@@ -38,6 +38,13 @@ gem 'spring',        group: :development
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
-
 gem 'sufia'
 gem 'kaminari', github: 'harai/kaminari', branch: 'route_prefix_prototype'  # required to handle pagination properly in dashboard. See https://github.com/amatsuda/kaminari/pull/322
+gem 'therubyracer', '0.11.3', platforms: :ruby
+
+gem "devise"
+gem "devise-guests", "~> 0.3"
+group :development, :test do
+  gem "rspec-rails"
+  gem "jettywrapper"
+end

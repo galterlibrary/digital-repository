@@ -64,6 +64,7 @@ GEM
       addressable (>= 2.3.1)
       extlib (>= 0.9.15)
       multi_json (>= 1.0.0)
+    bcrypt (3.1.9)
     blacklight (5.8.0)
       bootstrap-sass (~> 3.2)
       deprecation
@@ -116,6 +117,16 @@ GEM
     daemons (1.1.9)
     deprecation (0.1.0)
       activesupport
+    devise (3.4.1)
+      bcrypt (~> 3.0)
+      orm_adapter (~> 0.1)
+      railties (>= 3.2.6, < 5)
+      responders
+      thread_safe (~> 0.1)
+      warden (~> 1.2.3)
+    devise-guests (0.3.3)
+      devise
+    diff-lcs (1.2.5)
     dropbox-sdk (1.6.4)
       json
     ebnf (0.3.6)
@@ -219,6 +230,7 @@ GEM
       addressable (~> 2.3)
     legato (0.4.0)
       multi_json
+    libv8 (3.11.8.17)
     link_header (0.0.8)
     linkeddata (1.1.1)
       equivalent-xml (>= 0.4.0)
@@ -281,6 +293,7 @@ GEM
       solrizer (~> 3.3)
     openseadragon (0.0.9)
       rails (> 3.2.0)
+    orm_adapter (0.5.0)
     parslet (1.6.2)
       blankslate (>= 2.0, <= 4.0)
     rack (1.5.2)
@@ -350,6 +363,9 @@ GEM
     redis (3.2.0)
     redis-namespace (1.5.1)
       redis (~> 3.0, >= 3.0.4)
+    ref (1.0.5)
+    responders (1.1.2)
+      railties (>= 3.2, < 4.2)
     resque (1.25.2)
       mono_logger (~> 1.0)
       multi_json (~> 1.0)
@@ -366,6 +382,22 @@ GEM
     retriable (1.4.1)
     rsolr (1.0.10)
       builder (>= 2.1.2)
+    rspec-core (3.1.7)
+      rspec-support (~> 3.1.0)
+    rspec-expectations (3.1.2)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.1.0)
+    rspec-mocks (3.1.3)
+      rspec-support (~> 3.1.0)
+    rspec-rails (3.1.0)
+      actionpack (>= 3.0)
+      activesupport (>= 3.0)
+      railties (>= 3.0)
+      rspec-core (~> 3.1.0)
+      rspec-expectations (~> 3.1.0)
+      rspec-mocks (~> 3.1.0)
+      rspec-support (~> 3.1.0)
+    rspec-support (3.1.2)
     ruby-box (1.15.0)
       addressable
       json
@@ -474,6 +506,9 @@ GEM
       resque (~> 1.23)
       resque-pool (~> 0.3)
     sxp (0.1.5)
+    therubyracer (0.11.3)
+      libv8 (~> 3.11.8.12)
+      ref
     thor (0.19.1)
     thread_safe (0.3.4)
     tilt (1.4.1)
@@ -494,6 +529,8 @@ GEM
     uuidtools (2.1.5)
     vegas (0.1.11)
       rack (>= 1.0.0)
+    warden (1.2.3)
+      rack (>= 1.0)
     xml-simple (1.1.4)
     yaml_db (0.3.0)
       rails (>= 3.0, < 4.3)
@@ -504,14 +541,19 @@ PLATFORMS
 
 DEPENDENCIES
   coffee-rails (~> 4.0.0)
+  devise
+  devise-guests (~> 0.3)
   jbuilder (~> 2.0)
+  jettywrapper
   jquery-rails
   kaminari!
   rails (= 4.1.6)
+  rspec-rails
   sass-rails (~> 4.0.3)
   sdoc (~> 0.4.0)
   spring
   sqlite3
   sufia
+  therubyracer (= 0.11.3)
   turbolinks
   uglifier (>= 1.3.0)
