@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141215193034) do
+ActiveRecord::Schema.define(version: 20141218213159) do
 
   create_table "bookmarks", force: true do |t|
     t.integer  "user_id",       null: false
@@ -199,6 +199,24 @@ ActiveRecord::Schema.define(version: 20141215193034) do
 
   add_index "proxy_deposit_rights", ["grantee_id"], name: "index_proxy_deposit_rights_on_grantee_id"
   add_index "proxy_deposit_rights", ["grantor_id"], name: "index_proxy_deposit_rights_on_grantor_id"
+
+  create_table "qa_mesh_trees", force: true do |t|
+    t.string "term_id"
+    t.string "tree_number"
+  end
+
+  add_index "qa_mesh_trees", ["term_id"], name: "index_qa_mesh_trees_on_term_id"
+  add_index "qa_mesh_trees", ["tree_number"], name: "index_qa_mesh_trees_on_tree_number"
+
+  create_table "qa_subject_mesh_terms", force: true do |t|
+    t.string "term_id"
+    t.string "term"
+    t.text   "synonyms"
+    t.string "term_lower"
+  end
+
+  add_index "qa_subject_mesh_terms", ["term_id"], name: "index_qa_subject_mesh_terms_on_term_id"
+  add_index "qa_subject_mesh_terms", ["term_lower"], name: "index_qa_subject_mesh_terms_on_term_lower"
 
   create_table "searches", force: true do |t|
     t.text     "query_params"

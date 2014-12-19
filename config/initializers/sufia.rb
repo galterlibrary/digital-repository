@@ -100,10 +100,11 @@ Sufia.config do |config|
   # config.temp_file_base = '/home/developer1'
 
   # If you have ffmpeg installed and want to transcode audio and video uncomment this line
-  # config.enable_ffmpeg = true
+  config.enable_ffmpeg = true
 
   # Specify the Fedora pid prefix:
-  # config.id_namespace = "sufia"
+  #config.id_namespace = "galter_library"
+  config.id_namespace = "sufia"
 
   # Specify the path to the file characterization tool:
   config.fits_path = "/home/phb010/fits-0.8.3/fits.sh"
