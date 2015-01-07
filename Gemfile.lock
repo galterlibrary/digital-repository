@@ -65,6 +65,8 @@ GEM
       extlib (>= 0.9.15)
       multi_json (>= 1.0.0)
     bcrypt (3.1.9)
+    binding_of_caller (0.7.2)
+      debug_inspector (>= 0.0.1)
     blacklight (5.8.0)
       bootstrap-sass (~> 3.2)
       deprecation
@@ -121,6 +123,7 @@ GEM
     coffee-script-source (1.8.0)
     columnize (0.9.0)
     daemons (1.1.9)
+    debug_inspector (0.0.2)
     debugger-linecache (1.2.0)
     deprecation (0.1.0)
       activesupport
@@ -179,6 +182,7 @@ GEM
       httparty (>= 0.7.3)
       mimemagic
       multipart-post
+    http_logger (0.5.1)
     httparty (0.13.3)
       json (~> 1.8)
       multi_xml (>= 0.5.2)
@@ -311,6 +315,8 @@ GEM
     pry-byebug (2.0.0)
       byebug (~> 3.4)
       pry (~> 0.10)
+    pry-rails (0.3.2)
+      pry (>= 0.9.10)
     qa (0.3.0)
       activerecord-import
       deprecation
@@ -553,6 +559,11 @@ GEM
       rack (>= 1.0.0)
     warden (1.2.3)
       rack (>= 1.0)
+    web-console (2.0.0)
+      activemodel (~> 4.0)
+      binding_of_caller (>= 0.7.2)
+      railties (~> 4.0)
+      sprockets-rails (>= 2.0, < 4.0)
     xml-simple (1.1.4)
     yaml_db (0.3.0)
       rails (>= 3.0, < 4.3)
@@ -565,12 +576,14 @@ DEPENDENCIES
   coffee-rails (~> 4.0.0)
   devise
   devise-guests (~> 0.3)
+  http_logger
   jbuilder (~> 2.0)
   jettywrapper
   jquery-rails
   kaminari!
   pry
   pry-byebug
+  pry-rails
   qa
   rails (= 4.1.6)
   rspec-rails
@@ -582,3 +595,4 @@ DEPENDENCIES
   therubyracer (= 0.11.3)
   turbolinks
   uglifier (>= 1.3.0)
+  web-console

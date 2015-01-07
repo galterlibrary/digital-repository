@@ -123,6 +123,8 @@ Sufia.config do |config|
     config.browse_everything = nil
   end
 
+  #config.enable_local_ingest = true
+
 end
 
 Date::DATE_FORMATS[:standard] = "%m/%d/%Y"
