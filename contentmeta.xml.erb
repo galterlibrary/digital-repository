@@ -1,0 +1,20 @@
+  <foxml:datastream ID="contentMetadata" STATE="A" CONTROL_GROUP="X" VERSIONABLE="true">
+    <foxml:datastreamVersion
+    ID="contentMetadata.0"
+    LABEL=""
+    CREATED="<%= rh['ef_create_date'] %>"
+    MIMETYPE="text/xml" SIZE="1">
+      <foxml:xmlContent>   
+        <contentMetadata type="born-digital" objectId="na">
+          <resource id="file" type="file" data="content" objectId="na">
+            <file id="<%= rsrc['fname'] %>" format="<%= rsrc['format'] %>" mimetype="<%= rsrc['mime'] %>" size="<%= rsrc['size'] %>" preserve="yes" shelve="yes" deliver="yes">
+              <location type="url"><%= rsrc['url'] %></location>
+              <checksum type="md5"><%= rsrc['md5'] %></checksum>
+              <checksum type="sha1"><%= rsrc['sha1'] %></checksum>
+            </file>
+          </resource>
+        </contentMetadata> 
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  

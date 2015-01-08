@@ -1,0 +1,4545 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ead PUBLIC "+//ISBN 1-931666-00-8//DTD ead.dtd (Encoded Archival Description (EAD) Version 2002)//EN" "../shared/ead/ead.dtd">
+<ead audience="external"> 
+  <eadheader audience="internal" langencoding="ISO639-2b"> 
+	 <eadid>http://www.galter.northwestern.edu/gvblack/gvbfind.xml</eadid> 
+	 <filedesc> 
+		<titlestmt> 
+		  <titleproper>Guide to the G.V. Black Manuscripts, Correspondence and
+			 Photographs in the Galter Health Sciences Library Northwestern University,
+			 </titleproper> 
+		  <author>Compiled by Ron Sims</author> 
+		</titlestmt> 
+		<publicationstmt> 
+		  <publisher>Galter Health Sciences Library, Northwestern, University,
+			 Chicago, Ill., </publisher> 
+		  <date normal="2004">2004</date> 
+		</publicationstmt> 
+	 </filedesc> 
+	 <profiledesc> 
+		<creation>Finding aid encoded in EAD Version 2002, by Tony Olson, 
+		  <date normal="2002-04">April 2002. </date></creation> 
+		<langusage>Finding aid written in <language
+		  langcode="eng">English.</language></langusage> 
+	 </profiledesc> 
+	 <revisiondesc> 
+		<change> 
+		  <date normal="2004-10">October 2004</date> 
+		  <item>Revised and updated to EAD version 2002, by Tony Olson</item> 
+		</change> 
+	 </revisiondesc> 
+  </eadheader> 
+  <frontmatter> 
+	 <titlepage> 
+		<titleproper>Guide to the G.V. Black Manuscripts, Correspondence and
+		  Photographs<lb/> in the Galter Health Sciences Library, Northwestern
+		  University</titleproper> 
+		<author>Compiled by Ron Sims</author> 
+		<address> 
+		  <addressline>Chicago, Illinois</addressline> 
+		</address> 
+		<date normal="2004">2004</date> 
+	 </titlepage> 
+	 <div> 
+	 <head id="table1">TABLE OF CONTENTS</head> 
+	 <blockquote> 
+		<list type="simple"> 
+		  <item> 
+			 <ref actuate="onrequest" show="replace" target="contact1">Contact
+				Information</ref></item> 
+		  <item> 
+			 <ref actuate="onrequest" show="replace" target="desc1">Descriptive
+				Summary</ref></item> 
+		  <item> 
+			 <ref actuate="onrequest" show="replace" target="index1">Index
+				Terms</ref></item> 
+		  <item> 
+			 <ref actuate="onrequest" show="replace" target="biog1">Biographical
+				Sketch</ref></item> 
+		  <item> 
+			 <ref actuate="onrequest" show="replace" target="scope1">Scope and
+				Content of the Collection</ref></item> 
+		  <item> 
+			 <ref actuate="onrequest" show="replace" target="ser1">Series I.
+				Manuscripts on general subjects, 1867-1900</ref></item> 
+		  <item> 
+			 <ref actuate="onrequest" show="replace" target="ser2">Series II.
+				Correspondence between G.V. Black and F.S. McKay on mottled enamel of teeth,
+				1907-1915</ref></item> 
+		  <item> 
+			 <ref actuate="onrequest" show="replace" target="ser3">Series III.
+				Correspondence, photographs, other documents and memorabilia related to the
+				World's Columbian Dental Congress of 1893</ref></item> 
+		  <item> 
+			 <ref actuate="onrequest" show="replace" target="ser4">Series IV.
+				Photographs</ref></item> 
+		</list> 
+	 </blockquote> 
+	 <table id="contact1" frame="none"> 
+		<tgroup cols="2">
+		  <colspec colnum="1" colname="1" align="left" colwidth="50"/>
+		  <colspec colnum="2" colname="2" align="right" colwidth="50"/> 
+		  <thead> 
+			 <row> 
+				<entry colname="1">Contact Information</entry> 
+				<entry colname="2">Project Team</entry> 
+			 </row> 
+		  </thead> 
+		  <tbody> 
+			 <row> 
+				<entry valign="top"> 
+				  <address> 
+					 <addressline>Galter Health Sciences Library</addressline> 
+					 <addressline>Special Collections</addressline> 
+					 <addressline>Northwestern University</addressline> 
+					 <addressline>303 East Chicago Avenue</addressline> 
+					 <addressline>Chicago, Illinois 60611 </addressline> 
+					 <addressline>(312) 503-1913</addressline> 
+					 <addressline>FAX: (312) 503-1204</addressline> 
+					 <addressline>rnsms@northwestern.edu</addressline> 
+				  </address> </entry> 
+				<entry valign="top"> 
+				  <list type="simple"> 
+					 <item>Project Manager: Ron Sims</item> 
+					 <item>Metadata created by: Ron Sims</item> 
+					 <item>EAD encoding by: Tony Olson</item> 
+					 <item>Scanning and compression by: Brian Ricupero</item> 
+					 <item>Scanning by: S.J. Murray</item> 
+					 <item>Page Turner by: Steve Hunt</item> 
+				  </list> </entry> 
+			 </row> 
+		  </tbody> 
+		</tgroup> 
+	 </table> 
+	 </div> 
+  </frontmatter> 
+  <archdesc level="collection" relatedencoding="marc"> 
+	 <did id="desc1"> 
+		<head>DESCRIPTIVE SUMMARY</head> 
+    <unitid label="Collection Name">GVBlack</unitid> 
+		<origination label="Creator:"> 
+		  <persname encodinganalog="100" source="lcnaf">Black, G. V. (Greene
+			 Vardiman), 1836-1915</persname> </origination> 
+		<unittitle encodinganalog="245" label="Title:"> G.V. Black Manuscripts,
+		  Correspondence and Photographs in the Galter Health Sciences Library,
+		  Northwestern University</unittitle> 
+		<unitdate encodinganalog="260$c" type="inclusive" label="Date:"
+		normal="1867/1915">1867-1915</unitdate> 
+		<physdesc label="Quantity:"><extent encodinganalog="300$a">7 boxes (2
+		  linear feet)</extent></physdesc> 
+		<physdesc label="Forms of Material:"> 
+		  <genreform encodinganalog="500">Manuscripts, correspondence,
+			 photographs (black and white), other ephemera</genreform></physdesc> 
+		<repository label="Repository:"> 
+		  <corpname encodinganalog="710" source="lcnaf"> Northwestern University
+			 (Evanston, Ill.). Health Sciences Library</corpname></repository> 
+		<abstract encodinganalog="520" label="Abstract">The Collection includes:
+		  manuscripts on general subjects; correspondence between G.V. Black and Dr.
+		  Frederick S. McKay on mottled teeth; photographs; correspondence and other
+		  ephemera pertaining to the 1893 World Dental Congress held in conjunction with
+		  the 1893 World's Columbian Exposition in Chicago, Illinois.</abstract> 
+		<physloc label="Location"> Special Collections</physloc> 
+	 </did> 
+	 <controlaccess> 
+		<head>Index</head> 
+		<controlaccess id="index1"> 
+		  <head>Persons</head> 
+		  <persname encodinganalog="600" source="lcnaf">Black, G. V. (Greene
+			 Vardiman), 1836-1915</persname> 
+		  <persname encodinganalog="600" source="local">McKay, Frederick
+			 S.</persname> 
+		</controlaccess> 
+		<controlaccess> 
+		  <head>Organizations</head> 
+		  <corpname encodinganalog="610" source="local">Literary Union
+			 (Jacksonville, Ill.)</corpname> 
+		  <corpname encodinganalog="611" source="lcnaf">World's Columbian
+			 Exposition (1893 : Chicago, Ill.)</corpname> 
+		  <corpname encodinganalog="611" source="lcnaf">World Dental Congress
+			 (1893 : Chicago, Ill.)</corpname> 
+		</controlaccess> 
+		<controlaccess> 
+		  <head>Places</head> 
+		  <geogname encodinganalog="651" source="lcnaf">Colorado</geogname> 
+		  <geogname encodinganalog="651" source="lcnaf">Jacksonville
+			 (Ill.)</geogname> 
+		</controlaccess> 
+		<controlaccess> 
+		  <head>Subjects</head> 
+		  <subject encodinganalog="650" source="mesh">Biochemistry</subject> 
+		  <subject encodinganalog="650" source="mesh">Chemistry</subject> 
+		  <subject encodinganalog="650" source="mesh">Fluorosis,
+			 Dental--epidemiology</subject> 
+		  <subject encodinganalog="650" source="mesh">Tooth
+			 Abnormalities</subject> 
+		  <subject encodinganalog="650" source="mesh">Zoology</subject> 
+		</controlaccess> 
+	 </controlaccess> 
+	 <bioghist id="biog1"> 
+		<head>BIOGRAPHICAL SKETCH</head> 
+		<p>Dr. Greene Vardiman Black (1836-1915), the acknowledged father of
+		  modern dentistry, was born in Winchester, Illinois. His work and contributions
+		  to dentistry were all based in Illinois. His career included dental practices
+		  in Winchester and Jacksonville, Illinois. Dr. Black taught at several dental
+		  schools in the area, and served as the second dean of the Northwestern
+		  University Dental School, which became know as the largest and most outstanding
+		  institution of its kind under his administration.</p> 
+		<p>Dr. Black contributed to the advancement of dental science by
+		  standardizing operative procedures and providing uniformity in the manufacture
+		  of amalgam, cavity preparation and dental terminology. His development of
+		  dental amalgams, over 150 years ago, set the standards for formulae, clinical
+		  use and techniques. He provided the first dental identification and
+		  categorization of dental procedures to restore diseased or injured teeth. Among
+		  his dental inventions were the foot-powered drill engine and the
+		  gnathodynamometer for measuring bite force.</p> 
+	 </bioghist> 
+	 <scopecontent id="scope1"> 
+		<head>SCOPE AND CONTENT OF THE COLLECTION</head> 
+		<p>The Northwestern University G.V. Black collection contains 43
+		  manuscripts, 100 letters and several photographs covering the period between
+		  1867 and 1915. Some of the more important items in the collection are:
+		  correspondence between Dr. Black and Dr. Frederick S. McKay from the turn of
+		  the century that focus on mottled enamel of teeth and early hypotheses on water
+		  and fluoridation; correspondence, program announcements and other ephemera from
+		  the World Dental Congress held in conjunction with the World's Columbian
+		  Exposition in 1893; a manuscript on zoo chemistry.</p> 
+	 </scopecontent> 
+	 <arrangement> 
+		<p>The collection is organized into 4 series.</p> 
+		<list type="simple"> 
+		  <item> 
+			 <ref actuate="onrequest" show="replace" target="ser1"> Series I.
+				Manuscripts on general subjects, 1867-1900</ref> (Boxes 1-3)</item> 
+		  <item> 
+			 <ref actuate="onrequest" show="replace" target="ser2"> Series II.
+				Correspondence between G.V. Black and F.S. McKay on mottled enamel of teeth,
+				1907-1915</ref> (Box 4)</item> 
+		  <item> 
+			 <ref actuate="onrequest" show="replace" target="ser3"> Series III.
+				Correspondence, photographs, other documents and memorabilia related to the
+				World's Columbian Dental Congress, 1893</ref> (Box 5)</item> 
+		  <item> 
+			 <ref actuate="onrequest" show="replace" target="ser4">Series IV.
+				Photographs</ref> (Box 6)</item> 
+		</list> 
+	 </arrangement> 
+	 <dsc type="in-depth"> 
+		<head>SERIES DESCRIPTIONS</head> 
+		<c01 id="ser1" level="series"> 
+		  <did> 
+			 <unittitle>Series I. Manuscripts on general subjects, </unittitle> 
+			 <unitdate type="inclusive">1867-1900.</unitdate> 
+			 <note> 
+				<p>These manuscripts are kept in Boxes 1-3. See descriptions of
+				  individual manuscripts below for location of the manuscript. The descriptions
+				  are arranged alphabetically by the title of the manuscript.</p> 
+			 </note> 
+		  </did> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">Antiseptics. </unittitle> 
+				<unitdate type="inclusive" normal="1889"
+				encodinganalog="260$c">(1889) </unitdate> 
+				<physdesc><extent encodinganalog="300$a">46 p.</extent></physdesc> 
+				<note encodinganalog="500"> 
+				  <p>Published in Dental review.</p> 
+				</note> 
+				<unitid label="Accession No.:" encodinganalog="099">615.778-2
+				  </unitid> 
+				<container type="box">3 </container> 
+				<dao
+				href="../gvblack/gvb-man/man.cfm?man=615.778-2&amp;page=1&amp;total=46&amp;title=Antiseptics"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="mesh">Anti-Infective Agents,
+				  Local</subject> 
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">Balance of reason. </unittitle> 
+				<unitdate type="inclusive" normal="1885"
+				encodinganalog="260$c">(1885) </unitdate> 
+				<physdesc><extent encodinganalog="300$a">20 p.</extent></physdesc> 
+				<note encodinganalog="246"> 
+				  <p>Title on manuscript: Ballance of reason.</p> 
+				</note> 
+				<note> 
+				  <p>Given as a toast at a joint meeting of the four Jacksonville,
+					 Ill. clubs (Literary Union, Sorosis, Club, and Round Table) on February 13,
+					 1885.</p> 
+				  <p>Includes membership rosters.</p> 
+				</note> 
+				<unitid label="Accession No.:" encodinganalog="099">600-15
+				  </unitid> 
+				<container type="box">2 </container> 
+				<dao
+				href="../gvblack/gvb-man/man.cfm?man=600-15&amp;page=1&amp;total=46&amp;title=Ballance%20of%20reason"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Organizations</head> 
+				<corpname encodinganalog="610" source="local">Literary Union
+				  (Jacksonville, Ill.)</corpname> 
+				<corpname encodinganalog="610" source="local">Sorosis
+				  (Jacksonville, Ill.)</corpname> 
+				<corpname encodinganalog="610" source="local">Club (Jacksonville,
+				  Ill.)</corpname> 
+				<corpname encodinganalog="610" source="local">Round Table
+				  (Jacksonville, Ill.)</corpname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="mesh">Thinking</subject> 
+				<subject encodinganalog="650" source="mesh">Problem
+				  Solving</subject> 
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">The basis of morality. </unittitle>
+				
+				<unitdate type="inclusive" normal="1880"
+				encodinganalog="260$c">(1880) </unitdate> 
+				<physdesc><extent encodinganalog="300$a">6 p.</extent></physdesc> 
+				<note encodinganalog="500"> 
+				  <p>Read before the Literary Union of Jacksonville, Ill.</p> 
+				</note> 
+				<unitid label="Accession No.:" encodinganalog="099">600-5 </unitid>
+				
+				<container type="box">2 </container> 
+				<dao
+				href="../gvblack/gvb-man/man.cfm?man=600-5&amp;page=1&amp;total=6&amp;title=Basis%20of%20morality"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Organizations</head> 
+				<corpname encodinganalog="610" source="local">Literary Union
+				  (Jacksonville, Ill.)</corpname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="mesh">Morals</subject> 
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>Calender log of cruise of the Microbe, July-August 1891.
+				  </unittitle> 
+				<unitdate type="inclusive" normal="1891"
+				encodinganalog="260$c">(1891) </unitdate> 
+				<physdesc><extent encodinganalog="300$a">7 p.</extent></physdesc> 
+				<note encodinganalog="500"> 
+				  <p>By the Crew, G.V. Black and W.N. Filson.</p> 
+				</note> 
+				<container type="box">2 </container> 
+				<dao
+				href="../gvblack/gvb-man/man.cfm?man=CM&amp;page=1&amp;total=7&amp;title=Cruise%20of%20the%20Microbe"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Persons</head> 
+				<persname encodinganalog="600" source="local">Filson, W.
+				  N.</persname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="lcsh">Sailboats</subject> 
+				<subject encodinganalog="650" source="lcsh">Microbe
+				  (Sailboat)</subject> 
+				<subject encodinganalog="650" source="mesh">Recreation</subject> 
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">City water works of Jacksonville,
+				  Illinois. </unittitle> 
+				<unitdate type="inclusive" normal="1884"
+				encodinganalog="260$c">(1884) </unitdate> 
+				<physdesc><extent encodinganalog="300$a">29 p.</extent></physdesc> 
+				<note encodinganalog="500"> 
+				  <p>Presented to the Literary Union of Jacksonville, Ill.,
+					 1884.</p> 
+				</note> 
+				<unitid label="Accession No.:" encodinganalog="099">614-1 </unitid>
+				
+				<container type="box">3 </container> 
+				<dao
+				href="../gvblack/gvb-man/man.cfm?man=614-1&amp;page=1&amp;total=29&amp;title=City%20water%20works"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Organizations</head> 
+				<corpname encodinganalog="610" source="local">Literary Union
+				  (Jacksonville, Ill.)</corpname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Places</head> 
+				<geogname encodinganalog="651" source="lcnaf">Jacksonville
+				  (Ill.)</geogname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="mesh">Water Supply</subject> 
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>A Contribution to the theory of sight. </unittitle> 
+				<unitdate type="inclusive" normal="1882"
+				encodinganalog="260$c">(1882) </unitdate> 
+				<physdesc><extent encodinganalog="300$a">20 p.</extent></physdesc> 
+				<note encodinganalog="500"> 
+				  <p>Translated from the German, additional remarks added by Dr.
+					 Black.</p> 
+				</note> 
+				<unitid label="Accession No.:" encodinganalog="099">D612-33
+				  </unitid> 
+				<container type="box">3 </container> 
+				<dao
+				href="../gvblack/gvb-man.cfm?man=D612-33&amp;page=1&amp;total=20&amp;title=Contribution%20to%20the%20theory%20of%20sight"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="mesh">Vision</subject> 
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">The development of the arts.
+				  </unittitle> 
+				<unitdate type="inclusive" normal="1879"
+				encodinganalog="260$c">(1879) </unitdate> 
+				<physdesc><extent encodinganalog="300$a">75 p.</extent></physdesc> 
+				<note encodinganalog="500"> 
+				  <p>Presented to the Literary Union of Jacksonville, Ill.</p> 
+				</note> 
+				<unitid label="Accession No.:" encodinganalog="099">600-4 </unitid>
+				
+				<container type="box">1 </container> 
+				<dao
+				href="../gvblack/gvb-man/man.cfm?man=600-4&amp;page=1&amp;total=75&amp;title=Development%20of%20the%20arts"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Organizations</head> 
+				<corpname encodinganalog="610" source="local">Literary Union
+				  (Jacksonville, Ill.)</corpname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="mesh">Art</subject> 
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">Drawings on the Cicada, the
+				  seventeen year locust. </unittitle> 
+				<unitdate type="inclusive" normal="1876"
+				encodinganalog="260$c">(1876) </unitdate> 
+				<physdesc><extent encodinganalog="300$a">8 p.</extent></physdesc> 
+				<note encodinganalog="500"> 
+				  <p>Pencil drawings presented to the Jacksonville, Illinois
+					 Microscopical Society.</p> 
+				</note> 
+				<unitid label="Accession No.:" encodinganalog="099">590-2 </unitid>
+				
+				<container type="box">1 </container> 
+				<dao
+				href="../gvblack/gvb-man.cfm?590-2&amp;page=1&amp;total=8&amp;title=Drawings%20on%20the%20Cicada"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Organizations</head> 
+				<corpname encodinganalog="610" source="local">Microscopical Society
+				  (Jacksonville, Ill.)</corpname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="mesh">Hemiptera</subject> 
+				<subject encodinganalog="650" source="lcsh">Periodical
+				  cicada</subject> 
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">The early diagnosis of disease of
+				  the kidneys, especially Bright's disease. </unittitle> 
+				<unitdate type="inclusive" normal="1883"
+				 encodinganalog="260$c">(1883) </unitdate> 
+				<physdesc><extent encodinganalog="300$a">16 p.</extent></physdesc> 
+				<unitid label="Accession No.:" encodinganalog="099">616-5 </unitid>
+				
+				<container type="box">3 </container> 
+				<dao
+				 href="../gvblack/gvb-man/man.cfm?man=616-5&amp;page=1&amp;total=17&amp;title=Bright's%20disease%20"
+				 actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="mesh">Kidney
+				  Diseases--diagnosis</subject> 
+				<subject encodinganalog="650"
+				 source="mesh">Glomerulonephritis--diagnosis</subject> 
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">The earth worm. </unittitle> 
+				<unitdate type="inclusive" normal="1875"
+				 encodinganalog="260$c">(1875) </unitdate> 
+				<physdesc><extent encodinganalog="300$a">73 p.</extent></physdesc> 
+				<unitid label="Accession No.:" encodinganalog="099">590-1 </unitid>
+				
+				<container type="box">1 </container> 
+				<dao
+				 href="../gvblack/gvb-man/man.cfm?man=590-1&amp;page=1&amp;total=73&amp;title=Earth%20worm"
+				 actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="mesh">Oligochaeta</subject> 
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">Experiences with anesthetic spray
+				  producers in mouth operations. </unittitle> 
+				<unitdate type="inclusive" encodinganalog="260$c"
+				 normal="1867">(1867) </unitdate> 
+				<physdesc><extent encodinganalog="300$a">15 p.</extent></physdesc> 
+				<note> 
+				  <p>Read before the Morgan County Medical Society.</p> 
+				</note> 
+				<unitid label="Accession No.:" encodinganalog="099">615.781-1
+				  </unitid> 
+				<container type="box">3 </container> 
+				<dao
+				 href="../gvblack/gvb-man/man.cfm?man=615-781-1&amp;page=1&amp;total=15&amp;title=Experiences%20with%20anesthetic%20spray"
+				 actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Organizations</head> 
+				<corpname encodinganalog="610" source="local">Morgan County Medical
+				  Society (Ill.)</corpname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="mesh">Anesthetics</subject> 
+				<subject encodinganalog="650" source="mesh">Surgery, Oral</subject>
+				
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">A few words about salicylic acid.
+				  </unittitle> 
+				<unitdate type="inclusive" normal="1882"
+				 encodinganalog="260$c">(1882) </unitdate> 
+				<physdesc><extent encodinganalog="300$a">6 p.</extent></physdesc> 
+				<note encodinganalog="500"> 
+				  <p>Translation of an article that appeared in the
+					 Vierteljahrsschrift fur Zahnheilkunde.</p> 
+				</note> 
+				<container type="box">2 </container> 
+				<dao
+				 href="../gvblack/gvb-man/man.cfm?man=FWSA&amp;page=1&amp;total=6&amp;title=Salicylic%20acid"
+				 actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="mesh">Salicyclic
+				  Acid</subject> 
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">From Quebec to the Saguenay River
+				  and Chicontimi. </unittitle> 
+				<unitdate type="inclusive" normal="1887"
+				 encodinganalog="260$c">(1887) </unitdate> 
+				<physdesc><extent encodinganalog="300$a">52 p.</extent></physdesc> 
+				<unitid label="Accession No.:" encodinganalog="099">600-18
+				  </unitid> 
+				<container type="box">2 </container> 
+				<dao
+				 href="../gvblack/gvb-man/man.cfm?man=600-18&amp;page=1&amp;total=53&amp;title=From%20Quebec%20..."
+				 actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Places</head> 
+				<geogname encodinganalog="651" source="lcnaf">Quebec
+				  (Province)</geogname> 
+				<geogname encodinganalog="651" source="local">Chicontimi
+				  (Quebec)</geogname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="mesh">Travel</subject> 
+				<subject encodinganalog="650" source="lcsh">Saguenay River
+				  (Quebec)</subject> 
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">The histopathology of scarlet
+				  fever. </unittitle> 
+				<unitdate type="inclusive" normal="1878"
+				 encodinganalog="260$c">(1878) </unitdate> 
+				<physdesc><extent encodinganalog="300$a">69 p.</extent></physdesc> 
+				<note encodinganalog="500"> 
+				  <p>Read before the Morgan County Medical Society.</p> 
+				</note> 
+				<unitid label="Accession No.:" encodinganalog="099">616-2 </unitid>
+				
+				<container type="box">3 </container> 
+				<dao
+				 href="../gvblack/gvb-man/man.cfm?man=616-2&amp;page=1&amp;total=69&amp;title=Histopathology%20of%20scarlet%20fever"
+				 actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Organizations</head> 
+				<corpname encodinganalog="610" source="local">Morgan County Medical
+				  Society (Ill.)</corpname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="mesh">Scarlet Fever</subject>
+				
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">How to rest, or modes of
+				  recreation. </unittitle> 
+				<unitdate type="inclusive" normal="1891"
+				 encodinganalog="260$c">(1891) </unitdate> 
+				<physdesc><extent encodinganalog="300$a">14 p.</extent></physdesc> 
+				<note encodinganalog="500"> 
+				  <p>Presented to the Literary Union of Jacksonville, Ill.,
+					 1884.</p> 
+				</note> 
+				<unitid label="Accession No.:" encodinganalog="099">600-21
+				  </unitid> 
+				<container type="box">2 </container> 
+				<dao
+				 href="../gvblack/gvb-man/man.cfm?man=600-21&amp;page=1&amp;total=14&amp;title=How%20to%20rest"
+				 actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Organizations</head> 
+				<corpname encodinganalog="610" source="local">Literary Union
+				  (Jacksonville, Ill.)</corpname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="mesh">Rest</subject> 
+				<subject encodinganalog="650" source="mesh">Recreation</subject> 
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">Industrial picture. </unittitle> 
+				<unitdate type="inclusive" normal="1885"
+				 encodinganalog="260$c">(1885)</unitdate> 
+				<physdesc><extent encodinganalog="300$a">23 p.</extent></physdesc> 
+				<note encodinganalog="500"> 
+				  <p>Presented to the Literary Union of Jacksonville, Ill.</p> 
+				</note> 
+				<unitid label="Accession no.:" encodinganalog="099">600-12
+				  </unitid> 
+				<container type="box">2 </container> 
+				<dao
+				 href="../gvblack/gvb-man/man.cfm?man=600-12&amp;page=1&amp;total=23&amp;title=Industrial%20picture"
+				 actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Organizations</head> 
+				<corpname encodinganalog="610" source="local">Literary Union
+				  (Jacksonville, Ill.)</corpname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Subjects&gt;</head> 
+				<subject encodinganalog="650" source="mesh">Industry</subject> 
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">Inflammation. </unittitle> 
+				<unitdate type="inclusive" normal="1882"
+				 encodinganalog="260$c">(1882) </unitdate> 
+				<physdesc><extent encodinganalog="300$a">31 p.</extent></physdesc> 
+				<note encodinganalog="500"> 
+				  <p>Read before the Morgan County Medical Society.</p> 
+				</note> 
+				<unitid label="Accession No.:" encodinganalog="099">616-3 </unitid>
+				
+				<container type="box">3 </container> 
+				<dao
+				 href="../gvblack/gvb-man/man.cfm?man=616-3&amp;page=1&amp;total=31&amp;title=Inflammation"
+				 actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Organizations</head> 
+				<corpname encodinganalog="610" source="local">Morgan County Medical
+				  Society (Ill.)</corpname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="mesh">Inflammation</subject> 
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">Influence of the middle man in the
+				  formation of social castes in the United States. </unittitle> 
+				<unitdate type="inclusive" normal="1886"
+				 encodinganalog="260$c">(1886) </unitdate> 
+				<physdesc><extent encodinganalog="300$a">6 p.</extent></physdesc> 
+				<note encodinganalog="500"> 
+				  <p>Presented to the Literary Union of Jacksonville, Ill.</p> 
+				</note> 
+				<unitid label="Accession No.:">600-14 </unitid> 
+				<container type="box">2 </container> 
+				<dao
+				 href="../gvblack/gvb-man/man.cfm?man=600-14&amp;page=1&amp;total=6&amp;title=Influence%20of%20the%20middle%20man"
+				 actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Organizations</head> 
+				<corpname encodinganalog="610" source="local">Literary Union
+				  (Jacksonville, Ill.)</corpname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Places</head> 
+				<geogname encodinganalog="651" source="lcnaf">United
+				  States</geogname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="lcsh">Social
+				  stratification</subject> 
+				<subject encodinganalog="650" source="mesh">Social Class</subject> 
+				<subject encodinganalog="650" source="mesh">Middle Class</subject> 
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">Lee County Texas fossil woods.
+				  </unittitle> 
+				<unitdate type="inclusive" normal="1881"
+				 encodinganalog="260$c">(1881) </unitdate> 
+				<physdesc><extent encodinganalog="300$a">6 p.; 12
+				  drawings</extent></physdesc> 
+				<abstract encodinganalog="520">Multigraph reproductions of fossil
+				  woods from Lee County, Texas. A camera lucida was used to draw the
+				  images.</abstract> 
+				<unitid label="Accession No.:" encodinganalog="099">600-7 </unitid>
+				
+				<container type="box">1 </container> 
+				<dao
+				 href="../gvblack/gvb-man/man.cfm?man=600-7&amp;page=1&amp;total=18&amp;title=Fossil%20woods"
+				 actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Places</head> 
+				<geogname encodinganalog="651" source="lcnaf">Lee County
+				  (Tex.)</geogname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="mesh">Fossils</subject> 
+				<subject encodinganalog="650" source="mesh">Wood</subject> 
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">Man, a representative of the
+				  universe. </unittitle> 
+				<unitdate type="inclusive" normal="1885"
+				 encodinganalog="260$c">(1885) </unitdate> 
+				<physdesc><extent encodinganalog="300$a">36 p.</extent></physdesc> 
+				<note encodinganalog="500"> 
+				  <p>Read before the Literary Union of Jacksonville, Illinois.</p> 
+				</note> 
+				<unitid label="Accession No.:" encodinganalog="099">575-1 </unitid>
+				
+				<container type="box">1 </container> 
+				<dao
+				 href="../gvblack/gvb-man/man.cfm?man=575-1&amp;page=1&amp;total=37&amp;title=Man"
+				 actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Organizations</head> 
+				<corpname encodinganalog="610" source="local">Literary Union
+				  (Jacksonville, Ill.)</corpname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="mesh">Hominidae</subject> 
+				<subject encodinganalog="650" source="mesh">Human
+				  Activities</subject> 
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">The man eater, a story.
+				  </unittitle> 
+				<unitdate type="inclusive" normal="1887"
+				 encodinganalog="260$c">(1887) </unitdate> 
+				<physdesc><extent encodinganalog="300$a">9 p.</extent></physdesc> 
+				<unitid label="Accession No.:" encodinganalog="099">600-19
+				  </unitid> 
+				<container type="box">2 </container> 
+				<dao
+				 href="../gvblack/gvb-man/man.cfm?man=600-19&amp;page=1&amp;total=9&amp;title=Man%20eater"
+				 actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="mesh">Dreams</subject> 
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">Manual training as an element in
+				  education. </unittitle> 
+				<unitdate type="inclusive" normal="1886"
+				 encodinganalog="260$c">(1886) </unitdate> 
+				<physdesc><extent>40 p.</extent></physdesc> 
+				<note encodinganalog="500"> 
+				  <p>Presented before the Literary Union of Jacksonville,
+					 Illinois.</p> 
+				</note> 
+				<unitid label="Accession No.:" encodinganalog="099">600-16
+				  </unitid> 
+				<container type="box">2 </container> 
+				<dao
+				 href="../gvblack/gvb-man/man.cfm?man=600-16&amp;page=1&amp;total=40&amp;title=Manual%20training"
+				 actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Organizations</head> 
+				<corpname encodinganalog="610" source="local">Literary Union
+				  (Jacksonville, Ill.)</corpname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="mesh">Vocational
+				  Education</subject> 
+				<subject encodinganalog="650" source="mesh">Education</subject> 
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">The mechanic arts of 1776 and 1876.
+				  </unittitle> 
+				<unitdate type="inclusive" normal="1876"
+				 encodinganalog="260$c">(1876) </unitdate> 
+				<physdesc><extent encodinganalog="300$a">10 p.</extent></physdesc> 
+				<note encodinganalog="500"> 
+				  <p>A toast to the Literary Union.</p> 
+				</note> 
+				<unitid label="Accession No.:" encodinganalog="099">600-1 </unitid>
+				
+				<container type="box">1 </container> 
+				<dao
+				 href="../gvblack/gvb-man/man.cfm?man=600-1&amp;page=1&amp;total=10&amp;title=Mechanic%20arts"
+				 actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Organizations</head> 
+				<corpname encodinganalog="610" source="local">Literary Union
+				  (Jacksonville, Ill.)</corpname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650"
+				 source="mesh">Technology--history</subject> 
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">New Orleans. </unittitle> 
+				<unitdate type="inclusive" normal="1889"
+				 encodinganalog="260$c">(1889) </unitdate> 
+				<physdesc><extent encodinganalog="300$a">21 p.</extent></physdesc> 
+				<unitid label="Accession No.:" encodinganalog="099">600-23
+				  </unitid> 
+				<container type="box">3 </container> 
+				<dao
+				 href="../gvblack/gvb-man/man.cfm?600-23&amp;page=1&amp;total=21&amp;title=New%20Orleans"
+				 actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Places</head> 
+				<geogname encodinganalog="651" source="lcnaf">New Orleans
+				  (La.)</geogname> 
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">Oil of cassia. </unittitle> 
+				<unitdate type="inclusive" normal="1881"
+				 encodinganalog="260$c">(1881) </unitdate> 
+				<physdesc><extent encodinganalog="300$a">11 p.</extent></physdesc> 
+				<abstract encodinganalog="520">History of the use of oil of cassia
+				  followed by 4 case reports.</abstract> 
+				<note encodinganalog="500"> 
+				  <p>Published in Dental review.</p> 
+				</note> 
+				<unitid label="Accession No.:" encodinganalog="099">615.778-5
+				  </unitid> 
+				<container type="box">3 </container> 
+				<dao
+				 href="../gvblack/gvb-man/man.cfm?man=615-778-5&amp;page=1&amp;total=11&amp;title=Oil%20of%20cassia"
+				 actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="mesh">Cassia</subject> 
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">Originality. </unittitle> 
+				<unitdate type="inclusive" normal="1878"
+				 encodinganalog="260$c">(1878)</unitdate> 
+				<physdesc><extent encodinganalog="300$a">16 p.</extent></physdesc> 
+				<note encodinganalog="500"> 
+				  <p>An extract from Wilhelm Jordan's epic letter. Translated from
+					 the German with Dr. Black's reflections. Presented to the Literary Union of
+					 Jacksonville, Ill.</p> 
+				</note> 
+				<unitid label="Accession no.:" encodinganalog="099">600-2</unitid> 
+				<container type="box">3 </container> 
+				<dao
+				 href="../gvblack/gvb-man/man.cfm?man=600-2&amp;page=1&amp;total=16&amp;title=Originality"
+				 actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Persons</head> 
+				<persname encodinganalog="600" source="lcnaf">Jordan, Wilhelm,
+				  1819-1904</persname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Organizations</head> 
+				<corpname encodinganalog="610" source="local">Literary Union
+				  (Jacksonville, Ill.)</corpname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="lcsh">Originality</subject> 
+				<subject encodinganalog="650" source="mesh">Creativeness</subject> 
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">Our police system. </unittitle> 
+				<unitdate type="inclusive" normal="1890"
+				 encodinganalog="260$c">(1890) </unitdate> 
+				<physdesc><extent encodinganalog="300$a">11 p.</extent></physdesc> 
+				<note encodinganalog="500"> 
+				  <p>Presented before the Literary Union of Jacksonville,
+					 Illinois.</p> 
+				</note> 
+				<container type="box">2 </container> 
+				<dao
+				 href="../gvblack/gvb-man/man.cfm?man=PS&amp;page=1&amp;total=11&amp;title=Our%20police%20system"
+				 actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Organizations</head> 
+				<corpname encodinganalog="610" source="local">Literary Union
+				  (Jacksonville, Ill.)</corpname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="mesh">Police</subject> 
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">Out sailing. </unittitle> 
+				<unitdate type="inclusive" normal="1886" certainty="260$c">(1886)
+				  </unitdate> 
+				<physdesc><extent encodinganalog="300$a">46 p.; 3
+				  drawings</extent></physdesc> 
+				<note encodinganalog="500"> 
+				  <p>Includes drawings of the Microbe, designed by Dr. Black.</p> 
+				</note> 
+				<unitid label="Accession no.:" encodinganalog="099">600-17</unitid>
+				
+				<container type="box">2 </container> 
+				<dao
+				 href="../gvblack/gvb-man/man.cfm?man=600-17&amp;page=1&amp;total=49&amp;title=Out%20sailing%"
+				 actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="lcsh">Sailing</subject> 
+				<subject encodinganalog="650" source="lcsh">Microbe
+				  (Sailboat)</subject> 
+				<subject encodinganalog="650" source="mesh">Recreation</subject> 
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">Practical relations of observation
+				  and thought. </unittitle> 
+				<unitdate type="inclusive" normal="1883"
+				 encodinganalog="260$c">(1883)</unitdate> 
+				<physdesc><extent encodinganalog="300$a">8 p.</extent></physdesc> 
+				<note encodinganalog="500"> 
+				  <p>Presented before the Literary Union of Jacksonville,
+					 Illinois.</p> 
+				</note> 
+				<unitid label="Accession No.:" encodinganalog="099">600-10
+				  </unitid> 
+				<container type="box">2 </container> 
+				<dao
+				 href="../gvblack/gvb-man/man.cfm?man=600-10&amp;page=1&amp;total=8&amp;title=Practical%20relations%20..."
+				 actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Organizations</head> 
+				<corpname encodinganalog="610" source="local">Literary Union
+				  (Jacksonville, Ill.)</corpname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="mesh">Observation</subject> 
+				<subject encodinganalog="650"
+				 source="mesh">Science--methods</subject> 
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">Progress of civilization.
+				  </unittitle> 
+				<unitdate type="inclusive" normal="1882"
+				 encodinganalog="260$c">(1882) </unitdate> 
+				<physdesc><extent encodinganalog="300$a">34 p.</extent></physdesc> 
+				<note encodinganalog="500"> 
+				  <p>Presented before the Literary Union of Jacksonville,
+					 Illinois.</p> 
+				</note> 
+				<unitid label="Accession No.:" encodinganalog="099">600-8 </unitid>
+				
+				<container type="box">2 </container> 
+				<dao
+				 href="../gvblack/gvb-man/man.cfm?man=600-8&amp;page=1&amp;total=34&amp;title=Progress%20of%20civilization"
+				 actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Organizations</head> 
+				<corpname encodinganalog="610" source="local">Literary Union
+				  (Jacksonville, Ill.)</corpname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="mesh">Civilization</subject> 
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">Pus formation. </unittitle> 
+				<unitdate type="inclusive" normal="1887"
+				 encodinganalog="260$c">(1887) </unitdate> 
+				<physdesc><extent encodinganalog="300$a">45 p.</extent></physdesc> 
+				<abstract encodinganalog="520">Recent theories of the formation of
+				  pus, considered with reference to dental operations.</abstract> 
+				<unitid label="Accession No.:">616-6 </unitid> 
+				<container type="box">3 </container> 
+				<dao
+				 href="../gvblack/gvb-man/man.cfm?man=616-6&amp;page=1&amp;total=45&amp;title=Pus%20formation"
+				 actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="mesh">Suppuration</subject> 
+				<subject encodinganalog="650" source="mesh">Abcess</subject> 
+				<subject encodinganalog="650" source="mesh">Oral Surgical
+				  Procedures</subject> 
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">Report of a post mortem examination
+				  in case of Wm. Patterson. </unittitle> 
+				<unitdate type="inclusive" normal="1883"
+				 encodinganalog="260$c">(1883) </unitdate> 
+				<physdesc><extent encodinganalog="300$a">5 p.</extent></physdesc> 
+				<abstract>Gastric ulcer with pathological specimen.</abstract> 
+				<note> 
+				  <p>Read before the Morgan County Medical Society.</p> 
+				</note> 
+				<unitid label="Accession No.:" encodinganalog="099">616-4 </unitid>
+				
+				<container type="box">3 </container> 
+				<dao
+				 href="../gvblack/gvb-man/man.cfm?man=616-4&amp;page=1&amp;total=5&amp;title=Post%20mortem"
+				 actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Persons</head> 
+				<persname encodinganalog="600" source="lcnaf">Patterson, William,
+				  d. 1883</persname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Organizations</head> 
+				<corpname encodinganalog="610" source="local">Morgan County Medical
+				  Society (Ill.)</corpname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="mesh">Autopsy</subject> 
+				<subject encodinganalog="650" source="mesh">Peptic
+				  Ulcer--pathology</subject> 
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">Salicylic acid as an antispetic.
+				  </unittitle> 
+				<unitdate type="inclusive" normal="1881"
+				 encodinganalog="260$c">(1881) </unitdate> 
+				<physdesc><extent encodinganalog="300$a">59 p.</extent></physdesc> 
+				<note encodinganalog="500"> 
+				  <p>Translation from the German of an article by H. Humm that
+					 originally appeared in the Vierteljahrsschrift fur Zahnheilkunde.</p> 
+				</note> 
+				<unitid label="Accession No.:" encodinganalog="099">615.778-1
+				  </unitid> 
+				<container type="box">3 </container> 
+				<dao
+				 href="../gvblack/gvb-man/man.cfm?man=615-778-1&amp;page=1&amp;total=57&amp;title=Salicylic%20acid%20as%20an%20antiseptic"
+				 actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Persons</head> 
+				<persname encodinganalog="700" source="local">Humm, H.</persname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="mesh">Salicylic
+				  Acid</subject> 
+				<subject encodinganalog="650" source="mesh">Anti-Infective Agents,
+				  Local</subject> 
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">Sam Marsden's race for life.
+				  </unittitle> 
+				<unitdate type="inclusive" normal="1885"
+				encodinganalog="260$c">(1885) </unitdate> 
+				<physdesc><extent encodinganalog="300$a">22 p.</extent></physdesc> 
+				<abstract encodinganalog="520">An Indian story of the pioneer days
+				  on the Illinois prairies.</abstract> 
+				<unitid label="Accession No.:" encodinganalog="099">600-13
+				  </unitid> 
+				<container type="box">2 </container> 
+				<dao
+				href="../gvblack/gvb-man/man.cfm?man=600-13&amp;page=1&amp;total=22&amp;title=Sam%20Marsden's%20race%20..."
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="lcsh">Marsden, Sam
+				  (Fictitious character)</subject> 
+				<subject encodinganalog="650"
+				source="mesh">Illinois--history</subject> 
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">Some experiments with acids.
+				  </unittitle> 
+				<unitdate type="inclusive" normal="1885"
+				encodinganalog="260$c">(1885)</unitdate> 
+				<physdesc><extent encodinganalog="300$a">24 p.</extent></physdesc> 
+				<note encodinganalog="500"> 
+				  <p>The quality of the orginal manuscript is very poor and in some
+					 places illegible. No digital images were created for this manuscript.</p> 
+				</note> 
+				<unitid label="Accession No.:" encodinganalog="099">540-3 </unitid>
+				
+				<container type="box">1 </container> 
+			 </did> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="mesh">Acids</subject> 
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">Students I have known. </unittitle>
+				
+				<unitdate type="inclusive" normal="1900"
+				encodinganalog="260$c">(ca. 1900)</unitdate> 
+				<physdesc><extent encodinganalog="300$a">45 p.</extent></physdesc> 
+				<abstract encodinganalog="505">Frazzels of the moral sense --
+				  Incentive and initiative -- A group of four -- 12th inch lense incident --
+				  Elbert -- Hit -- F --John -- Russell.</abstract> 
+				<container type="box">2 </container> 
+				<dao
+				href="../gvblack/gvb-man/man.cfm?man=Students&amp;page=1&amp;total=45&amp;title=Students%20I%20have%20known"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Subjects&gt;</head> 
+				<subject encodinganalog="650" source="mesh">Students,
+				  Dental</subject> 
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">Studies of saprophitic moulds.
+				  </unittitle> 
+				<unitdate type="inclusive" normal="1892"
+				encodinganalog="260$c">(1892) </unitdate> 
+				<physdesc><extent encodinganalog="300$a">55 p.</extent></physdesc> 
+				<unitid label="Accession No.:" encodinganalog="099">D6a-95
+				  </unitid> 
+				<container type="box">3 </container> 
+				<dao
+				href="../gvblack/gvb-man/man.cfm?man=D6a-9&amp;page=1&amp;total=55&amp;title=Studies%20of%20saprophitic%20molds"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="lcsh">Molds (Fungi)</subject>
+				
+				<subject encodinganalog="650" source="mesh">Food Chain</subject> 
+				<subject encodinganalog="650" source="mesh">Fungi</subject> 
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">Typhoid fever. </unittitle> 
+				<unitdate type="inclusive" normal="1875"
+				encodinganalog="260$c">(1875) </unitdate> 
+				<physdesc><extent encodinganalog="300$a">49 p.</extent></physdesc> 
+				<note encodinganalog="500"> 
+				  <p>Read before the Morgan County Medical Society.</p> 
+				</note> 
+				<unitid label="Accession No.:" encodinganalog="099">616-1 </unitid>
+				
+				<container type="box">3 </container> 
+				<dao
+				href="../gvblack/gvb-man/man.cfm?man=616-1&amp;page=1&amp;total=49&amp;title=Typhoid%20fever"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Organizations</head> 
+				<corpname encodinganalog="610" source="local">Morgan County Medical
+				  Society (Ill.)</corpname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="mesh">Typhoid Fever</subject>
+				
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">The Walk under the lindens.
+				  </unittitle> 
+				<unitdate type="inclusive" normal="1878"
+				encodinganalog="260$c">(1878) </unitdate> 
+				<physdesc><extent encodinganalog="300">29 p.</extent></physdesc> 
+				<note encodinganalog="500"> 
+				  <p>Translated from the German. Orginal author, Friedrich
+					 Schiller.</p> 
+				</note> 
+				<unitid label="Accession No.:" encodinganalog="099">600-3 </unitid>
+				
+				<container type="box">3 </container> 
+				<dao
+				href="../gvblack/gvb-man/man.cfm?man=600-3&amp;page=1&amp;total=27&amp;title=Walk%20under%20the%20lindens"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Persons</head> 
+				<persname encodinganalog="600" source="lcnaf">Schiller, Friedrich,
+				  1759-1805</persname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="lcsh">Lindens</subject> 
+				<subject encodinganalog="650" source="mesh">Trees</subject> 
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">Waste products of thought.
+				  </unittitle> 
+				<unitdate type="inclusive" normal="1884"
+				encodinganalog="260$c">1884</unitdate> 
+				<physdesc><extent encodinganalog="300$a">12 p.</extent></physdesc> 
+				<note encodinganalog="500"> 
+				  <p>An inaugural address before the Literary Union of
+					 Jacksonville, Illinois.</p> 
+				</note> 
+				<unitid label="Accession No.:" encodinganalog="099">600-11
+				  </unitid> 
+				<container type="box">2 </container> 
+				<dao
+				href="../gvblack/gvb-man/man.cfm?man=600-11&amp;page=1&amp;total=12&amp;title=Waste%20products%20of%20thought"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Organizations</head> 
+				<corpname encodinganalog="610" source="local">Literary Union
+				  (Jacksonville, Ill.)</corpname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="mesh">Thinking</subject> 
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">What is solution, letter to Dr.
+				  George H. Cushing replying to a question. </unittitle> 
+				<unitdate type="inclusive" normal="1883"
+				encodinganalog="260$c">(1883) </unitdate> 
+				<physdesc><extent encodinganalog="300$a">10 p.</extent></physdesc> 
+				<unitid label="Accession No.:" encodinganalog="099">540-2</unitid> 
+				<container type="box">1 </container> 
+				<dao
+				href="../gvblack/gvb-man/man.cfm?man=540-2&amp;page=1&amp;total=10&amp;title=What%20is%20solution"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Persons</head> 
+				<persname encodinganalog="600" source="local">Cushing, George
+				  H.</persname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="mesh">Solutions</subject> 
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">Wind and storm. </unittitle> 
+				<unitdate type="inclusive" normal="1882"
+				encodinganalog="260$c">(1882) </unitdate> 
+				<physdesc><extent encodinganalog="300$a">97 p.</extent></physdesc> 
+				<note encodinganalog="500"> 
+				  <p>First, second and third lectures presented before the
+					 Jacksonville, Illinois Y.M.C.A.</p> 
+				</note> 
+				<unitid label="Accession No.:" encodinganalog="099">600-9 </unitid>
+				
+				<container type="box">2 </container> 
+				<dao
+				href="../gvblack/gvb-man/man.cfm?man=600-9&amp;page=1&amp;total=97&amp;title=Wind%20and%20storm"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Organizations</head> 
+				<corpname encodinganalog="610" source="lcnaf">Young Men's Christian
+				  Association (Jacksonville, Ill.)</corpname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="mesh">Weather</subject> 
+				<subject encodinganalog="650" source="mesh">Wind</subject> 
+				<subject encodinganalog="650" source="mesh">Rain</subject> 
+			 </controlaccess> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">Zoo chemistry. </unittitle> 
+				<unitdate type="inclusive" normal="1867"
+				encodinganalog="260$c">(1867) </unitdate> 
+				<physdesc><extent encodinganalog="300">148 p.</extent></physdesc> 
+				<note encodinganalog="500"> 
+				  <p>This was used for his lectures when he conducted a class in
+					 chemistry.</p> 
+				</note> 
+				<unitid label="Accession No.:" encodinganalog="099">540-1 </unitid>
+				
+				<container type="box">1 </container> 
+				<dao
+				href="../gvblack/gvb-man/man.cfm?man=540-1&amp;page=1&amp;total=148&amp;title=Zoo%20chemistry"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="mesh">Biochemistry</subject> 
+			 </controlaccess> 
+			 <note> 
+				<p> 
+				  <ref actuate="onrequest" show="replace" target="table1">Return to
+					 Table of Contents</ref> </p> 
+			 </note> 
+		  </c02> 
+		</c01> 
+		<c01 id="ser2" level="series"> 
+		  <did> 
+			 <unittitle encodinganalog="245">Series II. Correspondence between
+				G.V. Black and F.S. McKay on mottled enamel of teeth, </unittitle> 
+			 <unitdate type="inclusive" normal="1907/1915"
+			 encodinganalog="260$c">1907-1915. </unitdate> 
+			 <container type="box">4</container> 
+		  </did> 
+		  <bioghist> 
+			 <head>Description</head> 
+			 <p> Between 1908 and 1915 Dr. Black and Dr. McKay, a practicing
+				dentist in Colorado, had a running discussion concerning mottled teeth, or
+				Colorado Brown Stain. Dr. Black spent the summer of 1909 in Colorado Springs to
+				gather information and make observations. Their work culminated in the
+				publication of Mottled teeth: an endemic developmental imperfection of the
+				enamel of the teeth heretofore unknown in the literature of dentistry. (See: 
+				<bibref> 
+				  <title>Dental cosmos, </title> 1916; vol. 58, pp. 129-153,
+				  477-484, 627-644, 781-792, 894-904</bibref>) </p> 
+			 <p> After Dr. Black's death, McKay continued their studies and
+				discovered that fluoride in drinking water was the causal agent of the
+				imperfection, noting the effect on enamel, but the lack of dental caries in
+				those who had the condition. This was a critical breakthrough in understanding
+				the etiology and prevention of dental caries. This discovery is the foundation
+				for water fluoridation, which is the single most effective public health
+				measure to inhibit tooth decay. </p> 
+		  </bioghist> 
+		  <controlaccess> 
+			 <head>Persons</head> 
+			 <persname encodinganalog="700" source="lcnaf">Black, G. V. (Greene
+				Vardiman), 1836-1915</persname> 
+			 <persname encodinganalog="700" source="local">McKay, Frederick
+				S.</persname> 
+			 <persname encodinganalog="700" source="local">Black, Arthur
+				Davenport, 1870-1937</persname> 
+		  </controlaccess> 
+		  <controlaccess> 
+			 <head>Places</head> 
+			 <geogname encodinganalog="651" source="lcnaf">Colorado</geogname> 
+		  </controlaccess> 
+		  <controlaccess> 
+			 <head>Subjects</head> 
+			 <subject encodinganalog="650" source="mesh">Fluorosis,
+				Dental--epidemiology</subject> 
+			 <subject encodinganalog="650" source="mesh">Tooth
+				Abnormalities</subject> 
+		  </controlaccess> 
+		  <arrangement> 
+			 <p>The list is arranged in chronological order</p> 
+		  </arrangement> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay </unittitle> 
+				<unitdate type="inclusive" normal="1907-09-06">(Sept. 6, 1907)
+				  </unitdate> 
+				<physdesc><extent>1 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19070906&amp;page=1&amp;total=1&amp;title=G%20V%20Black%20to%20McKay20Sept.%206,%201907"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay </unittitle> 
+				<unitdate type="inclusive" normal="1908-03-05">(Mar. 5?, 1908)
+				  </unitdate> 
+				<physdesc><extent>2 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19080305&amp;page=1&amp;total=2&amp;title=G%20V%20Black%20to%20McKay20March%205?%201908"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black </unittitle> 
+				<unitdate type="inclusive" normal="1908-03-05">(Mar. 5, 1908)
+				  </unitdate> 
+				<physdesc><extent>2 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19080305&amp;page=1&amp;total=2&amp;title=McKay%20to%20G%20V%20Black%20March%205,%201908"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black </unittitle> 
+				<unitdate type="inclusive" normal="1908-11-17">(Nov. 17, 1908)
+				  </unitdate> 
+				<physdesc><extent>5 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19081117&amp;page=1&amp;total=5&amp;title=McKay%20to%20G%20V%20Black%20Nov.%2017,%201908"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay </unittitle> 
+				<unitdate type="inclusive" normal="1908-12-07">(Dec. 7, 1908)
+				  </unitdate> 
+				<physdesc><extent>2 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19081207&amp;page=1&amp;total=2&amp;title=G%20V%20Black%20to%20McKay20Dec.%207,%201908"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black </unittitle> 
+				<unitdate type="inclusive" normal="1908-12-19">(Dec. 19, 1908)
+				  </unitdate> 
+				<physdesc><extent>1 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19081219&amp;page=1&amp;total=1&amp;title=McKay%20to%20G%20V%20Black%20Dec.%2019,%201908"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay </unittitle> 
+				<unitdate type="inclusive" normal="1908-12-24">(Dec. 24, 1908)
+				  </unitdate> 
+				<physdesc><extent>2 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19081224&amp;page=1&amp;total=2&amp;title=G%20V%20Black%20to%20McKay20Dec.%2024,%201908"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black </unittitle> 
+				<unitdate type="inclusive" normal="1909-01-27">(Jan. 27, 1909)
+				  </unitdate> 
+				<physdesc><extent>2 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19090127&amp;page=1&amp;total=2&amp;title=McKay%20to%20G%20V%20Black%20Jan.%2027,%201909"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay </unittitle> 
+				<unitdate type="inclusive" normal="1909-01-29">(Jan. 29, 1909)
+				  </unitdate> 
+				<physdesc><extent>2 p.</extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19090129&amp;page=1&amp;total=2&amp;title=G%20V%20Black%20to%20McKay20Jan.%2029,%201909"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black </unittitle> 
+				<unitdate type="inclusive" normal="1909-02-17">(Feb. 17, 1909)
+				  </unitdate> 
+				<physdesc><extent>2 p.</extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19090217&amp;page=1&amp;total=2&amp;title=McKay%20to%20G%20V%20Black%20Feb.%2017,%201909"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay </unittitle> 
+				<unitdate type="inclusive" normal="19-02-23">(Feb. 23, 1909)
+				  </unitdate> 
+				<physdesc><extent>2 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19090223&amp;page=1&amp;total=2&amp;title=G%20V%20Black%20to%20McKay20Feb.%2023,%201909"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black </unittitle> 
+				<unitdate type="inclusive" normal="1909-05-14">(May 14, 1909)
+				  </unitdate> 
+				<physdesc><extent>3 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19090514&amp;page=1&amp;total=3&amp;title=McKay%20to%20G%20V%20Black%20May%2014,%201909"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay </unittitle> 
+				<unitdate type="inclusive" normal="1909-05-19">(May 19, 1909)
+				  </unitdate> 
+				<physdesc><extent>3 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19090519&amp;page=1&amp;total=3&amp;title=G%20V%20Black%20to%20McKay20May%2019,%201909"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black </unittitle> 
+				<unitdate type="inclusive" normal="1909-05-20">(May 20, 1909)
+				  </unitdate> 
+				<physdesc><extent>1 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19090520&amp;page=1&amp;total=1&amp;title=McKay%20to%20G%20V%20Black%20May%2020,%201909"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay </unittitle> 
+				<unitdate type="inclusive" normal="1909-05-24">(May 24, 1909)
+				  </unitdate> 
+				<physdesc><extent>1 p.</extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19090524&amp;page=1&amp;total=1&amp;title=G%20V%20Black%20to%20McKay20May%2024,%201909"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black </unittitle> 
+				<unitdate type="inclusive" normal="1909-05-26">(May 26, 1909)
+				  </unitdate> 
+				<physdesc><extent>3 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19090526&amp;page=1&amp;total=3&amp;title=McKay%20to%20G%20V%20Black%20May%2026,%201909"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black </unittitle> 
+				<unitdate type="inclusive" normal="1909-05-28">(May 28, 1909)
+				  </unitdate> 
+				<physdesc><extent>1 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19090528&amp;page=1&amp;total=1&amp;title=McKay%20to%20G%20V%20Black%20May%2028,%201909"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay </unittitle> 
+				<unitdate type="inclusive" normal="1909-05-29">(May 29, 1909)
+				  </unitdate> 
+				<physdesc><extent>2 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19090529&amp;page=1&amp;total=2&amp;title=G%20V%20Black%20to%20McKay20May%2029,%201909"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black </unittitle> 
+				<unitdate type="inclusive" normal="1909-06-17">(June 17, 1909)
+				  </unitdate> 
+				<physdesc><extent>1 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19090617&amp;page=1&amp;total=1&amp;title=McKay%20to%20G%20V%20Black%20June%2017,%201909"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay </unittitle> 
+				<unitdate type="inclusive" normal="1909-07-03">(July 3, 1909)
+				  </unitdate> 
+				<physdesc><extent>2 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19090703&amp;page=1&amp;total=2&amp;title=G%20V%20Black%20to%20McKay20July%203,%201909"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay </unittitle> 
+				<unitdate type="inclusive" normal="1909-07-08">(July 8, 1909)
+				  </unitdate> 
+				<physdesc><extent>1 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19090708&amp;page=1&amp;total=1&amp;title=G%20V%20Black%20to%20McKay20July%208,%201909"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay </unittitle> 
+				<unitdate type="inclusive" normal="1909-08-20">(Aug. 20, 1909)
+				  </unitdate> 
+				<physdesc><extent>1 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19090820&amp;page=1&amp;total=1&amp;title=G%20V%20Black%20to%20McKay20Aug.%2020,%201909"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black </unittitle> 
+				<unitdate type="inclusive" normal="1909-08-26">(Aug. 26, 1909)
+				  </unitdate> 
+				<physdesc><extent>2 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19090826&amp;page=1&amp;total=2&amp;title=McKay%20to%20G%20V%20Black%20Aug.%2026,%201909"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay </unittitle> 
+				<unitdate type="inclusive" normal="1909-09-02">(Sept. 2, 1909)
+				  </unitdate> 
+				<physdesc><extent>3 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19090902&amp;page=1&amp;total=3&amp;title=G%20V%20Black%20to%20McKay20Sept.%202,%201909"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay </unittitle> 
+				<unitdate type="inclusive" normal="1909-09-03">(Sept. 3, 1909)
+				  </unitdate> 
+				<physdesc><extent>3 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19090903&amp;page=1&amp;total=3&amp;title=G%20V%20Black%20to%20McKay20Sept.%203%201909"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay </unittitle> 
+				<unitdate type="inclusive" normal="1909-09-04">(Sept. 4, 1909)
+				  </unitdate> 
+				<physdesc><extent>1 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19090904&amp;page=1&amp;total=1&amp;title=G%20V%20Black%20to%20McKay20Sept.%204,%201909"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black </unittitle> 
+				<unitdate type="inclusive" normal="1909-09-10">(Sept. 10, 1909)
+				  </unitdate> 
+				<physdesc><extent>2 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19090910&amp;page=1&amp;total=2&amp;title=McKay%20to%20G%20V%20Black%20Sept.%2010,%201909"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay </unittitle> 
+				<unitdate type="inclusive" normal="1909-09-14">(Sept. 14, 1909)
+				  </unitdate> 
+				<physdesc><extent>2 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19090914&amp;page=1&amp;total=2&amp;title=G%20V%20Black%20to%20McKay20Sept.%2014,%201909"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black </unittitle> 
+				<unitdate type="inclusive" normal="1909-09-20">(Sept. 20, 1909)
+				  </unitdate> 
+				<physdesc><extent>3 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19090920&amp;page=1&amp;total=3&amp;title=McKay%20to%20G%20V%20Black%20Sept.%2020,%201909"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black </unittitle> 
+				<unitdate type="inclusive" normal="1909-10-26">(Oct. 26, 1909)
+				  </unitdate> 
+				<physdesc><extent>8 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19091026&amp;page=1&amp;total=8&amp;title=McKay%20to%20G%20V%20Black%20Oct.%2026,%201909"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black </unittitle> 
+				<unitdate type="inclusive" normal="1909-10-29">(Oct. 29, 1909)
+				  </unitdate> 
+				<physdesc><extent>2 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19091029&amp;page=1&amp;total=2&amp;title=McKay%20to%20G%20V%20Black%20Oct.%2029,%201909"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay </unittitle> 
+				<unitdate type="inclusive" normal="1909-11-01">(Nov. 1, 1909)
+				  </unitdate> 
+				<physdesc><extent>2 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19091101&amp;page=1&amp;total=2&amp;title=G%20V%20Black%20to%20McKay20Nov.%201,%201909"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black </unittitle> 
+				<unitdate type="inclusive" normal="1909-12-23">(Dec. 23, 1909)
+				  </unitdate> 
+				<physdesc><extent>3 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19091223&amp;page=1&amp;total=3&amp;title=McKay%20to%20G%20V%20Black%20Dec.%2023,%201909"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black </unittitle> 
+				<unitdate type="inclusive" normal="1909-12-26">(Dec. 26, 1909)
+				  </unitdate> 
+				<physdesc><extent>4 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19091223&amp;page=1&amp;total=4&amp;title=McKay%20to%20G%20V%20Black%20Dec.%2026,%201909"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay </unittitle> 
+				<unitdate type="inclusive" normal="1909-12-31">(Dec. 31, 1909)
+				  </unitdate> 
+				<physdesc><extent>1 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19091231&amp;page=1&amp;total=1&amp;title=G%20V%20Black%20to%20McKay20Dec.%2031,%201909"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay </unittitle> 
+				<unitdate type="inclusive" normal="1910-01-17">(Jan. 17, 1910)
+				  </unitdate> 
+				<physdesc><extent>6 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19100117&amp;page=1&amp;total=6&amp;title=G%20V%20Black%20to%20McKay20Jan.%2017,%201910"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black </unittitle> 
+				<unitdate type="inclusive" normal="1910-02-06">(Feb. 6, 1910)
+				  </unitdate> 
+				<physdesc><extent>6 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19100206&amp;page=1&amp;total=6&amp;title=McKay%20to%20G%20V%20Black%20Feb.%206,%201910"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay </unittitle> 
+				<unitdate type="inclusive" normal="1910-02-09">(Feb. 9, 1910)
+				  </unitdate> 
+				<physdesc><extent>3 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19100209&amp;page=1&amp;total=3&amp;title=G%20V%20Black%20to%20McKay20Feb.%209,%201910"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black </unittitle> 
+				<unitdate type="inclusive" normal="1910-03-04">(Mar. 4, 1910)
+				  </unitdate> 
+				<physdesc><extent>4 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19100304&amp;page=1&amp;total=4&amp;title=McKay%20to%20G%20V%20Black%20March%204,%201910"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black </unittitle> 
+				<unitdate type="inclusive" normal="1910-03-25">(Mar. 25, 1910)
+				  </unitdate> 
+				<physdesc><extent>1 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19100325&amp;page=1&amp;total=1&amp;title=McKay%20to%20G%20V%20Black%20March%2025,%201910"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay </unittitle> 
+				<unitdate type="inclusive" normal="1910-03-31">(Mar. 31, 1910)
+				  </unitdate> 
+				<physdesc><extent>1 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19100331&amp;page=1&amp;total=1&amp;title=G%20V%20Black%20to%20McKay20March%2031,%201910"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black </unittitle> 
+				<unitdate type="inclusive" normal="1910-04-17">(Apr. 17, 1910)
+				  </unitdate> 
+				<physdesc><extent>9 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19100417&amp;page=1&amp;total=9&amp;title=McKay%20to%20G%20V%20Black%20April%2017,%201910"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay </unittitle> 
+				<unitdate type="inclusive" normal="1910-05-05">(May 5, 1910)
+				  </unitdate> 
+				<physdesc><extent>3 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19100505&amp;page=1&amp;total=3&amp;title=G%20V%20Black%20to%20McKay20May%205,%201910"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay </unittitle> 
+				<unitdate type="inclusive" normal="1910-07-14">(July 14, 1910)
+				  </unitdate> 
+				<physdesc><extent>2 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19100714&amp;page=1&amp;total=2&amp;title=G%20V%20Black%20to%20McKay20July%2014,%201910"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black </unittitle> 
+				<unitdate type="inclusive" normal="1910-07-31">(July 31, 1910)
+				  </unitdate> 
+				<physdesc><extent>8 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19100731&amp;page=1&amp;total=8&amp;title=McKay%20to%20G%20V%20Black%20July%2031,%201910"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay </unittitle> 
+				<unitdate type="inclusive" normal="1910-10-19">(Oct. 19, 1910)
+				  </unitdate> 
+				<physdesc><extent>4 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19101019&amp;page=1&amp;total=4&amp;title=G%20V%20Black%20to%20McKay20Oct.%2014,%201910"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay </unittitle> 
+				<unitdate type="inclusive" normal="1910-11-03">(Nov. 3, 1910)
+				  </unitdate> 
+				<physdesc><extent>1 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19101103&amp;page=1&amp;total=1&amp;title=G%20V%20Black%20to%20McKay20Nov.%203,%201910"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black </unittitle> 
+				<unitdate type="inclusive" normal="1911-01-08">(Jan. 8, 1911)
+				  </unitdate> 
+				<physdesc><extent>8 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19110108&amp;page=1&amp;total=8&amp;title=McKay%20to%20G%20V%20Black%20Jan.%208,%201911"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay </unittitle> 
+				<unitdate type="inclusive" normal="1911-01-21">(Jan. 21, 1911)
+				  </unitdate> 
+				<physdesc><extent>3 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19110121&amp;page=1&amp;total=3&amp;title=G%20V%20Black%20to%20McKay20Jan.%2021,%201911"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black </unittitle> 
+				<unitdate type="inclusive" normal="1911-09-21">(Sept. 21, 1911)
+				  </unitdate> 
+				<physdesc><extent>4 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19110921&amp;page=1&amp;total=4&amp;title=McKay%20to%20G%20V%20Black%20Sept.%2021,%201911"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black </unittitle> 
+				<unitdate type="inclusive" normal="1911-09-22">(Sept. 22, 1911)
+				  </unitdate> 
+				<physdesc><extent>2 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19110922&amp;page=1&amp;total=2&amp;title=McKay%20to%20G%20V%20Black%20Sept.%2022,%201911"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay </unittitle> 
+				<unitdate type="inclusive" normal="1911-09-27">(Sept. 27, 1911)
+				  </unitdate> 
+				<physdesc><extent>3 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19110927&amp;page=1&amp;total=3&amp;title=G%20V%20Black%20to%20McKay20Sept.%2027,%201911"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black </unittitle> 
+				<unitdate type="inclusive" normal="1911-10-10">(Oct. 10, 1911)
+				  </unitdate> 
+				<physdesc><extent>2 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19111010&amp;page=1&amp;total=2&amp;title=McKay%20to%20G%20V%20Black%20Oct.%2010,%201911"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay </unittitle> 
+				<unitdate type="inclusive" normal="1911-10-14">(Oct. 14, 1911)
+				  </unitdate> 
+				<physdesc><extent>1 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19111014&amp;page=1&amp;total=1&amp;title=G%20V%20Black%20to%20McKay20Oct.%2014,%201911"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black </unittitle> 
+				<unitdate type="inclusive" normal="1911-10-22">(Oct. 22, 1911)
+				  </unitdate> 
+				<physdesc><extent>3 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19111022&amp;page=1&amp;total=3&amp;title=McKay%20to%20G%20V%20Black%20Oct.%2022,%201911"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay </unittitle> 
+				<unitdate type="inclusive" normal="1911-11-16">(Nov. 16, 1911)
+				  </unitdate> 
+				<physdesc><extent>2 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19111116&amp;page=1&amp;total=2&amp;title=G%20V%20Black%20to%20McKay20Nov.%2016,%201911"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black</unittitle> 
+				<unitdate type="inclusive" normal="1912-01-14">(Jan. 14,
+				  1912)</unitdate> 
+				<physdesc><extent>1 p.</extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19120114&amp;page=1&amp;total=1&amp;title=McKay%20to%20G%20V%20Black%20Jan%2014%201912"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay</unittitle> 
+				<unitdate type="inclusive" normal="1912-01-18">(Jan. 18,
+				  1912)</unitdate> 
+				<physdesc><extent>1 p.</extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19120118&amp;page=1&amp;total=1&amp;title=G%20V%20Black%20to%20McKay20Jan%2018%201912"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black </unittitle> 
+				<unitdate type="inclusive" normal="1912-02-27">(Feb. 27, 1912)
+				  </unitdate> 
+				<physdesc><extent>19 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19120227&amp;page=1&amp;total=19&amp;title=McKay%20to%20G%20V%20Black%20Feb.%2027,%201912"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black </unittitle> 
+				<unitdate type="inclusive" normal="1912-02-27">(Feb. 27, 1912)
+				  </unitdate> 
+				<physdesc><extent>12 p. </extent></physdesc> 
+				<note> 
+				  <p>Typed transcription of the original.</p> 
+				</note> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19120227t&amp;page=1&amp;total=12&amp;title=McKay%20to%20G%20V%20Black%20Feb.%2027,%201912"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black </unittitle> 
+				<unitdate type="inclusive" normal="1912-06-06">(June 6, 1912)
+				  </unitdate> 
+				<physdesc><extent>6 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19120606&amp;page=1&amp;total=6&amp;title=McKay%20to%20G%20V%20Black%20June%206,%201912"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay </unittitle> 
+				<unitdate type="inclusive" normal="1912-06-24">(June 24, 1912)
+				  </unitdate> 
+				<physdesc><extent>2 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19120624&amp;page=1&amp;total=2&amp;title=G%20V%20Black%20to%20McKay20June%2024,%201912"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay </unittitle> 
+				<unitdate type="inclusive" normal="1912-06-25">(June 25, 1912)
+				  </unitdate> 
+				<physdesc><extent>3 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19120625&amp;page=1&amp;total=3&amp;title=G%20V%20Black%20to%20McKay20June%2025,%201912"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black </unittitle> 
+				<unitdate type="inclusive" normal="1912-08-30">(Aug. 30, 1912)
+				  </unitdate> 
+				<physdesc><extent>1 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19120830&amp;page=1&amp;total=1&amp;title=McKay%20to%20G%20V%20Black%20Aug.%2030,%201912"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black </unittitle> 
+				<unitdate type="inclusive" normal="1912-10-07">(Oct. 7, 1912)
+				  </unitdate> 
+				<physdesc><extent>2 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19121007&amp;page=1&amp;total=2&amp;title=McKay%20to%20G%20V%20Black%20Oct.%207,%201912"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay </unittitle> 
+				<unitdate type="inclusive" normal="1912-12-12">(Dec. 12, 1912)
+				  </unitdate> 
+				<physdesc><extent>5 p. </extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19121212&amp;page=1&amp;total=5&amp;title=G%20V%20Black%20to%20McKay20Dec.%2012,%201912"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black</unittitle> 
+				<unitdate type="inclusive" normal="1913-02-23">(Feb. 23,
+				  1913)</unitdate> 
+				<physdesc><extent>10 p.</extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19130223&amp;page=1&amp;total=10&amp;title=McKay%20to%20G%20V%20Black%20Feb%2023%201913"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black</unittitle> 
+				<unitdate type="inclusive" normal="1913-02-25">(Feb. 25,
+				  1913)</unitdate> 
+				<physdesc><extent>1 p.</extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19130225&amp;page=1&amp;total=1&amp;title=McKay%20to%20G%20V%20Black%20Feb%2025%201913"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay</unittitle> 
+				<unitdate type="inclusive" normal="1913-02-28">(Feb. 28,
+				  1913)</unitdate> 
+				<physdesc><extent>1 p.</extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19130228&amp;page=1&amp;total=1&amp;title=G%20V%20Black%20to%20McKay20Feb%2028%201913"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay</unittitle> 
+				<unitdate type="inclusive" normal="1913-03-18">(Mar. 18,
+				  1913)</unitdate> 
+				<physdesc><extent>2 p.</extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19130318&amp;page=1&amp;total=2&amp;title=G%20V%20Black%20to%20McKay20March%2018%201913"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay</unittitle> 
+				<unitdate type="inclusive" normal="1913-03-18">(Mar. 18,
+				  1913)</unitdate> 
+				<physdesc><extent>4 p.</extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19130318a&amp;page=1&amp;total=4&amp;title=G%20V%20Black%20to%20McKay20March%2018%201913"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black</unittitle> 
+				<unitdate type="inclusive" normal="1913-10-07">(Oct. 7,
+				  1913)</unitdate> 
+				<physdesc><extent>5 p.</extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19131007&amp;page=1&amp;total=5&amp;title=McKay%20to%20G%20V%20Black%20Oct%207%201913"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay</unittitle> 
+				<unitdate type="inclusive" normal="1913-12-04">(Dec. 4,
+				  1913)</unitdate> 
+				<physdesc><extent>4 p.</extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19131204&amp;page=1&amp;total=4&amp;title=G%20V%20Black%20to%20McKay20Dec%204%201913"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black</unittitle> 
+				<unitdate type="inclusive" normal="1913-12-28">(Dec. 28,
+				  1913)</unitdate> 
+				<physdesc><extent>4 p.</extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19131228&amp;page=1&amp;total=4&amp;title=McKay%20to%20G%20V%20Black%20Dec%2028%201913"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay</unittitle> 
+				<unitdate type="inclusive" normal="1914-01-30">(Jan. 30,
+				  1914)</unitdate> 
+				<physdesc><extent>2 p.</extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19140130&amp;page=1&amp;total=2&amp;title=G%20V%20Black%20to%20McKay20Jan%2030%201914"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to A.D. Black</unittitle> 
+				<unitdate type="inclusive" normal="1914-10-23">(Oct. 23,
+				  1914)</unitdate> 
+				<physdesc><extent>2 p.</extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19141023&amp;page=1&amp;total=2&amp;title=McKay%20to%20A%20D%20Black%20Oct%2023%201914"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>A.D. Black to McKay</unittitle> 
+				<unitdate type="inclusive" normal="1914-11-14">(Nov. 14,
+				  1914)</unitdate> 
+				<physdesc><extent>1 p.</extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19141114&amp;page=1&amp;total=1&amp;title=A%20D%20Black%20to%20McKay20Nov%2014%201914"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black</unittitle> 
+				<unitdate type="inclusive" normal="1914-11-14">(Nov. 14,
+				  1914)</unitdate> 
+				<physdesc><extent>2 p.</extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19141114&amp;page=1&amp;total=2&amp;title=McKay%20to%20G%20V%20Black%20Nov%2014%201914"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to A.D. Black</unittitle> 
+				<unitdate type="inclusive" normal="1915-01-22">(Jan. 22,
+				  1915)</unitdate> 
+				<physdesc><extent>2 p.</extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19150122&amp;page=1&amp;total=2&amp;title=McKay%20to%20A%20D%20Black%20Jan%2022%201915"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>A.D. Black to McKay</unittitle> 
+				<unitdate type="inclusive" normal="1915-01-23">(Jan. 23,
+				  1915)</unitdate> 
+				<physdesc><extent>2 p.</extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19150123&amp;page=1&amp;total=2&amp;title=A%20D%20Black%20to%20McKay20Jan%2023%201915"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay</unittitle> 
+				<unitdate type="inclusive" normal="1915-02-19">(Feb. 19,
+				  1915)</unitdate> 
+				<physdesc><extent>2 p.</extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19150219&amp;page=1&amp;total=2&amp;title=G%20V%20Black%20to%20McKay20Feb%2019%201915"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black</unittitle> 
+				<unitdate type="inclusive" normal="1915-02-23">(Feb. 23,
+				  1915)</unitdate> 
+				<physdesc><extent>3 p.</extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19150223&amp;page=1&amp;total=3&amp;title=McKay%20to%20G%20V%20Black%20Feb%2023%201915"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay</unittitle> 
+				<unitdate type="inclusive" normal="1915-03-03">(Mar. 3,
+				  1915)</unitdate> 
+				<physdesc><extent>2 p.</extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19150303&amp;page=1&amp;total=2&amp;title=G%20V%20Black%20to%20McKay20March%203%201915"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay</unittitle> 
+				<unitdate type="inclusive" normal="1915-04-09">(Apr. 9,
+				  1915)</unitdate> 
+				<physdesc><extent>2 p.</extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19150409&amp;page=1&amp;total=2&amp;title=G%20V%20Black%20to%20McKay20April%209%201915"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black</unittitle> 
+				<unitdate type="inclusive" normal="1915-04-12">(Apr. 12,
+				  1915)</unitdate> 
+				<physdesc><extent>4 p.</extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19150412&amp;page=1&amp;total=4&amp;title=McKay%20to%20G%20V%20Black%20April%2012%201915"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay</unittitle> 
+				<unitdate type="inclusive" normal="1915-04-20">(Apr. 20,
+				  1915)</unitdate> 
+				<physdesc><extent>2 p.</extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19150420&amp;page=1&amp;total=2&amp;title=G%20V%20Black%20to%20McKay20April%2020%201915"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black</unittitle> 
+				<unitdate type="inclusive" normal="1915-04-24">(Apr. 24,
+				  1915)</unitdate> 
+				<physdesc><extent>4 p.</extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19150424&amp;page=1&amp;total=4&amp;title=McKay%20to%20G%20V%20Black%20April%2014%201915"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay</unittitle> 
+				<unitdate type="inclusive" normal="1915-04-29">(Apr. 29,
+				  1915)</unitdate> 
+				<physdesc><extent>2 p.</extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19150429&amp;page=1&amp;total=2&amp;title=G%20V%20Black%20to%20McKay20April%2029%201915"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay</unittitle> 
+				<unitdate type="inclusive" normal="1915-04-29">(Apr. 29,
+				  1915)</unitdate> 
+				<note> 
+				  <p>(Another version)</p> 
+				</note> 
+				<physdesc><extent>1 p.</extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19150429a&amp;page=1&amp;total=2&amp;title=G%20V%20Black%20to%20McKay20April%2029%201915"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay</unittitle> 
+				<unitdate type="inclusive" normal="1915-05-10">(May 10,
+				  1915)</unitdate> 
+				<physdesc><extent>1 p.</extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19150510&amp;page=1&amp;total=1&amp;title=G%20V%20Black%20to%20McKay20May%2010%201915"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay</unittitle> 
+				<unitdate type="inclusive" normal="1915-05-11">(May 11,
+				  1915)</unitdate> 
+				<physdesc><extent>1 p.</extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19150511&amp;page=1&amp;total=1&amp;title=G%20V%20Black%20to%20McKay20May%2011%201915"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay</unittitle> 
+				<unitdate type="inclusive" normal="1915-05-14">(May 14,
+				  1915)</unitdate> 
+				<physdesc><extent>2 p.</extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19150514&amp;page=1&amp;total=2&amp;title=G%20V%20Black%20to%20McKay20May%2014%201915"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black</unittitle> 
+				<unitdate type="inclusive" normal="1915-05-17">(May 17,
+				  1915)</unitdate> 
+				<physdesc><extent>2 p.</extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19150517&amp;page=1&amp;total=2&amp;title=McKay%20to%20G%20V%20Black%20May%2017%201915"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay</unittitle> 
+				<unitdate type="inclusive" normal="1915-05-27">(May 27,
+				  1915)</unitdate> 
+				<physdesc><extent>1 p.</extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19150527&amp;page=1&amp;total=1&amp;title=G%20V%20Black%20to%20McKay20May%2027%201915"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>McKay to G.V. Black</unittitle> 
+				<unitdate type="inclusive" normal="1915-05-30">(May 30,
+				  1915)</unitdate> 
+				<physdesc><extent>3 p.</extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=m19150530&amp;page=1&amp;total=3&amp;title=McKay%20to%20G%20V%20Black%20May%2030%201915"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>G.V. Black to McKay</unittitle> 
+				<unitdate type="inclusive" normal="1915-07-20">(July 20,
+				  1915)</unitdate> 
+				<physdesc><extent>1 p.</extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19150720&amp;page=1&amp;total=1&amp;title=G%20V%20Black%20to%20McKay20July%2020%201915"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle>A.D. Black to McKay</unittitle> 
+				<unitdate type="inclusive" normal="1915-07-24">(July 24,
+				  1915)</unitdate> 
+				<physdesc><extent>1 p.</extent></physdesc> 
+				<dao
+				href="../gvblack/gvb-ltr/ltr.cfm?ltr=b19150724&amp;page=1&amp;total=1&amp;title=A%20D%20Black%20to%20McKay20July%2024%201915"
+				actuate="onrequest" show="new"> 
+				  <daodesc> 
+					 <p>Digital Images</p> 
+				  </daodesc> 
+				</dao> 
+			 </did> 
+			 <note> 
+				<p> 
+				  <ref actuate="onrequest" show="replace" target="table1">Return to
+					 Table of Contents</ref> </p> 
+			 </note> 
+		  </c02> 
+		</c01> 
+		<c01 id="ser3" level="series"> 
+		  <did> 
+			 <unittitle encodinganalog="245">Series III. Documents,
+				correspondence, ephemera, and a photograph relating to the World's Columbian
+				Dental Congress, Chicago, Illinois, 
+				<unitdate type="inclusive" normal="1892/1893"
+				encodinganalog="260$c">1892-1893. </unitdate></unittitle> 
+			 <container type="box">5</container> 
+			 <abstract> The World's Columbian Dental Congress was held in Chicago,
+				Illinois, August 1893, in conjunction with the World's Columbian Exposition of
+				1893. The transactions of the Congress were published in a 2 volume set (cited
+				below): 
+				<bibref> 
+				  <corpname encodinganalog="610" source="local">World's Columbian
+					 Dental Congress (1893 : Chicago, Ill.).</corpname> 
+				  <title><emph render="italic">Transactions of the World's
+					 Columbian Dental Congress.</emph></title> <imprint> 
+				  <geogname encodinganalog="651" source="lcnaf">Chicago (Ill.)
+					 :</geogname> 
+				  <publisher>Knight, Leonard &amp; Co.,</publisher> 
+				  <date>1894.</date> </imprint> </bibref> The documents and
+				correspondence provide some insight into the planning for the Congress. Dr.
+				Black was the Chairman of the World's Columbian Dental Congress Committee on
+				Nomenclature. </abstract> 
+		  </did> 
+		  <controlaccess> 
+			 <head>Organizations</head> 
+			 <corpname encodinganalog="610" source="local">World's Columbian
+				Dental Congress (1893 : Chicago, Ill.)</corpname> 
+			 <corpname encodinganalog="610" source="local">World's Columbian
+				Dental Congress (1893 : Chicago, Ill.). Committee on Nomenclature</corpname> 
+			 <corpname encodinganalog="610" source="lcnaf">World's Columbian
+				Exposition (1893 : Chicago, Ill.)</corpname> 
+		  </controlaccess> 
+		  <controlaccess> 
+			 <head>Places</head> 
+			 <geogname encodinganalog="651" source="lcnaf">Chicago
+				(Ill.)</geogname> 
+		  </controlaccess> 
+		  <controlaccess> 
+			 <head>Subjects</head> 
+			 <subject encodinganalog="650" source="mesh">Dentistry</subject> 
+		  </controlaccess> 
+		  <c02 level="subseries"> 
+			 <did> 
+				<unittitle>Documents.</unittitle> 
+			 </did> 
+			 <c03> 
+				<did> 
+				  <unittitle>Preliminary communication from the Committee on
+					 Essays, World's Columbian Dental Congress </unittitle> 
+				  <unitdate type="inclusive" normal="1892-09-24">(September 24,
+					 1892) </unitdate> 
+				  <physdesc><extent>2 p. </extent></physdesc> 
+				  <dao
+				  href="../gvblack/wcdc-doc/doc.cfm?doc=prelim&amp;page=1&amp;total=2&amp;title=Preliminary%20communication"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>The general programme of the World's Congresses of 
+					 <unitdate type="inclusive" normal="1893">1893.</unitdate>
+					 </unittitle> 
+				  <physdesc><extent>18 p. </extent></physdesc> 
+				  <dao
+				  href="../gvblack/wcdc-doc/doc.cfm?doc=prog&amp;page=1&amp;total=18&amp;title=General%20programme"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>The World's Congress Auxiliary of the World's
+					 Columbian Exposition of 
+					 <unitdate type="inclusive" normal="1893">1893.</unitdate>
+					 </unittitle> 
+				  <physdesc><extent>3 p. </extent></physdesc> 
+				  <dao
+				  href="../gvblack/wcdc-doc/doc.cfm?doc=aux&amp;page=1&amp;total=3&amp;title=Worlds%20Congress%20Auxililary"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<scopecontent> 
+				  <p>A brochure that provides general information about the World
+					 Congresses held in conjunction with the World's Columbian Exposition, including
+					 location of the meetings, registration, publications, dates and hotels.</p> 
+				</scopecontent> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>The World's Columbian Dental Congress, Chicago,
+					 Illinois, 
+					 <unitdate type="inclusive"
+					 normal="1893-08-14/1893-08-19">August 14-19, 1893.</unitdate> </unittitle> 
+				  <physdesc><extent>4 p. </extent></physdesc> 
+				  <dao
+				  href="../gvblack/wcdc-doc/doc.cfm?doc=dent&amp;page=1&amp;total=4&amp;title=Worlds%20Columbian%20Dental%20Congress"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<scopecontent> 
+				  <p>A circular addressed to dentists in the Western Hemisphere
+					 announcing the Congress.</p> 
+				</scopecontent> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>World's Columbian Dental Congress, Committee on
+					 Nomenclature </unittitle> 
+				  <unitdate type="inclusive" normal="1893-02-20">(Feb. 20,
+					 1893)</unitdate> 
+				  <physdesc><extent>18 p. </extent></physdesc> 
+				  <dao
+				  href="../gvblack/wcdc-doc/doc.cfm?doc=com&amp;page=1&amp;total=18&amp;title=Committee%20on%20Nomenclature"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<scopecontent> 
+				  <p>A pamphlet prepared by Dr. Black listing questions to be
+					 answered by the Committee, and specifying its duties and responsibilities.</p> 
+				</scopecontent> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>The World's Columbian Dental Congress to be held in
+					 Chicago, August 14th to 19th inclusive, 1893 </unittitle> 
+				  <unitdate type="inclusive" normal="1893">(1893) </unitdate> 
+				  <physdesc><extent>1 p. </extent></physdesc> 
+				  <dao
+				  href="../gvblack/wcdc-doc/doc.cfm?doc=sub&amp;page=1&amp;total=1&amp;title=Fund%20raising%20"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<scopecontent> 
+				  <p>A form letter addressed to dentists in Illinois soliciting
+					 their support for the Congress. Prepared by the Finance Committee for
+					 Illinois.</p> 
+				</scopecontent> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>Questions for the state committees of the World's
+					 Columbian Dental meeting </unittitle> 
+				  <unitdate type="inclusive" normal="1893">(1893) </unitdate> 
+				  <physdesc><extent>1 p. </extent></physdesc> 
+				  <dao
+				  href="../gvblack/wcdc-doc/doc.cfm?doc=ques&amp;page=1&amp;total=1&amp;title=Survey%20questionnaire"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<scopecontent> 
+				  <p>A survey questionnaire for dentists in various states.</p> 
+				</scopecontent> 
+			 </c03> 
+		  </c02> 
+		  <c02 level="subseries"> 
+			 <did> 
+				<unittitle>Correspondence.</unittitle> 
+			 </did> 
+			 <c03> 
+				<did> 
+				  <unittitle>A.O. Hunt to G.V. Black</unittitle> 
+				  <unitdate>(Sept. 10, 1892)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=hunt18920910&amp;page=1&amp;total=1&amp;title=Hunt%20to%20Black%20Sept%2010%201892"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="local">Hunt, A.
+					 O.</persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>A.O. Hunt to G.V. Black</unittitle> 
+				  <unitdate>(Sept. 30, 1892)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=hunt18920930&amp;page=1&amp;total=1&amp;title=Hunt%20to%20Black%20Sept%2030%201892"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="local">Hunt, A.
+					 O.</persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>G.V. Black to A.O. Hunt</unittitle> 
+				  <unitdate>(Oct. 9, 1892)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=hunt18921009&amp;page=1&amp;total=1&amp;title=Black%20to%20Hunt%20Octt%209%201892"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="local">Hunt, A.
+					 O.</persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>A.O. Hunt to G.V. Black</unittitle> 
+				  <unitdate>(Oct. 12, 1892)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=hunt18921012&amp;page=1&amp;total=1&amp;title=Hunt%20to%20Black%20Oct%2012%201892"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="local">Hunt, A.
+					 O.</persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>G.V. Black to E.C. Kirk (and other Committee
+					 members)</unittitle> 
+				  <unitdate>(Oct. 13, 1892)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=black18921013&amp;page=1&amp;total=1&amp;title=Black%20to%20Kirk%20Oct%2013%201892"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="lcnaf">Kirk, Edward C.
+					 (Edward Cameron), 1856-1933</persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>G.V. Black to A.O. Hunt</unittitle> 
+				  <unitdate>(Oct. 14, 1892)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=black18921014&amp;page=1&amp;total=1&amp;title=Black%20to%20Hunt%20Oct%2014%201892"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="local">Hunt, A.
+					 O.</persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>C.T. Stockwell to G.V. Black</unittitle> 
+				  <unitdate>(Oct. 18, 1892)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=stockwell18921018&amp;page=1&amp;total=4&amp;title=Stockwell%20to%20Black%20Oct%2018%201892"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="local">Stockwell, C.
+					 T.</persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>J.S. Cassidy to G.V. Black</unittitle> 
+				  <unitdate>(Oct. 19, 1892)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=cassidy18921019&amp;page=1&amp;total=1&amp;title=Cassidy%20to%20Black%20Oct%2019%201892"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="local">Cassidy, J. S.
+					 </persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>E.C. Kirk to G.V. Black</unittitle> 
+				  <unitdate>(Oct. 20, 1892)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=kirk18921020&amp;page=1&amp;total=2&amp;title=Kirk%20to%20Black%20Oct%2020%201892"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="lcnaf">Kirk, Edward C.
+					 (Edward Cameron), 1856-1933</persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>E.C. Kirk to G.V. Black</unittitle> 
+				  <unitdate>(Oct. 29, 1892)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=kirk18921029&amp;page=1&amp;total=1&amp;title=Kirk%20to%20Black%20Oct%2029%201892"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="lcnaf">Kirk, Edward C.
+					 (Edward Cameron), 1856-1933</persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>J.L. Howe to G.V. Black</unittitle> 
+				  <unitdate>(Nov. 1892)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=howe189211&amp;page=1&amp;total=2&amp;title=Howe%20to%20Black%20Nov%201892"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="lcnaf">Howe, James Lewis,
+					 1859-</persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>M.C. Gottschaldt to G.V. Black</unittitle> 
+				  <unitdate>(Nov. 1892)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=gottschaldt189211&amp;page=1&amp;total=1&amp;title=Gottschaldt%20to%20Black%20Nov%201892"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="local">Gottschaldt, M. C.
+					 </persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>A.O. Hunt to G.V. Black</unittitle> 
+				  <unitdate>(Nov. 7, 1892)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=hunt18921107&amp;page=1&amp;total=1&amp;title=Hunt%20to%20Black%20Nov%207%201892"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="local">Hunt, A.
+					 O.</persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>G.V. Black memo</unittitle> 
+				  <unitdate>(Nov. 28, 1892)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=black18921128&amp;page=1&amp;total=1&amp;title=Black%20memo%20Nov%2028%201892"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>G.V. Black to H.C. Bolton</unittitle> 
+				  <unitdate>(Nov. 28, 1892)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=black18921128&amp;page=1&amp;total=1&amp;title=Black%20to%20Bolton%20Nov%2028%201892"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="lcnaf">Bolton, Henry
+					 Carrington, 1843-1903</persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>W.O. Kulp to G.V. Black</unittitle> 
+				  <unitdate>(Nov. 30, 1892)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=kulp18921130&amp;page=1&amp;total=2&amp;title=Kulp%20to%20Black%20Nov%2030%201892"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="local">Kulp, William
+					 O.</persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>H.C. Bolton to G.V. Black</unittitle> 
+				  <unitdate>(Dec. 1, 1892)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=bolton18921201&amp;page=1&amp;total=2&amp;title=Bolton%20to%20Black%20Dec%201%201892"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="lcnaf">Bolton, Henry
+					 Carrington, 1843-1903</persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>G.V. Black to G.H. Cushing</unittitle> 
+				  <unitdate>(Dec. 1, 1892)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=black18921201&amp;page=1&amp;total=2&amp;title=Black%20to%20Cushing%20Dec%201%201892"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="local">Cushing, George
+					 H.</persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>C.N. Johnson to G.V. Black</unittitle> 
+				  <unitdate>(Dec. 5, 1892)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=johnson18921205&amp;page=1&amp;total=2&amp;title=Johnson%20to%20Black%20Dec%205%201892"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="lcnaf">Johnson, Charles
+					 Nelson, 1860-1938</persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>A.H. Fuller to G.V. Black</unittitle> 
+				  <unitdate>(Dec. 12, 1892)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=fuller18921212&amp;page=1&amp;total=2&amp;title=Fuller%20to%20Black%20Dec%2012%201892"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="local">Fuller, A.
+					 H.</persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>A.H. Thompson to G.V. Black</unittitle> 
+				  <unitdate>(Dec. 15, 1892)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=thompson18921215&amp;page=1&amp;total=1&amp;title=Thompson%20to%20Black%20Dec%2015%201892"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="local">Thompson, A.
+					 H.</persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>G.H. Cushing to G.V. Black</unittitle> 
+				  <unitdate>(Dec. 26, 1892)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=cushing18921226&amp;page=1&amp;total=6&amp;title=Cushing%20to%20Black%20Dec%2026%201892"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="local">Cushing, George
+					 H.</persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>G.H. Cushing to G.V. Black</unittitle> 
+				  <unitdate>(Dec. 30, 1892)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=cushing18921230&amp;page=1&amp;total=2&amp;title=Cushing%20to%20Black%20Dec%2030%201892"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="local">Cushing, George
+					 H.</persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>H. A. Smith to G.V. Black</unittitle> 
+				  <unitdate>(Jan. 2, 1893)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=smith18930102&amp;page=1&amp;total=1&amp;title=Smith%20to%20Black%20Jan%202%201893"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="local">Smith, H.
+					 A.</persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>J. E. Line to G.V. Black</unittitle> 
+				  <unitdate>(Jan. 23, 1893)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=line18930123&amp;page=1&amp;total=1&amp;title=Line%20to%20Black%20Jan%2023%201893"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="local">Line, J.
+					 Edward.</persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>R. R. Andrews to G.V. Black</unittitle> 
+				  <unitdate>(Feb. 13, 1893)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=andrews18930213&amp;page=1&amp;total=2&amp;title=Andrews%20to%20Black%20Feb%2013%201893"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="local">Andrews, R.
+					 R.</persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>A.O. Hunt to G.V. Black</unittitle> 
+				  <unitdate>(Feb. 18, 1893)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=hunt18930218&amp;page=1&amp;total=1&amp;title=Hunt%20to%20Black%20Feb%2018%201893"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="local">Hunt, A.
+					 O.</persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>R. R. Andrews to G.V. Black</unittitle> 
+				  <unitdate>(Feb. 22, 1893)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=andrews18930222&amp;page=1&amp;total=1&amp;title=Andrews%20to%20Black%20Feb%2022%201893"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="local">Andrews, R.
+					 R.</persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>J.S. Cassidy to G.V. Black</unittitle> 
+				  <unitdate>(Mar. 2, 1893)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=cassidy18930302&amp;page=1&amp;total=1&amp;title=Cassidy%20to%20Black%20March%202%201893"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="local">Cassidy, J. S.
+					 </persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>E.C. Kirk to G.V. Black</unittitle> 
+				  <unitdate>(Mar. 2, 1893)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=kirk18930302&amp;page=1&amp;total=1&amp;title=Kirk%20to%20Black%20March%202%201893"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="lcnaf">Kirk, Edward C.
+					 (Edward Cameron), 1856-1933</persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>F. Peabody to G.V. Black</unittitle> 
+				  <unitdate>(Mar. 6, 1893)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=peabody18930306&amp;page=1&amp;total=1&amp;title=Peabody%20to%20Black%20March%206%201893"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="local">Peabody,
+					 Francis.</persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>G.V. Black to E. Damain</unittitle> 
+				  <unitdate>(Mar. 7, 1893)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=black18930307&amp;page=1&amp;total=1&amp;title=Black%20to%20Damain%20March%207%201893"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="local">Damain,
+					 E.</persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>W. H. Whitslar to G.V. Black</unittitle> 
+				  <unitdate>(Mar. 9, 1893)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=whitslar18930309&amp;page=1&amp;total=2&amp;title=Whitslar%20to%20Black%20March%209%201893"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="local">Whitslar, W.
+					 H.</persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>W. H. Whitslar to G.V. Black</unittitle> 
+				  <unitdate>(Mar. 22, 1893)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=whitslar18930322&amp;page=1&amp;total=2&amp;title=Whitslar%20to%20Black%20March%2022%201893"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="local">Whitslar, W.
+					 H.</persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>G.V. Black to E.C. Kirk (and other Committee
+					 members)</unittitle> 
+				  <unitdate>(Apr. 10, 1893)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=black18930410&amp;page=1&amp;total=2&amp;title=Black%20to%20Kirk%20April%2010%201893"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="lcnaf">Kirk, Edward C.
+					 (Edward Cameron), 1856-1933</persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>A. C. Hugenschmidt to G.V. Black</unittitle> 
+				  <unitdate>(Apr. 14, 1893)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=hugenschmidt18930414&amp;page=1&amp;total=4&amp;title=Hugenschmidt%20to%20Black%20April%2014%201893"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="local">Hugenschmidt, A.
+					 C.</persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>G. Newkirk to G.V. Black</unittitle> 
+				  <unitdate>(Apr. 15, 1893)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=newkirk18930415&amp;page=1&amp;total=6&amp;title=Newkirk%20to%20Black%20April%2015%201893"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="lcnaf">Newkirk, Garrett,
+					 1847-1921.</persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>J.S. Cassidy to G.V. Black</unittitle> 
+				  <unitdate>(Apr. 19, 1893)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=cassidy18930419&amp;page=1&amp;total=3&amp;title=Cassidy%20to%20Black%20April%2019%201893"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="local">Cassidy, J. S.
+					 </persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>H.J. Billeter to G.V. Black</unittitle> 
+				  <unitdate>(Apr. 21, 1893)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=billeter18930421&amp;page=1&amp;total=4&amp;title=Billeter%20to%20Black%20April%2021%201893"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="local">Billeter, H.
+					 J.</persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>J.B. Hodgkin to G.V. Black</unittitle> 
+				  <unitdate>(Apr. 21, 1893)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=hodgkin18930421&amp;page=1&amp;total=1&amp;title=Hodgkin%20to%20Black%20April%2021%201893"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="local">Hodgkin, J.
+					 B.</persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>A.O. Hunt to G.V. Black</unittitle> 
+				  <unitdate>(Apr. 24, 1893)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=hunt18930424&amp;page=1&amp;total=1&amp;title=Hunt%20to%20Black%20April%2024%201893"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="local">Hunt, A.
+					 O.</persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>A.H. Fuller to G.V. Black</unittitle> 
+				  <unitdate>(May 28, 1893)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=fuller18930528&amp;page=1&amp;total=2&amp;title=Fuller%20to%20Black%20May%2028%201893"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="local">Fuller, A.
+					 H.</persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>A.W. Harlan to G.V. Black</unittitle> 
+				  <unitdate>(Sept. 24, 1893)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-ltr/ltr.cfm?ltr=harlan18930924&amp;page=1&amp;total=2&amp;title=Harlan%20to%20Black%20Sept%2024%201893"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<controlaccess> 
+				  <head>Persons</head> 
+				  <persname encodinganalog="700" source="local">Harlan, A. W.
+					 (Allison Wright), 1851-1909.</persname> 
+				  <persname encodinganalog="700" source="lcnaf">Black, G. V.
+					 (Greene Vardiman), 1836-1915.</persname> 
+				</controlaccess> 
+			 </c03> 
+		  </c02> 
+		  <c02 level="subseries"> 
+			 <did> 
+				<unittitle>Memorabilia and photograph.</unittitle> 
+			 </did> 
+			 <c03> 
+				<did> 
+				  <unittitle>Opening of the World's Congresses of 1893</unittitle> 
+				  <unitdate type="inclusive" normal="1893-05-10">(May 10,
+					 1893)</unitdate> 
+				  <dao href="../gvblack/wcdc-eph/open.gif"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Image</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<scopecontent> 
+				  <p>Invitation to the opening ceremonies of the World's Congresses
+					 held on May 15, 1893 in the Memorial Art Palace of Chicago, Illinois.</p> 
+				</scopecontent> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>Invitation to a Reception in honor of the officers and
+					 members of the World's Columbian Dental Congress held on 
+					 <unitdate type="inclusive" normal="1893-08-12">August 12,
+						1893.</unitdate> </unittitle> 
+				  <dao href="../gvblack/wcdc-eph/reception.gif" actuate="onrequest"
+				  show="new"> 
+					 <daodesc> 
+						<p>Digital Image</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>World's Columbian Dental Congress member's
+					 ticket</unittitle> 
+				  <unitdate type="inclusive" normal="1893-08-14/1893-08-19">(August
+					 14-19, 1893)</unitdate> 
+				  <dao
+				  href="../gvblack/wcdc-eph/eph.cfm?eph=ticket&amp;page=1&amp;total=2&amp;title=Ticket"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<scopecontent> 
+				  <p>Front and back Dr. Black's ticket to the Dental Congress. On
+					 the back is a map of Chicago showing the locations of the various venues of the
+					 Congress.</p> 
+				</scopecontent> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>Dinner given by the American members of the World's
+					 Columbian Dental Congress to their friends from abroad on 
+					 <unitdate type="inclusive" normal="1893-08-18">August 18,
+						1893.</unitdate> </unittitle> 
+				  <dao
+				  href="../gvblack/wcdc-eph/eph.cfm?eph=menu&amp;page=1&amp;total=3&amp;title=Dinner%20Menu"
+				  actuate="onrequest" show="new"> 
+					 <daodesc> 
+						<p>Digital Images</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+				<scopecontent> 
+				  <p>Menu of the dinner held in the Chicago Beach Hotel, and
+					 autographed by some of the attendees, including Dr. Black.</p> 
+				</scopecontent> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>Invitation to the World's Columbian Dental Congress
+					 luncheon held at the Wellington Catering Company's Cafe in the Terminal Station
+					 inside of the World's Fair Grounds on 
+					 <unitdate type="inclusive" normal="1893-08-19">August 19,
+						1893.</unitdate> </unittitle> 
+				  <dao href="../gvblack/wcdc-eph/lunch.gif" actuate="onrequest"
+				  show="new"> 
+					 <daodesc> 
+						<p>Digital Image</p> 
+					 </daodesc> 
+				  </dao> 
+				</did> 
+			 </c03> 
+			 <c03> 
+				<did> 
+				  <unittitle>Group photograph of the participants in the World's
+					 Columbian Dental Congress, 
+					 <unitdate type="inclusive"
+					 normal="1893">1893.</unitdate></unittitle> 
+				</did> 
+				<daogrp linktype="extended"> 
+				  <resource linktype="resource" label="start"/> 
+					 <daoloc href="gvb-photos/WCDCtn.gif" linktype="locator"
+					 label="thumb"/> 
+						<daoloc href="gvb-photos/WCDC1.jpg" linktype="locator"
+						label="reference"/>
+						  <arc linktype="arc" show="embed" actuate="onload" from="start" to="thumb"/>
+						  <arc linktype="arc" show="new" actuate="onrequest" from="thumb"
+						  to="reference"/> 
+				</daogrp> 
+				<note> 
+				  <p> 
+					 <ref actuate="onrequest" show="replace" target="table1">Return
+						to Table of Contents</ref> </p> 
+				</note> 
+			 </c03> 
+		  </c02> 
+		</c01> 
+		<c01 id="ser4" level="series"> 
+		  <did> 
+			 <unittitle>Series IV. Photographs. </unittitle> 
+			 <container type="box">7</container> 
+		  </did> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">Portrait of G.V. Black.</unittitle>
+				
+				<unitdate type="inclusive" encodinganalog="260$c">(n.d.)</unitdate>
+				
+			 </did> 
+			 <controlaccess> 
+				<head>Persons</head> 
+				<persname encodinganalog="600" source="lcnaf">Black, G. V. (Greene
+				  Vardiman), 1836-1915.</persname> 
+			 </controlaccess> 
+			 <daogrp linktype="extended"> 
+				<resource linktype="resource" label="start"/> 
+				  <daoloc href="gvb-photos/GVBportrait-tn.gif" linktype="locator"
+				  label="thumb"/> 
+					 <daoloc href="gvb-photos/GVBportrait.jpg.jpg"
+					 linktype="locator" label="reference"/>
+						<arc linktype="arc" show="embed" actuate="onload" from="start" to="thumb"/>
+						<arc linktype="arc" show="new" actuate="onrequest" from="thumb"
+						to="reference"/> 
+			 </daogrp> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">G.V. Black statue in Lincoln Park,
+				  Chicago, Illinois.</unittitle> 
+				<unitdate type="inclusive" normal="1935"
+				encodinganalog="260$c">(1935)</unitdate> 
+				<abstract encodinganalog="520">The statue was created by Frederick
+				  Hibbard and dedicated in 1918. The larger than life seated figure was
+				  originally located in Lincoln Park, just east of the Chicago Historical Society
+				  building. This photograph was taken before the statue was relocated to its
+				  current site at the head of Astor Street on North Avenue in Lincoln
+				  Park.</abstract> 
+			 </did> 
+			 <controlaccess> 
+				<head>Persons</head> 
+				<persname encodinganalog="600" source="lcnaf">Black, G. V. (Greene
+				  Vardiman), 1836-1915.</persname> 
+				<persname encodinganalog="600" source="lcnaf">Hibbard Frederck
+				  Cleveland, 1881-</persname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Places</head> 
+				<geogname encodinganalog="651" source="lcnaf">Lincoln Park
+				  (Chicago, Ill.)</geogname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="lcsh">Statues</subject> 
+			 </controlaccess> 
+			 <daogrp linktype="extended"> 
+				<resource linktype="resource" label="start"/> 
+				  <daoloc href="gvb-photos/GVBLincolnPk-tn.gif" linktype="locator"
+				  label="thumb"/> 
+					 <daoloc href="gvb-photos/GVBLincolnPk.jpg" linktype="locator"
+					 label="reference"/>
+						<arc linktype="arc" show="embed" actuate="onload" from="start" to="thumb"/>
+						<arc linktype="arc" show="new" actuate="onrequest" from="thumb"
+						to="reference"/> 
+			 </daogrp> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">G.V. Black as a
+				  teacher.</unittitle> 
+				<unitdate type="inclusive" normal="1900"
+				encodinganalog="260$c">(1900)</unitdate> 
+				<abstract encodinganalog="520">Dr. Black with giant models of teeth
+				  and oversized instruments. He used these for classroom demonstrations of cavity
+				  preparation.</abstract> 
+			 </did> 
+			 <controlaccess> 
+				<head>Persons</head> 
+				<persname encodinganalog="600" source="lcnaf">Black, G. V. (Greene
+				  Vardiman), 1836-1915.</persname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="mesh">Tooth</subject> 
+				<subject encodinganalog="650" source="mesh">Dental Models</subject>
+				
+			 </controlaccess> 
+			 <daogrp linktype="extended"> 
+				<resource linktype="resource" label="start"/> 
+				  <daoloc href="gvb-photos/GVBteacher-tn.gif" linktype="locator"
+				  label="thumb"/> 
+					 <daoloc href="gvb-photos/GVBteacher.jpg" linktype="locator"
+					 label="reference"/>
+						<arc linktype="arc" show="embed" actuate="onload" from="start" to="thumb"/>
+						<arc linktype="arc" show="new" actuate="onrequest" from="thumb"
+						to="reference"/> 
+			 </daogrp> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">G.V. Black as a
+				  scientist.</unittitle> 
+				<unitdate type="inclusive" normal="1900"
+				encodinganalog="260$c">(1900)</unitdate> 
+				<abstract encodinganalog="520">Dr. Black is operating his machine
+				  for the grinding of microscopic sections of teeth and bone in his laboratory in
+				  the Northwestern University Dental School.</abstract> 
+			 </did> 
+			 <controlaccess> 
+				<head>Persons</head> 
+				<persname encodinganalog="600" source="lcnaf">Black, G. V. (Greene
+				  Vardiman), 1836-1915.</persname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Organizations</head> 
+				<corpname encodinganalog="610" source="lcnaf">Northwestern
+				  University (Evanston, Ill.). Dental School</corpname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Places</head> 
+				<geogname encodinganalog="651" source="lcnaf">Chicago
+				  (Ill.)</geogname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="mesh">Histological
+				  Techniques</subject> 
+			 </controlaccess> 
+			 <daogrp linktype="extended"> 
+				<resource linktype="resource" label="start"/> 
+				  <daoloc href="gvb-photos/GVBscientist-tn.gif" linktype="locator"
+				  label="thumb"/> 
+					 <daoloc href="gvb-photos/GVBscientist.jpg" linktype="locator"
+					 label="reference"/>
+						<arc linktype="arc" show="embed" actuate="onload" from="start" to="thumb"/>
+						<arc linktype="arc" show="new" actuate="onrequest" from="thumb"
+						to="reference"/> 
+			 </daogrp> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">G.V. Black as an
+				  administrator.</unittitle> 
+				<unitdate type="inclusive" normal="1897"
+				encodinganalog="260$c">(1897)</unitdate> 
+				<abstract encodinganalog="520">Dr. Black , the second dean of the
+				  Northwestern University Dental School, with other faculty members including
+				  William E. Harper, Thomas L. Gilmer, Edmund Noyes, Twing B. Wiggin, Fred W.
+				  Gethro, Frederick B. Noyes, Eugene S. Williard, Ira B. Sellery, and Edwin D.
+				  Swain.</abstract> 
+			 </did> 
+			 <controlaccess> 
+				<head>Persons</head> 
+				<persname encodinganalog="600" source="lcnaf">Black, G. V. (Greene
+				  Vardiman), 1836-1915.</persname> 
+				<persname encodinganalog="600" source="local">Gethro, Fred
+				  W.</persname> 
+				<persname encodinganalog="600" source="local">Gilmer, Thomas
+				  L.</persname> 
+				<persname encodinganalog="600" source="local">Harper, William
+				  E.</persname> 
+				<persname encodinganalog="600" source="local">Noyes, Edmund,
+				  1842-1926</persname> 
+				<persname encodinganalog="600" source="local">Noyes, Frederick
+				  Bogue, 1872-1961</persname> 
+				<persname encodinganalog="600" source="local">Sellery, Ira
+				  D.</persname> 
+				<persname encodinganalog="600" source="local">Swain, Edgar
+				  D.</persname> 
+				<persname encodinganalog="600" source="lcnaf">Wiggin, T. B. (Twing
+				  Brooks), b. 1865</persname> 
+				<persname encodinganalog="600" source="local">Willard, Eugene
+				  S.</persname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Organizations</head> 
+				<corpname encodinganalog="610" source="lcnaf">Northwestern
+				  University (Evanston, Ill.). Dental School</corpname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="mesh">Education,
+				  Dental</subject> 
+			 </controlaccess> 
+			 <daogrp linktype="extended"> 
+				<resource linktype="resource" label="start"/> 
+				  <daoloc href="gvb-photos/GVBadministrator-tn.gif"
+				  linktype="locator" label="thumb"/> 
+					 <daoloc href="gvb-photos/GVBadministrator.jpg"
+					 linktype="locator" label="reference"/>
+						<arc linktype="arc" show="embed" actuate="onload" from="start" to="thumb"/>
+						<arc linktype="arc" show="new" actuate="onrequest" from="thumb"
+						to="reference"/> 
+			 </daogrp> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">G.V. Black and other instructors in
+				  the Great Dental Clinic. </unittitle> 
+				<unitdate type="inclusive" normal="1902"
+				encodinganalog="260$c">(1902)</unitdate> 
+				<abstract encodinganalog="520">The Clinic was located the corner of
+				  Lake and Dearborn in the Chicago Loop.</abstract> 
+			 </did> 
+			 <controlaccess> 
+				<head>Persons</head> 
+				<persname encodinganalog="600" source="lcnaf">Black, G. V. (Greene
+				  Vardiman), 1836-1915.</persname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Organizations</head> 
+				<corpname encodinganalog="610" source="lcnaf">Northwestern
+				  University (Evanston, Ill.). Great Dental Clinic</corpname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Places</head> 
+				<geogname encodinganalog="651" source="lcnaf">Chicago
+				  (Ill.)</geogname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="mesh">Dental
+				  Clinics</subject> 
+			 </controlaccess> 
+			 <daogrp linktype="extended"> 
+				<resource linktype="resource" label="start"/> 
+				  <daoloc href="gvb-photos/GVBcolleague-tn.gif" linktype="locator"
+				  label="thumb"/> 
+					 <daoloc href="gvb-photos/GVBcolleague.jpg" linktype="locator"
+					 label="reference"/>
+						<arc linktype="arc" show="embed" actuate="onload" from="start" to="thumb"/>
+						<arc linktype="arc" show="new" actuate="onrequest" from="thumb"
+						to="reference"/> 
+			 </daogrp> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">G.V. Black and
+				  colleagues.</unittitle> 
+				<unitdate type="inclusive" normal="1912"
+				encodinganalog="260$c">(1912)</unitdate> 
+				<abstract encodinganalog="520">An unidentified patient is
+				  surrounded by Dr. Black and other prominent dentists, including Dr. C.N.
+				  Johnson at the Institute of Dental Pedagogics meeting in 1912 in Chicago,
+				  Ill.</abstract> 
+			 </did> 
+			 <controlaccess> 
+				<head>Persons</head> 
+				<persname encodinganalog="600" source="lcnaf">Black, G. V. (Greene
+				  Vardiman), 1836-1915.</persname> 
+				<persname encodinganalog="600" source="lcnaf">Johnson, Charles
+				  Nelson, 1860-1938</persname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Organizations</head> 
+				<corpname encodinganalog="610" source="lcnaf">Institute of Dental
+				  Pedagogics (U.S.)</corpname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Places</head> 
+				<geogname encodinganalog="651" source="lcnaf">Chicago
+				  (Ill.)</geogname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Subjects</head> 
+				<subject encodinganalog="650" source="mesh">Dentistry</subject> 
+			 </controlaccess> 
+			 <daogrp linktype="extended"> 
+				<resource linktype="resource" label="start"/> 
+				  <daoloc href="gvb-photos/GVBOperatory-tn.gif" linktype="locator"
+				  label="thumb"/> 
+					 <daoloc href="gvb-photos/GVBOperatory.jpg" linktype="locator"
+					 label="reference"/>
+						<arc linktype="arc" show="embed" actuate="onload" from="start" to="thumb"/>
+						<arc linktype="arc" show="new" actuate="onrequest" from="thumb"
+						to="reference"/> 
+			 </daogrp> 
+		  </c02> 
+		  <c02> 
+			 <did> 
+				<unittitle encodinganalog="245">G.V. Black as outdoorsman.
+				  </unittitle> 
+				<unitdate type="inclusive" normal="1900"
+				encodinganalog="260$c">(1900)</unitdate> 
+				<abstract encodinganalog="520">Dr. Black on vacation, Mackinac
+				  Island, Michigan.</abstract> 
+			 </did> 
+			 <controlaccess> 
+				<head>Persons</head> 
+				<persname encodinganalog="600" source="lcnaf">Black, G. V. (Greene
+				  Vardiman), 1836-1915.</persname> 
+			 </controlaccess> 
+			 <controlaccess> 
+				<head>Places</head> 
+				<geogname encodinganalog="651" source="lcnaf">Mackinac Island
+				  (Mich.)</geogname> 
+			 </controlaccess> 
+			 <daogrp linktype="extended"> 
+				<resource linktype="resource" label="start"/> 
+				  <daoloc href="gvb-photos/GVBoutdoorsman-tn.gif"
+				  linktype="locator" label="thumb"/> 
+					 <daoloc href="gvb-photos/GVBoutdoorsman.jpg" linktype="locator"
+					 label="reference"/>
+						<arc linktype="arc" show="embed" actuate="onload" from="start" to="thumb"/>
+						<arc linktype="arc" show="new" actuate="onrequest" from="thumb"
+						to="reference"/> 
+			 </daogrp> 
+			 <note> 
+				<p> 
+				  <ref actuate="onrequest" show="replace" target="table1">Return to
+					 Table of Contents</ref> </p> 
+			 </note> 
+		  </c02> 
+		</c01> 
+	 </dsc> 
+  </archdesc> 
+</ead> 

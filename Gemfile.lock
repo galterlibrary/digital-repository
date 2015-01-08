@@ -146,6 +146,7 @@ GEM
     equivalent-xml (0.5.1)
       nokogiri (>= 1.4.3)
     erubis (2.7.0)
+    escape (0.0.4)
     execjs (2.2.2)
     extlib (0.9.16)
     faraday (0.9.0)
@@ -237,6 +238,7 @@ GEM
     json-ld (1.1.7)
       rdf (~> 1.1, >= 1.1.4)
     jwt (1.2.0)
+    kgio (2.9.2)
     launchy (2.4.3)
       addressable (~> 2.3)
     legato (0.4.0)
@@ -347,6 +349,7 @@ GEM
       activesupport (= 4.1.6)
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
+    raindrops (0.13.0)
     rake (10.4.2)
     rdf (1.1.7)
       link_header (~> 0.0, >= 0.0.8)
@@ -554,6 +557,10 @@ GEM
     uglifier (2.6.0)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
+    unicorn (4.8.3)
+      kgio (~> 2.6)
+      rack
+      raindrops (~> 0.7)
     uuidtools (2.1.5)
     vegas (0.1.11)
       rack (>= 1.0.0)
@@ -576,6 +583,7 @@ DEPENDENCIES
   coffee-rails (~> 4.0.0)
   devise
   devise-guests (~> 0.3)
+  escape
   http_logger
   jbuilder (~> 2.0)
   jettywrapper
@@ -595,4 +603,5 @@ DEPENDENCIES
   therubyracer (= 0.11.3)
   turbolinks
   uglifier (>= 1.3.0)
+  unicorn
   web-console
