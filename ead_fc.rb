@@ -469,21 +469,22 @@ module Ead_fc
     end
 
     def make_file(rh)
+      #TODO
+      if rh['title'] =~ /Zoo chemistry/
+        return
+      end
       @current_user ||= User.find(1)
       fname = rh['fname']
+      original_filename = fname.split('/').last
       @generic_file = GenericFile.find {|c|
-        c.title.any? {|t| t == rh['title'] } }
+        c.filename.any? {|f| f == original_filename } }
+
       if @generic_file.blank?
-        @generic_file = GenericFile.new
         file = ActionDispatch::Http::UploadedFile.new(
           tempfile: File.open(fname))
-        file.original_filename = fname.split('/').last
-        #content_type = 'image/tiff'
-        #content_type = 'application/pdf' if fname =~ /.*pdf/
-        #content_type = 'image/jpeg' if fname =~ /.*jpg/
-        #file.content_type = content_type
+        file.original_filename = original_filename
 
-        @actor ||= Sufia::GenericFile::Actor.new(@generic_file, @current_user)
+        @actor = Sufia::GenericFile::Actor.new(GenericFile.new, @current_user)
         @actor.create_metadata(Sufia::Noid.noidify(Sufia::IdService.mint))
 
         if @actor.create_content(file, file.original_filename, 'content')
@@ -491,24 +492,15 @@ module Ead_fc
         else
           puts "Error: #{fname}"
         end
-
-        if fname =~ /.*pdf/
-          @generic_file.page_count = [`pdfinfo #{file.tempfile.path} |grep 'Pages:' |sed 's/Pages://'`.strip]
-        end
+        @generic_file = @actor.generic_file
       end
-      #@generic_file.mime_type = content_type
+
       @generic_file.title = [rh['title']]
       @generic_file.visibility = 'open'
       @generic_file.subject = rh['subject']
-
-      begin
-      @generic_file.save! if @generic_file.changed?
-      rescue
-      binding.pry
-      end
+      @generic_file.save!
 
       add_to_collection(rh['parent_pid'], @generic_file)
-      binding.pry
     end
 
     def add_to_collection(parent_pid, member)
