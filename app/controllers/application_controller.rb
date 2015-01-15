@@ -12,4 +12,17 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
+  around_filter :profile if Rails.env == 'development'
+
+  def profile
+    if params[:profile] && result = RubyProf.profile { yield }
+
+      out = StringIO.new
+      RubyProf::GraphHtmlPrinter.new(result).print out, :min_percent => 0
+      self.response_body = out.string
+
+    else
+      yield
+    end
+  end
 end
