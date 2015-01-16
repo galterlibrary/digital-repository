@@ -1,0 +1,100 @@
+/*
+ dark-northwestern: rgb(49,4,63)
+ northwestern: rgb(72,0,88)
+*/
+
+a {
+  color: #4E015C;
+}
+
+a:hover {
+  color: #4E015C;
+}
+
+#masthead {
+  min-height: 6em;
+}
+
+ul.tagcloud a {
+  color: #4E015C !important;
+}
+
+#topTitle {
+  color: #FFF;
+}
+
+#masthead, #footer{
+
+  background-color: rgb(72,0,88);
+  background-image: linear-gradient(rgb(72,0,88), rgb(120,40,135));
+}
+
+#masthead_controls {
+  background-color: rgb(49,4,63);
+  border: none;
+}
+
+#masthead_controls .navbar {
+  background-color: rgb(49,4,63) !important;
+}
+
+#masthead_controls .navbar li {
+  border-right: 1px solid #5B3B64;
+}
+
+#masthead_controls .navbar:first-child {
+  border-left: 1px solid #5B3B64;
+}
+
+#masthead_controls .navbar a:hover {
+  color: #FFAE00;
+  background: none repeat scroll 0% 0% rgb(104, 72, 113);
+}
+
+#masthead_controls .navbar-default .navbar-nav > .active > a, #masthead_controls .navbar-default .navbar-nav > .active > a:hover, #masthead_controls .navbar-default .navbar-nav > .active > a:focus {
+  background: none repeat scroll 0% 0% rgb(49,4,63);
+  color: #FFAE00;
+}
+
+.dashboard .panel-default > .dashboard-panel {
+  //background-color: rgb(104, 72, 113);
+  background-color: rgb(245,245,245);
+  color: #333;
+}
+
+div.heading-tile .glyphicon, div.heading-tile .help-icon {
+    background: none repeat scroll 0% 0% #FFAE00;
+}
+
+.dashboard .badge {
+    background-color: #FFAE00;
+}
+
+/* Make primary button look differnt? FIXME
+.btn-primary {
+  color: #333;
+  background-color: #FFF;
+  border-color: #CCC;
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary.focus, .btn-primary:active, .btn-primary.active, .open > .dropdown-toggle.btn-primary {
+    background-color: #e6e6e6;
+    border-color: #adadad;
+    color: #333;
+}
+
+.btn-primary:active, .btn-primary.active, .open > .dropdown-toggle.btn-primary {
+    background-image: none;
+}
+
+.btn-primary.disabled, .btn-primary[disabled], fieldset[disabled] .btn-primary, .btn-primary.disabled:hover, .btn-primary[disabled]:hover, fieldset[disabled] .btn-primary:hover, .btn-primary.disabled:focus, .btn-primary[disabled]:focus, fieldset[disabled] .btn-primary:focus, .btn-primary.disabled.focus, .btn-primary.focus[disabled], fieldset[disabled] .btn-primary.focus, .btn-primary.disabled:active, .btn-primary[disabled]:active, fieldset[disabled] .btn-primary:active, .btn-primary.disabled.active, .btn-primary.active[disabled], fieldset[disabled] .btn-primary.active {
+    background-color: #fff;
+    border-color: #ccc;
+}
+
+.btn-primary .badge {
+    background-color: #333;
+    color: #fff;
+}
+
+*/

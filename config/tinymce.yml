@@ -1,7 +1,9 @@
 menubar: false
-toolbar1: styleselect | bold italic | link image | undo redo
+browser_spellcheck : true
+toolbar1: styleselect | bold italic | link | undo redo
 toolbar2: table | fullscreen | uploadimage
 plugins:
   - table
   - fullscreen
   - uploadimage
+  - link
