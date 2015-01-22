@@ -56,6 +56,9 @@ ul.tagcloud a {
   color: #FFAE00;
 }
 
+#home_header {
+  background-image: url("/assets/spec_col_crop_top.jpg");
+}
 .dashboard .panel-default > .dashboard-panel {
   //background-color: rgb(104, 72, 113);
   background-color: rgb(245,245,245);
@@ -68,6 +71,10 @@ div.heading-tile .glyphicon, div.heading-tile .help-icon {
 
 .dashboard .badge {
     background-color: #FFAE00;
+}
+
+#footer a {
+  color: #FFF;
 }
 
 /* Make primary button look differnt? FIXME

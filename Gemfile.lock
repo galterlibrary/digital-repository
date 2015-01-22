@@ -439,6 +439,7 @@ GEM
       json
       multipart-post
       oauth2
+    ruby-ldap (0.9.16)
     ruby-prof (0.15.2)
     rubydora (1.8.1)
       activemodel
@@ -607,6 +608,7 @@ DEPENDENCIES
   qa
   rails (= 4.1.6)
   rspec-rails
+  ruby-ldap
   ruby-prof
   sass-rails (~> 4.0.3)
   sdoc (~> 0.4.0)
