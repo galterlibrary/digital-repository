@@ -19,3 +19,6 @@ gvblack
 db/vocabularies
 public/system
 public/uploads
+config/local_env.rb
+config/solr.yml
+config/fedora.yml

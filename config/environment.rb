@@ -10,6 +10,7 @@ load(local_env) if File.exists?(local_env)
 
 unless Rails.env.test? || Rails.env.ci?
   if ['LDAP_PASSWORD'].any? {|v| ENV[v].blank? }
+    vars = ['LDAP_PASSWORD'].select {|v| ENV[v].blank? }
     $stderr.puts "Can't start Rails. Missing critical env variables: #{vars}"
     ActionMailer::Base.mail(
       from: ENV['DEFAULT_EMAIL_SENDER'],
