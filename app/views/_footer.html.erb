@@ -1,7 +1,7 @@
 <div id="footer" class="container-fluid">
   <div class="row">
 
-    <div class="col-sm-3">
+    <div class="col-sm-2">
       <dl>
         <dt><a href="http://www.galter.northwestern.edu">Galter Health Sciences Library</a></dt>
         <dd>Feinberg School of Medicine</dd>
@@ -12,17 +12,33 @@
       </dl>
     </div>
 
-    <div class="col-sm-6">
+    <div class="col-sm-1">
     </div>
 
     <div class="col-sm-3">
-        <%= link_to image_tag("Feinberg-Logo_White.png", height: '80',
-                              alt: 'Northwestern University Feinberg School of Medicine'),
-        "http://www.feinberg.northwestern.edu/?utm_source=website&amp;utm_medium=footer-link&amp;utm_campaign=GalterLibrary",
-        class: 'pull-right', id: 'bottomLogo' %>
-        </a>
+      <br />
+      <%= link_to 'About us', 'http://www.galter.northwestern.edu/about-us' %>
+      <br />
+      <br />
+      <%= link_to 'Northwestern University Feinberg School of Medicine', 'http://www.feinberg.northwestern.edu/' %>
     </div>
-  
+    <div class="col-sm-3">
+      <br />
+      <%= link_to 'Northwestern University', 'http://www.northwestern.edu/' %>
+      <br />
+      <br />
+      <%= link_to 'Northwestern Search', 'http://googlesearch.northwestern.edu/search?output=xml_no_dtd&client=default_oneboxes&oe=UTF-8&ie=UTF-8&proxystylesheet=default_oneboxes' %>
+    </div>
+
+    <div class="col-sm-1">
+    </div>
+    <div class="col-sm-2">
+      <%= link_to image_tag("Feinberg-Logo_White.png", height: '80',
+                            alt: 'Northwestern University Feinberg School of Medicine'),
+      "http://www.feinberg.northwestern.edu/?utm_source=website&amp;utm_medium=footer-link&amp;utm_campaign=GalterLibrary",
+      class: 'pull-right', id: 'bottomLogo' %>
+
+    </div>
   </div><!-- /.row -->
 </div><!-- /footer -->
 

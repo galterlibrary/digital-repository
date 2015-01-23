@@ -25,8 +25,12 @@ ul.tagcloud a {
 
 #masthead, #footer{
 
-  background-color: rgb(72,0,88);
-  background-image: linear-gradient(rgb(72,0,88), rgb(120,40,135));
+  //background-color: rgb(72,0,88);
+  background: none repeat scroll 0% 0% #61468B;
+  //background-image: linear-gradient(rgb(72,0,88), rgb(120,40,135));
+}
+#footer dl {
+  margin-bottom: 0px;
 }
 
 #masthead_controls {
