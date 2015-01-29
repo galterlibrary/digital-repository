@@ -43,7 +43,7 @@ gem 'thin'
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
-gem 'sufia'
+gem 'sufia'#, :git => 'https://github.com/projecthydra/sufia.git', :branch => '5.0.0-stable'
 gem 'kaminari', github: 'harai/kaminari', branch: 'route_prefix_prototype'  # required to handle pagination properly in dashboard. See https://github.com/amatsuda/kaminari/pull/322
 gem 'therubyracer', '0.11.3', platforms: :ruby
 
@@ -61,3 +61,6 @@ gem 'qa'
 gem 'http_logger'
 gem 'escape'
 gem 'ruby-ldap'
+
+#gem 'active-fedora', :git => 'https://github.com/projecthydra/active_fedora.git'
+#gem 'hydra-editor', :git => 'https://github.com/projecthydra-labs/hydra-editor.git'

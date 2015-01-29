@@ -20,7 +20,6 @@ class Nuldap
   rescue Timeout::Error
     message = 'LDAP server is down or taking too long to respond'
     Rails.logger.error(message)
-    NewRelic::Agent.notice_error(message)
     false
   end
   private :ldap_server_up?

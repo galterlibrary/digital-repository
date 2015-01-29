@@ -1,17 +1,11 @@
 #!/bin/env ruby
+Dir.chdir 'lib/batch/gvblack/'
 require './ead_fc'
 
 # unbuffer output.
 STDOUT.sync = true
 
-if ARGV.size == 0
-  print "Usage: #{$0} collction_config_file.rb\n"
-  exit
-end
-
-# The command line arg is the config file name
-
-myfile = ARGV[0]
+myfile = './config.dist.rb'
 
 require myfile
 

@@ -403,11 +403,22 @@ module Ead_fc
         query = params['ltr']
       elsif params['doc']
         query = params['doc']
+      elsif params['eph']
+        query = params['eph']
+      end
+
+      if url == '../gvblack/wcdc-eph/open.gif'
+        query = 'open'
+      elsif url == '../gvblack/wcdc-eph/reception.gif'
+        query = 'recep'
+      elsif url == '../gvblack/wcdc-eph/lunch.gif'
+        query = 'lunch'
       end
       query.strip.downcase
     end
 
     def find_file(file_id)
+      file_id = file_id.strip.downcase
       if file_id == 'cm'
         file_id = 'cruisemicrobe'
       elsif file_id == 'ps'
@@ -432,52 +443,65 @@ module Ead_fc
         file_id = 'black18930207'
       end
 
-      Find.find('/home/phb010/galter_sufia/gvblack/GVBlackArchive') do |path|
-        if path.downcase =~ /.*#{file_id}_full.pdf/
-          return path
+      if !file_id.nil?
+        Find.find('/home/phb010/GVBlackArchive') do |path|
+          if path.downcase =~ /.*#{file_id}_full.pdf/
+            return path
+          end
         end
-      end
 
-      if !file_id.nil? and paths.empty?
         file_id = file_id.gsub(/[a-zA-Z]/, '')
 
-        Find.find('/home/phb010/galter_sufia/gvblack/GVBlackArchive') do |path|
+        Find.find('/home/phb010/GVBlackArchive') do |path|
           if path.downcase =~ /.*#{file_id}_full.pdf/
             return path
           end
         end
       end
-      puts "Missing Paths for: #{file_id}"
+      puts "Missing File Path for: #{file_id}"
     end
 
     def make_collection(rh)
       @current_user ||= User.find(1)
       if !rh['type'].to_s.empty?
-        title = rh['title']
+        title = unescape_and_clean( rh['title'])
         if rh['type'] == 'subseries'
-          title = "#{rh['title']} - World's Columbian Dental Congress"
+          title = "#{title} - World's Columbian Dental Congress"
         end
         c = Collection.find {|c| c.title == "#{title}" }
+        c.apply_depositor_metadata("galter-is@listserv.it.northwestern.edu")
         if !c
           c = Collection.new
-          c.title = title
-          c.apply_depositor_metadata(@current_user.user_key)
-          c.save!
         end
+        c.title = title
+        c.save!
         rh['collection'] = c
       end
     end
 
+    def unescape_and_clean(str)
+      str = CGI::unescapeHTML(str)
+      str.strip.gsub(/[,.;]\z/, '')
+    end
+
     def make_file(rh)
-      #TODO
-      if rh['title'] =~ /Zoo chemistry/
-        return
-      end
-      @current_user ||= User.find(1)
+      @current_user ||= User.find(6)
       fname = rh['fname']
       original_filename = fname.split('/').last
-      @generic_file = GenericFile.find {|c|
-        c.filename.any? {|f| f == original_filename } }
+      #@generic_file = GenericFile.find {|c|
+      #  c.filename.any? {|f| f == original_filename } }
+      @generic_file = nil
+      begin
+        @all_file_names ||= GenericFile.all.inject({}) do |h, gf|
+          puts "already exists: #{gf.filename}" if h[gf.filename].present?
+          h[gf.filename.first] = gf.id
+          h
+        end
+        @generic_file = ::GenericFile.find(@all_file_names[original_filename])
+      rescue ArgumentError
+      end
+
+      binding.pry if @generic_file.blank?
 
       if @generic_file.blank?
         file = ActionDispatch::Http::UploadedFile.new(
@@ -495,7 +519,8 @@ module Ead_fc
         @generic_file = @actor.generic_file
       end
 
-      @generic_file.title = [rh['title']]
+      @generic_file.apply_depositor_metadata("galter-is@listserv.it.northwestern.edu")
+      @generic_file.title = [unescape_and_clean(rh['title'])]
       @generic_file.visibility = 'open'
       @generic_file.subject = rh['subject']
       @generic_file.save!
@@ -515,7 +540,6 @@ module Ead_fc
     end
 
     def container_parse(nset, parent_path)
-      
       # Process the <c> aka <c0x> container elements.
 
       # params are a node set and the parent's path to digital
@@ -678,11 +702,15 @@ module Ead_fc
 
               if child.name.match(/dao/)
                 begin
-                rh['href'] = child.attribute('href').value
-                rh['file_id'] = query_from_url(rh['href'])
-                rh['fname'] = find_file(rh['file_id'])
+                  rh['href'] = child.attribute('href').value
+                  rh['file_id'] = query_from_url(rh['href'])
+                  if rh['file_id'].blank?
+                    rh['file_id'] = rh['container_unitid']
+                  end
+                  raise if rh['file_id'].blank?
+                  rh['fname'] = find_file(rh['file_id'])
                 rescue
-                  puts "bad #{rh['title']}"
+                  puts "Can't file file_id for #{rh['title']}"
                 end
               end
             }
@@ -893,11 +921,11 @@ module Ead_fc
                 fid = 'gvblackinoperatory.tif'
               elsif rh['title'] =~ /Group photograph/
                 fid = 'wcdc_group.jpg'
-                p = '/home/phb010/galter_sufia/gvblack/GVBlackArchive'
+                p = '/home/phb010/GVBlackArchive'
               end
 
               if @cn_loh[-2]['title'] =~ /Series IV/
-                p = '/home/phb010/galter_sufia/gvblack/GVBlackArchive/Photographs'
+                p = '/home/phb010/GVBlackArchive/Photographs'
               end
 
               if p
@@ -940,7 +968,6 @@ module Ead_fc
     end # container_parse
 
     def gvblack_path_key(container_obj)
-      #TODO
       return []
       unless attribs.find {|a| a[1] =~ /image not available/ }
         query = query_from_url(attribs.find {|a| a[0] == 'url' }.second)

@@ -28,6 +28,7 @@ class User < ActiveRecord::Base
       return
     end
 
+    return if results.empty?
     attrs = {}
     #attrs[:email] = results[:mail].first rescue nil
     attrs[:display_name] = results['displayName'].first rescue nil

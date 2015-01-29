@@ -42,4 +42,4 @@ Digital_assets_url = "http://galter.northwestern.edu/repo"
 # path. This might change to a regular expression. Example relative
 # path: data/2004-M-088.0007/2004-M-088.0007.txt
 
-Digital_assets_home = '/home/phb010/galter_sufia/gvblack/GVBlackArchive'
+Digital_assets_home = '/home/phb010/GVBlackArchive'
