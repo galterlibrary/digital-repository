@@ -336,7 +336,7 @@ module Ead_fc
       if rh['fname']
         puts "Processed #{fname}"
       else
-        make_collection(rh)
+        store_collection(rh)
       end
       #print "Wrote foxml: #{wfx_name} pid: #{rh['pid']} id: #{rh['id']}\n"
 
@@ -461,7 +461,7 @@ module Ead_fc
       puts "Missing File Path for: #{file_id}"
     end
 
-    def make_collection(rh)
+    def store_collection(rh)
       @current_user ||= User.find(1)
       if !rh['type'].to_s.empty?
         title = unescape_and_clean( rh['title'])
@@ -469,19 +469,22 @@ module Ead_fc
           title = "#{title} - World's Columbian Dental Congress"
         end
         c = Collection.find {|c| c.title == "#{title}" }
-        c.apply_depositor_metadata("galter-is@listserv.it.northwestern.edu")
         if !c
           c = Collection.new
+          c.title = title
         end
-        c.title = title
+        c.description = rh['note']
         c.save!
+        c.apply_depositor_metadata("galter-is@listserv.it.northwestern.edu")
         rh['collection'] = c
       end
     end
 
-    def unescape_and_clean(str)
+    def unescape_and_clean(str, postfix='')
       str = CGI::unescapeHTML(str)
-      str.strip.gsub(/[,.;]\z/, '')
+      # Remove junk from the end and strip
+      # Remove line-breaks and more then one space
+      str.strip.gsub(/[,.;]\z/, '').gsub(/[\n\t]/, '').gsub(/ +/, ' ') + postfix
     end
 
     def make_file(rh)
@@ -510,7 +513,6 @@ module Ead_fc
 
         @actor = Sufia::GenericFile::Actor.new(GenericFile.new, @current_user)
         @actor.create_metadata(Sufia::Noid.noidify(Sufia::IdService.mint))
-
         if @actor.create_content(file, file.original_filename, 'content')
           puts "Success: #{fname}"
         else
@@ -520,9 +522,11 @@ module Ead_fc
       end
 
       @generic_file.apply_depositor_metadata("galter-is@listserv.it.northwestern.edu")
+      @generic_file.creator = ['Galter Health Sciences Library']
       @generic_file.title = [unescape_and_clean(rh['title'])]
       @generic_file.visibility = 'open'
       @generic_file.subject = rh['subject']
+      @generic_file.description = [rh['note']].compact
       @generic_file.save!
 
       add_to_collection(rh['parent_pid'], @generic_file)
@@ -713,6 +717,10 @@ module Ead_fc
                   puts "Can't file file_id for #{rh['title']}"
                 end
               end
+
+              if child.name.match(/note/)
+                rh['note'] = unescape_and_clean(child.content, '.')
+              end
             }
           end
 
@@ -830,7 +838,7 @@ module Ead_fc
 
           rh['contentmeta'] = ""
 
-          make_collection(rh)
+          store_collection(rh)
           # Order critical. Push our data onto @cn_loh, then
           # recurse. After we return from recursing, ingest ourself.
           # A true return value from container_parse() means there

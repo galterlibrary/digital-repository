@@ -69,6 +69,7 @@ class CatalogController < ApplicationController
     #   The ordering of the field names is the order of the display
     config.add_index_field solr_name("desc_metadata__title", :stored_searchable), label: "Title", itemprop: 'name'
     config.add_index_field solr_name("desc_metadata__description", :stored_searchable), label: "Description", itemprop: 'description'
+    config.add_index_field solr_name("desc_metadata__abstract", :stored_searchable), label: "Description", itemprop: 'abstract'
     config.add_index_field solr_name("desc_metadata__tag", :stored_searchable), label: "Keyword", itemprop: 'keywords'
     config.add_index_field solr_name("desc_metadata__subject", :stored_searchable), label: "Subject", itemprop: 'about'
     config.add_index_field solr_name("desc_metadata__creator", :stored_searchable), label: "Creator", itemprop: 'creator'
@@ -88,6 +89,7 @@ class CatalogController < ApplicationController
     #   The ordering of the field names is the order of the display
     config.add_show_field solr_name("desc_metadata__title", :stored_searchable), label: "Title"
     config.add_show_field solr_name("desc_metadata__description", :stored_searchable), label: "Description"
+    config.add_show_field solr_name("desc_metadata__abstract", :stored_searchable), label: "Description"
     config.add_show_field solr_name("desc_metadata__tag", :stored_searchable), label: "Keyword"
     config.add_show_field solr_name("desc_metadata__subject", :stored_searchable), label: "Subject"
     config.add_show_field solr_name("desc_metadata__creator", :stored_searchable), label: "Creator"
@@ -170,11 +172,23 @@ class CatalogController < ApplicationController
     end
 
     config.add_search_field('description') do |field|
-      field.label = "Abstract or Summary"
+      field.label = "Description"
       field.solr_parameters = {
         :"spellcheck.dictionary" => "description"
       }
       solr_name = solr_name("desc_metadata__description", :stored_searchable)
+      field.solr_local_parameters = {
+        qf: solr_name,
+        pf: solr_name
+      }
+    end
+
+    config.add_search_field('abstract') do |field|
+      field.label = "Abstract"
+      field.solr_parameters = {
+        :"spellcheck.dictionary" => "abstract"
+      }
+      solr_name = solr_name("desc_metadata__abstract", :stored_searchable)
       field.solr_local_parameters = {
         qf: solr_name,
         pf: solr_name
