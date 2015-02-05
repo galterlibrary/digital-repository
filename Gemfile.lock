@@ -154,6 +154,11 @@ GEM
     eventmachine (1.0.4)
     execjs (2.2.2)
     extlib (0.9.16)
+    factory_girl (4.5.0)
+      activesupport (>= 3.0.0)
+    factory_girl_rails (4.5.0)
+      factory_girl (~> 4.5.0)
+      railties (>= 3.0.0)
     faraday (0.9.1)
       multipart-post (>= 1.2, < 3)
     fastercsv (1.5.5)
@@ -600,6 +605,7 @@ DEPENDENCIES
   devise
   devise-guests (~> 0.3)
   escape
+  factory_girl_rails
   http_logger
   jbuilder (~> 2.0)
   jettywrapper

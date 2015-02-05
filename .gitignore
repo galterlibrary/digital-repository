@@ -22,3 +22,5 @@ public/uploads
 config/local_env.rb
 config/solr.yml
 config/fedora.yml
+
+spec/mock_upload_directory
