@@ -1,0 +1,6 @@
+<% Array(record.bibliographic_citation).each do |bc| %>
+  <span itemprop="bibliographic_citation">
+  <%= iconify_auto_link(bc) %>
+  </span>
+  <br />
+<% end %>

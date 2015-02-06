@@ -70,6 +70,7 @@ class CatalogController < ApplicationController
     config.add_index_field solr_name("desc_metadata__title", :stored_searchable), label: "Title", itemprop: 'name'
     config.add_index_field solr_name("desc_metadata__description", :stored_searchable), label: "Description", itemprop: 'description'
     config.add_index_field solr_name("desc_metadata__abstract", :stored_searchable), label: "Abstrct", itemprop: 'abstract'
+    config.add_index_field solr_name("desc_metadata__bibliographic_citation", :stored_searchable), label: "Bibliographic Citation", itemprop: 'bibliographic_citation'
     config.add_index_field solr_name("desc_metadata__tag", :stored_searchable), label: "Keyword", itemprop: 'keywords'
     config.add_index_field solr_name("desc_metadata__subject", :stored_searchable), label: "Subject", itemprop: 'about'
     config.add_index_field solr_name("desc_metadata__creator", :stored_searchable), label: "Creator", itemprop: 'creator'
@@ -90,6 +91,7 @@ class CatalogController < ApplicationController
     config.add_show_field solr_name("desc_metadata__title", :stored_searchable), label: "Title"
     config.add_show_field solr_name("desc_metadata__description", :stored_searchable), label: "Description"
     config.add_show_field solr_name("desc_metadata__abstract", :stored_searchable), label: "Abstract"
+    config.add_show_field solr_name("desc_metadata__bibliographic_citation", :stored_searchable), label: "Bibliographic Citation"
     config.add_show_field solr_name("desc_metadata__tag", :stored_searchable), label: "Keyword"
     config.add_show_field solr_name("desc_metadata__subject", :stored_searchable), label: "Subject"
     config.add_show_field solr_name("desc_metadata__creator", :stored_searchable), label: "Creator"
@@ -189,6 +191,18 @@ class CatalogController < ApplicationController
         :"spellcheck.dictionary" => "abstract"
       }
       solr_name = solr_name("desc_metadata__abstract", :stored_searchable)
+      field.solr_local_parameters = {
+        qf: solr_name,
+        pf: solr_name
+      }
+    end
+
+    config.add_search_field('bibliographic_citation') do |field|
+      field.label = "Bibliographic Citation"
+      field.solr_parameters = {
+        :"spellcheck.dictionary" => "bibliographic_citation"
+      }
+      solr_name = solr_name("desc_metadata__bibliographic_citation", :stored_searchable)
       field.solr_local_parameters = {
         qf: solr_name,
         pf: solr_name

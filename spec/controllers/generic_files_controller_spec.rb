@@ -14,15 +14,17 @@ describe GenericFilesController do
 
   describe "#show" do
     before do
-      @file = GenericFile.new(abstract: ['testa'])
+      @file = GenericFile.new(
+        abstract: ['testa'], bibliographic_citation: ['cit'])
       @file.apply_depositor_metadata(@user.user_key)
       @file.save!
     end
 
-    it "should show xml" do
+    it "should assign proper generic_file" do
       get :show, id: @file
       expect(response).to be_successful
       expect(assigns(:generic_file).abstract).to eq(['testa'])
+      expect(assigns(:generic_file).bibliographic_citation).to eq(['cit'])
     end
   end
 
@@ -50,6 +52,7 @@ describe GenericFilesController do
   describe "#update" do
     before do
       @file = GenericFile.new(abstract: ['testa'])
+      @file = GenericFile.new(bibliographic_citation: ['cit'])
       @file.apply_depositor_metadata(@user.user_key)
       @file.save!
     end
@@ -59,6 +62,14 @@ describe GenericFilesController do
       expect(response).to redirect_to(
         @routes.url_helpers.edit_generic_file_path(@file))
       expect(assigns(:generic_file).abstract).to eq(['dudu'])
+    end
+
+    it "should update bibliographic_citation" do
+      patch :update, id: @file, generic_file: {
+        bibliographic_citation: ['dudu'] }
+      expect(response).to redirect_to(
+        @routes.url_helpers.edit_generic_file_path(@file))
+      expect(assigns(:generic_file).bibliographic_citation).to eq(['dudu'])
     end
   end
 end
