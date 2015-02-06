@@ -1,4 +1,5 @@
 #!/usr/bin/ruby 
+require "#{Rails.root}/app/models/datastreams/dublin_core_datastream.rb"
 
 
 # Copyright 2011 University of Virginia
@@ -474,6 +475,7 @@ module Ead_fc
           c.title = title
         end
         c.description = rh['note']
+        c.date_created = [rh['create_date']]
         c.save!
         c.apply_depositor_metadata("galter-is@listserv.it.northwestern.edu")
         rh['collection'] = c
@@ -527,6 +529,9 @@ module Ead_fc
       @generic_file.visibility = 'open'
       @generic_file.subject = rh['subject']
       @generic_file.description = [rh['note']].compact
+      @generic_file.date_created = [rh['create_date']]
+      @generic_file.abstract = [rh['abstract']].compact
+      @generic_file.identifier = [rh['file_id']].compact
       @generic_file.save!
 
       add_to_collection(rh['parent_pid'], @generic_file)
@@ -721,6 +726,10 @@ module Ead_fc
               if child.name.match(/note/)
                 rh['note'] = unescape_and_clean(child.content, '.')
               end
+
+              if child.name.match(/abstract/)
+                rh['abstract'] = unescape_and_clean(child.content, '.')
+              end
             }
           end
 
@@ -753,7 +762,7 @@ module Ead_fc
             rh['id'] = String.new(rh['container_unitid'].to_s)
           end
 
-          rh['create_date'] = String.new(rh['container_unitdate'].to_s)
+          rh['create_date'] = String.new(rh['container_unitdate'].to_s).tr('()', '')
 
           # Build the description and title to be more consistent
           # between collection, containers, etc.
