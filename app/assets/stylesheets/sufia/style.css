@@ -13,51 +13,55 @@ a:hover {
 
 #masthead {
   min-height: 6em;
+  background: white;
 }
 
 ul.tagcloud a {
   color: #4E015C !important;
 }
 
-#topTitle {
-  color: #FFF;
-}
-
-#masthead, #footer{
-
-  //background-color: rgb(72,0,88);
+#footer{
   background: none repeat scroll 0% 0% #61468B;
-  //background-image: linear-gradient(rgb(72,0,88), rgb(120,40,135));
 }
+
 #footer dl {
   margin-bottom: 0px;
 }
 
 #masthead_controls {
-  background-color: rgb(49,4,63);
+  background: none repeat scroll 0% 0% #E6E6E6;
   border: none;
 }
 
 #masthead_controls .navbar {
-  background-color: rgb(49,4,63) !important;
+  background: none repeat scroll 0% 0% #E6E6E6 !important;
+  color: #54585A;
 }
 
 #masthead_controls .navbar li {
-  border-right: 1px solid #5B3B64;
+  border-right: 1px solid white;
 }
 
 #masthead_controls .navbar:first-child {
-  border-left: 1px solid #5B3B64;
+  border-left: 1px solid white;
+}
+
+#masthead_controls .navbar a:link, #masthead_controls .navbar a:visited {
+  color: #54585A;
 }
 
 #masthead_controls .navbar a:hover {
-  color: #FFAE00;
-  background: none repeat scroll 0% 0% rgb(104, 72, 113);
+  background-position: left bottom;
+  background-color: #D4D5D6;
+  color: #0082BF;
+  font-weight: 400;
 }
 
 #masthead_controls .navbar-default .navbar-nav > .active > a, #masthead_controls .navbar-default .navbar-nav > .active > a:hover, #masthead_controls .navbar-default .navbar-nav > .active > a:focus {
-  background: none repeat scroll 0% 0% rgb(49,4,63);
-  color: #FFAE00;
+  background: none repeat scroll 0% 0% white;
+  border-top: 3px solid #B1ACCE;
+  border-bottom: 2px solid white;
+  margin-top: -4px;
 }
 
 #home_header {
@@ -80,32 +84,3 @@ div.heading-tile .glyphicon, div.heading-tile .help-icon {
 #footer a {
   color: #FFF;
 }
-
-/* Make primary button look differnt? FIXME
-.btn-primary {
-  color: #333;
-  background-color: #FFF;
-  border-color: #CCC;
-}
-
-.btn-primary:hover, .btn-primary:focus, .btn-primary.focus, .btn-primary:active, .btn-primary.active, .open > .dropdown-toggle.btn-primary {
-    background-color: #e6e6e6;
-    border-color: #adadad;
-    color: #333;
-}
-
-.btn-primary:active, .btn-primary.active, .open > .dropdown-toggle.btn-primary {
-    background-image: none;
-}
-
-.btn-primary.disabled, .btn-primary[disabled], fieldset[disabled] .btn-primary, .btn-primary.disabled:hover, .btn-primary[disabled]:hover, fieldset[disabled] .btn-primary:hover, .btn-primary.disabled:focus, .btn-primary[disabled]:focus, fieldset[disabled] .btn-primary:focus, .btn-primary.disabled.focus, .btn-primary.focus[disabled], fieldset[disabled] .btn-primary.focus, .btn-primary.disabled:active, .btn-primary[disabled]:active, fieldset[disabled] .btn-primary:active, .btn-primary.disabled.active, .btn-primary.active[disabled], fieldset[disabled] .btn-primary.active {
-    background-color: #fff;
-    border-color: #ccc;
-}
-
-.btn-primary .badge {
-    background-color: #333;
-    color: #fff;
-}
-
-*/
