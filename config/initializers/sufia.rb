@@ -1,5 +1,10 @@
 # Returns an array containing the vhost 'CoSign service' value and URL
 Sufia.config do |config|
+  # Enable displaying usage statistics in the UI
+  # Defaults to FALSE
+  # Requires a Google Analytics id and OAuth2 keyfile.  See README for more info
+  #config.analytics = false
+
 
   config.fits_to_desc_mapping= {
     file_title: :title,

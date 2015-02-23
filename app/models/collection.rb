@@ -1,5 +1,4 @@
-class Collection < ActiveFedora::Base
-  include Sufia::Collection
+class Collection < Sufia::Collection
 
   def bytes
     'FIXME in app/models/collection.rb'
