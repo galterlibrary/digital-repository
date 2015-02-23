@@ -12,6 +12,7 @@ module GalterSufia
       g.test_framework :rspec, :spec => true
     end
 
+    #config.autoload_paths += %W(#{config.root}/app/presenters)
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers

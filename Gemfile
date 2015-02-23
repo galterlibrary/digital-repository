@@ -43,7 +43,7 @@ gem 'thin'
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
-gem 'sufia'#, :git => 'https://github.com/projecthydra/sufia.git', :branch => '5.0.0-stable'
+gem 'sufia', '6.0.0.rc2'#, :git => 'https://github.com/projecthydra/sufia.git', :branch => '5.0.0-stable'
 gem 'kaminari', github: 'harai/kaminari', branch: 'route_prefix_prototype'  # required to handle pagination properly in dashboard. See https://github.com/amatsuda/kaminari/pull/322
 gem 'therubyracer', '0.11.3', platforms: :ruby
 
@@ -56,6 +56,7 @@ group :development, :test do
   gem 'factory_girl_rails'
 end
 
+gem "better_errors",  group: :development
 gem 'pry-byebug'
 gem 'pry-rails'
 gem 'pry'
