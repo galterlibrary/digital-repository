@@ -1,5 +1,5 @@
 #!/usr/bin/ruby 
-require "#{Rails.root}/app/models/datastreams/dublin_core_datastream.rb"
+#require "#{Rails.root}/app/models/datastreams/dublin_core_datastream.rb"
 
 
 # Copyright 2011 University of Virginia
@@ -445,7 +445,7 @@ module Ead_fc
       end
 
       if !file_id.nil?
-        Find.find('/home/phb010/GVBlackArchive') do |path|
+        Find.find(Digital_assets_home) do |path|
           if path.downcase =~ /.*#{file_id}_full.pdf/
             return path
           end
@@ -453,7 +453,7 @@ module Ead_fc
 
         file_id = file_id.gsub(/[a-zA-Z]/, '')
 
-        Find.find('/home/phb010/GVBlackArchive') do |path|
+        Find.find(Digital_assets_home) do |path|
           if path.downcase =~ /.*#{file_id}_full.pdf/
             return path
           end
@@ -476,8 +476,8 @@ module Ead_fc
         end
         c.description = rh['note']
         c.date_created = [rh['create_date']]
-        c.save!
         c.apply_depositor_metadata("galter-is@listserv.it.northwestern.edu")
+        c.save!
         rh['collection'] = c
       end
     end
@@ -493,8 +493,6 @@ module Ead_fc
       @current_user ||= User.find(6)
       fname = rh['fname']
       original_filename = fname.split('/').last
-      #@generic_file = GenericFile.find {|c|
-      #  c.filename.any? {|f| f == original_filename } }
       @generic_file = nil
       begin
         @all_file_names ||= GenericFile.all.inject({}) do |h, gf|
@@ -509,6 +507,7 @@ module Ead_fc
       binding.pry if @generic_file.blank?
 
       if @generic_file.blank?
+        byebug
         file = ActionDispatch::Http::UploadedFile.new(
           tempfile: File.open(fname))
         file.original_filename = original_filename
@@ -938,11 +937,11 @@ module Ead_fc
                 fid = 'gvblackinoperatory.tif'
               elsif rh['title'] =~ /Group photograph/
                 fid = 'wcdc_group.jpg'
-                p = '/home/phb010/GVBlackArchive'
+                p = Digital_assets_home
               end
 
               if @cn_loh[-2]['title'] =~ /Series IV/
-                p = '/home/phb010/GVBlackArchive/Photographs'
+                p = Digital_assets_home + '/Photographs'
               end
 
               if p

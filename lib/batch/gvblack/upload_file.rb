@@ -2,7 +2,7 @@ current_user = User.find(1)
 exit 1 unless fname = ARGV[0]
 @generic_file = GenericFile.new
 file = ActionDispatch::Http::UploadedFile.new(
-  tempfile: File.open("/home/phb010/galter_sufia/gvblack/GVBlackArchive/#{fname}"))
+  tempfile: File.open("#{Digital_assets_home}/#{fname}"))
 file.original_filename = fname.split('/').last
 content_type = 'image/tiff'
 content_type = 'application/pdf' if fname =~ /.*pdf/
