@@ -1,14 +1,15 @@
-/*
- dark-northwestern: rgb(49,4,63)
- northwestern: rgb(72,0,88)
-*/
-
 a {
   color: #4E015C;
 }
 
 a:hover {
   color: #4E015C;
+}
+
+#home_header {
+  background-image: url("/assets/spec_col_crop_top.jpg");
+  border-top: 8px solid #FFF;
+  border-bottom: 8px solid #FFF;
 }
 
 #masthead {
@@ -28,45 +29,43 @@ ul.tagcloud a {
   margin-bottom: 0px;
 }
 
+#wrapper {
+  background-image: linear-gradient(to bottom, #E6E6E6 0%, #FFF 100%);
+}
+
 #masthead_controls {
-  background: none repeat scroll 0% 0% #E6E6E6;
-  border: none;
+  border-top: none;
+  border-bottom: none;
+  background-color: #E6E6E6;
 }
-
 #masthead_controls .navbar {
-  background: none repeat scroll 0% 0% #E6E6E6 !important;
-  color: #54585A;
+  background-color: #E6E6E6;
+  margin-bottom: 0px;
 }
-
+#masthead_controls .navbar li:first-child {
+  border-left: 2px solid #FFF;
+}
 #masthead_controls .navbar li {
-  border-right: 1px solid white;
-}
-
-#masthead_controls .navbar:first-child {
-  border-left: 1px solid white;
+  border-right: 2px solid #FFF;
 }
 
 #masthead_controls .navbar a:link, #masthead_controls .navbar a:visited {
   color: #54585A;
+  background-color: #E6E6E6;
 }
 
 #masthead_controls .navbar a:hover {
-  background-position: left bottom;
   background-color: #D4D5D6;
-  color: #0082BF;
-  font-weight: 400;
 }
 
 #masthead_controls .navbar-default .navbar-nav > .active > a, #masthead_controls .navbar-default .navbar-nav > .active > a:hover, #masthead_controls .navbar-default .navbar-nav > .active > a:focus {
-  background: none repeat scroll 0% 0% white;
+  background-color: #FFF;
+  color: #0082BF;
   border-top: 3px solid #B1ACCE;
   border-bottom: 2px solid white;
   margin-top: -4px;
 }
 
-#home_header {
-  background-image: url("/assets/spec_col_crop_top.jpg");
-}
 .dashboard .panel-default > .dashboard-panel {
   //background-color: rgb(104, 72, 113);
   background-color: rgb(245,245,245);
