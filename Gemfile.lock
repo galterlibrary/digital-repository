@@ -452,6 +452,8 @@ GEM
     rdf-turtle (1.1.5)
       ebnf (~> 0.3, >= 0.3.6)
       rdf (~> 1.1, >= 1.1.4)
+    rdf-vocab (0.4.0)
+      linkeddata
     rdf-xsd (1.1.2)
       rdf (~> 1.1)
     rdoc (4.2.0)
@@ -624,6 +626,7 @@ DEPENDENCIES
   pry-rails
   qa
   rails (= 4.1.6)
+  rdf-vocab
   rspec-rails
   ruby-ldap
   ruby-prof

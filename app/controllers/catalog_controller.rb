@@ -73,6 +73,11 @@ class CatalogController < ApplicationController
     config.add_index_field solr_name("abstract", :stored_searchable), label: "Abstract", itemprop: 'abstract'
     config.add_index_field solr_name("tag", :stored_searchable), label: "Keyword", itemprop: 'keywords'
     config.add_index_field solr_name("subject", :stored_searchable), label: "Subject", itemprop: 'about'
+    config.add_index_field solr_name("mesh", :stored_searchable), label: "Subject: MESH", itemprop: 'about'
+    config.add_index_field solr_name("lcsh", :stored_searchable), label: "Subject: LCSH", itemprop: 'about'
+    config.add_index_field solr_name("subject_geographic", :stored_searchable), label: "Subject: Geographic Name", itemprop: 'about'
+    config.add_index_field solr_name("subject_name", :stored_searchable), label: "Subject: Name", itemprop: 'about'
+    config.add_index_field solr_name("digital_origin", :stored_searchable), label: "Digital Origin", itemprop: 'digital_origin'
     config.add_index_field solr_name("creator", :stored_searchable), label: "Creator", itemprop: 'creator'
     config.add_index_field solr_name("contributor", :stored_searchable), label: "Contributor", itemprop: 'contributor'
     config.add_index_field solr_name("publisher", :stored_searchable), label: "Publisher", itemprop: 'publisher'
@@ -94,6 +99,11 @@ class CatalogController < ApplicationController
     config.add_show_field solr_name("abstract", :stored_searchable), label: "Abstract"
     config.add_show_field solr_name("tag", :stored_searchable), label: "Keyword"
     config.add_show_field solr_name("subject", :stored_searchable), label: "Subject"
+    config.add_show_field solr_name("mesh", :stored_searchable), label: "Subject: MESH"
+    config.add_show_field solr_name("lcsh", :stored_searchable), label: "Subject: LCSH"
+    config.add_show_field solr_name("subject_geographic", :stored_searchable), label: "Subject: Geographic Name"
+    config.add_show_field solr_name("subject_name", :stored_searchable), label: "Subject: Name"
+    config.add_show_field solr_name("digital_origin", :stored_searchable), label: "Digital Origin"
     config.add_show_field solr_name("creator", :stored_searchable), label: "Creator"
     config.add_show_field solr_name("contributor", :stored_searchable), label: "Contributor"
     config.add_show_field solr_name("publisher", :stored_searchable), label: "Publisher"
@@ -236,6 +246,61 @@ class CatalogController < ApplicationController
         :"spellcheck.dictionary" => "subject"
       }
       solr_name = solr_name("subject", :stored_searchable)
+      field.solr_local_parameters = {
+        qf: solr_name,
+        pf: solr_name
+      }
+    end
+
+    config.add_search_field('mesh') do |field|
+      field.solr_parameters = {
+        :"spellcheck.dictionary" => "mesh"
+      }
+      solr_name = solr_name("mesh", :stored_searchable)
+      field.solr_local_parameters = {
+        qf: solr_name,
+        pf: solr_name
+      }
+    end
+
+    config.add_search_field('lcsh') do |field|
+      field.solr_parameters = {
+        :"spellcheck.dictionary" => "lcsh"
+      }
+      solr_name = solr_name("lcsh", :stored_searchable)
+      field.solr_local_parameters = {
+        qf: solr_name,
+        pf: solr_name
+      }
+    end
+
+    config.add_search_field('subject_geographic') do |field|
+      field.solr_parameters = {
+        :"spellcheck.dictionary" => "subject_geographic"
+      }
+      solr_name = solr_name("subject_geographic", :stored_searchable)
+      field.solr_local_parameters = {
+        qf: solr_name,
+        pf: solr_name
+      }
+    end
+
+    config.add_search_field('subject_name') do |field|
+      field.solr_parameters = {
+        :"spellcheck.dictionary" => "subject_name"
+      }
+      solr_name = solr_name("subject_name", :stored_searchable)
+      field.solr_local_parameters = {
+        qf: solr_name,
+        pf: solr_name
+      }
+    end
+
+    config.add_search_field('digital_origin') do |field|
+      field.solr_parameters = {
+        :"spellcheck.dictionary" => "digital_origin"
+      }
+      solr_name = solr_name("digital_origin", :stored_searchable)
       field.solr_local_parameters = {
         qf: solr_name,
         pf: solr_name

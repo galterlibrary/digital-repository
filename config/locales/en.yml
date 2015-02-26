@@ -24,5 +24,16 @@ en:
     labels:
       generic_file:
         description: 'Description'
+        mesh: 'Subject: MESH'
+        lcsh: 'Subject: LCSH'
+        subject_geographic: 'Subject: Geographic Name'
+        subject_name: 'Subject: Name'
       collection:
         description: 'Description'
+    metadata_help:
+      generic_file:
+        mesh: 'Medical Subject Headings'
+        subject: 'General subject terms'
+        lcsh: 'Library of Congress Subject Headings'
+        subject_geographic: 'Subject: Geographic name'
+        subject_name: 'Subject: Name of Person, Corporation, etc'

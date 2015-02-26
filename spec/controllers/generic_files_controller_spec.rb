@@ -15,7 +15,10 @@ describe GenericFilesController do
   describe "#show" do
     before do
       @file = GenericFile.new(
-        abstract: ['testa'], bibliographic_citation: ['cit'])
+        abstract: ['testa'], bibliographic_citation: ['cit'],
+        digital_origin: ['digo'], mesh: ['mesh'], lcsh: ['lcsh'],
+        subject_geographic: ['geo'], subject_name: ['subjn']
+      )
       @file.apply_depositor_metadata(@user.user_key)
       @file.save!
     end
@@ -25,6 +28,11 @@ describe GenericFilesController do
       expect(response).to be_successful
       expect(assigns(:generic_file).abstract).to eq(['testa'])
       expect(assigns(:generic_file).bibliographic_citation).to eq(['cit'])
+      expect(assigns(:generic_file).digital_origin).to eq(['digo'])
+      expect(assigns(:generic_file).mesh).to eq(['mesh'])
+      expect(assigns(:generic_file).lcsh).to eq(['lcsh'])
+      expect(assigns(:generic_file).subject_geographic).to eq(['geo'])
+      expect(assigns(:generic_file).subject_name).to eq(['subjn'])
     end
   end
 
@@ -51,8 +59,11 @@ describe GenericFilesController do
 
   describe "#update" do
     before do
-      @file = GenericFile.new(abstract: ['testa'])
-      @file = GenericFile.new(bibliographic_citation: ['cit'])
+      @file = GenericFile.new(
+        abstract: ['testa'], bibliographic_citation: ['cit'],
+        digital_origin: ['digo'], mesh: ['mesh'], lcsh: ['lcsh'],
+        subject_geographic: ['geo'], subject_name: ['subjn']
+      )
       @file.apply_depositor_metadata(@user.user_key)
       @file.save!
     end
@@ -70,6 +81,41 @@ describe GenericFilesController do
       expect(response).to redirect_to(
         @routes.url_helpers.edit_generic_file_path(@file))
       expect(assigns(:generic_file).bibliographic_citation).to eq(['dudu'])
+    end
+
+    it "should update subject_name" do
+      patch :update, id: @file, generic_file: { subject_name: ['dudu'] }
+      expect(response).to redirect_to(
+        @routes.url_helpers.edit_generic_file_path(@file))
+      expect(assigns(:generic_file).subject_name).to eq(['dudu'])
+    end
+
+    it "should update subject_geographic" do
+      patch :update, id: @file, generic_file: { subject_geographic: ['dudu'] }
+      expect(response).to redirect_to(
+        @routes.url_helpers.edit_generic_file_path(@file))
+      expect(assigns(:generic_file).subject_geographic).to eq(['dudu'])
+    end
+
+    it "should update mesh" do
+      patch :update, id: @file, generic_file: { mesh: ['dudu'] }
+      expect(response).to redirect_to(
+        @routes.url_helpers.edit_generic_file_path(@file))
+      expect(assigns(:generic_file).mesh).to eq(['dudu'])
+    end
+
+    it "should update lcsh" do
+      patch :update, id: @file, generic_file: { lcsh: ['dudu'] }
+      expect(response).to redirect_to(
+        @routes.url_helpers.edit_generic_file_path(@file))
+      expect(assigns(:generic_file).lcsh).to eq(['dudu'])
+    end
+
+    it "should update digital_origin" do
+      patch :update, id: @file, generic_file: { digital_origin: ['dudu'] }
+      expect(response).to redirect_to(
+        @routes.url_helpers.edit_generic_file_path(@file))
+      expect(assigns(:generic_file).digital_origin).to eq(['dudu'])
     end
   end
 end

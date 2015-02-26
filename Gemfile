@@ -68,3 +68,5 @@ gem 'ruby-ldap'
 
 #gem 'active-fedora', :git => 'https://github.com/projecthydra/active_fedora.git'
 #gem 'hydra-editor', :git => 'https://github.com/projecthydra-labs/hydra-editor.git'
+
+gem "rdf-vocab"
