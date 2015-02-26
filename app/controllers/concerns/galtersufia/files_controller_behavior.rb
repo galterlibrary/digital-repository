@@ -8,8 +8,8 @@ module Galtersufia
     extend ActiveSupport::Concern
     include Sufia::FilesControllerBehavior
     included do
-      self.presenter_class = GenericFilePresenter
-      self.edit_form_class = Sufia::Forms::GenericFileEditForm
+      self.presenter_class = GalterGenericFilePresenter
+      self.edit_form_class = Sufia::Forms::GalterGenericFileEditForm
     end
   end
 end

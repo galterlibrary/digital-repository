@@ -1,4 +1,4 @@
-class GenericFilePresenter < Sufia::GenericFilePresenter
+class GalterGenericFilePresenter < Sufia::GenericFilePresenter
   self.terms = [
     :resource_type,
     :title,
