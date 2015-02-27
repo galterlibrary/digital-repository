@@ -474,10 +474,11 @@ module Ead_fc
           c = Collection.new
           c.title = title
         end
+        c.apply_depositor_metadata("galter-is@listserv.it.northwestern.edu")
         c.description = rh['note']
         c.date_created = [rh['create_date']]
-        c.apply_depositor_metadata("galter-is@listserv.it.northwestern.edu")
-        c.save!
+        c.rights = ['http://creativecommons.org/publicdomain/mark/1.0/']
+        #c.save!
         rh['collection'] = c
       end
     end
@@ -527,10 +528,16 @@ module Ead_fc
       @generic_file.title = [unescape_and_clean(rh['title'])]
       @generic_file.visibility = 'open'
       @generic_file.subject = rh['subject']
+      @generic_file.mesh = rh['mesh']
+      @generic_file.lcsh = rh['lcsh']
+      @generic_file.subject_geographic = rh['geoname']
+      @generic_file.subject_name = (rh['corpname'] || []) + (rh['persname'] || [])
       @generic_file.description = [rh['note']].compact
       @generic_file.date_created = [rh['create_date']]
       @generic_file.abstract = [rh['abstract']].compact
       @generic_file.identifier = [rh['file_id']].compact
+      @generic_file.rights = ['http://creativecommons.org/publicdomain/mark/1.0/']
+      @generic_file.digital_origin = ['Reformatted Digital']
       @generic_file.save!
 
       add_to_collection(rh['parent_pid'], @generic_file)
@@ -735,8 +742,17 @@ module Ead_fc
           ele.xpath("./#{@ns}controlaccess").each {|ca|
             ca.children.each { |child|
               if child.name.match(/subject/)
-                rh['subject'] = [] if rh['subject'].nil?
-                rh['subject'].concat(child.content.strip.gsub(/\s+/," ").split(',')).flatten.compact
+                unless subject = child.attributes['source'].try(:value)
+                  byebug
+                end
+                rh[subject] = [] if rh[subject].nil?
+                rh[subject].concat(child.content.strip.gsub(/\s+/," ").split(',')).flatten.compact
+              end
+
+              if child.name.match(/geogname/)
+                rh['geoname'] = [] if rh['geoname'].nil?
+                rh['geoname'] << child.content.strip.gsub(/\s+/," ")
+                rh['geoname'].flatten.compact
               end
 
               if child.name.match(/corpname/)
