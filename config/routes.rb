@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   get '/authorities/generic_files/subject' => 'custom_authorities#query_mesh'
   mount Qa::Engine => '/qa'
+  mount Riiif::Engine => '/image-service'
 
   blacklight_for :catalog
   devise_for :users

@@ -485,6 +485,8 @@ GEM
       mime-types (>= 1.16, < 3.0)
       netrc (~> 0.7)
     retriable (1.4.1)
+    riiif (0.1.0)
+      rails (> 3.2.0)
     rsolr (1.0.10)
       builder (>= 2.1.2)
     rspec-core (3.1.7)
@@ -638,6 +640,7 @@ DEPENDENCIES
   qa
   rails (= 4.1.6)
   rdf-vocab
+  riiif
   rspec-rails
   ruby-ldap
   ruby-prof

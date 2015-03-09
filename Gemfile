@@ -67,3 +67,5 @@ gem 'http_logger'
 gem 'escape'
 gem 'ruby-ldap'
 gem 'rdf-vocab'
+
+gem 'riiif'
