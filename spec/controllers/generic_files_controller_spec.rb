@@ -5,11 +5,6 @@ describe GenericFilesController do
     @user = FactoryGirl.create(:user)
     sign_in @user
     @routes = Sufia::Engine.routes
-     GenericFile.delete_all
-  end
-
-  after do
-    GenericFile.delete_all
   end
 
   describe "#show" do
@@ -17,7 +12,8 @@ describe GenericFilesController do
       @file = GenericFile.new(
         abstract: ['testa'], bibliographic_citation: ['cit'],
         digital_origin: ['digo'], mesh: ['mesh'], lcsh: ['lcsh'],
-        subject_geographic: ['geo'], subject_name: ['subjn']
+        subject_geographic: ['geo'], subject_name: ['subjn'],
+        page_number: 11
       )
       @file.apply_depositor_metadata(@user.user_key)
       @file.save!
@@ -33,6 +29,7 @@ describe GenericFilesController do
       expect(assigns(:generic_file).lcsh).to eq(['lcsh'])
       expect(assigns(:generic_file).subject_geographic).to eq(['geo'])
       expect(assigns(:generic_file).subject_name).to eq(['subjn'])
+      expect(assigns(:generic_file).page_number).to eq(11)
     end
   end
 
@@ -44,8 +41,7 @@ describe GenericFilesController do
     end
 
     after do
-      FileContentDatastream.any_instance.stub(:live?).and_return(true)
-      GenericFile.destroy_all
+      expect_any_instance_of(FileContentDatastream).to receive(:live?).and_return(true)
     end
 
     it "should ingest files from the filesystem" do
@@ -62,7 +58,8 @@ describe GenericFilesController do
       @file = GenericFile.new(
         abstract: ['testa'], bibliographic_citation: ['cit'],
         digital_origin: ['digo'], mesh: ['mesh'], lcsh: ['lcsh'],
-        subject_geographic: ['geo'], subject_name: ['subjn']
+        subject_geographic: ['geo'], subject_name: ['subjn'],
+        page_number: 11
       )
       @file.apply_depositor_metadata(@user.user_key)
       @file.save!
@@ -116,6 +113,13 @@ describe GenericFilesController do
       expect(response).to redirect_to(
         @routes.url_helpers.edit_generic_file_path(@file))
       expect(assigns(:generic_file).digital_origin).to eq(['dudu'])
+    end
+
+    it "should update page_number" do
+      patch :update, id: @file, generic_file: { page_number: 22 }
+      expect(response).to redirect_to(
+        @routes.url_helpers.edit_generic_file_path(@file))
+      expect(assigns(:generic_file).page_number).to eq('22')
     end
   end
 end

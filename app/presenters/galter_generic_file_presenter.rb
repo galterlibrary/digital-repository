@@ -20,6 +20,7 @@ class GalterGenericFilePresenter < Sufia::GenericFilePresenter
     :identifier,
     :based_near,
     :related_url,
-    :digital_origin
+    :digital_origin,
+    :page_number
   ]
 end

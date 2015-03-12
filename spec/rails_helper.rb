@@ -7,6 +7,7 @@ require 'factory_girl'
 
 ActiveRecord::Migration.maintain_test_schema!
 
+require 'active_fedora/cleaner'
 RSpec.configure do |config|
   config.include Devise::TestHelpers, :type => :controller
   config.include FactoryGirl::Syntax::Methods
@@ -15,4 +16,10 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = true
 
   config.infer_spec_type_from_file_location!
+
+   config.before :each do |example|
+     unless (example.metadata[:type] == :view || example.metadata[:no_clean])
+       ActiveFedora::Cleaner.clean!
+     end
+   end
 end

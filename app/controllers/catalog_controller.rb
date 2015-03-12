@@ -81,6 +81,7 @@ class CatalogController < ApplicationController
     config.add_index_field solr_name("creator", :stored_searchable), label: "Creator", itemprop: 'creator'
     config.add_index_field solr_name("contributor", :stored_searchable), label: "Contributor", itemprop: 'contributor'
     config.add_index_field solr_name("publisher", :stored_searchable), label: "Publisher", itemprop: 'publisher'
+    config.add_index_field solr_name("page_number", :stored_searchable), label: "pageNumber"
     config.add_index_field solr_name("based_near", :stored_searchable), label: "Location", itemprop: 'contentLocation'
     config.add_index_field solr_name("language", :stored_searchable), label: "Language", itemprop: 'inLanguage'
     config.add_index_field solr_name("date_uploaded", :stored_searchable), label: "Date Uploaded", itemprop: 'datePublished'
@@ -107,6 +108,7 @@ class CatalogController < ApplicationController
     config.add_show_field solr_name("creator", :stored_searchable), label: "Creator"
     config.add_show_field solr_name("contributor", :stored_searchable), label: "Contributor"
     config.add_show_field solr_name("publisher", :stored_searchable), label: "Publisher"
+    config.add_show_field solr_name("page_number", :stored_searchable), label: "Page Number"
     config.add_show_field solr_name("based_near", :stored_searchable), label: "Location"
     config.add_show_field solr_name("language", :stored_searchable), label: "Language"
     config.add_show_field solr_name("date_uploaded", :stored_searchable), label: "Date Uploaded"
@@ -224,6 +226,17 @@ class CatalogController < ApplicationController
         :"spellcheck.dictionary" => "publisher"
       }
       solr_name = solr_name("publisher", :stored_searchable)
+      field.solr_local_parameters = {
+        qf: solr_name,
+        pf: solr_name
+      }
+    end
+
+    config.add_search_field('page_number') do |field|
+      field.solr_parameters = {
+        :"spellcheck.dictionary" => "page_number"
+      }
+      solr_name = solr_name("page_number", :stored_searchable)
       field.solr_local_parameters = {
         qf: solr_name,
         pf: solr_name

@@ -11,6 +11,12 @@ Rails.application.routes.draw do
   mount Sufia::Engine => '/'
   root to: 'homepage#index'
 
+  get '/iiif-api/collection/:id/manifest', to: 'iiif_apis#manifest', as: 'iiif_apis_manifest'
+  get '/iiif-api/collection/:id/sequence/:name', to: 'iiif_apis#sequence', as: 'iiif_apis_sequence'
+  get '/iiif-api/generic_file/:id/canvas/:name', to: 'iiif_apis#canvas', as: 'iiif_apis_canvas'
+  get '/iiif-api/generic_file/:id/annotation/:name', to: 'iiif_apis#annotation', as: 'iiif_apis_annotation'
+  get '/iiif-api/generic_file/:id/list/:name', to: 'iiif_apis#list', as: 'iiif_apis_list'
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

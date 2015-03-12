@@ -374,6 +374,10 @@ GEM
     openseadragon (0.1.0)
       rails (> 3.2.0)
     orm_adapter (0.5.0)
+    osullivan (0.0.3)
+      activesupport (>= 3.2.18)
+      faraday (~> 0.9.0)
+      json
     parslet (1.7.0)
       blankslate (>= 2.0, <= 4.0)
     pg (0.18.1)
@@ -633,6 +637,7 @@ DEPENDENCIES
   jettywrapper
   jquery-rails
   kaminari!
+  osullivan
   pg
   pry
   pry-byebug

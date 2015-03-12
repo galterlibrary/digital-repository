@@ -69,3 +69,4 @@ gem 'ruby-ldap'
 gem 'rdf-vocab'
 
 gem 'riiif'
+gem 'osullivan'
