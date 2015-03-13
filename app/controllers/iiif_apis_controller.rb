@@ -3,8 +3,26 @@ class IiifApisController < ApplicationController
     render json: {}
   end
 
+  def add_canvases_to_sequence(collection, iif_sequence)
+    collection.pagable_members.each do |gf|
+      iif_sequence.canvases << generate_canvas(gf)
+    end
+    iif_sequence
+  end
+  private :add_canvases_to_sequence
+
+  def generate_sequence(collection, name='basic')
+    iif_sequence = IIIF::Presentation::Sequence.new(
+      '@id' => iiif_apis_sequence_path(id: collection.id, name: name),
+      'label' => name
+    )
+    add_canvases_to_sequence(collection, iif_sequence)
+  end
+  private :generate_sequence
+
   def sequence
-    render json: {}
+    collection = Collection.find(params[:id])
+    render json: generate_sequence(collection, params['name'])
   end
 
   def generate_canvas(generic_file, name=nil)
