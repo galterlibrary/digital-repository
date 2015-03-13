@@ -1,6 +1,19 @@
 class IiifApisController < ApplicationController
+  def generate_manifest(collection)
+    manifest = IIIF::Presentation::Manifest.new(
+      '@id' => iiif_apis_manifest_path(id: collection.id),
+      'label' => collection.title,
+      'description' => collection.description,
+      'license' => collection.rights.first
+    )
+    manifest.sequences << generate_sequence(collection)
+    manifest
+  end
+  private :generate_manifest
+
   def manifest
-    render json: {}
+    collection = Collection.find(params[:id])
+    render json: generate_manifest(collection)
   end
 
   def add_canvases_to_sequence(collection, iif_sequence)
