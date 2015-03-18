@@ -41,6 +41,9 @@ RSpec.describe IiifApisController, :type => :controller do
           GenericFile.new(id: 'gf1', page_number: '9'),
           GenericFile.new(id: 'gf2', page_number: '10')
         ])
+        allow(collection).to receive(:parent).and_return(
+          Collection.new(id: 'col_parent')
+        )
       end
 
       subject { controller.send(:generate_manifest, collection) }
@@ -57,6 +60,10 @@ RSpec.describe IiifApisController, :type => :controller do
 
       it 'generates correct label' do
         expect(subject['label']).to eq('something')
+      end
+
+      it 'generates correct within' do
+        expect(subject['within']).to eq('http://test.host/collections/col_parent')
       end
 
       it 'generates correct metadata' do

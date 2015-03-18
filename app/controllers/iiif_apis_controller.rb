@@ -5,12 +5,19 @@ class IiifApisController < ApplicationController
       'label' => collection.title,
       'description' => collection.description,
       'license' => collection.rights.first,
+      'within' => collection_within(collection),
       'metadata' => collection_metadata(collection)
     )
     manifest.sequences << generate_sequence(collection)
     manifest
   end
   private :generate_manifest
+
+  def collection_within(collection)
+    return '' unless collection.parent.present?
+    collections.collection_url(collection.parent)
+  end
+  private :collection_within
 
   def collection_metadata(collection)
     (GalterCollectionPresenter.terms - [
