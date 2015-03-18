@@ -144,16 +144,18 @@ RSpec.describe Collection do
     end
   end
 
-  context 'children relation' do
+  context 'children-parent relation' do
     let(:user) { FactoryGirl.create(:user) }
     let(:collection) { make_collection(user) }
+    let(:collection_parent) { make_collection(user) }
+    let(:collection_child) { make_collection(user) }
     let(:member1) { make_generic_file(user, { title: ['Member 1'] }) }
     let(:non_member) { make_generic_file(user, { title: ['Non-member'] }) }
     let(:member2) { make_generic_file(user, { title: ['Member 2'] }) }
 
     it { is_expected.to respond_to(:children) }
 
-    it 'recognizes its own children' do
+    it 'recognizes its own generic files children' do
       member1.parent = collection
       member1.save!
       member2.parent = collection
@@ -163,6 +165,36 @@ RSpec.describe Collection do
       expect(collection.children).to include(member1)
       expect(collection.children).to include(member2)
       expect(collection.children).not_to include(non_member)
+    end
+
+    it 'recognizes its own collection children' do
+      collection.parent = collection_parent
+      collection.save!
+      expect(collection_parent.children.count).to eq(1)
+      expect(collection_parent.children).to include(collection)
+      expect(collection.children).to be_blank
+    end
+
+    it 'cannot have a generic file parent' do
+      expect { collection.parent = member1 }.to raise_error(
+        ActiveFedora::AssociationTypeMismatch)
+    end
+
+    it 'can be a child and parent to mixed type children' do
+      collection.parent = collection_parent
+      collection.save!
+      member1.parent = collection
+      member1.save!
+      member2.parent = collection
+      member2.save!
+      collection_child.parent = collection
+      collection_child.save!
+      expect(collection_child.children.count).to eq(0)
+      expect(collection_parent.children.count).to eq(1)
+      expect(collection.children.count).to eq(3)
+      expect(collection.children).to include(member1)
+      expect(collection.children).to include(member2)
+      expect(collection.children).to include(collection_child)
     end
   end
 end
