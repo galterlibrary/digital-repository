@@ -1,6 +1,9 @@
 require 'iiif/presentation'
 class GenericFile < ActiveFedora::Base
   include Sufia::GenericFile
+  belongs_to :parent, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf,
+    class_name: "Collection"
+
   property :abstract, predicate: ::RDF::DC.abstract, multiple: true do |index|
     index.type :text
     index.as :stored_searchable

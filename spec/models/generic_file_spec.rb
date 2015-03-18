@@ -1,6 +1,5 @@
 require 'rails_helper'
 RSpec.describe GenericFile do
-
   context 'iif presentation api' do
     require 'iiif/presentation'
     describe 'iiif_image_resource' do
@@ -105,6 +104,38 @@ RSpec.describe GenericFile do
         subject.save(validate: false)
         expect(subject.reload.page_number).to eq(22)
       end
+    end
+  end
+
+  context 'parent relationship' do
+    let(:user) { FactoryGirl.create(:user) }
+    let(:collection) {
+      col = Collection.new(title: 'hello')
+      col.apply_depositor_metadata(user.user_key)
+      col.save!
+      col
+    }
+    let(:generic_file) {
+      gf = GenericFile.new(title: ['hello'])
+      gf.apply_depositor_metadata(user.user_key)
+      gf.save!
+      gf
+    }
+
+    it { is_expected.to respond_to(:parent) }
+
+    it 'can store a parent object of Collection type' do
+      expect(subject.parent).to eq(nil)
+      subject.parent = collection
+      subject.save(validate: false)
+      expect(subject.reload.parent).to eq(collection)
+    end
+
+    it 'will not store a parent object of any other type' do
+      expect(subject.parent).to eq(nil)
+      expect { subject.parent = generic_file }.to raise_error(
+        ActiveFedora::AssociationTypeMismatch)
+      expect(subject.parent).to be(nil)
     end
   end
 end

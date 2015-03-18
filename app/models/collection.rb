@@ -1,4 +1,7 @@
 class Collection < Sufia::Collection
+  has_many :children, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf,
+    class_name: 'GenericFile'
+
   property :abstract, predicate: ::RDF::DC.abstract, multiple: true do |index|
     index.type :text
     index.as :stored_searchable

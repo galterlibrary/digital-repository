@@ -143,4 +143,26 @@ RSpec.describe Collection do
       end
     end
   end
+
+  context 'children relation' do
+    let(:user) { FactoryGirl.create(:user) }
+    let(:collection) { make_collection(user) }
+    let(:member1) { make_generic_file(user, { title: ['Member 1'] }) }
+    let(:non_member) { make_generic_file(user, { title: ['Non-member'] }) }
+    let(:member2) { make_generic_file(user, { title: ['Member 2'] }) }
+
+    it { is_expected.to respond_to(:children) }
+
+    it 'recognizes its own children' do
+      member1.parent = collection
+      member1.save!
+      member2.parent = collection
+      member2.save!
+      non_member.parent = nil
+      non_member.save!
+      expect(collection.children).to include(member1)
+      expect(collection.children).to include(member2)
+      expect(collection.children).not_to include(non_member)
+    end
+  end
 end
