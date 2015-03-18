@@ -1,4 +1,3 @@
-require 'iiif/presentation'
 class GenericFile < ActiveFedora::Base
   include Sufia::GenericFile
   belongs_to :parent, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf,
@@ -32,13 +31,5 @@ class GenericFile < ActiveFedora::Base
   property :page_number, predicate: ::RDF::URI.new('http://opaquenamespace.org/hydra/pageNumber'), multiple: false do |index|
     index.as :stored_searchable
     index.type :integer
-  end
-
-  def iiif_image_resource
-    IIIF::Presentation::ImageResource.new(
-      '@id' => Riiif::Engine.routes.url_helpers.image_path(id, size: 'full'),
-      'format' => 'image/jpeg', 'height' => height.first.to_i,
-      'width' => width.first.to_i
-    )
   end
 end

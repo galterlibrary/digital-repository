@@ -1,38 +1,5 @@
 require 'rails_helper'
 RSpec.describe GenericFile do
-  context 'iif presentation api' do
-    require 'iiif/presentation'
-    describe 'iiif_image_resource' do
-      let(:generic_file) { GenericFile.new(id: 'testa') }
-      subject { generic_file.iiif_image_resource }
-
-      it { is_expected.to be_an_instance_of(IIIF::Presentation::ImageResource) }
-
-      it 'generates correct image path' do
-        expect(subject['@id']).to eq(
-          '/image-service/testa/full/full/0/native.jpg')
-      end
-
-      it 'generates correct type' do
-        expect(subject['@type']).to eq('dcterms:Image')
-      end
-
-      it 'generates correct format' do
-        expect(subject['format']).to eq('image/jpeg')
-      end
-
-      it 'generates correct height' do
-        expect(generic_file).to receive(:height).and_return(['20'])
-        expect(subject['height']).to eq(20)
-      end
-
-      it 'generates correct width' do
-        expect(generic_file).to receive(:width).and_return(['50'])
-        expect(subject['width']).to eq(50)
-      end
-    end
-  end
-
   context 'custom metadata' do
     describe "abstract" do
       it "has it" do

@@ -1,7 +1,9 @@
+require 'iiif/presentation'
+
 class IiifApisController < ApplicationController
   def generate_manifest(collection)
     manifest = IIIF::Presentation::Manifest.new(
-      '@id' => iiif_apis_manifest_path(id: collection.id),
+      '@id' => iiif_apis_manifest_url(id: collection.id),
       'label' => collection.title,
       'description' => collection.description,
       'license' => collection.rights.first,
@@ -44,7 +46,7 @@ class IiifApisController < ApplicationController
 
   def generate_sequence(collection, name='basic')
     iif_sequence = IIIF::Presentation::Sequence.new(
-      '@id' => iiif_apis_sequence_path(id: collection.id, name: name),
+      '@id' => iiif_apis_sequence_url(id: collection.id, name: name),
       'label' => name
     )
     add_canvases_to_sequence(collection, iif_sequence)
@@ -59,7 +61,7 @@ class IiifApisController < ApplicationController
   def generate_canvas(generic_file, name=nil)
     name ||= "p#{generic_file.page_number}"
     canvas = IIIF::Presentation::Canvas.new(
-      '@id' => iiif_apis_canvas_path(id: generic_file.id, name: name),
+      '@id' => iiif_apis_canvas_url(id: generic_file.id, name: name),
       'label' => name,
       'height' => generic_file.height.first.to_i,
       'width' => generic_file.width.first.to_i
@@ -77,13 +79,24 @@ class IiifApisController < ApplicationController
   def generate_annotation(generic_file, name=nil)
     name ||= "p#{generic_file.page_number}"
     annotation = IIIF::Presentation::Annotation.new(
-      '@id' => iiif_apis_annotation_path(id: generic_file.id, name: name),
-      'on' => iiif_apis_canvas_path(id: generic_file.id, name: name)
+      '@id' => iiif_apis_annotation_url(id: generic_file.id, name: name),
+      'on' => iiif_apis_canvas_url(id: generic_file.id, name: name)
     )
-    annotation.resource << generic_file.iiif_image_resource
+    annotation.resource << image_resource(generic_file)
     annotation
   end
   private :generate_annotation
+
+  def image_resource(generic_file)
+    IIIF::Presentation::ImageResource.new(
+      '@id' => Riiif::Engine.routes.url_helpers.image_url(
+        generic_file.id, size: 'full', host: root_url.gsub(/\/$/, '')),
+      'format' => 'image/jpeg',
+      'height' => generic_file.height.first.to_i,
+      'width' => generic_file.width.first.to_i
+    )
+  end
+  private :image_resource
 
   def annotation
     generic_file = GenericFile.find(params[:id])
