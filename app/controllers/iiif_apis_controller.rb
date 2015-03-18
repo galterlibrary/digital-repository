@@ -4,12 +4,23 @@ class IiifApisController < ApplicationController
       '@id' => iiif_apis_manifest_path(id: collection.id),
       'label' => collection.title,
       'description' => collection.description,
-      'license' => collection.rights.first
+      'license' => collection.rights.first,
+      'metadata' => collection_metadata(collection)
     )
     manifest.sequences << generate_sequence(collection)
     manifest
   end
   private :generate_manifest
+
+  def collection_metadata(collection)
+    (GalterCollectionPresenter.terms - [
+      :title, :description, :rights, :total_items, :size]).map {|o|
+      next unless collection[o].present?
+      label = t(:simple_form)[:labels][:collection][o] || o.to_s.titleize
+      { 'label' => label, 'value' => collection[o] }
+    }.compact
+  end
+  private :collection_metadata
 
   def manifest
     collection = Collection.find(params[:id])

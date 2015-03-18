@@ -30,6 +30,10 @@ en:
         subject_name: 'Subject: Name'
       collection:
         description: 'Description'
+        mesh: 'Subject: MESH'
+        lcsh: 'Subject: LCSH'
+        subject_geographic: 'Subject: Geographic Name'
+        subject_name: 'Subject: Name'
     metadata_help:
       generic_file:
         mesh: 'Medical Subject Headings'

@@ -5,6 +5,12 @@ RSpec.describe IiifApisController, :type => :controller do
   let(:user) { FactoryGirl.create(:user) }
 
   describe "GET manifest" do
+    let(:collection) { Collection.new(
+      id: 'col1', title: 'something', description: 'blahbalh',
+      rights: ['http://creativecommons.org/publicdomain/mark/1.0/'],
+      abstract: ['abs'], mesh: ['bcd', 'efg']
+    ) }
+
     describe '#manifest' do
       before do
         collection.apply_depositor_metadata(user.user_key)
@@ -27,10 +33,6 @@ RSpec.describe IiifApisController, :type => :controller do
           '{"@context":"http://iiif.io/api/presentation/2/context.json","@id":"/iiif-api/collection/col1/sequence/blah","@type":"sc:Sequence","label":"blah","canvases":[{"@id":"/iiif-api/generic_file/testa1/canvas/p1","@type":"sc:Canvas","label":"p1","height":0,"width":0,"images":[{"@id":"/iiif-api/generic_file/testa1/annotation/p1","@type":"oa:Annotation","on":"/iiif-api/generic_file/testa1/canvas/p1","motivation":"sc:painting","resource":[{"@id":"/image-service/testa1/full/full/0/native.jpg","@type":"dcterms:Image","format":"image/jpeg","height":0,"width":0}]}]},{"@id":"/iiif-api/generic_file/testa2/canvas/p2","@type":"sc:Canvas","label":"p2","height":0,"width":0,"images":[{"@id":"/iiif-api/generic_file/testa2/annotation/p2","@type":"oa:Annotation","on":"/iiif-api/generic_file/testa2/canvas/p2","motivation":"sc:painting","resource":[{"@id":"/image-service/testa2/full/full/0/native.jpg","@type":"dcterms:Image","format":"image/jpeg","height":0,"width":0}]}]},{"@id":"/iiif-api/generic_file/testa3/canvas/p3","@type":"sc:Canvas","label":"p3","height":0,"width":0,"images":[{"@id":"/iiif-api/generic_file/testa3/annotation/p3","@type":"oa:Annotation","on":"/iiif-api/generic_file/testa3/canvas/p3","motivation":"sc:painting","resource":[{"@id":"/image-service/testa3/full/full/0/native.jpg","@type":"dcterms:Image","format":"image/jpeg","height":0,"width":0}]}]}]}')
       end
     end
-    let(:collection) { Collection.new(
-      id: 'col1', title: 'something', description: 'blahbalh',
-      rights: ['http://creativecommons.org/publicdomain/mark/1.0/']
-    ) }
 
     describe '#generate_manifest' do
       before do
@@ -55,6 +57,14 @@ RSpec.describe IiifApisController, :type => :controller do
 
       it 'generates correct label' do
         expect(subject['label']).to eq('something')
+      end
+
+      it 'generates correct metadata' do
+        expect(subject['metadata'].count).to eq(2)
+        expect(subject['metadata'].find {|o|
+          o['label'] == 'Abstract' }['value']).to eq(['abs'])
+        expect(subject['metadata'].find {|o|
+          o['label'] == 'Subject: MESH' }['value']).to eq(['bcd', 'efg'])
       end
 
       it 'generates correct description' do
