@@ -23,7 +23,7 @@ Riiif::Image.info_service = lambda do |id, file|
   { height: doc[HEIGHT_SOLR_FIELD], width: doc[WIDTH_SOLR_FIELD] }
 end
 
-include Blacklight::SolrHelper
+#include Blacklight::SearchHelper
 def blacklight_config
   CatalogController.blacklight_config
 end
@@ -34,5 +34,8 @@ def logger
   Rails.logger
 end
 
-
+Riiif::Image.file_resolver.basic_auth_credentials = [
+  ENV['FEDORA_USER'],
+  ENV['FEDORA_PASS']
+]
 Riiif::Engine.config.cache_duration_in_days = 30

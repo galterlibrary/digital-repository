@@ -70,3 +70,4 @@ gem 'rdf-vocab'
 
 gem 'riiif'
 gem 'osullivan'
+gem 'rsolr'

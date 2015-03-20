@@ -9,13 +9,13 @@ GIT
 
 GIT
   remote: https://github.com/projecthydra/sufia.git
-  revision: b78c090a84388e3811b66663259258106c610903
+  revision: 6b6f3c7ea5345c04bb04a9b8ceda2f327491be9e
   branch: master
   specs:
     sufia (6.0.0.rc4)
-      blacklight (< 5.10)
+      blacklight (~> 5.10)
       blacklight-gallery (~> 0.1)
-      blacklight_advanced_search (~> 5.0)
+      blacklight_advanced_search (>= 5.1.4, < 6.0)
       breadcrumbs_on_rails (~> 2.3.0)
       browse-everything (~> 0.4)
       daemons (~> 1.1)
@@ -38,7 +38,7 @@ GIT
       acts_as_follower (>= 0.1.1, < 0.3)
       carrierwave (~> 0.9)
       google-api-client (~> 0.7)
-      hydra-collections (~> 4.0)
+      hydra-collections (>= 5.0.2, < 6.0)
       hydra-derivatives (~> 1.0)
       hydra-head (~> 9.0)
       legato (~> 0.3)
@@ -110,7 +110,7 @@ GEM
       addressable (>= 2.3.1)
       extlib (>= 0.9.15)
       multi_json (>= 1.0.0)
-    autoprefixer-rails (5.1.7)
+    autoprefixer-rails (5.1.7.1)
       execjs
       json
     bcrypt (3.1.10)
@@ -120,23 +120,23 @@ GEM
       rack (>= 0.9.0)
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
-    blacklight (5.9.3)
+    blacklight (5.11.2)
       bootstrap-sass (~> 3.2)
       deprecation
       kaminari (~> 0.13)
       nokogiri (~> 1.6)
       rails (>= 3.2.6, < 5)
-      rsolr (~> 1.0.6)
-    blacklight-gallery (0.2.0)
+      rsolr (~> 1.0.11)
+    blacklight-gallery (0.3.0)
       blacklight (~> 5.0)
       bootstrap-sass (~> 3.0)
-      openseadragon (>= 0.0.9)
+      openseadragon (>= 0.2.0)
       rails
-    blacklight_advanced_search (5.1.2)
-      blacklight (>= 5.2, < 6.0)
+    blacklight_advanced_search (5.1.4)
+      blacklight (~> 5.10)
       parslet
     blankslate (3.1.3)
-    bootstrap-sass (3.3.3)
+    bootstrap-sass (3.3.4.1)
       autoprefixer-rails (>= 5.0.0.1)
       sass (>= 3.2.19)
     breadcrumbs_on_rails (2.3.0)
@@ -179,10 +179,10 @@ GEM
       execjs
     coffee-script-source (1.8.0)
     columnize (0.9.0)
-    daemons (1.2.1)
+    daemons (1.2.2)
     debug_inspector (0.0.2)
     debugger-linecache (1.2.0)
-    deprecation (0.1.0)
+    deprecation (0.2.2)
       activesupport
     devise (3.4.1)
       bcrypt (~> 3.0)
@@ -196,7 +196,7 @@ GEM
     diff-lcs (1.2.5)
     dropbox-sdk (1.6.4)
       json
-    ebnf (0.3.6)
+    ebnf (0.3.7)
       haml (~> 4.0)
       rdf (~> 1.1)
       sxp (~> 0.1, >= 0.1.3)
@@ -214,7 +214,7 @@ GEM
       railties (>= 3.0.0)
     faraday (0.9.1)
       multipart-post (>= 1.2, < 3)
-    ffi (1.9.6)
+    ffi (1.9.8)
     font-awesome-rails (4.3.0.0)
       railties (>= 3.2, < 5.0)
     foreigner (1.7.2)
@@ -246,21 +246,22 @@ GEM
     httparty (0.13.3)
       json (~> 1.8)
       multi_xml (>= 0.5.2)
-    hydra-access-controls (9.0.1)
+    hydra-access-controls (9.1.2)
       active-fedora (~> 9.0.0)
       activesupport (~> 4.0)
-      blacklight (~> 5.3)
+      blacklight (~> 5.10)
       cancancan (~> 1.8)
-      deprecation (~> 0.1.0)
+      deprecation (~> 0.1)
       sass-rails
     hydra-batch-edit (1.1.1)
       blacklight
       hydra-collections
-    hydra-collections (4.0.0)
-      deprecation (~> 0.1.0)
-      hydra-head (~> 9.0.1)
-    hydra-core (9.0.1)
-      hydra-access-controls (= 9.0.1)
+    hydra-collections (5.0.2)
+      blacklight (~> 5.10)
+      deprecation (~> 0.1)
+      hydra-head (~> 9.1)
+    hydra-core (9.1.2)
+      hydra-access-controls (= 9.1.2)
       jettywrapper (>= 2.0.0)
       rails (~> 4.0)
     hydra-derivatives (1.0.0)
@@ -277,9 +278,9 @@ GEM
       simple_form (~> 3.1.0)
     hydra-file_characterization (0.3.1)
       activesupport (>= 3.0.0)
-    hydra-head (9.0.1)
-      hydra-access-controls (= 9.0.1)
-      hydra-core (= 9.0.1)
+    hydra-head (9.1.2)
+      hydra-access-controls (= 9.1.2)
+      hydra-core (= 9.1.2)
       rails (>= 3.2.6)
     i18n (0.7.0)
     jbuilder (2.2.5)
@@ -341,7 +342,7 @@ GEM
     method_source (0.8.2)
     mime-types (2.4.3)
     mimemagic (0.2.1)
-    mini_magick (4.1.0)
+    mini_magick (4.2.0)
     mini_portile (0.6.2)
     minitest (5.5.1)
     mono_logger (1.1.0)
@@ -371,7 +372,7 @@ GEM
       activesupport
       nokogiri (>= 1.4.2)
       solrizer (~> 3.3)
-    openseadragon (0.1.0)
+    openseadragon (0.2.0)
       rails (> 3.2.0)
     orm_adapter (0.5.0)
     osullivan (0.0.3)
@@ -646,6 +647,7 @@ DEPENDENCIES
   rails (= 4.1.6)
   rdf-vocab
   riiif
+  rsolr
   rspec-rails
   ruby-ldap
   ruby-prof
