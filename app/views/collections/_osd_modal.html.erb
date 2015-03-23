@@ -1,0 +1,31 @@
+<div class="modal fade" id="osdModal" aria-labelledby="osdModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"><%= @collection.title %></h4>
+      </div>
+      <div class="modal-body">
+        <div id="osdViewer" class="openseadragon" style='width:100%;height:600px;'>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+$(function() {
+  OpenSeadragon({
+      id:            "osdViewer",
+      prefixUrl:     "/assets/openseadragon/",
+      tileSources:   [
+        <% @collection.osd_tile_sources.each do |tile| %>
+          <%= "\"#{tile}\",".html_safe %>
+        <% end %>
+      ]
+  });
+});
+</script>

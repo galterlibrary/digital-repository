@@ -49,4 +49,9 @@ class Collection < Sufia::Collection
   def bytes
     'FIXME in app/models/collection.rb'
   end
+
+  def osd_tile_sources
+    return [] unless pagable?
+    pagable_members.map {|gf| "/image-service/#{gf.id}/info.json" }
+  end
 end

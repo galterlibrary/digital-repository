@@ -4,10 +4,6 @@ Riiif::Image.file_resolver = Riiif::HTTPFileResolver.new
 # This tells RIIIF how to resolve the identifier to a URI in Fedora
 DATASTREAM = 'imageContent'
 Riiif::Image.file_resolver.id_to_uri = lambda do |id|
-  #connection = ActiveFedora::Base.connection_for_pid(id)
-  #host = connection.config[:url]
-  #path = connection.api.datastream_content_url(id, DATASTREAM, {})
-  #host + '/' + path
   ::GenericFile.find(id).content.uri
 end
 
@@ -17,12 +13,16 @@ end
 HEIGHT_SOLR_FIELD = 'height_isi'
 WIDTH_SOLR_FIELD = 'width_isi'
 Riiif::Image.info_service = lambda do |id, file|
-  resp = get_solr_response_for_doc_id id
-  doc = resp.first['response']['docs'].first
-  byebug
-  { height: doc[HEIGHT_SOLR_FIELD], width: doc[WIDTH_SOLR_FIELD] }
+  gf = ::GenericFile.find(id)
+  #resp = get_solr_response_for_doc_id id
+  #doc = resp.first['response']['docs'].first
+  { height: gf.height.try(:first).try(:to_i),
+    width: gf.width.try(:first).try(:to_i),
+    scale_factors: [1, 2, 4, 8, 16, 32],
+    qualities: ["native", "bitonal", "grey", "color"] }
 end
 
+# FIXME: Investigate stack level too deep when including this
 #include Blacklight::SearchHelper
 def blacklight_config
   CatalogController.blacklight_config
