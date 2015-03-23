@@ -82,18 +82,23 @@ class IiifApisController < ApplicationController
       '@id' => iiif_apis_annotation_url(id: generic_file.id, name: name),
       'on' => iiif_apis_canvas_url(id: generic_file.id, name: name)
     )
-    annotation.resource << image_resource(generic_file)
+    annotation.resource = image_resource(generic_file)
     annotation
   end
   private :generate_annotation
 
   def image_resource(generic_file)
-    IIIF::Presentation::ImageResource.new(
+    image_resource = IIIF::Presentation::ImageResource.new(
       '@id' => Riiif::Engine.routes.url_helpers.image_url(
         generic_file.id, size: 'full', host: root_url.gsub(/\/$/, '')),
       'format' => 'image/jpeg',
       'height' => generic_file.height.first.to_i,
-      'width' => generic_file.width.first.to_i
+      'width' => generic_file.width.first.to_i,
+      'service' => {
+        '@id' => "#{root_url}image-service/#{generic_file.id}",
+        '@context' => 'http://iiif.io/api/image/2/context.json',
+        'profile' => 'http://iiif.io/api/image/2/profiles/level2.json'
+      }
     )
   end
   private :image_resource
