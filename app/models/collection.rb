@@ -1,4 +1,5 @@
 class Collection < Sufia::Collection
+  include Hydra::Collections::Actions
   has_many :children, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf,
     class_name: 'ActiveFedora::Base'
   belongs_to :parent, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf,
