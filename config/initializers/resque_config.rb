@@ -3,3 +3,7 @@ Resque.redis = Redis.new(host: config[:host], port: config[:port], thread_safe: 
 
 Resque.inline = Rails.env.test?
 Resque.redis.namespace = "#{Sufia.config.redis_namespace}:#{Rails.env}"
+# Explicitly set default namespace for clarity, see #79
+if Rails.env.staging? || Rails.env.production?
+  Resque.redis.namespace = :resque
+end
