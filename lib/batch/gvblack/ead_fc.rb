@@ -418,7 +418,7 @@ module Ead_fc
       query.strip.downcase
     end
 
-    def find_file(file_id)
+    def find_file(file_id, rh)
       file_id = file_id.strip.downcase
       if file_id == 'cm'
         file_id = 'cruisemicrobe'
@@ -445,6 +445,7 @@ module Ead_fc
       end
 
       if !file_id.nil?
+        rh['file_id'] = file_id
         Find.find(Digital_assets_home) do |path|
           if path.downcase =~ /.*#{file_id}_full.pdf/
             return path
@@ -455,6 +456,7 @@ module Ead_fc
 
         Find.find(Digital_assets_home) do |path|
           if path.downcase =~ /.*#{file_id}_full.pdf/
+            rh['file_id'] = file_id
             return path
           end
         end
@@ -469,16 +471,34 @@ module Ead_fc
         if rh['type'] == 'subseries'
           title = "#{title} - World's Columbian Dental Congress"
         end
-        c = Collection.find {|c| c.title == "#{title}" }
+        #c = Collection.find {|c| c.title == "#{title}" }
+        docs = Blacklight.solr.select(
+          params: { q: 'title_tesim:"' + title + '",has_model_ssim:"Collection"' }
+        )['response']['docs']
+        binding.pry if docs.count > 1
+        c = nil
+        c = Collection.find(docs.first['id']) if docs.count == 1
         if !c
           c = Collection.new
           c.title = title
+          c.apply_depositor_metadata("galter-is@listserv.it.northwestern.edu")
         end
-        c.apply_depositor_metadata("galter-is@listserv.it.northwestern.edu")
+        c.visibility = 'open'
+        c.subject = rh['subject']
+        c.mesh = rh['mesh']
+        c.lcsh = rh['lcsh']
+        c.subject_geographic = rh['geoname']
+        c.subject_name = (rh['corpname'] || []) + (rh['persname'] || [])
+        c.date_created = [rh['create_date']]
+        c.abstract = [rh['abstract']].compact
+        c.identifier = [rh['file_id']].compact
+        c.rights = ['http://creativecommons.org/publicdomain/mark/1.0/']
+        c.digital_origin = ['Reformatted Digital']
         c.description = rh['note']
         c.date_created = [rh['create_date']]
         c.rights = ['http://creativecommons.org/publicdomain/mark/1.0/']
         #c.save!
+        #ActiveFedora::SolrService.instance.conn.commit
         rh['collection'] = c
       end
     end
@@ -490,41 +510,66 @@ module Ead_fc
       str.strip.gsub(/[,.;]\z/, '').gsub(/[\n\t]/, '').gsub(/ +/, ' ') + postfix
     end
 
+    def get_all_files_for_item(full_name, fid)
+      dir = File.dirname(full_name)
+      if fid.blank?
+        fid = File.basename(full_name).gsub(/#{File.extname(full_name)}/, '')
+      end
+      pages = {}
+      Find.find(dir) do |path|
+        path_clean = path.tr('[]()', '').downcase
+        if path_clean =~ /.*#{fid}_[0-9]+[a-z]?\.[tg]if/
+          page = path_clean.match(/.*#{fid}_([0-9]+[a-z]?)\.[tg]if/i).captures.first
+          pages[page] = path
+        elsif path_clean =~ /.*#{fid}_figure.*\.[tg]if/ ||
+            path_clean =~ /.*#{fid}_title\.[tg]if/ ||
+            path_clean =~ /.*#{fid}_tp\.[tg]if/
+          page = path_clean.match(/.*#{fid}_(.*)\.[tg]if/i).captures.first
+          pages[page] = path
+        end
+      end
+      pages
+    end
+
     def make_file(rh)
       @current_user ||= User.find(6)
+      rh['type'] = 'item'
+      store_collection(rh)
       fname = rh['fname']
-      original_filename = fname.split('/').last
-      @generic_file = nil
-      begin
-        @all_file_names ||= GenericFile.all.inject({}) do |h, gf|
-          puts "already exists: #{gf.filename}" if h[gf.filename].present?
-          h[gf.filename.first] = gf.id
-          h
-        end
-        @generic_file = ::GenericFile.find(@all_file_names[original_filename])
-      rescue ArgumentError
+      pages = get_all_files_for_item(fname, rh['file_id'])
+      pages[nil] = fname
+      puts pages
+      pages.each do |page, path|
+        store_gf(rh, page, path)
       end
+    end
 
-      binding.pry if @generic_file.blank?
+    def store_gf(rh, page, path)
+      @generic_file = nil
+      @generic_file = GenericFile.where(
+        'title_sim' => unescape_and_clean(rh['title'])).where(
+          Solrizer.solr_name('page_number') => page).first
 
       if @generic_file.blank?
-        byebug
         file = ActionDispatch::Http::UploadedFile.new(
-          tempfile: File.open(fname))
-        file.original_filename = original_filename
-
+          tempfile: File.open(path))
+        file.original_filename = File.basename(path)
         @actor = Sufia::GenericFile::Actor.new(GenericFile.new, @current_user)
+        return
         @actor.create_metadata(Sufia::Noid.noidify(Sufia::IdService.mint))
         if @actor.create_content(file, file.original_filename, 'content')
-          puts "Success: #{fname}"
+          puts "Success: #{path}"
         else
-          puts "Error: #{fname}"
+          puts "Error: #{path}"
         end
         @generic_file = @actor.generic_file
+        @generic_file.apply_depositor_metadata("galter-is@listserv.it.northwestern.edu")
+        @generic_file.creator = ['Galter Health Sciences Library']
       end
 
-      @generic_file.apply_depositor_metadata("galter-is@listserv.it.northwestern.edu")
-      @generic_file.creator = ['Galter Health Sciences Library']
+      binding.pry if @generic_file.title.first != unescape_and_clean(rh['title'])
+      return
+
       @generic_file.title = [unescape_and_clean(rh['title'])]
       @generic_file.visibility = 'open'
       @generic_file.subject = rh['subject']
@@ -538,6 +583,7 @@ module Ead_fc
       @generic_file.identifier = [rh['file_id']].compact
       @generic_file.rights = ['http://creativecommons.org/publicdomain/mark/1.0/']
       @generic_file.digital_origin = ['Reformatted Digital']
+      @generic_file.page_number = page
       @generic_file.save!
 
       add_to_collection(rh['parent_pid'], @generic_file)
@@ -610,10 +656,6 @@ module Ead_fc
         if ele.name.match(/(?:^c\d+)|(?:^c$)/i)
 
           have_c_children = true
-
-          # Actions to implment here: Get Fedora PID. Get parent PID
-          # from the stack. Save current node info in a hash, push onto
-          # the container stack, generate foxml, ingest.
 
           rh['pid'] = gen_pid()
           rh['ef_create_date'] = String.new(@ef_create_date.to_s)
@@ -723,7 +765,7 @@ module Ead_fc
                     rh['file_id'] = rh['container_unitid']
                   end
                   raise if rh['file_id'].blank?
-                  rh['fname'] = find_file(rh['file_id'])
+                  rh['fname'] = find_file(rh['file_id'], rh)
                 rescue
                   puts "Can't file file_id for #{rh['title']}"
                 end
@@ -915,7 +957,7 @@ module Ead_fc
 
             if rh['cm'].size > 0
               printf "Found group: %s size: %s\n", curr_path, rh['cm'].size
-              create_file_objects(rh)
+              #create_file_objects(rh)
             end
           else
             # printf "lf: %s pk: %s title: %s\n", leaf_flag, curr_path, rh['path_key'], rh['container_unittitle']
@@ -1210,13 +1252,13 @@ module Ead_fc
       # include a :content_type hash key-value as the third arg to
       # post().
 
-      working_url = "#{@base_url}/objects/nextPID?namespace=#{@pid_namespace}&format=xml"
-      some_xml = RestClient.post(working_url, '')
-      numeric_pid = some_xml.match(/<pid>#{@pid_namespace}:(\d+)<\/pid>/)[1]
+      #working_url = "#{@base_url}/objects/nextPID?namespace=#{@pid_namespace}&format=xml"
+      #some_xml = RestClient.post(working_url, '')
+      #numeric_pid = some_xml.match(/<pid>#{@pid_namespace}:(\d+)<\/pid>/)[1]
 
       # Fedora requires pids to match a regex, apparently text:number
 
-      return "#{@pid_namespace}:#{numeric_pid}"
+      return "sufia:#{Random.rand(9999999)}"
     end
 
     def ingest(fname)
