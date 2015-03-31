@@ -465,41 +465,52 @@ module Ead_fc
     end
 
     def store_collection(rh)
-      @current_user ||= User.find(1)
-      if !rh['type'].to_s.empty?
-        title = unescape_and_clean( rh['title'])
-        if rh['type'] == 'subseries'
-          title = "#{title} - World's Columbian Dental Congress"
+      return if rh['type'].to_s.blank?
+      title = unescape_and_clean( rh['title'])
+      if rh['type'] == 'subseries'
+        title = "#{title} - World's Columbian Dental Congress"
+      end
+      #c = Collection.find {|c| c.title == "#{title}" }
+      docs = Blacklight.solr.select(
+        params: { q: 'title_tesim:"' + title + '",has_model_ssim:"Collection"' }
+      )['response']['docs']
+      binding.pry if docs.count > 1
+      c = nil
+      c = Collection.find(docs.first['id']) if docs.count == 1
+      if !c
+        c = Collection.new
+        c.title = title
+        c.apply_depositor_metadata("galter-is@listserv.it.northwestern.edu")
+      end
+      c.visibility = 'open'
+      c.subject = rh['subject']
+      c.mesh = rh['mesh']
+      c.lcsh = rh['lcsh']
+      c.subject_geographic = rh['geoname']
+      c.subject_name = (rh['corpname'] || []) + (rh['persname'] || [])
+      c.date_created = [rh['create_date']]
+      c.abstract = [rh['abstract']].compact
+      c.identifier = [rh['file_id']].compact
+      c.rights = ['http://creativecommons.org/publicdomain/mark/1.0/']
+      c.digital_origin = ['Reformatted Digital']
+      c.description = rh['note']
+      c.date_created = [rh['create_date']]
+      c.rights = ['http://creativecommons.org/publicdomain/mark/1.0/']
+      c.save!
+      ActiveFedora::SolrService.instance.conn.commit
+      rh['collection'] = c
+      add_to_collection(rh['parent_pid'], rh['collection'])
+    end
+
+    def add_to_collection(parent_pid, member)
+      col = @cn_loh.find {|o| o['pid'] == parent_pid }
+      if col.present?
+        if !col['collection'].member_ids.any? {|m| m == member.id }
+          col['collection'].members << member
+          col['collection'].save!
+          member.parent = col['collection']
+          member.save!
         end
-        #c = Collection.find {|c| c.title == "#{title}" }
-        docs = Blacklight.solr.select(
-          params: { q: 'title_tesim:"' + title + '",has_model_ssim:"Collection"' }
-        )['response']['docs']
-        binding.pry if docs.count > 1
-        c = nil
-        c = Collection.find(docs.first['id']) if docs.count == 1
-        if !c
-          c = Collection.new
-          c.title = title
-          c.apply_depositor_metadata("galter-is@listserv.it.northwestern.edu")
-        end
-        c.visibility = 'open'
-        c.subject = rh['subject']
-        c.mesh = rh['mesh']
-        c.lcsh = rh['lcsh']
-        c.subject_geographic = rh['geoname']
-        c.subject_name = (rh['corpname'] || []) + (rh['persname'] || [])
-        c.date_created = [rh['create_date']]
-        c.abstract = [rh['abstract']].compact
-        c.identifier = [rh['file_id']].compact
-        c.rights = ['http://creativecommons.org/publicdomain/mark/1.0/']
-        c.digital_origin = ['Reformatted Digital']
-        c.description = rh['note']
-        c.date_created = [rh['create_date']]
-        c.rights = ['http://creativecommons.org/publicdomain/mark/1.0/']
-        #c.save!
-        #ActiveFedora::SolrService.instance.conn.commit
-        rh['collection'] = c
       end
     end
 
@@ -533,14 +544,27 @@ module Ead_fc
 
     def make_file(rh)
       @current_user ||= User.find(6)
-      rh['type'] = 'item'
-      store_collection(rh)
       fname = rh['fname']
       pages = get_all_files_for_item(fname, rh['file_id'])
       pages[nil] = fname
       puts pages
       pages.each do |page, path|
         store_gf(rh, page, path)
+      end
+    end
+
+    def mime_type(extname)
+      case(extname)
+      when '.tif'
+        'image/tiff'
+      when '.gif'
+        'image/gif'
+      when '.jpg'
+        'image/jpeg'
+      when '.jpeg'
+        'image/jpeg'
+      when '.pdf'
+        'application/pdf'
       end
     end
 
@@ -551,26 +575,22 @@ module Ead_fc
           Solrizer.solr_name('page_number') => page).first
 
       if @generic_file.blank?
-        file = ActionDispatch::Http::UploadedFile.new(
-          tempfile: File.open(path))
-        file.original_filename = File.basename(path)
-        @actor = Sufia::GenericFile::Actor.new(GenericFile.new, @current_user)
-        return
-        @actor.create_metadata(Sufia::Noid.noidify(Sufia::IdService.mint))
-        if @actor.create_content(file, file.original_filename, 'content')
-          puts "Success: #{path}"
-        else
-          puts "Error: #{path}"
+        @generic_file = GenericFile.create! do |f|
+          f.apply_depositor_metadata(@current_user.user_key)
+          f.label = File.basename(path)
+          time_in_utc = DateTime.now.new_offset(0)
+          f.date_uploaded = time_in_utc
+          f.date_modified = time_in_utc
+          f.add_file(File.open(path), path: 'content', original_name: f.label,
+                     mime_type: mime_type(File.extname(path)))
         end
-        @generic_file = @actor.generic_file
-        @generic_file.apply_depositor_metadata("galter-is@listserv.it.northwestern.edu")
+        @generic_file.record_version_committer(@current_user)
         @generic_file.creator = ['Galter Health Sciences Library']
+        @generic_file.title = [unescape_and_clean(rh['title'])]
       end
 
       binding.pry if @generic_file.title.first != unescape_and_clean(rh['title'])
-      return
 
-      @generic_file.title = [unescape_and_clean(rh['title'])]
       @generic_file.visibility = 'open'
       @generic_file.subject = rh['subject']
       @generic_file.mesh = rh['mesh']
@@ -584,20 +604,12 @@ module Ead_fc
       @generic_file.rights = ['http://creativecommons.org/publicdomain/mark/1.0/']
       @generic_file.digital_origin = ['Reformatted Digital']
       @generic_file.page_number = page
+
+      @generic_file.parent = rh['collection']
       @generic_file.save!
-
-      add_to_collection(rh['parent_pid'], @generic_file)
-    end
-
-    def add_to_collection(parent_pid, member)
-      col = @cn_loh.find {|o| o['pid'] == parent_pid }
-      if col.present?
-        if !col['collection'].members.any? {|m| m == member }
-          col['collection'].members << member
-          col['collection'].save!
-        end
-        add_to_collection(col['parent_pid'], member)
-      end
+      Sufia.queue.push(CharacterizeJob.new(@generic_file.id))
+      rh['collection'].members << @generic_file
+      rh['collection'].save!
     end
 
     def container_parse(nset, parent_path)
@@ -1011,6 +1023,8 @@ module Ead_fc
               end
             end
             if rh['fname']
+              rh['type'] = 'item'
+              store_collection(rh)
               make_file(rh)
               puts "Processed #{rh['title']}: #{rh['fname']}"
             else
