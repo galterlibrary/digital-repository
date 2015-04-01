@@ -1,13 +1,4 @@
-require "resque_web"
 Rails.application.routes.draw do
-  resque_web_constraint = lambda do |request|
-    current_user = request.env['warden'].user
-    current_user.present? && current_user.respond_to?(:admin?) && current_user.admin?
-  end
-  constraints resque_web_constraint do
-    mount ResqueWeb::Engine => "/resque_web"
-  end
-
   get '/authorities/generic_files/subject' => 'custom_authorities#query_mesh'
   mount Qa::Engine => '/qa'
   mount Riiif::Engine => '/image-service'

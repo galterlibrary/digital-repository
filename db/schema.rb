@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150223143836) do
+ActiveRecord::Schema.define(version: 20150223143838) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,7 +29,7 @@ ActiveRecord::Schema.define(version: 20150223143836) do
   add_index "bookmarks", ["user_id"], name: "index_bookmarks_on_user_id", using: :btree
 
   create_table "checksum_audit_logs", force: true do |t|
-    t.string   "pid"
+    t.string   "generic_file_id"
     t.string   "dsid"
     t.string   "version"
     t.integer  "pass"
@@ -39,7 +39,7 @@ ActiveRecord::Schema.define(version: 20150223143836) do
     t.datetime "updated_at"
   end
 
-  add_index "checksum_audit_logs", ["pid", "dsid"], name: "by_pid_and_dsid", using: :btree
+  add_index "checksum_audit_logs", ["generic_file_id", "dsid"], name: "by_pid_and_dsid", using: :btree
 
   create_table "content_blocks", force: true do |t|
     t.string   "name"
@@ -178,7 +178,7 @@ ActiveRecord::Schema.define(version: 20150223143836) do
   add_index "mailboxer_receipts", ["receiver_id", "receiver_type"], name: "index_mailboxer_receipts_on_receiver_id_and_receiver_type", using: :btree
 
   create_table "proxy_deposit_requests", force: true do |t|
-    t.string   "pid",                                   null: false
+    t.string   "generic_file_id",                       null: false
     t.integer  "sending_user_id",                       null: false
     t.integer  "receiving_user_id",                     null: false
     t.datetime "fulfillment_date"
