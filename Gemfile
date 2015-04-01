@@ -71,3 +71,5 @@ gem 'rdf-vocab'
 gem 'riiif'
 gem 'osullivan'
 gem 'rsolr'
+
+gem 'resque-web', require: 'resque_web'

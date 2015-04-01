@@ -488,13 +488,12 @@ module Ead_fc
       c.lcsh = rh['lcsh']
       c.subject_geographic = rh['geoname']
       c.subject_name = (rh['corpname'] || []) + (rh['persname'] || [])
-      c.date_created = [rh['create_date']]
+      c.date_created = [normalize_date(rh['create_date'])]
       c.abstract = [rh['abstract']].compact
       c.identifier = [rh['file_id']].compact
       c.rights = ['http://creativecommons.org/publicdomain/mark/1.0/']
       c.digital_origin = ['Reformatted Digital']
       c.description = rh['note']
-      c.date_created = [rh['create_date']]
       c.rights = ['http://creativecommons.org/publicdomain/mark/1.0/']
       c.save!
       ActiveFedora::SolrService.instance.conn.commit
@@ -568,6 +567,14 @@ module Ead_fc
       end
     end
 
+    def normalize_date(date)
+      date = date.tr('?', '')
+      if date =~ / [0-9]+,/ && date != /-/
+        date = Time.parse(date).to_date.to_s
+      end
+      date
+    end
+
     def store_gf(rh, page, path)
       @generic_file = nil
       @generic_file = GenericFile.where(
@@ -598,7 +605,7 @@ module Ead_fc
       @generic_file.subject_geographic = rh['geoname']
       @generic_file.subject_name = (rh['corpname'] || []) + (rh['persname'] || [])
       @generic_file.description = [rh['note']].compact
-      @generic_file.date_created = [rh['create_date']]
+      @generic_file.date_created = [normalize_date(rh['create_date'])]
       @generic_file.abstract = [rh['abstract']].compact
       @generic_file.identifier = [rh['file_id']].compact
       @generic_file.rights = ['http://creativecommons.org/publicdomain/mark/1.0/']
