@@ -43,8 +43,8 @@ gem 'thin'
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
-#gem 'sufia', :git => 'https://github.com/projecthydra/sufia.git', :branch => 'master'
-gem 'sufia', '6.0.0'
+gem 'sufia', :git => 'https://github.com/projecthydra/sufia.git', :branch => 'master'
+#gem 'sufia', '6.0.0'
 gem 'kaminari', github: 'jcoyne/kaminari', branch: 'sufia' # required to handle pagination properly in dashboard. See https://github.com/amatsuda/kaminari/pull/322
 gem 'therubyracer', '0.11.3', platforms: :ruby
 

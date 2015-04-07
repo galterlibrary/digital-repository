@@ -7,6 +7,50 @@ GIT
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
 
+GIT
+  remote: https://github.com/projecthydra/sufia.git
+  revision: 76dd46cea39b842f9e64c78dae9c29866d464091
+  branch: master
+  specs:
+    sufia (6.0.0)
+      blacklight (~> 5.12)
+      blacklight-gallery (~> 0.1)
+      blacklight_advanced_search (>= 5.1.4, < 6.0)
+      breadcrumbs_on_rails (~> 2.3.0)
+      browse-everything (~> 0.4)
+      daemons (~> 1.1)
+      devise (~> 3.0)
+      font-awesome-rails (~> 4.2)
+      hydra-batch-edit (~> 1.1)
+      hydra-editor (~> 1.0)
+      mail_form (~> 1.5)
+      rails_autolink (~> 1.1)
+      sass-rails
+      select2-rails (~> 3.5.9)
+      sufia-models (= 6.0.0)
+      tinymce-rails (~> 4.0.19)
+      tinymce-rails-imageupload (~> 4.0.16.beta)
+      yaml_db (~> 0.2)
+    sufia-models (6.0.0)
+      active-fedora (~> 9.0)
+      active_fedora-noid (~> 0.1)
+      activerecord-import (~> 0.5)
+      activeresource (~> 4.0)
+      acts_as_follower (>= 0.1.1, < 0.3)
+      carrierwave (~> 0.9)
+      google-api-client (~> 0.7)
+      hydra-collections (>= 5.0.2, < 6.0)
+      hydra-derivatives (~> 1.0)
+      hydra-head (~> 9.0)
+      legato (~> 0.3)
+      mailboxer (~> 0.12)
+      mini_magick
+      nest (~> 1.1)
+      oauth2 (~> 0.9)
+      rails (~> 4.0)
+      resque (~> 1.23)
+      resque-pool (~> 0.3)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -40,6 +84,9 @@ GEM
       deprecation (~> 0.1)
       linkeddata (~> 1.1)
       rdf (~> 1.1)
+    active_fedora-noid (0.2.0)
+      active-fedora (~> 9.0)
+      noid (~> 0.7)
     activemodel (4.1.6)
       activesupport (= 4.1.6)
       builder (~> 3.1)
@@ -311,7 +358,7 @@ GEM
     method_source (0.8.2)
     mime-types (2.4.3)
     mimemagic (0.3.0)
-    mini_magick (4.2.0)
+    mini_magick (4.2.1)
     mini_portile (0.6.2)
     minitest (5.5.1)
     mono_logger (1.1.0)
@@ -440,7 +487,7 @@ GEM
     rdoc (4.2.0)
       json (~> 1.4)
     redis (3.2.1)
-    redis-namespace (1.5.1)
+    redis-namespace (1.5.2)
       redis (~> 3.0, >= 3.0.4)
     ref (1.0.5)
     responders (1.1.2)
@@ -547,44 +594,6 @@ GEM
       sprockets (>= 2.8, < 4.0)
     sqlite3 (1.3.10)
     stomp (1.3.4)
-    sufia (6.0.0)
-      blacklight (~> 5.12)
-      blacklight-gallery (~> 0.1)
-      blacklight_advanced_search (>= 5.1.4, < 6.0)
-      breadcrumbs_on_rails (~> 2.3.0)
-      browse-everything (~> 0.4)
-      daemons (~> 1.1)
-      devise (~> 3.0)
-      font-awesome-rails (~> 4.2)
-      hydra-batch-edit (~> 1.1)
-      hydra-editor (~> 1.0)
-      mail_form (~> 1.5)
-      rails_autolink (~> 1.1)
-      sass-rails
-      select2-rails (~> 3.5.9)
-      sufia-models (= 6.0.0)
-      tinymce-rails (~> 4.0.19)
-      tinymce-rails-imageupload (~> 4.0.16.beta)
-      yaml_db (~> 0.2)
-    sufia-models (6.0.0)
-      active-fedora (~> 9.0)
-      activerecord-import (~> 0.5)
-      activeresource (~> 4.0)
-      acts_as_follower (>= 0.1.1, < 0.3)
-      carrierwave (~> 0.9)
-      google-api-client (~> 0.7)
-      hydra-collections (>= 5.0.2, < 6.0)
-      hydra-derivatives (~> 1.0)
-      hydra-head (~> 9.0)
-      legato (~> 0.3)
-      mailboxer (~> 0.12)
-      mini_magick
-      nest (~> 1.1)
-      noid (~> 0.6)
-      oauth2 (~> 0.9)
-      rails (~> 4.0)
-      resque (~> 1.23)
-      resque-pool (~> 0.3)
     sxp (0.1.5)
     therubyracer (0.11.3)
       libv8 (~> 3.11.8.12)
@@ -663,7 +672,7 @@ DEPENDENCIES
   sequel
   spring
   sqlite3
-  sufia (= 6.0.0)
+  sufia!
   therubyracer (= 0.11.3)
   thin
   turbolinks

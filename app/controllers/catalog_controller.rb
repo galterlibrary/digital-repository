@@ -15,7 +15,7 @@ class CatalogController < ApplicationController
   # These before_filters apply the hydra access controls
   before_filter :enforce_show_permissions, only: :show
   # This applies appropriate access controls to all solr queries
-  CatalogController.search_params_logic += [:add_access_controls_to_solr_params]
+  CatalogController.search_params_logic += [:add_access_controls_to_solr_params, :add_advanced_parse_q_to_solr]
 
   skip_before_filter :default_html_head
 
@@ -29,11 +29,11 @@ class CatalogController < ApplicationController
 
   configure_blacklight do |config|
     config.view.gallery.partials = [:index_header, :index]
-    #config.view.masonry.partials = [:index]
+    config.view.masonry.partials = [:index]
     config.view.slideshow.partials = [:index]
 
-    #config.show.tile_source_field = :content_metadata_image_iiif_info_ssm
-    #config.show.partials.insert(1, :openseadragon)
+    config.show.tile_source_field = :content_metadata_image_iiif_info_ssm
+    config.show.partials.insert(1, :openseadragon)
 
     ## Default parameters to send to solr for all search-like requests. See also SolrHelper#solr_search_params
     config.default_solr_params = {
