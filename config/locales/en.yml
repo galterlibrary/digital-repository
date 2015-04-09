@@ -29,12 +29,15 @@ en:
         subject_geographic: 'Subject: Geographic Name'
         subject_name: 'Subject: Name'
       collection:
+        multi_page: 'Multi-page?'
         description: 'Description'
         mesh: 'Subject: MESH'
         lcsh: 'Subject: LCSH'
         subject_geographic: 'Subject: Geographic Name'
         subject_name: 'Subject: Name'
     metadata_help:
+      collection:
+        multi_page: 'Check if this is a multi-page collection such as book; allows for displaying pages using the IIIF viewer.'
       generic_file:
         mesh: 'Medical Subject Headings'
         subject: 'General subject terms'

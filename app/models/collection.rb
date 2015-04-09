@@ -40,8 +40,13 @@ class Collection < Sufia::Collection
     index.type :integer
   end
 
+  property :multi_page, predicate: ::RDF::URI.new('http://opaquenamespace.org/hydra/multiPage'), multiple: false do |index|
+    index.as :stored_searchable
+    index.type :boolean
+  end
+
   def pagable?
-    pagable_members.present?
+    multi_page && pagable_members.present?
   end
 
   def pagable_members

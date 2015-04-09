@@ -1,5 +1,6 @@
 class GalterCollectionPresenter < Sufia::CollectionPresenter
   self.terms = [
+    :multi_page,
     :resource_type,
     :title,
     :total_items,

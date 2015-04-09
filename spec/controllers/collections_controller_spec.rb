@@ -14,7 +14,7 @@ describe CollectionsController do
         abstract: ['testa'], bibliographic_citation: ['cit'],
         digital_origin: ['digo'], mesh: ['mesh'], lcsh: ['lcsh'],
         subject_geographic: ['geo'], subject_name: ['subjn'],
-        page_number: 11
+        page_number: 11, multi_page: true
       )
       @collection.apply_depositor_metadata(@user.user_key)
       @collection.save!
@@ -31,6 +31,7 @@ describe CollectionsController do
       expect(assigns(:collection).subject_geographic).to eq(['geo'])
       expect(assigns(:collection).subject_name).to eq(['subjn'])
       expect(assigns(:collection).page_number).to eq(11)
+      expect(assigns(:collection).multi_page).to eq(true)
     end
   end
 
@@ -53,7 +54,7 @@ describe CollectionsController do
         abstract: ['testa'], bibliographic_citation: ['cit'],
         digital_origin: ['digo'], mesh: ['mesh'], lcsh: ['lcsh'],
         subject_geographic: ['geo'], subject_name: ['subjn'],
-        page_number: 11
+        page_number: 11, multi_page: 'true'
       }
       expect(assigns(:collection).abstract).to eq(['testa'])
       expect(assigns(:collection).bibliographic_citation).to eq(['cit'])
@@ -63,6 +64,7 @@ describe CollectionsController do
       expect(assigns(:collection).subject_geographic).to eq(['geo'])
       expect(assigns(:collection).subject_name).to eq(['subjn'])
       expect(assigns(:collection).page_number).to eq('11')
+      expect(assigns(:collection).multi_page).to eq(true)
     end
   end
 
@@ -73,7 +75,7 @@ describe CollectionsController do
         abstract: ['testa'], bibliographic_citation: ['cit'],
         digital_origin: ['digo'], mesh: ['mesh'], lcsh: ['lcsh'],
         subject_geographic: ['geo'], subject_name: ['subjn'],
-        page_number: 11
+        page_number: 11, multi_page: true
       )
       @collection.apply_depositor_metadata(@user.user_key)
       @collection.save!
@@ -134,6 +136,13 @@ describe CollectionsController do
       expect(response).to redirect_to(
         @routes.url_helpers.collection_path(@collection))
       expect(assigns(:collection).page_number).to eq('22')
+    end
+
+    it "should update multi_page" do
+      patch :update, id: @collection, collection: { multi_page: false }
+      expect(response).to redirect_to(
+        @routes.url_helpers.collection_path(@collection))
+      expect(assigns(:collection).multi_page).to eq(false)
     end
   end
 end
