@@ -211,4 +211,24 @@ RSpec.describe Collection do
       expect(collection.children).to include(collection_child)
     end
   end
+
+  context 'combined file association' do
+    let(:user) { FactoryGirl.create(:user) }
+    let(:collection) { make_collection(user) }
+    let(:full_file) { make_generic_file(user, { title: ['Full File 1'] }) }
+
+    it { is_expected.to respond_to(:children) }
+
+    it 'recognizes its own generic files children' do
+      collection.combined_file = full_file
+      collection.save!
+      collection.reload
+      expect(collection.combined_file).to eq(full_file)
+    end
+
+    it 'cannot have a collection-type combined file' do
+      expect { collection.combined_file = make_collection(user) }.to raise_error(
+        ActiveFedora::AssociationTypeMismatch)
+    end
+  end
 end

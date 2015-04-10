@@ -5,6 +5,9 @@ class Collection < Sufia::Collection
     class_name: 'ActiveFedora::Base'
   belongs_to :parent, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf,
     class_name: 'Collection'
+  belongs_to :combined_file,
+    predicate: ActiveFedora::RDF::Fcrepo::RelsExt.hasEquivalent,
+    class_name: 'GenericFile'
 
   property :abstract, predicate: ::RDF::DC.abstract, multiple: true do |index|
     index.type :text
