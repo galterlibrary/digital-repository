@@ -20,6 +20,11 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
+  sufia:
+    collection:
+      collections_list:
+        empty: 'Not a member of any collections'
+        heading: 'Member of:'
   simple_form:
     labels:
       generic_file:

@@ -27,6 +27,7 @@ feature "Collections", :type => :feature do
 
     it { is_expected.not_to have_text('Number of pages') }
     it { is_expected.to have_text('Total Items') }
+    it { is_expected.to have_text('Not a member of any collections') }
 
     specify {
       expect(find_link('Display all details of Red box')['href']).to eq(
@@ -37,6 +38,13 @@ feature "Collections", :type => :feature do
 
     it 'shows the number of items' do
       expect(find(:xpath, '//span[@itemprop="total_items"]').text).to eq('2')
+    end
+
+    it 'lists collection membership' do
+      click_link('Display all details of Red box')
+      expect(page).to have_text('Member of:')
+      expect(find_link('Chinese box')['href']).to eq(
+        "/collections/#{chi_box.id}")
     end
   end
 
