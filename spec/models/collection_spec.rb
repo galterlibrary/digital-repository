@@ -5,6 +5,7 @@ RSpec.describe Collection do
 
     describe 'is pagable' do
       before do
+        collection.multi_page = true
         allow(collection).to receive(:members).and_return([
           GenericFile.new(id: 'gf3', page_number: '11'),
           GenericFile.new(id: 'gf1', page_number: '9'),
@@ -22,17 +23,19 @@ RSpec.describe Collection do
 
     describe 'is not pagable' do
       before do
+        collection.multi_page = false
         allow(collection).to receive(:members).and_return([
           GenericFile.new(id: 'gf3'),
           GenericFile.new(id: 'gf1'),
-          GenericFile.new(id: 'gf2')
+          GenericFile.new(id: 'gf2'),
+          GenericFile.new(id: 'gf4')
         ])
       end
 
       subject { collection.pagable_members }
 
       it 'returns all pagable members in order' do
-        expect(subject.map(&:page_number)).to eq([])
+        expect(subject.map(&:page_number)).to be_blank
       end
     end
   end
@@ -42,6 +45,7 @@ RSpec.describe Collection do
 
     describe 'is pagable' do
       before do
+        collection.multi_page = true
         allow(collection).to receive(:members).and_return([
           GenericFile.new(id: 'gf3', page_number: '11'),
           GenericFile.new(id: 'gf1', page_number: '9'),
@@ -58,9 +62,10 @@ RSpec.describe Collection do
     describe 'is not pagable' do
       before do
         allow(collection).to receive(:members).and_return([
-          GenericFile.new(id: 'gf3'),
-          GenericFile.new(id: 'gf1'),
-          GenericFile.new(id: 'gf2')
+          GenericFile.new(id: 'gf3', page_number: '11'),
+          GenericFile.new(id: 'gf1', page_number: '9'),
+          GenericFile.new(id: 'gf2', page_number: '10'),
+          GenericFile.new(id: 'gf4')
         ])
       end
 
@@ -142,6 +147,15 @@ RSpec.describe Collection do
         expect(subject.reload.page_number).to eq(22)
       end
     end
+
+    describe "multi_page" do
+      it "has it" do
+        expect(subject.multi_page).to be_nil
+        subject.multi_page = true
+        subject.save(validate: false)
+        expect(subject.reload.multi_page).to be_truthy
+      end
+    end
   end
 
   context 'children-parent relation' do
@@ -195,6 +209,26 @@ RSpec.describe Collection do
       expect(collection.children).to include(member1)
       expect(collection.children).to include(member2)
       expect(collection.children).to include(collection_child)
+    end
+  end
+
+  context 'combined file association' do
+    let(:user) { FactoryGirl.create(:user) }
+    let(:collection) { make_collection(user) }
+    let(:full_file) { make_generic_file(user, { title: ['Full File 1'] }) }
+
+    it { is_expected.to respond_to(:children) }
+
+    it 'recognizes its own generic files children' do
+      collection.combined_file = full_file
+      collection.save!
+      collection.reload
+      expect(collection.combined_file).to eq(full_file)
+    end
+
+    it 'cannot have a collection-type combined file' do
+      expect { collection.combined_file = make_collection(user) }.to raise_error(
+        ActiveFedora::AssociationTypeMismatch)
     end
   end
 end

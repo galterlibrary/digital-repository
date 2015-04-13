@@ -1,0 +1,8 @@
+<h2 class="sr-only">Descriptions</h2>
+<dl class="dl-horizontal metadata-collections">
+  <% present_terms(@presenter, @presenter.terms_with_values - [:title, :description]) do |r, term| %>
+    <% term = :number_of_pages if term == :total_items && @collection.multi_page %>
+    <dt><%= r.label(term) %></dt>
+    <dd><%= r.value(term) %></dd>
+  <% end %>
+</dl>

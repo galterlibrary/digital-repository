@@ -8,7 +8,9 @@ module Galtersufia
     include Sufia::CollectionsControllerBehavior
 
     def collection_params
-      form_class.model_attributes(params[:collection])
+      clean_params = form_class.model_attributes(params[:collection])
+      clean_params[:multi_page] = ActiveRecord::ConnectionAdapters::Column::TRUE_VALUES.include?(clean_params[:multi_page])
+      clean_params
     end
 
     def presenter_class

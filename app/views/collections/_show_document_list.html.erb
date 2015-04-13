@@ -1,0 +1,23 @@
+<table class="table table-zebra-striped">
+  <caption class="sr-only">List of items in this collection</caption>
+  <thead>
+  <tr>
+    <th>&nbsp;</th>
+    <th>Title</th>
+    <th>Date Uploaded</th>
+    <th>Visibility</th>
+    <th>Action</th>
+  </tr>
+  </thead>
+  <tbody>
+    <% documents.each do |doc| %>
+      <% if doc.to_model.is_a?(GenericFile) %>
+        <%= render partial: 'show_document_list_row',
+          locals: { document: doc } %>
+      <% else %>
+        <%= render partial: 'my/_index_partials/list_collections',
+          locals: { document: doc } %>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>

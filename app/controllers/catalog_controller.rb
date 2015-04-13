@@ -82,7 +82,8 @@ class CatalogController < ApplicationController
     config.add_index_field solr_name("creator", :stored_searchable), label: "Creator", itemprop: 'creator'
     config.add_index_field solr_name("contributor", :stored_searchable), label: "Contributor", itemprop: 'contributor'
     config.add_index_field solr_name("publisher", :stored_searchable), label: "Publisher", itemprop: 'publisher'
-    config.add_index_field solr_name("page_number", :stored_searchable), label: "pageNumber"
+    config.add_index_field solr_name("page_number", :stored_searchable), label: "Page Number", itemprop: 'pageNumber'
+    config.add_index_field solr_name("multi_page", :stored_searchable), label: "Multi Page", itemprop: 'multiPage'
     config.add_index_field solr_name("based_near", :stored_searchable), label: "Location", itemprop: 'contentLocation'
     config.add_index_field solr_name("language", :stored_searchable), label: "Language", itemprop: 'inLanguage'
     config.add_index_field solr_name("date_uploaded", :stored_searchable), label: "Date Uploaded", itemprop: 'datePublished'
@@ -110,6 +111,7 @@ class CatalogController < ApplicationController
     config.add_show_field solr_name("contributor", :stored_searchable), label: "Contributor"
     config.add_show_field solr_name("publisher", :stored_searchable), label: "Publisher"
     config.add_show_field solr_name("page_number", :stored_searchable), label: "Page Number"
+    config.add_show_field solr_name("multi_page", :stored_searchable), label: "Multi-Page?"
     config.add_show_field solr_name("based_near", :stored_searchable), label: "Location"
     config.add_show_field solr_name("language", :stored_searchable), label: "Language"
     config.add_show_field solr_name("date_uploaded", :stored_searchable), label: "Date Uploaded"
@@ -238,6 +240,17 @@ class CatalogController < ApplicationController
         :"spellcheck.dictionary" => "page_number"
       }
       solr_name = solr_name("page_number", :stored_searchable)
+      field.solr_local_parameters = {
+        qf: solr_name,
+        pf: solr_name
+      }
+    end
+
+    config.add_search_field('muti_page') do |field|
+      field.solr_parameters = {
+        :"spellcheck.dictionary" => "muti_page"
+      }
+      solr_name = solr_name("muti_page", :stored_searchable)
       field.solr_local_parameters = {
         qf: solr_name,
         pf: solr_name
@@ -411,7 +424,7 @@ class CatalogController < ApplicationController
     # whether the sort is ascending or descending (it must be asc or desc
     # except in the relevancy case).
     # label is key, solr field is value
-    config.add_sort_field "score desc, #{uploaded_field} desc", label: "relevance \u25BC"
+    config.add_sort_field "score desc, #{uploaded_field} desc", label: "relevance"
     config.add_sort_field "#{uploaded_field} desc", label: "date uploaded \u25BC"
     config.add_sort_field "#{uploaded_field} asc", label: "date uploaded \u25B2"
     config.add_sort_field "#{modified_field} desc", label: "date modified \u25BC"

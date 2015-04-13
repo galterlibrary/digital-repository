@@ -5,6 +5,9 @@ class Collection < Sufia::Collection
     class_name: 'ActiveFedora::Base'
   belongs_to :parent, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf,
     class_name: 'Collection'
+  belongs_to :combined_file,
+    predicate: ActiveFedora::RDF::Fcrepo::RelsExt.hasEquivalent,
+    class_name: 'GenericFile'
 
   property :abstract, predicate: ::RDF::DC.abstract, multiple: true do |index|
     index.type :text
@@ -40,8 +43,13 @@ class Collection < Sufia::Collection
     index.type :integer
   end
 
+  property :multi_page, predicate: ::RDF::URI.new('http://opaquenamespace.org/hydra/multiPage'), multiple: false do |index|
+    index.as :stored_searchable
+    index.type :boolean
+  end
+
   def pagable?
-    pagable_members.present?
+    multi_page && pagable_members.present?
   end
 
   def pagable_members
