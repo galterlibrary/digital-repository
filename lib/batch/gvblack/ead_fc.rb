@@ -466,36 +466,40 @@ module Ead_fc
 
     def store_collection(rh)
       return if rh['type'].to_s.blank?
+
       title = unescape_and_clean( rh['title'])
       if rh['type'] == 'subseries'
         title = "#{title} - World's Columbian Dental Congress"
       end
-      #c = Collection.find {|c| c.title == "#{title}" }
       docs = Blacklight.solr.select(
         params: { q: 'title_tesim:"' + title + '",has_model_ssim:"Collection"' }
       )['response']['docs']
-      binding.pry if docs.count > 1
-      c = nil
       c = Collection.find(docs.first['id']) if docs.count == 1
+      #cols = Collection.where('title_tesim' => title)
+      #c = cols.first
+      binding.pry if docs.count != 1
+
       if !c
         c = Collection.new
         c.title = title
         c.apply_depositor_metadata("galter-is@listserv.it.northwestern.edu")
       end
+
+      normalize_date(rh)
       c.visibility = 'open'
       c.subject = rh['subject']
       c.mesh = rh['mesh']
       c.lcsh = rh['lcsh']
       c.subject_geographic = rh['geoname']
       c.subject_name = (rh['corpname'] || []) + (rh['persname'] || [])
-      c.date_created = [normalize_date(rh['create_date'])]
+      c.date_created = [rh['create_date']].compact
       c.abstract = [rh['abstract']].compact
       c.identifier = [rh['file_id']].compact
       c.rights = ['http://creativecommons.org/publicdomain/mark/1.0/']
       c.digital_origin = ['Reformatted Digital']
-      c.description = rh['note']
+      c.description = "#{rh['description']} #{rh['note']}"
       c.rights = ['http://creativecommons.org/publicdomain/mark/1.0/']
-      c.save!
+      c.save! if c.changed?
       ActiveFedora::SolrService.instance.conn.commit
       rh['collection'] = c
       add_to_collection(rh['parent_pid'], rh['collection'])
@@ -567,19 +571,35 @@ module Ead_fc
       end
     end
 
-    def normalize_date(date)
-      date = date.tr('?', '')
+    def normalize_date(rh)
+      return if rh['create_date'].blank?
+      date = rh['create_date'].tr('?', '')
       if date =~ / [0-9]+,/ && date != /-/
-        date = Time.parse(date).to_date.to_s
+        rh['create_date'] = Time.parse(date).to_date.to_s
+      elsif date !~ /[0-9]+\z/
+        if rh['description'].present?
+          rh['description'] = "#{rh['description']} Date: #{date}"
+        else
+          rh['description'] = "Date: #{date}"
+        end
+        rh['create_date'] = nil
       end
-      date
     end
 
     def store_gf(rh, page, path)
+      if page.present?
+        full_title = "#{unescape_and_clean(rh['title'])} - Page #{page}"
+      else
+        full_title = "#{unescape_and_clean(rh['title'])} - Combined"
+      end
+
       @generic_file = nil
       @generic_file = GenericFile.where(
         'title_sim' => unescape_and_clean(rh['title'])).where(
           Solrizer.solr_name('page_number') => page).first
+
+      @generic_file = GenericFile.where('title_sim' => full_title).first if @generic_file.blank?
+      binding.pry if @generic_file.blank?
 
       if @generic_file.blank?
         @generic_file = GenericFile.create! do |f|
@@ -594,18 +614,23 @@ module Ead_fc
         @generic_file.record_version_committer(@current_user)
         @generic_file.creator = ['Galter Health Sciences Library']
         @generic_file.title = [unescape_and_clean(rh['title'])]
+        Sufia.queue.push(CharacterizeJob.new(@generic_file.id))
       end
 
-      binding.pry if @generic_file.title.first != unescape_and_clean(rh['title'])
+      if @generic_file.title.first != unescape_and_clean(rh['title']) &&
+          @generic_file.title.first != full_title
+        binding.pry
+      end
 
+      @generic_file.title = [full_title]
       @generic_file.visibility = 'open'
       @generic_file.subject = rh['subject']
       @generic_file.mesh = rh['mesh']
       @generic_file.lcsh = rh['lcsh']
       @generic_file.subject_geographic = rh['geoname']
       @generic_file.subject_name = (rh['corpname'] || []) + (rh['persname'] || [])
-      @generic_file.description = [rh['note']].compact
-      @generic_file.date_created = [normalize_date(rh['create_date'])]
+      @generic_file.description = [rh['note'].to_s + rh['description'].to_s].compact
+      @generic_file.date_created = [rh['create_date']].compact
       @generic_file.abstract = [rh['abstract']].compact
       @generic_file.identifier = [rh['file_id']].compact
       @generic_file.rights = ['http://creativecommons.org/publicdomain/mark/1.0/']
@@ -613,10 +638,15 @@ module Ead_fc
       @generic_file.page_number = page
 
       @generic_file.parent = rh['collection']
-      @generic_file.save!
-      Sufia.queue.push(CharacterizeJob.new(@generic_file.id))
-      rh['collection'].members << @generic_file
-      rh['collection'].save!
+      @generic_file.save! if @generic_file.changed?
+      if page.present?
+        rh['collection'].members << @generic_file
+      else
+        rh['collection'].combined_file = @generic_file
+        rh['collection'].multi_page = true
+        rh['collection'].member_ids = rh['collection'].member_ids.delete_if {|id|
+          id == @generic_file.id }
+      end
     end
 
     def container_parse(nset, parent_path)
@@ -1033,6 +1063,7 @@ module Ead_fc
               rh['type'] = 'item'
               store_collection(rh)
               make_file(rh)
+              rh['collection'].save! if rh['collection'].changed?
               puts "Processed #{rh['title']}: #{rh['fname']}"
             else
               puts "No file for #{rh['title']}"
