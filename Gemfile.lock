@@ -196,6 +196,9 @@ GEM
       warden (~> 1.2.3)
     devise-guests (0.3.3)
       devise
+    devise_ldap_authenticatable (0.8.4)
+      devise (>= 3.4.1)
+      net-ldap (>= 0.3.1, < 0.6.0)
     diff-lcs (1.2.5)
     dropbox-sdk (1.6.4)
       json
@@ -368,6 +371,7 @@ GEM
     nest (1.1.2)
       redis
     net-http-persistent (2.9.4)
+    net-ldap (0.5.1)
     netrc (0.10.2)
     noid (0.7.1)
     nokogiri (1.6.6.2)
@@ -647,6 +651,7 @@ DEPENDENCIES
   coffee-rails (~> 4.0.0)
   devise
   devise-guests (~> 0.3)
+  devise_ldap_authenticatable
   escape
   factory_girl_rails
   http_logger

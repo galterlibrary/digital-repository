@@ -65,11 +65,13 @@ gem 'pry'
 gem 'qa'
 gem 'http_logger'
 gem 'escape'
-gem 'ruby-ldap'
 gem 'rdf-vocab'
 
 gem 'riiif'
 gem 'osullivan'
 gem 'rsolr'
+
+gem 'ruby-ldap'
+gem "devise_ldap_authenticatable"
 
 #gem 'resque-web', require: 'resque_web'

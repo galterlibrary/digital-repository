@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150223143838) do
+ActiveRecord::Schema.define(version: 20150414181439) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -319,10 +319,14 @@ ActiveRecord::Schema.define(version: 20150223143838) do
     t.datetime "groups_last_update"
     t.string   "linkedin_handle"
     t.string   "orcid"
+    t.string   "username"
+    t.string   "remember_token"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
+  add_index "users", ["remember_token"], name: "index_users_on_remember_token", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+  add_index "users", ["username"], name: "index_users_on_username", unique: true, using: :btree
 
   create_table "version_committers", force: true do |t|
     t.string   "obj_id"
