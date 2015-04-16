@@ -415,6 +415,7 @@ module Ead_fc
       elsif url == '../gvblack/wcdc-eph/lunch.gif'
         query = 'lunch'
       end
+
       query.strip.downcase
     end
 
@@ -442,6 +443,18 @@ module Ead_fc
         file_id = 'bolton1892120'
       elsif file_id == 'black18930307'
         file_id = 'black18930207'
+      # Bad identifier, duplicate of another letter.
+      elsif file_id == 'black18921128' && rh['container_unittitle'] =~ /memo/
+        file_id = nil
+        rh['file_id'] = nil
+      elsif file_id == 'm19091223' && rh['container_unitdate'] =~ /26,/
+        file_id = 'm19091226'
+      elsif file_id == 'm19120227' && rh['note'] =~ /transcription/
+        file_id = nil
+        rh['file_id'] = nil
+      elsif file_id == 'b19150429' && rh['note'] =~ /Another/
+        file_id = nil
+        rh['file_id'] = nil
       end
 
       if !file_id.nil?
@@ -467,17 +480,27 @@ module Ead_fc
     def store_collection(rh)
       return if rh['type'].to_s.blank?
 
+      normalize_date(rh)
       title = unescape_and_clean( rh['title'])
       if rh['type'] == 'subseries'
         title = "#{title} - World's Columbian Dental Congress"
+      elsif rh['type'] == 'letter'
+        binding.pry unless rh['original_date'].present?
+        title = "#{title} (#{rh['original_date']})"
       end
-      docs = Blacklight.solr.select(
-        params: { q: 'title_tesim:"' + title + '",has_model_ssim:"Collection"' }
-      )['response']['docs']
+
+      if rh['type'] == 'letter'
+        docs = Blacklight.default_index.connection.select(
+          params: { q: 'identifier_tesim:"' + rh['file_id'] + '",has_model_ssim:"Collection"' }
+        )['response']['docs']
+      else
+        docs = Blacklight.default_index.connection.select(
+          params: { q: 'title_tesim:"' + title + '",has_model_ssim:"Collection"' }
+        )['response']['docs']
+      end
       c = Collection.find(docs.first['id']) if docs.count == 1
-      #cols = Collection.where('title_tesim' => title)
-      #c = cols.first
-      binding.pry if docs.count != 1
+      #binding.pry if docs.count != 1
+      binding.pry if docs.count > 1
 
       if !c
         c = Collection.new
@@ -485,7 +508,7 @@ module Ead_fc
         c.apply_depositor_metadata("galter-is@listserv.it.northwestern.edu")
       end
 
-      normalize_date(rh)
+      c.title = title
       c.visibility = 'open'
       c.subject = rh['subject']
       c.mesh = rh['mesh']
@@ -493,11 +516,11 @@ module Ead_fc
       c.subject_geographic = rh['geoname']
       c.subject_name = (rh['corpname'] || []) + (rh['persname'] || [])
       c.date_created = [rh['create_date']].compact
-      c.abstract = [rh['abstract']].compact
+      c.abstract = [unescape_and_clean(rh['abstract'])].compact
       c.identifier = [rh['file_id']].compact
       c.rights = ['http://creativecommons.org/publicdomain/mark/1.0/']
       c.digital_origin = ['Reformatted Digital']
-      c.description = "#{rh['description']} #{rh['note']}"
+      c.description = unescape_and_clean("#{rh['description']} #{rh['note']}")
       c.rights = ['http://creativecommons.org/publicdomain/mark/1.0/']
       c.save! if c.changed?
       ActiveFedora::SolrService.instance.conn.commit
@@ -518,6 +541,7 @@ module Ead_fc
     end
 
     def unescape_and_clean(str, postfix='')
+      return unless str.present?
       str = CGI::unescapeHTML(str)
       # Remove junk from the end and strip
       # Remove line-breaks and more then one space
@@ -550,7 +574,7 @@ module Ead_fc
       fname = rh['fname']
       pages = get_all_files_for_item(fname, rh['file_id'])
       pages[nil] = fname
-      puts pages
+      #puts pages
       pages.each do |page, path|
         store_gf(rh, page, path)
       end
@@ -574,6 +598,7 @@ module Ead_fc
     def normalize_date(rh)
       return if rh['create_date'].blank?
       date = rh['create_date'].tr('?', '')
+      rh['original_date'] = date
       if date =~ / [0-9]+,/ && date != /-/
         rh['create_date'] = Time.parse(date).to_date.to_s
       elsif date !~ /[0-9]+\z/
@@ -587,10 +612,12 @@ module Ead_fc
     end
 
     def store_gf(rh, page, path)
+      full_title = unescape_and_clean(rh['title'])
+      full_title = "#{full_title} (#{rh['original_date']})" if rh['type'] == 'letter'
       if page.present?
-        full_title = "#{unescape_and_clean(rh['title'])} - Page #{page}"
+        full_title = "#{full_title} - Page #{page}"
       else
-        full_title = "#{unescape_and_clean(rh['title'])} - Combined"
+        full_title = "#{full_title} - Combined"
       end
 
       @generic_file = nil
@@ -599,7 +626,18 @@ module Ead_fc
           Solrizer.solr_name('page_number') => page).first
 
       @generic_file = GenericFile.where('title_sim' => full_title).first if @generic_file.blank?
-      binding.pry if @generic_file.blank?
+
+      if rh['type'] == 'letter'
+        files = GenericFile.where(
+          'identifier_tesim' => rh['file_id']
+        ).where(Solrizer.solr_name('page_number') => page.to_s)
+        binding.pry if files.count > 1
+        @generic_file = files.first
+      end
+
+      if @generic_file.blank?
+        puts "Couldn't find file for #{path}, #{full_title}"
+      end
 
       if @generic_file.blank?
         @generic_file = GenericFile.create! do |f|
@@ -619,7 +657,7 @@ module Ead_fc
 
       if @generic_file.title.first != unescape_and_clean(rh['title']) &&
           @generic_file.title.first != full_title
-        binding.pry
+        #binding.pry
       end
 
       @generic_file.title = [full_title]
@@ -806,6 +844,14 @@ module Ead_fc
                 end
               end
 
+              if child.name.match(/note/)
+                rh['note'] = unescape_and_clean(child.content, '.')
+              end
+
+              if child.name.match(/abstract/)
+                rh['abstract'] = unescape_and_clean(child.content, '.')
+              end
+
               if child.name.match(/dao/)
                 begin
                   rh['href'] = child.attribute('href').value
@@ -818,14 +864,6 @@ module Ead_fc
                 rescue
                   puts "Can't file file_id for #{rh['title']}"
                 end
-              end
-
-              if child.name.match(/note/)
-                rh['note'] = unescape_and_clean(child.content, '.')
-              end
-
-              if child.name.match(/abstract/)
-                rh['abstract'] = unescape_and_clean(child.content, '.')
               end
             }
           end
@@ -1060,7 +1098,16 @@ module Ead_fc
               end
             end
             if rh['fname']
+              parent = @cn_loh.find {|o| o['pid'] == rh['parent_pid'] }['collection']
               rh['type'] = 'item'
+              if ['m039k503z', 'm039k506s'].include?(parent.id)
+                rh['type'] = 'letter'
+              end
+
+              #Uncomment to start processing from a specific identifier
+              #@gotime = true if rh['file_id'] == 'cassidy18921019'
+              #(@cn_loh.pop() and next) unless @gotime
+
               store_collection(rh)
               make_file(rh)
               rh['collection'].save! if rh['collection'].changed?
@@ -1069,14 +1116,6 @@ module Ead_fc
               puts "No file for #{rh['title']}"
             end
           end
-
-
-          #print "Wrote foxml: #{wfx_name} pid: #{rh['pid']} id: #{rh['id']}\n"
-
-          # Actions to implment here: Pop stack. When we eventually
-          # implement "isParentOf" then this is where we will modify the
-          # Fedora object created above to know about all the children
-          # created during the recursion.
 
           @cn_loh.pop()
         end
@@ -1186,7 +1225,7 @@ module Ead_fc
       rh['abstract'] = "" 
       tmp = @xml.xpath("//*/#{@ns}archdesc/#{@ns}did/#{@ns}abstract")[0]
       if ! tmp.nil?
-        rh['abstract'] = tmp.content
+        rh['abstract'] = unescape_and_clean(tmp.content)
       end
       
       # Not including the <head>. Could be multiple <p> so separate with
