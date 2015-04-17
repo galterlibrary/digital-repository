@@ -31,6 +31,7 @@ feature "MutiPageCollections", :type => :feature do
     it { is_expected.not_to have_text('Total Items') }
     it { is_expected.to have_text('Pages in this Collection') }
     it { is_expected.to have_link('View Combined Pages') }
+    it { is_expected.to have_select('sort', selected: 'page number▲') }
 
     it 'shows the number of pages' do
       expect(find(:xpath, '//span[@itemprop="number_of_pages"]').text).to eq('2')

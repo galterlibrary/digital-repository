@@ -67,9 +67,47 @@ RSpec.describe GenericFile do
     describe "page_number" do
       it "has it" do
         expect(subject.page_number).to be_nil
-        subject.page_number = 22
+        subject.page_number = '22'
         subject.save(validate: false)
-        expect(subject.reload.page_number).to eq(22)
+        expect(subject.reload.page_number).to eq('22')
+      end
+    end
+
+    describe "page_number_actual" do
+      it "has it" do
+        expect(subject.page_number_actual).to be_nil
+        subject.page_number_actual = 22
+        subject.save(validate: false)
+        expect(subject.reload.page_number_actual).to eq(22)
+      end
+    end
+
+    describe 'setting page_number_actual via page_number' do
+      it "sets page_number_actual when page_number is set" do
+        subject.page_number = '22'
+        subject.save(validate: false)
+        expect(subject.reload.page_number_actual).to eq(22)
+      end
+
+      it "sets page_number_actual when page_number is changed" do
+        subject.page_number = '22'
+        subject.save(validate: false)
+        subject.page_number = '33'
+        subject.save(validate: false)
+        expect(subject.reload.page_number_actual).to eq(33)
+      end
+
+      it "prefers page_number_actual over page_number" do
+        subject.page_number = '22'
+        subject.page_number_actual = '33'
+        subject.save(validate: false)
+        expect(subject.reload.page_number_actual).to eq(33)
+      end
+
+      it "leaves page_number_actual blank if page_number is not an integer" do
+        subject.page_number = '22a'
+        subject.save(validate: false)
+        expect(subject.reload.page_number_actual).to eq(nil)
       end
     end
   end

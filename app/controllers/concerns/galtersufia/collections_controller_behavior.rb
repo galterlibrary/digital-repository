@@ -20,5 +20,19 @@ module Galtersufia
     def form_class
       Sufia::Forms::GalterCollectionEditForm
     end
+
+    def show
+      if @collection.multi_page && params['sort'].blank?
+        params['sort'] = 'page_number_actual_isi asc'
+      end
+      super
+    end
+
+    def edit
+      if @collection.multi_page && params['sort'].blank?
+        params['sort'] = 'page_number_actual_isi asc'
+      end
+      super
+    end
   end
 end

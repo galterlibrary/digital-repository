@@ -27,6 +27,10 @@ class CatalogController < ApplicationController
     solr_name('date_modified', :stored_sortable, type: :date)
   end
 
+  def self.page_number_field
+    solr_name('page_number_actual', :stored_sortable, type: :integer)
+  end
+
   configure_blacklight do |config|
     config.view.gallery.partials = [:index_header, :index]
     config.view.masonry.partials = [:index]
@@ -429,6 +433,8 @@ class CatalogController < ApplicationController
     config.add_sort_field "#{uploaded_field} asc", label: "date uploaded \u25B2"
     config.add_sort_field "#{modified_field} desc", label: "date modified \u25BC"
     config.add_sort_field "#{modified_field} asc", label: "date modified \u25B2"
+    config.add_sort_field "#{page_number_field} desc", label: "page number\u25BC"
+    config.add_sort_field "#{page_number_field} asc", label: "page number\u25B2"
 
     # If there are more than this many search results, no spelling ("did you
     # mean") suggestion is offered.
