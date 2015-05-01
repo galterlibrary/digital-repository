@@ -169,4 +169,29 @@ RSpec.describe User do
       it { is_expected.to eq('noonoo') }
     end
   end
+
+  describe 'add_to_group' do
+    let(:user) { create(:user) }
+    it 'adds user to a group' do
+      Role.create(name: 'admin')
+      user.add_to_group('admin')
+      expect(user.groups).to include('admin')
+    end
+  end
+
+  describe 'in_group?' do
+    let(:user) { create(:user) }
+    it 'adds user to a group' do
+      Role.create(name: 'admin')
+      user.add_to_group('admin')
+      expect(user.in_group?('admin')).to be_truthy
+    end
+  end
+
+  describe 'groups' do
+    let(:user) { create(:user) }
+    it 'returns "registered" by default' do
+      expect(user.groups).to include('registered')
+    end
+  end
 end

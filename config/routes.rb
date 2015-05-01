@@ -6,6 +6,8 @@ Rails.application.routes.draw do
 
   blacklight_for :catalog
   devise_for :users
+  mount Hydra::RoleManagement::Engine => '/'
+
   Hydra::BatchEdit.add_routes(self)
 
   get '/iiif-api/collection/:id/manifest', to: 'iiif_apis#manifest', as: 'iiif_apis_manifest'

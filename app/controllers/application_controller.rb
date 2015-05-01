@@ -1,4 +1,9 @@
 class ApplicationController < ActionController::Base
+  before_filter do
+    resource = controller_path.singularize.gsub('/', '_').to_sym 
+    method = "#{resource}_params"
+    params[resource] &&= send(method) if respond_to?(method, true)
+  end
   before_action :configure_permitted_parameters, if: :devise_controller?
   rescue_from DeviseLdapAuthenticatable::LdapException do |exception|
     render :text => exception, :status => 500

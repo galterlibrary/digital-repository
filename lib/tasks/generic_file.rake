@@ -4,7 +4,7 @@ namespace :generic_file do
     Collection.where('multi_page_bsi' => 'true').each do |col|
       @current = 0
       col.pagable_members.each_with_index do |gf, idx|
-        byebug if gf.page_number.blank?
+        puts "Page Number blank for #{gf.id}: #{gf.title}" if gf.page_number.blank?
         @current += 1
         gf.page_number_actual = @current
         gf.save!

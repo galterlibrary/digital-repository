@@ -3,24 +3,42 @@ class User < ActiveRecord::Base
     :presence => true,
     :uniqueness => { :case_sensitive => false }
 
-  # Connects this user object to Hydra behaviors. 
-  include Hydra::User# Connects this user object to Sufia behaviors.
+  # Connects this user object to Hydra behaviors.
+  include Hydra::User
+  # Connects this user object to Role-management behaviors.
+  include Hydra::RoleManagement::UserRoles
+  # Connects this user object to Sufia behaviors.
   include Sufia::User
   include Sufia::UserUsageStats
 
-  # Connects this user object to Blacklights Bookmarks. 
+  # Connects this user object to Blacklights Bookmarks.
   include Blacklight::User
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :ldap_authenticatable, :rememberable, :trackable
-  has_many :user_roles
-  has_many :roles, through: :user_roles
 
   # Method added by Blacklight; Blacklight uses #to_s on your
   # user class to get a user-displayable login/identifier for
   # the account.
   def to_s
     login
+  end
+
+  def has_role?(role)
+    roles.where(name: role).exists?
+  end
+  alias_method :in_group?, :has_role?
+
+  def add_to_group(name)
+    return roles if has_role?(name)
+    roles << Role.find_by(name: name)
+  end
+  alias_method :add_role, :add_to_group
+
+  def groups
+    g = roles.map(&:name)
+    g += ['registered'] unless new_record? || guest? 
+    g
   end
 
   def populate_attributes
@@ -39,19 +57,6 @@ class User < ActiveRecord::Base
     attrs[:title] = results['title'].first rescue nil
     attrs[:chat_id] = results['pschatname'].first rescue nil
     update_attributes!(attrs)
-  end
-
-  def has_role?(role)
-    roles.where(role: role).present?
-  end
-
-  def admin?
-    has_role?('admin')
-  end
-
-  def add_role(role)
-    return if has_role?(role)
-    roles << Role.find_by(role: role)
   end
 
   def login=(login)

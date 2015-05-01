@@ -142,6 +142,7 @@ GEM
     bootstrap-sass (3.3.4.1)
       autoprefixer-rails (>= 5.0.0.1)
       sass (>= 3.2.19)
+    bootstrap_form (2.3.0)
     breadcrumbs_on_rails (2.3.0)
     browse-everything (0.8.1)
       bootstrap-sass
@@ -296,6 +297,10 @@ GEM
       hydra-access-controls (= 9.1.2)
       hydra-core (= 9.1.2)
       rails (>= 3.2.6)
+    hydra-role-management (0.2.1)
+      blacklight
+      bootstrap_form
+      cancancan
     i18n (0.7.0)
     jbuilder (2.2.5)
       activesupport (>= 3.0.0, < 5)
@@ -655,6 +660,7 @@ DEPENDENCIES
   escape
   factory_girl_rails
   http_logger
+  hydra-role-management
   jbuilder (~> 2.0)
   jettywrapper
   jquery-rails

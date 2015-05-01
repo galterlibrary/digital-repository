@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150414181439) do
+ActiveRecord::Schema.define(version: 20150501183254) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -221,9 +221,16 @@ ActiveRecord::Schema.define(version: 20150414181439) do
   add_index "qa_subject_mesh_terms", ["term_lower"], name: "index_qa_subject_mesh_terms_on_term_lower", using: :btree
 
   create_table "roles", force: true do |t|
-    t.string "role"
-    t.text   "description"
+    t.string "name"
   end
+
+  create_table "roles_users", id: false, force: true do |t|
+    t.integer "role_id"
+    t.integer "user_id"
+  end
+
+  add_index "roles_users", ["role_id", "user_id"], name: "index_roles_users_on_role_id_and_user_id", using: :btree
+  add_index "roles_users", ["user_id", "role_id"], name: "index_roles_users_on_user_id_and_role_id", using: :btree
 
   create_table "searches", force: true do |t|
     t.text     "query_params"
@@ -264,14 +271,6 @@ ActiveRecord::Schema.define(version: 20150414181439) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  create_table "user_roles", force: true do |t|
-    t.integer "user_id"
-    t.integer "role_id"
-  end
-
-  add_index "user_roles", ["role_id"], name: "index_user_roles_on_role_id", using: :btree
-  add_index "user_roles", ["user_id"], name: "index_user_roles_on_user_id", using: :btree
 
   create_table "user_stats", force: true do |t|
     t.integer  "user_id"
