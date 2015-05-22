@@ -36,9 +36,7 @@ class User < ActiveRecord::Base
   alias_method :add_role, :add_to_group
 
   def groups
-    g = roles.map(&:name)
-    g += ['registered'] unless new_record? || guest? 
-    g
+    roles.map(&:name)
   end
 
   def populate_attributes

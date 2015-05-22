@@ -190,8 +190,8 @@ RSpec.describe User do
 
   describe 'groups' do
     let(:user) { create(:user) }
-    it 'returns "registered" by default' do
-      expect(user.groups).to include('registered')
+    it 'does not return "registered" by default' do
+      expect(user.groups).not_to include('registered')
     end
   end
 end

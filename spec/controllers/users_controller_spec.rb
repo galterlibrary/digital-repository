@@ -29,6 +29,14 @@ describe UsersController do
         expect(resp_hash.first['text']).to eq('Good Mo (good)')
       end
 
+      it 'can ignore case' do
+        create(:user, username: 'bad', display_name: 'Bad Mof')
+        create(:user, username: 'good', display_name: 'Good mof')
+        create(:user, username: 'nah', display_name: 'Good Dof')
+        get :index, format: 'json', uq: 'MOF'
+        expect(assigns(:users).count).to eq(2)
+      end
+
       it 'returns the first ten users' do
         create_list(:user, 12)
         get :index, format: 'json'

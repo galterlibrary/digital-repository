@@ -7,7 +7,7 @@ class UsersController < ApplicationController
     base = User.where(*base_query)
     unless query.blank?
       base = base.where(
-        "username like lower(?) OR display_name like lower(?) OR email like lower(?)", query, query, query)
+        "LOWER(username) LIKE ? OR LOWER(display_name) LIKE ? OR LOWER(email) LIKE ?", query, query, query)
     end
     @users = base.references(:trophies).order(sort_val).page(
       params[:page]).per(10)
