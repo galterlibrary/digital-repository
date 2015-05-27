@@ -66,6 +66,7 @@ Sufia.config do |config|
 
   config.resource_types_to_schema = {
     "Article" => "http://schema.org/Article",
+    "Autobiography" => "https://github.com/vioil/ontology_extensions/blob/master/VlocalVI.rdf#Autobiography",
     "Audio" => "http://schema.org/AudioObject",
     "Bibliography" => "https://github.com/vioil/ontology_extensions/blob/master/VlocalVI.rdf#Bibliography",
     "Biography" => "https://github.com/vioil/ontology_extensions/blob/master/VlocalVI.rdf#Biography",

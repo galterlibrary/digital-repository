@@ -61,12 +61,12 @@ class User < ActiveRecord::Base
 
   def nuldap_groups
     ldap_working, results = Nuldap.new.search("uid=#{user_key}")
-    unless ldap_working
+    if ldap_working && results.try(:[], 'ou').present?
+      results['ou'].reject {|o| o == 'People' }
+    else
       Rails.logger.warn "No ldapresults exists for #{user_key}"
-      return
+      []
     end
-
-    results['ou'].reject {|o| o == 'People' }
   end
 
   def login=(login)
