@@ -7,8 +7,5 @@ FactoryGirl.define do
     sequence :username do |n|
       "user#{n}"
     end
-    factory :admin do
-      admin true
-    end
   end
 end

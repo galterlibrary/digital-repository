@@ -47,15 +47,19 @@ feature "Authentication", :type => :feature do
   end
 
   describe 'user is in LDAP' do
+    before do
+      #TODO test with real LDAP
+      allow_any_instance_of(User).to receive(
+        :valid_ldap_authentication?).and_return(true)
+      allow_any_instance_of(User).to receive(:add_to_nuldap_groups)
+    end
+
     context 'user is in local db' do
       let!(:user) {
         create(:user, username: 'noonoo', display_name: 'Noonoo The First')
       }
 
       before do
-        #TODO test with real LDAP
-        allow_any_instance_of(User).to receive(
-          :valid_ldap_authentication?).and_return(true)
         fill_in 'NetID', with: 'noonoo'
         fill_in 'Password', with: 'realdeal'
         click_button 'Log in'
@@ -72,9 +76,6 @@ feature "Authentication", :type => :feature do
 
     context 'user is not in local db' do
       before do
-        #TODO test with real LDAP
-        allow_any_instance_of(User).to receive(
-          :valid_ldap_authentication?).and_return(true)
         fill_in 'NetID', with: 'noonoo'
         fill_in 'Password', with: 'realdeal'
         click_button 'Log in'

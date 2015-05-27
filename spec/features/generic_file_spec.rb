@@ -41,4 +41,31 @@ describe 'generic file', :type => :feature do
       expect(page).to have_text('Digital')
     end
   end
+
+  describe 'edit' do
+    context 'logged in owner' do
+      before do
+        login_as(@user, :scope => :user)
+        visit "/files/#{@file.id}"
+      end
+
+      describe 'changing permissions' do
+        context 'custom groups' do
+          before do
+            @role = Role.create(name: 'ba-cla', description: 'Cleaning and meaining it.')
+            @user.add_role('ba-cla')
+            click_link 'Edit'
+            click_link 'Permissions'
+          end
+
+          it 'shows group descriptions in the select box', js: true do
+            select 'Cleaning and meaining it.', from: 'new_group_name_skel'
+            select 'Edit', from: 'new_group_permission_skel'
+            click_button 'add_new_group_skel'
+            expect(page).to have_text('ba-cla')
+          end
+        end
+      end
+    end
+  end
 end

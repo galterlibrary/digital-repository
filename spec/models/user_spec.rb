@@ -40,8 +40,21 @@ RSpec.describe User do
           expect_any_instance_of(User).to receive(
             :valid_ldap_authentication?).and_return(true)
           expect_any_instance_of(User).to receive(:populate_attributes)
+          expect_any_instance_of(User).to receive(:nuldap_groups).and_return(
+            ['Black Hats', 'DDoSers', 'Script Kiddies']
+          )
         end
         subject { User.find_for_ldap_authentication({ login: 'snoosnoo' }) }
+
+        it "creates roles if they don't yet exist and adds user to them" do
+          user_roles = subject.groups
+          expect(user_roles).to include('Black Hats')
+          expect(user_roles).to include('DDoSers')
+          expect(user_roles).to include('Script Kiddies')
+          expect(Role.find_by(name: 'Script-Kiddies')).to be_an_instance_of(Role)
+          expect(Role.find_by(name: 'Black-Hats')).to be_an_instance_of(Role)
+          expect(Role.find_by(name: 'DDoSers')).to be_an_instance_of(Role)
+        end
 
         it "returns an instace of a User" do
           expect(subject).to be_an_instance_of(User)
@@ -188,10 +201,51 @@ RSpec.describe User do
     end
   end
 
+  describe '#nuldap_groups' do
+    let(:user) { create(:user) }
+
+    it 'returns empty array if no groups' do
+      expect_any_instance_of(Nuldap).to receive(:search).and_return([])
+      expect(user.nuldap_groups).to be_nil
+    end
+
+    it 'returns ldap groups' do
+      allow_any_instance_of(Nuldap).to receive(:search).and_return([
+        true, { 'ou' => ['People', 'Bad Apples', 'Normal'] }
+      ])
+      expect(user.nuldap_groups).to include('Bad Apples')
+      expect(user.nuldap_groups).to include('Normal')
+    end
+
+    it 'does not return "People" group' do
+      expect_any_instance_of(Nuldap).to receive(:search).and_return([
+        true, { 'ou' => ['People', 'Bad Apples', 'Normal'] }
+      ])
+      expect(user.nuldap_groups).not_to include('People')
+    end
+  end
+
   describe 'groups' do
     let(:user) { create(:user) }
     it 'does not return "registered" by default' do
       expect(user.groups).not_to include('registered')
+    end
+
+    it 'returns descriptions if present' do
+      role_desc = Role.create(name: 'something', description: 'Other stuff')
+      user.add_to_group('something')
+      expect(user.groups).not_to include('something')
+      expect(user.groups).to include('Other stuff')
+    end
+
+    it 'returns name if no description' do
+      role_desc = Role.create(name: 'something', description: 'Other stuff')
+      role_name = Role.create(name: 'no-desc')
+      user.add_to_group('something')
+      user.add_to_group('no-desc')
+      expect(user.groups).not_to include('something')
+      expect(user.groups).to include('Other stuff')
+      expect(user.groups).to include('no-desc')
     end
   end
 end

@@ -36,7 +36,9 @@ class User < ActiveRecord::Base
   alias_method :add_role, :add_to_group
 
   def groups
-    roles.map(&:name)
+    roles.map do |role|
+      role.description ? role.description : role.name
+    end
   end
 
   def populate_attributes
@@ -57,6 +59,16 @@ class User < ActiveRecord::Base
     update_attributes!(attrs)
   end
 
+  def nuldap_groups
+    ldap_working, results = Nuldap.new.search("uid=#{user_key}")
+    unless ldap_working
+      Rails.logger.warn "No ldapresults exists for #{user_key}"
+      return
+    end
+
+    results['ou'].reject {|o| o == 'People' }
+  end
+
   def login=(login)
     @login = login
   end
@@ -67,6 +79,24 @@ class User < ActiveRecord::Base
 
   def [](key)
     key == :login ? login : super
+  end
+
+  def normalize_name(role_name)
+    role_name.gsub(/[^a-zA-Z_.-]/, '-')
+             .gsub(/-+/, '-')
+             .gsub(/^-+/, '')
+             .gsub(/-+$/, '')
+  end
+  private :normalize_name
+
+  def add_to_nuldap_groups
+    nuldap_groups.each do |ldap_role_name|
+      formatted_name = normalize_name(ldap_role_name)
+      unless Role.find_by(name: formatted_name)
+        Role.create(name: formatted_name, description: ldap_role_name)
+      end
+      add_role(formatted_name)
+    end
   end
 
   class << self
@@ -83,6 +113,7 @@ class User < ActiveRecord::Base
           resource.valid_ldap_authentication?(attributes[:password])
         resource.ldap_before_save if resource.respond_to?(:ldap_before_save)
         resource.save!
+        resource.add_to_nuldap_groups
         resource.populate_attributes
       end
 

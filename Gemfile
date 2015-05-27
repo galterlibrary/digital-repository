@@ -75,4 +75,5 @@ gem 'ruby-ldap'
 gem "devise_ldap_authenticatable"
 gem 'hydra-role-management'
 
-#gem 'resque-web', require: 'resque_web'
+gem 'poltergeist'
+gem 'database_cleaner'

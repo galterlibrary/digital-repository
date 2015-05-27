@@ -6,24 +6,46 @@ require 'rspec/rails'
 require 'factory_girl'
 require 'active_fedora/cleaner'
 require 'devise'
+require 'capybara/poltergeist'
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 
 include Warden::Test::Helpers
-Warden.test_mode! 
+Warden.test_mode!
 
+Capybara.javascript_driver = :poltergeist
 ActiveRecord::Migration.maintain_test_schema!
 RSpec.configure do |config|
   config.include Devise::TestHelpers, :type => :controller
   config.include FactoryGirl::Syntax::Methods
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
-  config.use_transactional_fixtures = true
+  config.use_transactional_fixtures = false
 
   config.infer_spec_type_from_file_location!
 
-   config.before :each do |example|
-     unless (example.metadata[:type] == :view || example.metadata[:no_clean])
-       ActiveFedora::Cleaner.clean!
-     end
-   end
+  config.before :suite do
+    begin
+      DatabaseCleaner.start
+      FactoryGirl.lint
+    ensure
+      DatabaseCleaner.clean
+    end
+
+    DatabaseCleaner.clean_with :truncation
+    DatabaseCleaner.strategy = :deletion
+  end
+
+  config.before :each do |example|
+    unless (example.metadata[:type] == :view || example.metadata[:no_clean])
+      ActiveFedora::Cleaner.clean!
+    end
+
+    DatabaseCleaner.strategy = :deletion
+    DatabaseCleaner.start
+  end
+
+  config.after :each do
+    DatabaseCleaner.clean
+    Warden.test_reset!
+  end
 end
