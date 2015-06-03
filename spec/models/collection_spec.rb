@@ -1,5 +1,6 @@
 require 'rails_helper'
 RSpec.describe Collection do
+  let(:user) { FactoryGirl.create(:user) }
   context '#pagable_members' do
     let(:collection) { Collection.new(id: 'col1', title: 'something') }
 
@@ -159,7 +160,6 @@ RSpec.describe Collection do
   end
 
   context 'children-parent relation' do
-    let(:user) { FactoryGirl.create(:user) }
     let(:collection) { make_collection(user) }
     let(:collection_parent) { make_collection(user) }
     let(:collection_child) { make_collection(user) }
@@ -213,7 +213,6 @@ RSpec.describe Collection do
   end
 
   context 'combined file association' do
-    let(:user) { FactoryGirl.create(:user) }
     let(:collection) { make_collection(user) }
     let(:full_file) { make_generic_file(user, { title: ['Full File 1'] }) }
 
@@ -229,6 +228,23 @@ RSpec.describe Collection do
     it 'cannot have a collection-type combined file' do
       expect { collection.combined_file = make_collection(user) }.to raise_error(
         ActiveFedora::AssociationTypeMismatch)
+    end
+  end
+
+  context 'visibility' do
+    let(:collection) { Collection.new(title: 'something') }
+    it 'is open visibility upon create' do
+      collection.apply_depositor_metadata(user.username)
+      collection.save
+      expect(collection.visibility).to eq('open')
+    end
+
+    it 'preserves visibility when updated' do
+      collection.apply_depositor_metadata(user.username)
+      collection.save
+      collection.visibility = 'restricted'
+      collection.save
+      expect(collection.visibility).to eq('restricted')
     end
   end
 end

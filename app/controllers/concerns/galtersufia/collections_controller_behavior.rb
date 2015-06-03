@@ -34,5 +34,36 @@ module Galtersufia
       end
       super
     end
+
+    # Ugly but allows us to do permissions in the same way
+    # as they're done for GenericFile.
+    def adjust_permissions
+      params['collection'] = {} if params['collection'].blank?
+
+      if params['visibility'].present?
+        @collection.visibility = params['visibility']
+      end
+
+      if params['generic_file'].try(:[], 'permissions_attributes').present?
+        if params['collection']['permissions_attributes'].blank?
+          params['collection']['permissions_attributes'] = {}
+        end
+
+        params['generic_file']['permissions_attributes'].keys.each do |key|
+          if params['collection']['permissions_attributes'][key].blank?
+            params['collection']['permissions_attributes'][key] = {}
+          end
+
+          params['collection']['permissions_attributes'][key].merge!(
+            params['generic_file']['permissions_attributes'][key])
+        end
+      end
+    end
+    private :adjust_permissions
+
+    def update
+      adjust_permissions
+      super
+    end
   end
 end

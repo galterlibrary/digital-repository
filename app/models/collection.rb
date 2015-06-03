@@ -1,6 +1,16 @@
 class Collection < Sufia::Collection
   include Hydra::Collections::Actions
 
+  before_create :open_visibility
+
+  def open_visibility
+    self.visibility = 'open'
+  end
+  private :open_visibility
+
+  def update_permissions
+  end
+
   has_many :children, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf,
     class_name: 'ActiveFedora::Base'
   belongs_to :parent, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf,

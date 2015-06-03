@@ -3,7 +3,7 @@ require 'rails_helper'
 describe CollectionsController do
   routes { Hydra::Collections::Engine.routes }
   before do
-    @user = FactoryGirl.create(:user)
+    @user = FactoryGirl.create(:user, username: 'badmofo')
     sign_in @user
   end
 
@@ -79,6 +79,161 @@ describe CollectionsController do
       )
       @collection.apply_depositor_metadata(@user.user_key)
       @collection.save!
+    end
+
+    context 'visibility' do
+      it 'allows for visibility settings changes to more restrictive' do
+        patch(
+          :update,
+          id: @collection,
+          collection: {},
+          visibility: 'restricted'
+        )
+        expect(@collection.reload.visibility).to eq('restricted')
+      end
+
+      it 'allows for visibility settings changes to less restrictive' do
+        @collection.visibility = 'restricted'
+        @collection.save!
+        patch(
+          :update,
+          id: @collection,
+          collection: {},
+          visibility: 'authenticated'
+        )
+        expect(@collection.reload.visibility).to eq('authenticated')
+      end
+
+      it 'disallows for visibility settings changes to an unexpected value' do
+        expect {
+          patch(
+            :update,
+            id: @collection,
+            visibility: 'bogus'
+          )
+        }.to raise_exception { ArgumentError }
+      end
+    end
+
+    context 'permissions' do
+      describe 'converts generic_file permissions_attributes to collection' do
+        context 'non-empty params["collection"]["permissions_attributes"]' do
+          it 'merges the permissions_attributes' do
+            patch(
+              :update,
+              id: @collection,
+              collection: {
+                permissions_attributes: {
+                  '7' => {
+                    'type' => 'user', 'name' => 'from_col', 'access'=>'read'
+                  }
+                }
+              }, generic_file: {
+                permissions_attributes: {
+                  '5' => {
+                    'type' => 'user', 'name' => 'from_gen', 'access'=>'read'
+                  }
+                }
+              }
+            )
+
+            expect(
+              controller.params['collection']['permissions_attributes']['7']
+            ).to be_present
+            expect(
+              controller.params['collection']['permissions_attributes']['5']
+            ).to be_present
+
+            expect(
+              @collection.reload.permissions.map(&:agent_name)
+            ).to include('from_col')
+            expect(
+              @collection.reload.permissions.map(&:agent_name)
+            ).to include('from_gen')
+          end
+        end
+
+        context 'empty params["collection"]["permissions_attributes"]' do
+          it 'populates the permissions_attributes' do
+            patch(
+              :update,
+              id: @collection,
+              generic_file: {
+                permissions_attributes: {
+                  '5' => {
+                    'type' => 'user', 'name' => 'from_gen', 'access'=>'read'
+                  }
+                }
+              }
+            )
+
+            expect(
+              controller.params['collection']['permissions_attributes']['5']
+            ).to be_present
+
+            expect(
+              @collection.reload.permissions.map(&:agent_name)
+            ).to include('from_gen')
+          end
+        end
+
+        it 'can delete an existing permission' do
+          @collection.permissions_attributes = {
+            '5' => {
+              'type' => 'user', 'name' => 'goodguy', 'access' => 'read'
+            }
+          }
+          @collection.save!
+
+          pid = @collection.reload.permissions.to_a.find {|o|
+            o.agent_name == 'goodguy' }.id
+
+          patch(
+            :update,
+            id: @collection,
+            collection: {
+              permissions_attributes: { '5' => { 'id' => pid, 'access'=>'read' } }
+            },
+            generic_file: {
+              permissions_attributes: { '5' => { '_destroy' => 'true' } }
+            }
+          )
+
+          expect(
+            @collection.reload.permissions.map(&:agent_name)
+          ).not_to include('goodguy')
+        end
+
+        it 'can update an existing permission' do
+          @collection.permissions_attributes = {
+            '5' => {
+              'type' => 'user', 'name' => 'goodguy', 'access' => 'read'
+            }
+          }
+          @collection.save!
+
+          permission = @collection.reload.permissions.to_a.find {|o|
+            o.agent_name == 'goodguy' }
+          expect(permission.access).to eq('read')
+
+          patch(
+            :update,
+            id: @collection,
+            collection: {
+              permissions_attributes: {
+                '5' => { 'id' => permission.id, 'access'=>'edit' }
+              }
+            },
+          )
+
+          # permission.reload.access doesn't work, hece this
+          expect(
+            @collection.reload.permissions.to_a.find {|o|
+              o.agent_name == 'goodguy'
+            }.access
+          ).to eq('edit')
+        end
+      end
     end
 
     it "should update abstract" do

@@ -206,7 +206,7 @@ RSpec.describe User do
 
     it 'returns empty array if no groups' do
       expect_any_instance_of(Nuldap).to receive(:search).and_return([])
-      expect(user.nuldap_groups).to be_nil
+      expect(user.nuldap_groups).to be_blank
     end
 
     it 'returns ldap groups' do

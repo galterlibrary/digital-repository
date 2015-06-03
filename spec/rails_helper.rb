@@ -45,7 +45,7 @@ RSpec.configure do |config|
   end
 
   config.after :each do
-    DatabaseCleaner.clean
     Warden.test_reset!
+    DatabaseCleaner.clean
   end
 end

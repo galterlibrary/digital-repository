@@ -23,7 +23,8 @@ en:
   sufia:
     institution_name: "Northwestern University"
     institution_name_full: "Northwestern University"
-
+    visibility:
+      open: "Open Access (recommended)"
     collection:
       collections_list:
         empty: 'Not a member of any collections'
