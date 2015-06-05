@@ -50,6 +50,20 @@ class Nuldap
     nil if e.to_s == 'Invalid credentials'
   end
 
+  def multi_search(filter)
+    bind_ldap_connection
+    begin
+      search_results = []
+      @ldap_connection.search(
+        'dc=northwestern,dc=edu', LDAP::LDAP_SCOPE_SUBTREE, filter, []) {|o|
+          search_results << o.to_hash }
+      search_results
+    rescue LDAP::ResultError
+      Rails.logger.error("LDAP eror: #{@ldap_connection.perror('search')}")
+      return false, {}
+    end
+  end
+
   def search(filter)
     return false, {} unless ldap_server_up?
     conn = LDAP::SSLConn.new(@ldap_server, @ldap_port.to_i, nil, nil, nil)

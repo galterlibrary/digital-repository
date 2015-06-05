@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   root to: 'homepage#index'
   get '/authorities/generic_files/subject' => 'custom_authorities#query_mesh'
+  get '/authorities/generic_files/creator' => 'custom_authorities#query_users'
+  get '/authorities/generic_files/contributor' => 'custom_authorities#query_users'
   mount Qa::Engine => '/qa'
   mount Riiif::Engine => '/image-service'
 
