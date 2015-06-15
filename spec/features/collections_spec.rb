@@ -232,7 +232,93 @@ feature "Collections", :type => :feature do
           click_link 'Permissions'
           expect(page).not_to have_text('zdenek101')
         end
-      end
+      end # permissions
+
+      describe 'autocomplete', js: true do
+        it 'triggers autocomplete for appropriate fields' do
+          visit "/collections/#{chi_box.id}/edit"
+
+          allow_any_instance_of(Qa::Authorities::Mesh).to(
+            receive(:results).and_return({ id: 1, label: 'ABC' })
+          )
+          execute_script("$('#collection_subject').val('AB').trigger('keydown')")
+          expect(page).to have_text('ABC')
+
+          allow_any_instance_of(Nuldap).to(receive(:multi_search).and_return(
+            { 'uid' => ['abc'], 'displayName' => ['User X'] }
+          ))
+          execute_script("$('#collection_creator').val('Use').trigger('keydown')")
+          expect(page).to have_text('User X')
+
+          allow_any_instance_of(Nuldap).to(receive(:multi_search).and_return(
+            { 'uid' => ['bcd'], 'displayName' => ['User Y'] }
+          ))
+          execute_script("$('#collection_contributor').val('Use').trigger('keydown')")
+          expect(page).to have_text('User Y')
+
+          allow_any_instance_of(GeoNamesResource).to(
+            receive(:find_location).and_return([
+              { label: 'Chicago', value: 'Chicago' },
+              { label: 'Ho Chi', value: 'Ho Chi' }
+            ]))
+          execute_script("$('#collection_based_near').val('Chi').trigger('keydown')")
+          expect(page).to have_text('Chicago')
+          expect(page).to have_text('Ho Chi')
+        end
+
+        it 'triggers autocomplete on keydown for newly added fields' do
+          visit "/collections/#{chi_box.id}/edit"
+
+          # Also tests id corrections for new multi-fields
+          allow_any_instance_of(Qa::Authorities::Mesh).to(
+            receive(:results).and_return({ id: 1, label: 'ABC' })
+          )
+          fill_in 'collection_subject', with: 'Advanced coloring'
+          within(:css, 'div.collection_subject') do
+            click_button('Add')
+            execute_script("$('#collection_subject1').val('AB').trigger('keydown')")
+          end
+          expect(page).to have_text('ABC')
+
+          allow_any_instance_of(Qa::Authorities::Mesh).to(
+            receive(:results).and_return({ id: 1, label: 'BCD' })
+          )
+          within(:css, 'div.collection_subject') do
+            click_button('Add')
+            execute_script("$('#collection_subject2').val('BC').trigger('keydown')")
+          end
+          expect(page).to have_text('BCD')
+        end
+
+        it 'triggers autocomplete on keydown for additional fields on page load' do
+          # Also tests id corrections on page load
+          chi_box.subject = ['Baa', 'Black', 'Sheep']
+          chi_box.save
+          visit "/collections/#{chi_box.id}/edit"
+
+          allow_any_instance_of(Qa::Authorities::Mesh).to(
+            receive(:results).and_return({ id: 1, label: 'BCD' })
+          )
+          execute_script("$('#collection_subject1').val('BC').trigger('keydown')")
+          expect(page).to have_text('BCD')
+
+          allow_any_instance_of(Qa::Authorities::Mesh).to(
+            receive(:results).and_return({ id: 1, label: 'CDE' })
+          )
+          execute_script("$('#collection_subject2').val('CD').trigger('keydown')")
+          expect(page).to have_text('CDE')
+
+          allow_any_instance_of(Qa::Authorities::Mesh).to(
+            receive(:results).and_return({ id: 1, label: 'FFF' })
+          )
+          within(:css, 'div.collection_subject') do
+            click_button('Add')
+            execute_script("$('#collection_subject2').val('FF').trigger('keydown')")
+          end
+          expect(page).to have_text('FFF')
+        end
+      end # autocomplete
+
     end
   end
 end

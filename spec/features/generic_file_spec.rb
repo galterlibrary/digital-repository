@@ -42,6 +42,31 @@ describe 'generic file', :type => :feature do
     end
   end
 
+  describe 'batch edit' do
+    context 'logged in owner' do
+      before do
+        @batch = Batch.create
+        @new_file = make_generic_file(@user, { label: 'Newnew' })
+        @new_file.batch = @batch
+        @new_file.save
+        login_as(@user, :scope => :user)
+      end
+
+      describe 'autocomplete', js: true do
+        it 'works like in regular edit' do
+          visit "/batches/#{@batch.id}/edit"
+          click_button('Show Additional Fields')
+
+          allow_any_instance_of(Qa::Authorities::Mesh).to(
+            receive(:results).and_return({ id: 1, label: 'ABC' })
+          )
+          execute_script("$('#generic_file_subject').val('AB').trigger('keydown')")
+          expect(page).to have_text('ABC')
+        end
+      end
+    end
+  end
+
   describe 'edit' do
     context 'logged in owner' do
       before do
@@ -88,6 +113,15 @@ describe 'generic file', :type => :feature do
           ))
           execute_script("$('#generic_file_contributor').val('Use').trigger('keydown')")
           expect(page).to have_text('User Y')
+
+          allow_any_instance_of(GeoNamesResource).to(
+            receive(:find_location).and_return([
+              { label: 'Chicago', value: 'Chicago' },
+              { label: 'Ho Chi', value: 'Ho Chi' }
+            ]))
+          execute_script("$('#generic_file_based_near').val('Chi').trigger('keydown')")
+          expect(page).to have_text('Chicago')
+          expect(page).to have_text('Ho Chi')
         end
 
         it 'triggers autocomplete on keydown for newly added fields' do
@@ -130,6 +164,15 @@ describe 'generic file', :type => :feature do
           )
           execute_script("$('#generic_file_subject2').val('CD').trigger('keydown')")
           expect(page).to have_text('CDE')
+
+          allow_any_instance_of(Qa::Authorities::Mesh).to(
+            receive(:results).and_return({ id: 1, label: 'FFF' })
+          )
+          within(:css, 'div.generic_file_subject') do
+            click_button('Add')
+            execute_script("$('#generic_file_subject2').val('FF').trigger('keydown')")
+          end
+          expect(page).to have_text('FFF')
         end
       end
     end
