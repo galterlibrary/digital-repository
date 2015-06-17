@@ -42,7 +42,7 @@ describe 'generic file', :type => :feature do
     end
   end
 
-  describe 'batch edit' do
+  describe 'create batch' do
     context 'logged in owner' do
       before do
         @batch = Batch.create
@@ -50,12 +50,88 @@ describe 'generic file', :type => :feature do
         @new_file.batch = @batch
         @new_file.save
         login_as(@user, :scope => :user)
+        visit "/batches/#{@batch.id}/edit"
+      end
+
+      describe 'custom metadata' do
+        it 'can update all custom metadata fields', js: true do
+          click_button('Show Additional Fields')
+          # Mandatory
+          fill_in 'generic_file_tag', with: 'something'
+          fill_in 'generic_file_creator', with: 'someone'
+          select 'Attribution 3.0 United States', from: 'generic_file_rights'
+
+          # Custom
+          fill_in 'generic_file_abstract', with: 'abs'
+          fill_in 'generic_file_digital_origin', with: 'digo'
+          fill_in 'generic_file_bibliographic_citation', with: 'cit'
+          fill_in 'generic_file_lcsh', with: 'lcsh'
+          fill_in 'generic_file_mesh', with: 'mesh'
+          fill_in 'generic_file_subject_geographic', with: 'geo'
+          fill_in 'generic_file_subject_name', with: 'subjn'
+
+          click_button('Save')
+
+          expect(current_path).to eq('/dashboard/files')
+          expect(page).to have_text('Your files are being processed')
+
+          @new_file.reload
+          expect(@new_file.abstract).to eq(['abs'])
+          expect(@new_file.digital_origin).to eq(['digo'])
+          expect(@new_file.bibliographic_citation).to eq(['cit'])
+          expect(@new_file.lcsh).to eq(['lcsh'])
+          expect(@new_file.mesh).to eq(['mesh'])
+          expect(@new_file.subject_geographic).to eq(['geo'])
+          expect(@new_file.subject_name).to eq(['subjn'])
+        end
       end
 
       describe 'autocomplete', js: true do
-        it 'works like in regular edit' do
-          visit "/batches/#{@batch.id}/edit"
+        it 'works like in regular gf edit' do
           click_button('Show Additional Fields')
+
+          allow_any_instance_of(Qa::Authorities::Mesh).to(
+            receive(:results).and_return({ id: 1, label: 'ABC' })
+          )
+          execute_script("$('#generic_file_subject').val('AB').trigger('keydown')")
+          expect(page).to have_text('ABC')
+        end
+      end
+    end
+  end
+
+  describe 'batch edits' do
+    context 'logged in owner' do
+      before do
+        @batch = Batch.create
+        @new_file = make_generic_file(@user, { label: 'Newnew', mesh: ['t2'] })
+        @new_file.batch = @batch
+        @new_file.save
+        login_as(@user, :scope => :user)
+        visit "/batch_edits/edit?batch_document_ids[]=#{@file.id}&batch_document_ids[]=#{@new_file.id}"
+      end
+
+      describe 'custom metadata' do
+        it 'does not list the page number field' do
+          expect(page).not_to have_link('Page number')
+        end
+
+        # Testing updatability of takes too long because JavaScript
+        # We trust the upstream tested this.
+        it 'lists the custom fields' do
+          expect(page).to have_link('Abstract')
+          expect(page).to have_link('Digital origin')
+          expect(page).to have_link('Bibliographic citation')
+          expect(page).to have_link('Subject: LCSH')
+          expect(page).to have_link('Subject: MESH')
+          expect(page).to have_link('Subject: Geographic Name')
+          expect(page).to have_link('Subject: Name')
+        end
+      end
+
+      describe 'autocomplete', js: true do
+        it 'works like in regular gf edit' do
+          click_link('Subject')
 
           allow_any_instance_of(Qa::Authorities::Mesh).to(
             receive(:results).and_return({ id: 1, label: 'ABC' })
