@@ -13,6 +13,12 @@ include Warden::Test::Helpers
 Warden.test_mode!
 
 Capybara.javascript_driver = :poltergeist
+# Sometimes poltergeist gets transient js errors with no
+# reflection in reality.
+Capybara.register_driver :poltergeist do |app|
+  Capybara::Poltergeist::Driver.new(app, js_errors: false)
+end
+
 ActiveRecord::Migration.maintain_test_schema!
 RSpec.configure do |config|
   config.include Devise::TestHelpers, :type => :controller

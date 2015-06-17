@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   get '/authorities/generic_files/subject' => 'custom_authorities#query_mesh'
   get '/authorities/generic_files/creator' => 'custom_authorities#query_users'
   get '/authorities/generic_files/contributor' => 'custom_authorities#query_users'
+  get '/authorities/generic_files/verify_user' => 'custom_authorities#verify_user'
   mount Qa::Engine => '/qa'
   mount Riiif::Engine => '/image-service'
 

@@ -42,9 +42,47 @@ Blacklight.onLoad(function() {
             $this.attr('id', clean_input_name($this.attr('name')) + index);
         }
 
-        enable_autocomplete(
-            $this, get_autocomplete_opts(vocab_type)
+        enable_autocomplete($this, get_autocomplete_opts(vocab_type));
+        enable_person_verify($this, vocab_type);
+    });
+  }
+
+  function enable_person_verify(element, vocab_type) {
+    if (vocab_type != 'creator' && vocab_type != 'contributor') return
+
+    element.on('blur', function() {
+      var note_id = this.id + '-ver';
+      if ($(this).val() == '') {
+        $(this).css('background-color', 'white');
+        $('#' + note_id).text('');
+        return;
+      }
+
+      if (!$('#' + note_id).length) {
+        element.parent().before(
+            '<li class="input-group" id="' + note_id + '"></li>'
         );
+      }
+
+      verify_user($(this).val(), $('#' + note_id), $(this))
+    });
+  }
+
+  function verify_user(query, node, input) {
+    $.getJSON('/authorities/generic_files/verify_user?q=' + query, function(data) {
+      if (data.verified) {
+        var formatted_name = data.last + ', ' + data.first
+        node.html(
+            '<span class="glyphicon glyphicon-ok" style="color:green" aria-hidden="true"></span> '
+            + '"' + formatted_name + '" is a valid NU directory name.');
+        input.val(formatted_name);
+        input.css('background-color', '#F0FFF0');
+      } else {
+        node.html(
+            '<span class="glyphicon glyphicon-exclamation-sign" style="color:red" aria-hidden="true"></span> '
+            + data.message);
+        input.css('background-color', '#FFD6CC');
+      }
     });
   }
 
@@ -55,7 +93,7 @@ Blacklight.onLoad(function() {
               'id', clone.attr('id').replace(/\d+$/, function(n){ return ++n })
           );
       } else {
-          clone.attr('id', clone.attr('id') + '1')
+          clone.attr('id', clone.attr('id') + '1');
       }
   }
 
@@ -71,6 +109,9 @@ Blacklight.onLoad(function() {
       if (autocomplete_vocab.url_var.toString().match(vocab_type)) {
           enable_autocomplete($cloneElem, get_autocomplete_opts(vocab_type));
       }
+
+      $cloneElem.css('background-color', 'white');
+      enable_person_verify($cloneElem, vocab_type);
   }
 
   function enable_autocomplete(element, auto_opts) {
@@ -82,5 +123,13 @@ Blacklight.onLoad(function() {
       }).autocomplete(auto_opts)
   }
 
-  $('.multi_value.form-group').manage_fields({add: setup_autocomplete});
+  function remove_user_verification() {
+      $(this).find('li[id$="-ver"]').each(function(idx, li) {
+          if (!$('input#' + li.id.replace(/-ver/, '')).length) $(li).remove();
+      });
+  }
+
+  $('.multi_value.form-group').manage_fields(
+      { add: setup_autocomplete, remove: remove_user_verification }
+  );
 });

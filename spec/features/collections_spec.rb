@@ -244,17 +244,17 @@ feature "Collections", :type => :feature do
           execute_script("$('#collection_subject').val('AB').trigger('keydown')")
           expect(page).to have_text('ABC')
 
-          allow_any_instance_of(Nuldap).to(receive(:multi_search).and_return(
-            { 'uid' => ['abc'], 'displayName' => ['User X'] }
-          ))
+          allow_any_instance_of(Nuldap).to(receive(:multi_search).and_return([
+            { 'uid' => ['abc'], 'givenName' => ['User'], 'sn' => ['X'] }
+          ]))
           execute_script("$('#collection_creator').val('Use').trigger('keydown')")
-          expect(page).to have_text('User X')
+          expect(page).to have_text('X, User')
 
-          allow_any_instance_of(Nuldap).to(receive(:multi_search).and_return(
-            { 'uid' => ['bcd'], 'displayName' => ['User Y'] }
-          ))
+          allow_any_instance_of(Nuldap).to(receive(:multi_search).and_return([
+            { 'uid' => ['abc'], 'givenName' => ['User'], 'sn' => ['Y'] }
+          ]))
           execute_script("$('#collection_contributor').val('Use').trigger('keydown')")
-          expect(page).to have_text('User Y')
+          expect(page).to have_text('Y, User')
 
           allow_any_instance_of(GeoNamesResource).to(
             receive(:find_location).and_return([

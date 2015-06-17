@@ -168,6 +168,133 @@ describe 'generic file', :type => :feature do
         end
       end
 
+      describe 'name verification', js: true do
+        context 'invalid users' do
+          it 'prints out the message returned from user validation' do
+            click_link 'Edit'
+
+            allow_any_instance_of(Nuldap).to receive(:multi_search).and_return([])
+            execute_script("$('#generic_file_creator').val('Zbys').trigger('blur')")
+            within 'div.generic_file_creator' do
+              expect(page).to have_text('"Zbys" not found')
+            end
+          end
+        end
+
+        context 'valid users' do
+          it 'triggers name validation for appropriate fields' do
+            click_link 'Edit'
+
+            allow_any_instance_of(Nuldap).to receive(:multi_search).and_return([
+              { 'givenName' => ['Zbyszko'], 'sn' => ['Bogdanca'] }
+            ])
+
+            execute_script("$('#generic_file_creator').val('Zbys').trigger('blur')")
+            within 'div.generic_file_creator' do
+              expect(page).to have_text('"Bogdanca, Zbyszko" is a valid')
+              expect(find('input#generic_file_creator').value).to eq('Bogdanca, Zbyszko')
+            end
+
+            execute_script("$('#generic_file_contributor').val('Zbys').trigger('blur')")
+            within 'div.generic_file_contributor' do
+              expect(page).to have_text('"Bogdanca, Zbyszko" is a valid')
+              expect(find('input#generic_file_contributor').value).to eq('Bogdanca, Zbyszko')
+            end
+          end
+
+          it 'triggers name validation for multi fields on load' do
+            @file.creator = ['abc', 'bcd']
+            @file.contributor = ['abc', 'bcd']
+            @file.save
+            click_link 'Edit'
+
+            allow_any_instance_of(Nuldap).to receive(:multi_search).and_return([
+              { 'givenName' => ['Zbyszko'], 'sn' => ['Bogdanca'] }
+            ])
+
+            execute_script("$('#generic_file_creator1').val('Zbys').trigger('blur')")
+            within 'div.generic_file_creator' do
+              expect(page).to have_text('"Bogdanca, Zbyszko" is a valid')
+              expect(find('input#generic_file_creator1').value).to eq('Bogdanca, Zbyszko')
+            end
+
+            execute_script("$('#generic_file_contributor1').val('Zbys').trigger('blur')")
+            within 'div.generic_file_contributor' do
+              expect(page).to have_text('"Bogdanca, Zbyszko" is a valid')
+              expect(find('input#generic_file_contributor1').value).to eq('Bogdanca, Zbyszko')
+            end
+          end
+
+          it 'triggers name validation for multi fields on newly added fields' do
+            click_link 'Edit'
+
+            allow_any_instance_of(Nuldap).to receive(:multi_search).and_return([
+              { 'givenName' => ['Zbyszko'], 'sn' => ['Bogdanca'] }
+            ])
+
+            fill_in 'generic_file_creator', with: 'Testa'
+            within 'div.generic_file_creator' do
+              click_button('Add')
+            end
+
+            execute_script("$('#generic_file_creator1').val('Zbys').trigger('blur')")
+            within 'li#generic_file_creator1-ver' do
+              expect(page).to have_text('"Bogdanca, Zbyszko" is a valid')
+            end
+            expect(find('input#generic_file_creator1').value).to eq('Bogdanca, Zbyszko')
+
+            fill_in 'generic_file_contributor', with: 'Testa'
+            within 'div.generic_file_contributor' do
+              click_button('Add')
+            end
+            execute_script("$('#generic_file_contributor1').val('Zbys').trigger('blur')")
+
+            within 'li#generic_file_contributor1-ver' do
+              expect(page).to have_text('"Bogdanca, Zbyszko" is a valid')
+            end
+            expect(find('input#generic_file_contributor1').value).to eq('Bogdanca, Zbyszko')
+          end
+
+          it 'marks user as invalid after a valid user name is modified to invalid' do
+            click_link 'Edit'
+
+            allow_any_instance_of(Nuldap).to receive(:multi_search).and_return([
+              { 'givenName' => ['Zbyszko'], 'sn' => ['Bogdanca'] }
+            ])
+
+            execute_script("$('#generic_file_creator').val('Bogdanca, Zbyszko').trigger('blur')")
+            within 'div.generic_file_creator' do
+              expect(page).to have_text('"Bogdanca, Zbyszko" is a valid')
+            end
+
+            allow_any_instance_of(Nuldap).to receive(:multi_search).and_return([])
+
+            execute_script("$('#generic_file_contributor').val('Zbys').trigger('blur')")
+            within 'div.generic_file_contributor' do
+              expect(page).not_to have_text('"Bogdanca, Zbyszko" is a valid')
+              expect(page).to have_text('User "Zbys" not found')
+            end
+          end
+
+          it 'removes the validation note when removing a corresponding input' do
+            @file.creator = ['asdf']
+            @file.save
+            click_link 'Edit'
+
+            allow_any_instance_of(Nuldap).to receive(:multi_search).and_return([
+              { 'givenName' => ['Zbyszko'], 'sn' => ['Bogdanca'] }
+            ])
+
+            execute_script("$('#generic_file_creator').val('Bogdanca, Zbyszko').trigger('blur')")
+            within 'div.generic_file_creator' do
+              expect(page).to have_text('"Bogdanca, Zbyszko" is a valid')
+              click_button('Remove')
+            end
+            expect(page).not_to have_text('"Bogdanca, Zbyszko" is a valid')
+          end
+        end
+      end
+
       describe 'autocomplete', js: true do
         it 'triggers autocomplete for appropriate fields' do
           click_link 'Edit'
@@ -178,17 +305,17 @@ describe 'generic file', :type => :feature do
           execute_script("$('#generic_file_subject').val('AB').trigger('keydown')")
           expect(page).to have_text('ABC')
 
-          allow_any_instance_of(Nuldap).to(receive(:multi_search).and_return(
-            { 'uid' => ['abc'], 'displayName' => ['User X'] }
-          ))
+          allow_any_instance_of(Nuldap).to(receive(:multi_search).and_return([
+            { 'uid' => ['abc'], 'givenName' => ['User'], 'sn' => ['X'] }
+          ]))
           execute_script("$('#generic_file_creator').val('Use').trigger('keydown')")
-          expect(page).to have_text('User X')
+          expect(page).to have_text('X, User')
 
-          allow_any_instance_of(Nuldap).to(receive(:multi_search).and_return(
-            { 'uid' => ['bcd'], 'displayName' => ['User Y'] }
-          ))
+          allow_any_instance_of(Nuldap).to(receive(:multi_search).and_return([
+            { 'uid' => ['abc'], 'givenName' => ['User'], 'sn' => ['Y'] }
+          ]))
           execute_script("$('#generic_file_contributor').val('Use').trigger('keydown')")
-          expect(page).to have_text('User Y')
+          expect(page).to have_text('Y, User')
 
           allow_any_instance_of(GeoNamesResource).to(
             receive(:find_location).and_return([
