@@ -8,7 +8,7 @@
             <li <%= 'class=active' if current_page?(sufia.about_path.tr('/', '')) %>>
               <%= link_to 'About', sufia.about_path %>
             </li>
-            <li <%= 'class=active' if action_name == "help" %>><a href="/help/" >Help</a></li>
+            <li <%= 'class=active' if current_page?('/help') %>><a href="/help/" >Help</a></li>
             <li <%= 'class=active' if current_page?(sufia.contact_path) %>><a href="<%= sufia.contact_form_index_path %>" >Contact</a></li>
         </ul><!-- /.nav -->
       </nav><!-- /.navbar -->
