@@ -4,6 +4,10 @@ class Ability
 
   # Define any customized permissions here.
   def custom_permissions
+    if current_user.has_role?('editor')
+      can :view, :all_details
+    end
+
     if current_user.admin?
       can :manage, :all
     end

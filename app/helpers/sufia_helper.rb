@@ -22,4 +22,9 @@ module SufiaHelper
       id: 'permission_'+document.id, class: 'visibility-link'
     )
   end
+
+  def select_viewable_details(terms)
+    return terms if can?(:view, :all_details)
+    terms.select {|k, v| [:mime_type, :file_size].include?(k) }
+  end
 end

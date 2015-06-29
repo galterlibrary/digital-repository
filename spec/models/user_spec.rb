@@ -183,6 +183,18 @@ RSpec.describe User do
     end
   end
 
+  describe 'remove_from_group' do
+    let(:user) { create(:user) }
+    it 'removes user from a group' do
+      Role.create(name: 'admin')
+      user.add_to_group('admin')
+      expect(user.groups).to include('admin')
+      user.remove_from_group('admin')
+      expect(user.groups).not_to include('admin')
+      expect(Role.all.map(&:name)).to include('admin')
+    end
+  end
+
   describe 'add_to_group' do
     let(:user) { create(:user) }
     it 'adds user to a group' do

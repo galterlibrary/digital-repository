@@ -35,6 +35,12 @@ class User < ActiveRecord::Base
   end
   alias_method :add_role, :add_to_group
 
+  def remove_from_group(name)
+    return roles unless has_role?(name)
+    roles.delete(Role.find_by(name: name))
+  end
+  alias_method :remove_role, :remove_from_group
+
   def groups
     roles.map do |role|
       role.description ? role.description : role.name

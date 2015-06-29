@@ -40,6 +40,46 @@ describe 'generic file', :type => :feature do
       expect(page).not_to have_text('Related URL')
       expect(page).to have_text('Digital')
     end
+
+    describe 'file details' do
+      before do
+        allow_any_instance_of(GenericFile).to receive(
+          :characterization_terms
+        ).and_return(
+          {:format_label=>["Portable Network Graphics"],
+          :mime_type=>"image/png",
+          :file_size=>["48512"],
+          :filename=>["synergy.png"]}
+        )
+      end
+
+      it 'hides details from the unprivileged users' do
+        login_as(@user, :scope => :user)
+        visit "/files/#{@file.id}"
+        expect(page).not_to have_text('Audit Status')
+        expect(page).to have_text('Mime type')
+        expect(page).to have_text('File size')
+      end
+
+      it 'hides details from the anonymous users' do
+        visit "/files/#{@file.id}"
+        expect(page).not_to have_text('Audit Status')
+        expect(page).to have_text('Mime type')
+        expect(page).to have_text('File size')
+      end
+
+      it 'shows details to the privileged users' do
+        allow_any_instance_of(GenericFile).to receive(
+          :file_format).and_return('png')
+        @user.add_role(Role.create(name: 'editor').name)
+        login_as(@user, :scope => :user)
+        visit "/files/#{@file.id}"
+        expect(page).to have_text('Audit Status')
+        expect(page).to have_text('Mime type')
+        expect(page).to have_text('File size')
+        expect(page).to have_text('48.5 kB')
+      end
+    end
   end
 
   describe 'create batch' do
