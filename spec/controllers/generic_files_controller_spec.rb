@@ -7,6 +7,30 @@ describe GenericFilesController do
     @routes = Sufia::Engine.routes
   end
 
+  describe "#destroy" do
+    before do
+      @file = make_generic_file(@user, id: 'nukeme')
+    end
+
+    it 'does not allow non-admin owner to delete files' do
+      expect {
+        delete :destroy, id: 'nukeme'
+      }.not_to change(GenericFile, :count)
+      expect(flash[:alert]).to match('You are not authorized')
+    end
+
+    it 'allows an admin user to delete files' do
+      @user = FactoryGirl.create(:user)
+      @user.add_role(Role.create(name: 'admin').name)
+      sign_in @user
+
+      expect {
+        delete :destroy, id: 'nukeme'
+      }.to change(GenericFile, :count).by(-1)
+      expect { GenericFile.find('nukeme') }.to raise_error(Ldp::Gone)
+    end
+  end
+
   describe "#show" do
     before do
       @file = GenericFile.new(

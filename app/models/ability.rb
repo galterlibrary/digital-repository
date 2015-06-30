@@ -4,23 +4,18 @@ class Ability
 
   # Define any customized permissions here.
   def custom_permissions
+    # Editors can do everything but delete things
     if current_user.has_role?('editor')
-      can :view, :all_details
+      can :manage, :all
     end
 
     if current_user.admin?
       can :manage, :all
     end
-    # Limits deleting objects to a the admin user
-    #
-    # if current_user.admin?
-    #   can [:destroy], ActiveFedora::Base
-    # end
 
-    # Limits creating new objects to a specific group
-    #
-    # if user_groups.include? 'special_group'
-    #   can [:create], ActiveFedora::Base
-    # end
+    # Limits deleting objects to a the admin user
+    if !current_user.admin?
+       cannot [:destroy], ActiveFedora::Base
+    end
   end
 end
