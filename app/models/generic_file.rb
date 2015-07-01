@@ -48,4 +48,14 @@ class GenericFile < ActiveFedora::Base
     end
   end
   protected :store_the_actual_page_number
+
+  def all_tags
+    subject + mesh + lcsh + subject_name + subject_geographic
+  end
+
+  class << self
+    def indexer
+      Sufia::GalterGenericFileIndexingService
+    end
+  end
 end

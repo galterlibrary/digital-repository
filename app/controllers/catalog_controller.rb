@@ -47,7 +47,7 @@ class CatalogController < ApplicationController
 
     # Specify which field to use in the tag cloud on the homepage.
     # To disable the tag cloud, comment out this line.
-    config.tag_cloud_field_name = Solrizer.solr_name("tag", :facetable)
+    config.tag_cloud_field_name = Solrizer.solr_name("tags", :facetable)
 
     # solr field configuration for document/show views
     config.index.title_field = solr_name("title", :stored_searchable)
@@ -59,7 +59,7 @@ class CatalogController < ApplicationController
     config.add_facet_field solr_name("resource_type", :facetable), label: "Resource Type", limit: 5
     config.add_facet_field solr_name("creator", :facetable), label: "Creator", limit: 5
     config.add_facet_field solr_name("tag", :facetable), label: "Keyword", limit: 5
-    config.add_facet_field solr_name("subject", :facetable), label: "Subject", limit: 5
+    config.add_facet_field solr_name("tags", :facetable), label: "All Subjects", limit: 5
     config.add_facet_field solr_name("language", :facetable), label: "Language", limit: 5
     config.add_facet_field solr_name("based_near", :facetable), label: "Location", limit: 5
     config.add_facet_field solr_name("publisher", :facetable), label: "Publisher", limit: 5

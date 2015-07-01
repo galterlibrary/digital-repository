@@ -143,4 +143,32 @@ RSpec.describe GenericFile do
       expect(subject.parent).to be(nil)
     end
   end
+
+  describe '#all_tags' do
+    it 'combines all subjects into one array' do
+      subject.mesh = ['a']
+      subject.lcsh = ['b', 'c']
+      subject.subject_geographic = ['d', 'e']
+      subject.subject_name = ['f']
+      subject.subject = ['g']
+      expect(subject.all_tags.sort).to eq(['a', 'b', 'c', 'd', 'e', 'f', 'g'])
+    end
+
+    it 'combines all subjects into one array when some are blank' do
+      subject.mesh = ['a']
+      subject.lcsh = ['b', 'c']
+      subject.subject_geographic = []
+      subject.subject_name = ['f']
+      subject.subject = []
+      expect(subject.all_tags.sort).to eq(['a', 'b', 'c', 'f'])
+    end
+  end
+
+  describe '#to_solr' do
+    it 'generates tags_sim' do
+      subject.mesh = ['a']
+      subject.lcsh = ['b', 'c']
+      expect(subject.to_solr['tags_sim'].sort).to eq(['a', 'b', 'c'])
+    end
+  end
 end
