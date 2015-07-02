@@ -12,8 +12,8 @@ end
 # cached in Solr. The following block directs the info_service to return those values:
 HEIGHT_SOLR_FIELD = 'height_isi'
 WIDTH_SOLR_FIELD = 'width_isi'
-Riiif::Image.info_service = lambda do |id, file|
-  gf = ::GenericFile.find(id)
+Riiif::Image.info_service = lambda do |id, gf|
+  gf ||= ::GenericFile.find(id)
   #resp = get_solr_response_for_doc_id id
   #doc = resp.first['response']['docs'].first
   { height: gf.height.try(:first).try(:to_i),
@@ -39,3 +39,22 @@ Riiif::Image.file_resolver.basic_auth_credentials = [
   ENV['FEDORA_PASS']
 ]
 Riiif::Engine.config.cache_duration_in_days = 30
+
+Rails.configuration.to_prepare do
+  Riiif::ImagesController.class_eval do
+    before_filter do
+      @gf = GenericFile.find(params['id'])
+      authorize!(:read, @gf)
+    end
+
+    alias_method :super_show, :show
+    def show
+      super_show
+    end
+
+    def info
+      image = model.new(@gf.id, @gf)
+      render json: image.info.merge(server_info)
+    end
+  end
+end
