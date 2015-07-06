@@ -1,6 +1,14 @@
 require 'iiif/presentation'
 
 class IiifApisController < ApplicationController
+  before_filter :authorize_action, :except => :list
+
+  def authorize_action
+    @fedoraObject = ActiveFedora::Base.find(params['id'])
+    authorize!(:read, @fedoraObject)
+  end
+  private :authorize_action
+
   def generate_manifest(collection)
     manifest = IIIF::Presentation::Manifest.new(
       '@id' => iiif_apis_manifest_url(id: collection.id),
@@ -32,8 +40,7 @@ class IiifApisController < ApplicationController
   private :collection_metadata
 
   def manifest
-    collection = Collection.find(params[:id])
-    render json: generate_manifest(collection)
+    render json: generate_manifest(@fedoraObject)
   end
 
   def add_canvases_to_sequence(collection, iif_sequence)
@@ -54,8 +61,7 @@ class IiifApisController < ApplicationController
   private :generate_sequence
 
   def sequence
-    collection = Collection.find(params[:id])
-    render json: generate_sequence(collection, params['name'])
+    render json: generate_sequence(@fedoraObject, params['name'])
   end
 
   def generate_canvas(generic_file, name=nil)
@@ -72,8 +78,7 @@ class IiifApisController < ApplicationController
   private :generate_canvas
 
   def canvas
-    generic_file = GenericFile.find(params[:id])
-    render json: generate_canvas(generic_file, params['name'])
+    render json: generate_canvas(@fedoraObject, params['name'])
   end
 
   def generate_annotation(generic_file, name=nil)
@@ -104,8 +109,7 @@ class IiifApisController < ApplicationController
   private :image_resource
 
   def annotation
-    generic_file = GenericFile.find(params[:id])
-    render json: generate_annotation(generic_file, params['name'])
+    render json: generate_annotation(@fedoraObject, params['name'])
   end
 
   def list

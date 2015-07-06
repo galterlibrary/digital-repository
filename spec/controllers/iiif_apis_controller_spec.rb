@@ -4,6 +4,62 @@ require 'iiif/presentation'
 RSpec.describe IiifApisController, :type => :controller do
   let(:user) { FactoryGirl.create(:user) }
 
+  describe 'authorization' do
+    let(:col) { make_collection(user, visibility: 'restricted', id: 'col1') }
+    let(:gf) { make_generic_file(user, visibility: 'restricted', id: 'gf1') }
+    context 'unauthorized user' do
+      it 'is unable to to view manifest' do
+        expect(
+          get :manifest, { id: col.id }
+        ).to redirect_to('/users/sign_in')
+      end
+
+      it 'is unable to to view sequence' do
+        expect(
+          get :sequence, { id: col.id, name: 'blah' }
+        ).to redirect_to('/users/sign_in')
+      end
+
+      it 'is unable to to view canvas' do
+        expect(
+          get :canvas, { id: gf.id, name: 'blah' }
+        ).to redirect_to('/users/sign_in')
+      end
+
+      it 'is unable to to view annotation' do
+        expect(
+          get :annotation, { id: gf.id, name: 'blah' }
+        ).to redirect_to('/users/sign_in')
+      end
+    end
+
+    context 'authorized user' do
+      before do
+        sign_in user
+      end
+
+      it 'is able to to view manifest' do
+        get :manifest, { id: col.id }
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'is able to to view sequence' do
+        get :sequence, { id: col.id, name: 'blah' }
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'is able to to view canvas' do
+        get :canvas, { id: gf.id, name: 'blah' }
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'is able to to view annotation' do
+        get :annotation, { id: gf.id, name: 'blah' }
+        expect(response).to have_http_status(:success)
+      end
+    end
+  end
+
   describe "GET manifest" do
     let(:collection) { Collection.new(
       id: 'col1', title: 'something', description: 'blahbalh',
@@ -189,9 +245,8 @@ RSpec.describe IiifApisController, :type => :controller do
   describe "GET canvas" do
     describe '#canvas' do
       before do
-        @generic_file = GenericFile.new(id: 'testa')
-        @generic_file.apply_depositor_metadata(user.user_key)
-        @generic_file.save!
+        @generic_file = make_generic_file(user, id: 'testa')
+        sign_in user
       end
 
       subject { get :canvas, { id: 'testa', name: 'blah' } }
@@ -263,9 +318,8 @@ RSpec.describe IiifApisController, :type => :controller do
   describe "GET annotation" do
     describe '#annotation' do
       before do
-        @generic_file = GenericFile.new(id: 'testa')
-        @generic_file.apply_depositor_metadata(user.user_key)
-        @generic_file.save!
+        @generic_file = make_generic_file(user, id: 'testa')
+        sign_in user
       end
 
       subject { get :annotation, { id: 'testa', name: 'blah' } }
