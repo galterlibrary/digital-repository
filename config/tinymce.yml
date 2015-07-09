@@ -1,9 +1,13 @@
 menubar: false
 browser_spellcheck : true
-toolbar1: styleselect | bold italic | link | undo redo
-toolbar2: table | fullscreen | uploadimage
+toolbar1: styleselect | formatselect | fontselect | fontsizeselect | bold italic underline | forecolor backcolor | outdent indent
+toolbar2:  link anchor uploadimage | hr | bullist numlist | table  | fullscreen | undo redo | code
 plugins:
   - table
   - fullscreen
   - uploadimage
   - link
+  - lists
+  - anchor
+  - textcolor
+  - code
