@@ -2,6 +2,8 @@ Rails.application.routes.draw do
   root to: 'homepage#index'
 
   get 'help' => 'pages#show', id: 'help_page'
+  get 'terms' => 'pages#show', id: 'terms_page'
+  get 'agreement' => 'pages#show', id: 'agreement_page'
   get '/authorities/generic_files/subject' => 'custom_authorities#query_mesh'
   get '/authorities/generic_files/creator' => 'custom_authorities#query_users'
   get '/authorities/generic_files/contributor' => 'custom_authorities#query_users'
