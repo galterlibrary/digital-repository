@@ -128,6 +128,7 @@ describe 'generic file', :type => :feature do
 
       describe 'autocomplete', js: true do
         it 'works like in regular gf edit' do
+          pending 'removing subjects, and moving this to subject: mash'
           click_button('Show Additional Fields')
 
           allow_any_instance_of(Qa::Authorities::Mesh).to(
@@ -171,6 +172,7 @@ describe 'generic file', :type => :feature do
 
       describe 'autocomplete', js: true do
         it 'works like in regular gf edit' do
+          pending 'removing subjects, and moving this to subject: mash'
           click_link('Subject')
 
           allow_any_instance_of(Qa::Authorities::Mesh).to(
@@ -337,6 +339,7 @@ describe 'generic file', :type => :feature do
 
       describe 'autocomplete', js: true do
         it 'triggers autocomplete for appropriate fields' do
+          pending 'removing subjects, and moving this to subject: mash'
           click_link 'Edit'
 
           allow_any_instance_of(Qa::Authorities::Mesh).to(
@@ -368,6 +371,7 @@ describe 'generic file', :type => :feature do
         end
 
         it 'triggers autocomplete on keydown for newly added fields' do
+          pending 'removing subjects, and moving this to subject: mash'
           click_link 'Edit'
           # Also tests id corrections for new multi-fields
           allow_any_instance_of(Qa::Authorities::Mesh).to(
@@ -391,6 +395,7 @@ describe 'generic file', :type => :feature do
         end
 
         it 'triggers autocomplete on keydown for additional fields on page load' do
+          pending 'removing subjects, and moving this to subject: mash'
           # Also tests id corrections on page load
           @file.subject = ['Baa', 'Black', 'Sheep']
           @file.save

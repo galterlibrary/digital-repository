@@ -236,6 +236,7 @@ feature "Collections", :type => :feature do
 
       describe 'autocomplete', js: true do
         it 'triggers autocomplete for appropriate fields' do
+          pending 'removing subjects, and moving this to subject: mash'
           visit "/collections/#{chi_box.id}/edit"
 
           allow_any_instance_of(Qa::Authorities::Mesh).to(
@@ -267,6 +268,7 @@ feature "Collections", :type => :feature do
         end
 
         it 'triggers autocomplete on keydown for newly added fields' do
+          pending 'removing subjects, and moving this to subject: mash'
           visit "/collections/#{chi_box.id}/edit"
 
           # Also tests id corrections for new multi-fields
@@ -291,6 +293,7 @@ feature "Collections", :type => :feature do
         end
 
         it 'triggers autocomplete on keydown for additional fields on page load' do
+          pending 'removing subjects, and moving this to subject: mash'
           # Also tests id corrections on page load
           chi_box.subject = ['Baa', 'Black', 'Sheep']
           chi_box.save

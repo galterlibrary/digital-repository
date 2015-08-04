@@ -11,7 +11,6 @@ class GalterGenericFilePresenter < Sufia::GenericFilePresenter
     :rights,
     :publisher,
     :date_created,
-    :subject,
     :mesh,
     :lcsh,
     :subject_geographic,

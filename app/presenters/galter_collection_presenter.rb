@@ -15,7 +15,6 @@ class GalterCollectionPresenter < Sufia::CollectionPresenter
       :rights,
       :publisher,
       :date_created,
-      :subject,
       :mesh,
       :lcsh,
       :subject_geographic,

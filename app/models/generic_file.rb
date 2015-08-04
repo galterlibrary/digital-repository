@@ -50,7 +50,7 @@ class GenericFile < ActiveFedora::Base
   protected :store_the_actual_page_number
 
   def all_tags
-    subject + mesh + lcsh + subject_name + subject_geographic
+    mesh + lcsh + subject_name + subject_geographic
   end
 
   class << self

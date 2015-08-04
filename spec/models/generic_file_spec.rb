@@ -150,8 +150,7 @@ RSpec.describe GenericFile do
       subject.lcsh = ['b', 'c']
       subject.subject_geographic = ['d', 'e']
       subject.subject_name = ['f']
-      subject.subject = ['g']
-      expect(subject.all_tags.sort).to eq(['a', 'b', 'c', 'd', 'e', 'f', 'g'])
+      expect(subject.all_tags.sort).to eq(['a', 'b', 'c', 'd', 'e', 'f'])
     end
 
     it 'combines all subjects into one array when some are blank' do

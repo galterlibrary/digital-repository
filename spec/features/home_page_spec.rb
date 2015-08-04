@@ -10,7 +10,7 @@ feature "HomePage", :type => :feature do
     }
     let!(:neuroblastoma) {
       make_generic_file(user, {
-        mesh: ['something'], subject: ['neoplasm'], visibility: 'open',
+        mesh: ['something'], subject_name: ['neoplasm'], visibility: 'open',
         title: ['BCD']
       })
     }
