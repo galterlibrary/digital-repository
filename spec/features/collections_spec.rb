@@ -236,13 +236,12 @@ feature "Collections", :type => :feature do
 
       describe 'autocomplete', js: true do
         it 'triggers autocomplete for appropriate fields' do
-          pending 'removing subjects, and moving this to subject: mash'
           visit "/collections/#{chi_box.id}/edit"
 
           allow_any_instance_of(Qa::Authorities::Mesh).to(
             receive(:results).and_return({ id: 1, label: 'ABC' })
           )
-          execute_script("$('#collection_subject').val('AB').trigger('keydown')")
+          execute_script("$('#collection_mesh').val('AB').trigger('keydown')")
           expect(page).to have_text('ABC')
 
           allow_any_instance_of(Nuldap).to(receive(:multi_search).and_return([
@@ -268,55 +267,53 @@ feature "Collections", :type => :feature do
         end
 
         it 'triggers autocomplete on keydown for newly added fields' do
-          pending 'removing subjects, and moving this to subject: mash'
           visit "/collections/#{chi_box.id}/edit"
 
           # Also tests id corrections for new multi-fields
           allow_any_instance_of(Qa::Authorities::Mesh).to(
             receive(:results).and_return({ id: 1, label: 'ABC' })
           )
-          fill_in 'collection_subject', with: 'Advanced coloring'
-          within(:css, 'div.collection_subject') do
+          fill_in 'collection_mesh', with: 'Advanced coloring'
+          within(:css, 'div.collection_mesh') do
             click_button('Add')
-            execute_script("$('#collection_subject1').val('AB').trigger('keydown')")
+            execute_script("$('#collection_mesh1').val('AB').trigger('keydown')")
           end
           expect(page).to have_text('ABC')
 
           allow_any_instance_of(Qa::Authorities::Mesh).to(
             receive(:results).and_return({ id: 1, label: 'BCD' })
           )
-          within(:css, 'div.collection_subject') do
+          within(:css, 'div.collection_mesh') do
             click_button('Add')
-            execute_script("$('#collection_subject2').val('BC').trigger('keydown')")
+            execute_script("$('#collection_mesh2').val('BC').trigger('keydown')")
           end
           expect(page).to have_text('BCD')
         end
 
         it 'triggers autocomplete on keydown for additional fields on page load' do
-          pending 'removing subjects, and moving this to subject: mash'
           # Also tests id corrections on page load
-          chi_box.subject = ['Baa', 'Black', 'Sheep']
+          chi_box.mesh = ['Baa', 'Black', 'Sheep']
           chi_box.save
           visit "/collections/#{chi_box.id}/edit"
 
           allow_any_instance_of(Qa::Authorities::Mesh).to(
             receive(:results).and_return({ id: 1, label: 'BCD' })
           )
-          execute_script("$('#collection_subject1').val('BC').trigger('keydown')")
+          execute_script("$('#collection_mesh1').val('BC').trigger('keydown')")
           expect(page).to have_text('BCD')
 
           allow_any_instance_of(Qa::Authorities::Mesh).to(
             receive(:results).and_return({ id: 1, label: 'CDE' })
           )
-          execute_script("$('#collection_subject2').val('CD').trigger('keydown')")
+          execute_script("$('#collection_mesh2').val('CD').trigger('keydown')")
           expect(page).to have_text('CDE')
 
           allow_any_instance_of(Qa::Authorities::Mesh).to(
             receive(:results).and_return({ id: 1, label: 'FFF' })
           )
-          within(:css, 'div.collection_subject') do
+          within(:css, 'div.collection_mesh') do
             click_button('Add')
-            execute_script("$('#collection_subject2').val('FF').trigger('keydown')")
+            execute_script("$('#collection_mesh2').val('FF').trigger('keydown')")
           end
           expect(page).to have_text('FFF')
         end
