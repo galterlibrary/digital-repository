@@ -222,23 +222,61 @@ describe 'generic file', :type => :feature do
         end
 
         context 'valid users' do
+          before do
+            allow_any_instance_of(Nuldap).to receive(:multi_search).and_return([
+              {
+                'givenName' => ['Zbyszko'], 'sn' => ['Bogdanca'],
+                'uid' => ['zby101']
+              }
+            ])
+          end
+
           it 'triggers name validation for appropriate fields' do
             click_link 'Edit'
-
-            allow_any_instance_of(Nuldap).to receive(:multi_search).and_return([
-              { 'givenName' => ['Zbyszko'], 'sn' => ['Bogdanca'] }
-            ])
-
             execute_script("$('#generic_file_creator').val('Zbys').trigger('blur')")
             within 'div.generic_file_creator' do
               expect(page).to have_text('"Bogdanca, Zbyszko" is a valid')
-              expect(find('input#generic_file_creator').value).to eq('Bogdanca, Zbyszko')
+              expect(find('input#generic_file_creator').value).to eq(
+                'Bogdanca, Zbyszko')
+              expect(page).not_to have_link('Vivo Profile')
             end
 
-            execute_script("$('#generic_file_contributor').val('Zbys').trigger('blur')")
+            execute_script(
+              "$('#generic_file_contributor').val('Zbys').trigger('blur')")
             within 'div.generic_file_contributor' do
               expect(page).to have_text('"Bogdanca, Zbyszko" is a valid')
-              expect(find('input#generic_file_contributor').value).to eq('Bogdanca, Zbyszko')
+              expect(find('input#generic_file_contributor').value).to eq(
+                'Bogdanca, Zbyszko')
+              expect(page).not_to have_link('Vivo Profile')
+            end
+          end
+
+          context 'vivo profile' do
+            before do
+              create(:net_id_to_vivo_id, netid: 'zby101', vivoid: 'vivo101')
+            end
+
+            it 'triggers name validation' do
+              click_link 'Edit'
+              execute_script("$('#generic_file_creator').val('Zbys').trigger('blur')")
+              within 'div.generic_file_creator' do
+                expect(page).to have_text('"Bogdanca, Zbyszko" is a valid')
+                expect(page).to have_link(
+                  'Vivo Profile',
+                  href: 'http://vfsmvivo.fsm.northwestern.edu/vivo/individual?uri=http%3A%2F%2Fvivo.northwestern.edu%2Findividual%2Fvivo101'
+                )
+                expect(find('input#generic_file_creator').value).to eq('Bogdanca, Zbyszko')
+              end
+
+              execute_script("$('#generic_file_contributor').val('Zbys').trigger('blur')")
+              within 'div.generic_file_contributor' do
+                expect(page).to have_text('"Bogdanca, Zbyszko" is a valid')
+                expect(page).to have_link(
+                  'Vivo Profile',
+                  href: 'http://vfsmvivo.fsm.northwestern.edu/vivo/individual?uri=http%3A%2F%2Fvivo.northwestern.edu%2Findividual%2Fvivo101'
+                )
+                expect(find('input#generic_file_contributor').value).to eq('Bogdanca, Zbyszko')
+              end
             end
           end
 
@@ -247,10 +285,6 @@ describe 'generic file', :type => :feature do
             @file.contributor = ['abc', 'bcd']
             @file.save
             click_link 'Edit'
-
-            allow_any_instance_of(Nuldap).to receive(:multi_search).and_return([
-              { 'givenName' => ['Zbyszko'], 'sn' => ['Bogdanca'] }
-            ])
 
             execute_script("$('#generic_file_creator1').val('Zbys').trigger('blur')")
             within 'div.generic_file_creator' do
@@ -267,10 +301,6 @@ describe 'generic file', :type => :feature do
 
           it 'triggers name validation for multi fields on newly added fields' do
             click_link 'Edit'
-
-            allow_any_instance_of(Nuldap).to receive(:multi_search).and_return([
-              { 'givenName' => ['Zbyszko'], 'sn' => ['Bogdanca'] }
-            ])
 
             fill_in 'generic_file_creator', with: 'Testa'
             within 'div.generic_file_creator' do
@@ -297,11 +327,6 @@ describe 'generic file', :type => :feature do
 
           it 'marks user as invalid after a valid user name is modified to invalid' do
             click_link 'Edit'
-
-            allow_any_instance_of(Nuldap).to receive(:multi_search).and_return([
-              { 'givenName' => ['Zbyszko'], 'sn' => ['Bogdanca'] }
-            ])
-
             execute_script("$('#generic_file_creator').val('Bogdanca, Zbyszko').trigger('blur')")
             within 'div.generic_file_creator' do
               expect(page).to have_text('"Bogdanca, Zbyszko" is a valid')
@@ -320,10 +345,6 @@ describe 'generic file', :type => :feature do
             @file.creator = ['asdf']
             @file.save
             click_link 'Edit'
-
-            allow_any_instance_of(Nuldap).to receive(:multi_search).and_return([
-              { 'givenName' => ['Zbyszko'], 'sn' => ['Bogdanca'] }
-            ])
 
             execute_script("$('#generic_file_creator').val('Bogdanca, Zbyszko').trigger('blur')")
             within 'div.generic_file_creator' do

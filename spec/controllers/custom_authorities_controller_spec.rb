@@ -30,9 +30,11 @@ RSpec.describe CustomAuthoritiesController, :type => :controller do
     context 'valid query' do
       describe 'one user found in LDAP' do
         before do
-          allow_any_instance_of(Nuldap).to receive(:multi_search).and_return([
-            { 'givenName' => ['Zbyszko'], 'sn' => ['Bogdanca'] }
-          ])
+          allow_any_instance_of(Nuldap).to receive(:multi_search).and_return([{
+            'givenName' => ['Zbyszko'],
+            'sn' => ['Bogdanca'],
+            'uid' => ['zbych101']
+          }])
         end
 
         subject { get :verify_user, q: 'Zbyszko Z Bogdanca' }
@@ -46,6 +48,27 @@ RSpec.describe CustomAuthoritiesController, :type => :controller do
         it 'returns users first and last name' do
           expect(JSON.parse(subject.body)['first']).to eq('Zbyszko')
           expect(JSON.parse(subject.body)['last']).to eq('Bogdanca')
+        end
+
+        it 'returns an empty vivo hash for non-matching netid' do
+          expect(JSON.parse(subject.body)['vivo']).to be_blank
+        end
+
+        describe 'netid maps to vivoid' do
+          before do
+            create(:net_id_to_vivo_id, netid: 'zbych101', vivoid: 'vivo101',
+                   full_name: 'Z Bogdanca, Zbyszko Czarny')
+          end
+
+          it 'returns vivo profile link' do
+            expect(JSON.parse(subject.body)['vivo']['profile']).to eq(
+              'http://vfsmvivo.fsm.northwestern.edu/vivo/individual?uri=http%3A%2F%2Fvivo.northwestern.edu%2Findividual%2Fvivo101')
+          end
+
+          it 'returns full name from vivo' do
+            expect(JSON.parse(subject.body)['vivo']['full_name']).to eq(
+              'Z Bogdanca, Zbyszko Czarny')
+          end
         end
       end
 

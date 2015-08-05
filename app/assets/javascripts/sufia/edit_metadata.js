@@ -77,9 +77,15 @@ Blacklight.onLoad(function() {
             + '"' + formatted_name + '" is a valid NU directory name.');
         input.val(formatted_name);
         input.css('background-color', '#F0FFF0');
+        if (!jQuery.isEmptyObject(data.vivo)) {
+            node.append(
+                ' <a href="' + data.vivo.profile +
+                '" target="_blank">Vivo Profile</a>'
+            );
+        }
       } else {
         node.html(
-            '<span class="glyphicon glyphicon-exclamation-sign" style="color:red" aria-hidden="true"></span> '
+            '<span class="glyphicon glyphicon-exclamation-sign" style="color:red" aria-hidden="true"></span>'
             + data.message);
         input.css('background-color', '#FFD6CC');
       }

@@ -1,0 +1,9 @@
+<% if vivo = NetIdToVivoId.find_by(netid: params[:id]) %>
+  <strong>
+    <%= link_to 'Vivo Profile',
+      "#{ENV['VIVO_PROFILES']}#{vivo.vivoid}", target: '_blank' %>
+  </strong><br />
+<% end %>
+<i class="glyphicon glyphicon-time"></i> Joined on <%= @user.created_at.to_date.strftime("%b %d, %Y") %> <br />
+<i class="glyphicon glyphicon-folder-open"></i> Deposited Files
+<%= link_to_field('depositor', @user.to_s, number_of_deposits(@user)) %> <br />

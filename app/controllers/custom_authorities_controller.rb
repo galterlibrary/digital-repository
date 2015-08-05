@@ -21,12 +21,23 @@ class CustomAuthoritiesController < ApplicationController
         results[:verified] = true
         results[:first] = ldap_results.first['givenName'].try(:first)
         results[:last] = ldap_results.first['sn'].try(:first)
+        results[:netid] = ldap_results.first['uid'].try(:first)
       end
     else
       results[:message] = "User \"#{params[:q]}\" not found in the NU directory."
     end
   end
   private :verify_user_in_ldap
+
+  def vivo_profile(results)
+    results[:vivo] = {}
+    if net_vivo = NetIdToVivoId.find_by(netid: results[:netid])
+      results[:vivo][:id] = net_vivo.vivoid
+      results[:vivo][:profile] = "#{ENV['VIVO_PROFILES']}#{net_vivo.vivoid}"
+      results[:vivo][:full_name] = net_vivo.full_name
+    end
+  end
+  private :vivo_profile
 
   def verify_user
     results = { verified: false }
@@ -35,6 +46,7 @@ class CustomAuthoritiesController < ApplicationController
       render :layout => false, :text => results.to_json and return
     end
     verify_user_in_ldap(results)
+    vivo_profile(results)
     render :layout => false, :text => results.to_json
   end
 

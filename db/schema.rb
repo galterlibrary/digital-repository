@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150526151801) do
+ActiveRecord::Schema.define(version: 20150805184950) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -177,6 +177,14 @@ ActiveRecord::Schema.define(version: 20150526151801) do
   add_index "mailboxer_receipts", ["notification_id"], name: "index_mailboxer_receipts_on_notification_id", using: :btree
   add_index "mailboxer_receipts", ["receiver_id", "receiver_type"], name: "index_mailboxer_receipts_on_receiver_id_and_receiver_type", using: :btree
 
+  create_table "net_id_to_vivo_ids", force: true do |t|
+    t.string   "netid"
+    t.string   "vivoid"
+    t.string   "full_name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "proxy_deposit_requests", force: true do |t|
     t.string   "generic_file_id",                       null: false
     t.integer  "sending_user_id",                       null: false
@@ -321,6 +329,7 @@ ActiveRecord::Schema.define(version: 20150526151801) do
     t.string   "orcid"
     t.string   "username"
     t.string   "remember_token"
+    t.string   "vivo_id"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
