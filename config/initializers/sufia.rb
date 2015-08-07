@@ -1,4 +1,9 @@
 Sufia.config do |config|
+  # Sufia can integrate with Zotero's Arkivo service for automatic deposit
+  # of Zotero-managed research items.
+  # Defaults to false.  See README for more info
+  config.arkivo_api = true
+
 
   config.fits_to_desc_mapping= {
     file_title: :title,
