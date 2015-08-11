@@ -247,4 +247,24 @@ RSpec.describe Collection do
       expect(collection.visibility).to eq('restricted')
     end
   end
+
+  describe 'date_uploaded' do
+    it 'sets the date_uploaded upon create' do
+      collection = Collection.new(id: 'col1', title: 'something')
+      collection.apply_depositor_metadata(user.username)
+      collection.save!
+      expect(collection.date_uploaded).to be_present
+      expect(collection.date_uploaded).to be_a_kind_of(Date)
+    end
+  end
+
+  describe 'date_modified' do
+    it 'sets the date_modified upon save' do
+      collection = Collection.new(id: 'col1', title: 'something')
+      collection.apply_depositor_metadata(user.username)
+      collection.save!
+      expect(collection.date_modified).to be_present
+      expect(collection.date_modified).to be_a_kind_of(Date)
+    end
+  end
 end
