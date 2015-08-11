@@ -42,8 +42,14 @@ class User < ActiveRecord::Base
   alias_method :remove_role, :remove_from_group
 
   def groups
-    roles.map do |role|
+    all_groups = roles.map do |role|
       role.description ? role.description : role.name
+    end
+
+    if username.present? && username != 'guest'
+      all_groups + ['registered']
+    else
+      all_groups
     end
   end
 

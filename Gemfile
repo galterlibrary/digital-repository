@@ -45,7 +45,7 @@ gem 'thin'
 
 gem 'active-fedora', '9.1.1'
 #gem 'sufia', :git => 'https://github.com/projecthydra/sufia.git', :branch => 'master'
-gem 'sufia', '6.1.0'
+gem 'sufia', '6.2.0'
 gem 'kaminari', github: 'jcoyne/kaminari', branch: 'sufia' # required to handle pagination properly in dashboard. See https://github.com/amatsuda/kaminari/pull/322
 gem 'therubyracer', platforms: :ruby
 

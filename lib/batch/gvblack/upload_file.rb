@@ -9,7 +9,7 @@ content_type = 'application/pdf' if fname =~ /.*pdf/
 file.content_type = content_type
 
 @actor ||= Sufia::GenericFile::Actor.new(@generic_file, current_user)
-@actor.create_metadata(Sufia::Noid.noidify(Sufia::IdService.mint))
+@actor.create_metadata(ActiveFedora::Noid::Service.new.mint)
 
 if @actor.create_content(file, file.original_filename, 'content')
   puts "Success: #{fname}"
