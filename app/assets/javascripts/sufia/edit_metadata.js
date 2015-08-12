@@ -22,7 +22,8 @@ Blacklight.onLoad(function() {
 
   // the url variable to pass to determine the vocab to attach to
   autocomplete_vocab.url_var = [
-    'mesh', 'language', 'creator', 'contributor', 'based_near'
+    'lcsh', 'mesh', 'language', 'creator', 'contributor', 'based_near',
+    'subject_geographic', 'subject_name'
   ];
 
   function clean_input_name(name) {
