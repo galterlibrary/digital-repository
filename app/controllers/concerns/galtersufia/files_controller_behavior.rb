@@ -11,5 +11,12 @@ module Galtersufia
       self.presenter_class = GalterGenericFilePresenter
       self.edit_form_class = Sufia::Forms::GalterGenericFileEditForm
     end
+
+    def update
+      super
+      if response.code == '302'
+        response.location = sufia.generic_file_path
+      end
+    end
   end
 end

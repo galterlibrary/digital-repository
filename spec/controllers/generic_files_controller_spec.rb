@@ -92,7 +92,7 @@ describe GenericFilesController do
     it "should update abstract" do
       patch :update, id: @file, generic_file: { abstract: ['dudu'] }
       expect(response).to redirect_to(
-        @routes.url_helpers.edit_generic_file_path(@file))
+        @routes.url_helpers.generic_file_path(@file))
       expect(assigns(:generic_file).abstract).to eq(['dudu'])
     end
 
@@ -100,49 +100,49 @@ describe GenericFilesController do
       patch :update, id: @file, generic_file: {
         bibliographic_citation: ['dudu'] }
       expect(response).to redirect_to(
-        @routes.url_helpers.edit_generic_file_path(@file))
+        @routes.url_helpers.generic_file_path(@file))
       expect(assigns(:generic_file).bibliographic_citation).to eq(['dudu'])
     end
 
     it "should update subject_name" do
       patch :update, id: @file, generic_file: { subject_name: ['dudu'] }
       expect(response).to redirect_to(
-        @routes.url_helpers.edit_generic_file_path(@file))
+        @routes.url_helpers.generic_file_path(@file))
       expect(assigns(:generic_file).subject_name).to eq(['dudu'])
     end
 
     it "should update subject_geographic" do
       patch :update, id: @file, generic_file: { subject_geographic: ['dudu'] }
       expect(response).to redirect_to(
-        @routes.url_helpers.edit_generic_file_path(@file))
+        @routes.url_helpers.generic_file_path(@file))
       expect(assigns(:generic_file).subject_geographic).to eq(['dudu'])
     end
 
     it "should update mesh" do
       patch :update, id: @file, generic_file: { mesh: ['dudu'] }
       expect(response).to redirect_to(
-        @routes.url_helpers.edit_generic_file_path(@file))
+        @routes.url_helpers.generic_file_path(@file))
       expect(assigns(:generic_file).mesh).to eq(['dudu'])
     end
 
     it "should update lcsh" do
       patch :update, id: @file, generic_file: { lcsh: ['dudu'] }
       expect(response).to redirect_to(
-        @routes.url_helpers.edit_generic_file_path(@file))
+        @routes.url_helpers.generic_file_path(@file))
       expect(assigns(:generic_file).lcsh).to eq(['dudu'])
     end
 
     it "should not allow to update digital_origin" do
       patch :update, id: @file, generic_file: { digital_origin: ['dudu'] }
       expect(response).to redirect_to(
-        @routes.url_helpers.edit_generic_file_path(@file))
+        @routes.url_helpers.generic_file_path(@file))
       expect(assigns(:generic_file).digital_origin).to eq(['digo'])
     end
 
     it "should update page_number" do
       patch :update, id: @file, generic_file: { page_number: 22 }
       expect(response).to redirect_to(
-        @routes.url_helpers.edit_generic_file_path(@file))
+        @routes.url_helpers.generic_file_path(@file))
       expect(assigns(:generic_file).page_number).to eq('22')
     end
   end
