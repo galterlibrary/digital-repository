@@ -82,7 +82,7 @@ describe CollectionsController do
       }
       expect(assigns(:collection).abstract).to eq(['testa'])
       expect(assigns(:collection).bibliographic_citation).to eq(['cit'])
-      expect(assigns(:collection).digital_origin).to eq(['digo'])
+      expect(assigns(:collection).digital_origin).to be_blank
       expect(assigns(:collection).mesh).to eq(['mesh'])
       expect(assigns(:collection).lcsh).to eq(['lcsh'])
       expect(assigns(:collection).subject_geographic).to eq(['geo'])
@@ -303,11 +303,11 @@ describe CollectionsController do
       expect(assigns(:collection).lcsh).to eq(['dudu'])
     end
 
-    it "should update digital_origin" do
+    it "should not allow to update digital_origin" do
       patch :update, id: @collection, collection: { digital_origin: ['dudu'] }
       expect(response).to redirect_to(
         @routes.url_helpers.collection_path(@collection))
-      expect(assigns(:collection).digital_origin).to eq(['dudu'])
+      expect(assigns(:collection).digital_origin).to eq(['digo'])
     end
 
     it "should update page_number" do

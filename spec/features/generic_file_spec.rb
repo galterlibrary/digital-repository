@@ -103,12 +103,13 @@ describe 'generic file', :type => :feature do
 
           # Custom
           fill_in 'generic_file_abstract', with: 'abs'
-          fill_in 'generic_file_digital_origin', with: 'digo'
           fill_in 'generic_file_bibliographic_citation', with: 'cit'
           fill_in 'generic_file_lcsh', with: 'lcsh'
           fill_in 'generic_file_mesh', with: 'mesh'
           fill_in 'generic_file_subject_geographic', with: 'geo'
           fill_in 'generic_file_subject_name', with: 'subjn'
+
+          expect(page).not_to have_text('Digital origin')
 
           click_button('Save')
 
@@ -117,7 +118,6 @@ describe 'generic file', :type => :feature do
 
           @new_file.reload
           expect(@new_file.abstract).to eq(['abs'])
-          expect(@new_file.digital_origin).to eq(['digo'])
           expect(@new_file.bibliographic_citation).to eq(['cit'])
           expect(@new_file.lcsh).to eq(['lcsh'])
           expect(@new_file.mesh).to eq(['mesh'])
@@ -160,7 +160,7 @@ describe 'generic file', :type => :feature do
         # We trust the upstream tested this.
         it 'lists the custom fields' do
           expect(page).to have_link('Abstract')
-          expect(page).to have_link('Digital origin')
+          expect(page).not_to have_link('Digital origin')
           expect(page).to have_link('Bibliographic citation')
           expect(page).to have_link('Subject: LCSH')
           expect(page).to have_link('Subject: MESH')

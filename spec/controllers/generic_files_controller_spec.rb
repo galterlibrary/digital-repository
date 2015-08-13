@@ -132,11 +132,11 @@ describe GenericFilesController do
       expect(assigns(:generic_file).lcsh).to eq(['dudu'])
     end
 
-    it "should update digital_origin" do
+    it "should not allow to update digital_origin" do
       patch :update, id: @file, generic_file: { digital_origin: ['dudu'] }
       expect(response).to redirect_to(
         @routes.url_helpers.edit_generic_file_path(@file))
-      expect(assigns(:generic_file).digital_origin).to eq(['dudu'])
+      expect(assigns(:generic_file).digital_origin).to eq(['digo'])
     end
 
     it "should update page_number" do
