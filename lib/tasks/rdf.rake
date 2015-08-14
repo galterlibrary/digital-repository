@@ -14,13 +14,13 @@ namespace :rdf do
   desc "Load terms from and RDF skos file into the LocalAuthorityEntry table"
   task :harvest_skos, [:auth_name, :file_path, :predicate, :model] => :environment do |t, args|
     puts 'This can take a long time, depending on the number of terms in the file'
-    predicate = eval(args[:predicate].to_s)
+    opts = {}
+    opts[:predicate] = eval(args[:predicate].to_s) if args[:predicate].present?
     if local = LocalAuthority.find_by(name: args[:auth_name])
-      local.local_authority_entries.delete_all
-      local.delete
+      local.local_authority_entries.destroy_all
+      local.destroy
     end
-    LocalAuthority.harvest_rdf(
-      args[:auth_name], [args[:file_path]], predicate: predicate)
+    LocalAuthority.harvest_rdf(args[:auth_name], [args[:file_path]], opts)
     model = args[:model] || 'generic_files'
     LocalAuthority.register_vocabulary(model, args[:auth_name], args[:auth_name])
   end
