@@ -24,4 +24,27 @@ namespace :rdf do
     model = args[:model] || 'generic_files'
     LocalAuthority.register_vocabulary(model, args[:auth_name], args[:auth_name])
   end
+
+  desc "Load LCSH names into SubjectLocalAuthorityEntry table"
+  task :harvest_lcsh_names, [:file_path] => :environment do |t, args|
+    puts 'This will take a long time, assumes you only have tripples with predicate == perfLabel'
+    SubjectLocalAuthorityEntry.destroy_all
+    entries = []
+    ::RDF::Reader.open(args[:file_path], format: :ntriples) do |reader|
+      reader.each_with_index do |statement, idx|
+        if (idx % 3000) == 0 && (idx > 0)
+          SubjectLocalAuthorityEntry.import(entries)
+          entries = []
+        end
+
+        entries << SubjectLocalAuthorityEntry.new(
+          lowerLabel: statement.object.to_s.downcase.slice(0..250),
+          label: statement.object.to_s,
+          url: statement.subject.to_s
+        )
+      end
+    end
+    SubjectLocalAuthorityEntry.import(entries) if entries.present?
+  end
 end
+

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150805184951) do
+ActiveRecord::Schema.define(version: 20150817173442) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -261,9 +261,9 @@ ActiveRecord::Schema.define(version: 20150805184951) do
   end
 
   create_table "subject_local_authority_entries", force: :cascade do |t|
-    t.string "label",      limit: 255
+    t.text   "label"
     t.string "lowerLabel", limit: 255
-    t.string "url",        limit: 255
+    t.text   "url"
   end
 
   add_index "subject_local_authority_entries", ["lowerLabel"], name: "entries_by_lower_label", using: :btree

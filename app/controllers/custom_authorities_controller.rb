@@ -5,6 +5,15 @@ class CustomAuthoritiesController < ApplicationController
     render :layout => false, :text => authority.results.to_json
   end
 
+  def lcsh_names
+    lowQuery = params['q'].to_s.downcase
+    hits = []
+    hits = SubjectLocalAuthorityEntry.where(
+      '"lowerLabel" like ?', "#{lowQuery}%").limit(25).pluck(
+        "label, url").map {|hit| { label: hit[0], uri: hit[1] } }
+    render :layout => false, :text => hits.to_json
+  end
+
   def ldap_cn_query
     params[:q].tr(',', '').strip.gsub(/ +/, ' ').split(' ').map {|o|
       "(cn=#{o}*)" }.join('')
