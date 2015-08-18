@@ -37,12 +37,6 @@ gem 'ruby-prof',        group: :development
 gem 'unicorn'
 gem 'thin'
 
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
-
-# Use debugger
-# gem 'debugger', group: [:development, :test]
-
 gem 'active-fedora', '9.1.1'
 #gem 'sufia', :git => 'https://github.com/phebal/sufia.git', :branch => 'fix/master/dashboard_sort_toggle_fix'
 #gem 'sufia', :git => 'https://github.com/projecthydra/sufia.git', :branch => 'master'
@@ -80,3 +74,8 @@ gem 'hydra-role-management'
 
 gem 'poltergeist'
 gem 'database_cleaner'
+
+gem 'capistrano'
+gem 'capistrano-bundler'
+gem 'capistrano-rails'
+gem 'capistrano-rvm'

@@ -1,0 +1,14 @@
+namespace :httpd do
+  desc "Restart Apache server"
+  task :restart do
+    on roles(:all) do
+      execute :sudo, :systemctl, :restart, :httpd
+    end
+  end
+
+  task :status do
+    on roles(:all) do
+      execute :sudo, :systemctl, :status, :httpd
+    end
+  end
+end
