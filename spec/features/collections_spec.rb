@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 feature "Collections", :type => :feature do
+  subject { page }
   let(:user) { FactoryGirl.create(:user) }
   let(:chi_box) {
     make_collection(user, { title: 'Chinese box' })
@@ -155,8 +156,21 @@ feature "Collections", :type => :feature do
     context 'logged in owner' do
       before do
         login_as(user, :scope => :user)
+        visit "/collections/new"
+      end
+
+      it { is_expected.to have_button('Create') }
+    end
+  end
+
+  describe 'editing' do
+    context 'logged in owner' do
+      before do
+        login_as(user, :scope => :user)
         visit "/collections/#{chi_box.id}/edit"
       end
+
+      it { is_expected.to have_button('Save') }
 
       describe 'descriptions' do
         it 'can access the descriptions tab' do

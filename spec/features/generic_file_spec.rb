@@ -184,10 +184,16 @@ describe 'generic file', :type => :feature do
   end
 
   describe 'edit' do
+    subject { page }
     context 'logged in owner' do
       before do
         login_as(@user, :scope => :user)
         visit "/files/#{@file.id}"
+      end
+
+      describe 'common elements' do
+        before { click_link 'Edit' }
+        it { is_expected.to have_button('Save') }
       end
 
       describe 'changing permissions' do
