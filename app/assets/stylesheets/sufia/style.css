@@ -83,3 +83,8 @@ div.heading-tile .glyphicon, div.heading-tile .help-icon {
 #footer a {
   color: #FFF;
 }
+
+div#announcement {
+  background-color: white;
+  color: black;
+}
