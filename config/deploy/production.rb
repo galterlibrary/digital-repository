@@ -1,7 +1,9 @@
 set :stage, :production
 
 set :rails_env, 'production'
-role :app, %W{#{fetch(:ssh_user)}@vfsmghslrepo01.fsm.northwestern.edu}
-role :web, %W{#{fetch(:ssh_user)}@vfsmghslrepo01.fsm.northwestern.edu}
-role :migrator, %W{#{fetch(:ssh_user)}@vfsmghslrepo01.fsm.northwestern.edu}
-role :production, %W{#{fetch(:ssh_user)}@vfsmghslrepo01.fsm.northwestern.edu}
+role :ssh_host, %W{#{fetch(:ssh_user)}@vfsmghslrepo01.fsm.northwestern.edu}
+role :app, fetch(:ssh_host)
+role :web, fetch(:ssh_host)
+role :migrator, fetch(:ssh_host)
+role :resque_worker, fetch(:ssh_host)
+role :resque_scheduler, fetch(:ssh_host)

@@ -28,6 +28,10 @@ set :bundle_without, %w{development test ci}.join(' ')
 set :bundle_flags, "--deployment --path=#{fetch(:deploy_to)}/shared/gems"
 set :migration_role, 'migrator'
 
+# Resque
+set :resque_environment_task, true
+set :workers, { '*' => 1 }
+
 namespace :config do
   desc 'Create apache config file and add selinux context'
   task :vhost do
@@ -121,10 +125,11 @@ PassengerPreStart http://#{www_host_name}/
 end
 
 before :deploy, 'config:mail_forwarding'
+before 'deploy:publishing', 'resque:stop'
 #before :deploy, 'config:db_backup_tasks'
 # REMOVEME https://github.com/capistrano/rails/issues/111
 after 'deploy:updating', 'config:fix_absent_manifest_bug'
 after 'deploy:publishing', 'config:vhost'
 #after 'deploy:publishing', 'httpd:restart'
+before 'deploy:publishing', 'resque:start'
 after 'deploy:publishing', 'deploy:cleanup'
-
