@@ -14,8 +14,8 @@ class UserRoles < ActiveRecord::Migration
     add_index :roles_users, [:user_id, :role_id]
 
     Role.create(name: 'admin')
-    User.find_by(username: 'phb010').add_role('admin')
-    User.find_by(username: 'viq454').add_role('admin')
+    User.find_by(username: 'phb010').try(:add_role, 'admin')
+    User.find_by(username: 'viq454').try(:add_role, 'admin')
   end
 
   def down

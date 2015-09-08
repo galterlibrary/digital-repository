@@ -1,33 +1,29 @@
-# SQLite version 3.x
-#   gem install sqlite3
-#
-#   Ensure the SQLite 3 gem is defined in your Gemfile
-#   gem 'sqlite3'
-#
 default: &default
   adapter: postgresql
   pool: 5
   encoding: unicode
+  host: 127.0.0.1
 
 development:
   <<: *default
-  database: sufia_dev6
+  database: <%= ENV['DB_DEV_NAME'] %>
+  user: <%= ENV['DB_DEV_USER'] %>
+  password: <%= ENV['DB_DEV_PASS'] %>
+
+test:
+  <<: *default
+  database: <%= ENV['DB_TEST_NAME'] %>
+  user: <%= ENV['DB_TEST_USER'] %>
+  password: <%= ENV['DB_TEST_PASS'] %>
 
 staging:
   <<: *default
-  database: sufia_dev6
-
-# Warning: The database defined as "test" will be erased and
-# re-generated from your development database when you run "rake".
-# Do not set this db to the same as development or production.
-test:
-  <<: *default
-  database: sufia_test6
-  #adapter: sqlite3
-  #pool: 5
-  #encoding: unicode
-  #database: db/test.sqlite3
+  database: <%= ENV['DB_NAME'] %>
+  user: <%= ENV['DB_USER'] %>
+  password: <%= ENV['DB_PASS'] %>
 
 production:
   <<: *default
-  database: db/production.sqlite3
+  user: <%= ENV['DB_USER'] %>
+  database: <%= ENV['DB_NAME'] %>
+  password: <%= ENV['DB_PASS'] %>

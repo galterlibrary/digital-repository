@@ -1,0 +1,22 @@
+development:
+  user: <%= ENV['FEDORA_DEV_USER'] %>
+  password: <%= ENV['FEDORA_DEV_PASS'] %>
+  url: http://localhost:8983/fedora/rest
+  base_path: /dev
+test: &TEST
+  user: <%= ENV['FEDORA_TEST_USER'] %>
+  password: <%= ENV['FEDORA_TEST_PASS'] %>
+  url: <%= "http://127.0.0.1:#{ENV['TEST_JETTY_PORT'] || 8983}/fedora/rest" %>
+  base_path: /test
+staging:
+  user: <%= ENV['FEDORA_USER'] %>
+  password: <%= ENV['FEDORA_PASS'] %>
+  url: http://localhost:8983/fedora/rest
+  base_path: /staging
+production:
+  user: <%= ENV['FEDORA_USER'] %>
+  password: <%= ENV['FEDORA_PASS'] %>
+  url: http://localhost:8983/fedora/rest
+  base_path: /production
+cucumber:
+  <<: *TEST

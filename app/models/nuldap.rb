@@ -4,8 +4,8 @@ class Nuldap
   def initialize
     @ldap_server = ENV['LDAP_SERVER']
     @ldap_port = ENV['LDAP_PORT']
-    @ldap_username = ENV['LDAP_USERNAME']
-    @ldap_password = ENV['LDAP_PASSWORD']
+    @ldap_username = ENV['LDAP_USER']
+    @ldap_password = ENV['LDAP_PASS']
     ldap_type = eval(ENV['LDAP_CONNECTION'].to_s) || LDAP::SSLConn
     @ldap_connection = ldap_type.new(@ldap_server, @ldap_port.to_i)
                                 .set_option(LDAP::LDAP_OPT_PROTOCOL_VERSION, 3)

@@ -20,10 +20,6 @@ db/vocabularies
 public/system
 public/uploads
 config/local_env.rb
-config/solr.yml
-config/blacklight.yml
-config/fedora.yml
-config/ldap.yml
 
 spec/mock_upload_directory
 public/assets

@@ -42,6 +42,7 @@ RSpec.configure do |config|
   end
 
   config.before :each do |example|
+    allow_any_instance_of(User).to receive(:populate_attributes)
     unless (example.metadata[:type] == :view || example.metadata[:no_clean])
       ActiveFedora::Cleaner.clean!
     end

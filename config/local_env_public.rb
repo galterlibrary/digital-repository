@@ -6,7 +6,6 @@
 # Authentication and authorization
 ENV['LDAP_SERVER']   = 'registry.northwestern.edu'
 ENV['LDAP_PORT']     = '636'
-ENV['LDAP_USERNAME'] = 'cn=galterlib,ou=service,dc=northwestern,dc=edu'
 ENV['OPENAM_BASE_URL'] = 'https://websso.it.northwestern.edu/'
 ENV['OPENAM_COOKIE_NAME'] = 'openAMssoToken'
 
