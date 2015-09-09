@@ -32,6 +32,15 @@ set :migration_role, 'migrator'
 set :resque_environment_task, true
 set :workers, { '*' => 1 }
 
+set :passenger_environment_variables, {
+  path: '/usr/share/gems/gems/passenger-4.0.56/bin:$PATH',
+  passenger_tmpdir: '/var/www/apps/tmp'
+}
+set :passenger_restart_with_sudo, true
+# REMOVEME see: https://github.com/capistrano/passenger/issues/33
+set :passenger_restart_command,
+  'PASSENGER_TMPDIR=/var/www/apps/tmp passenger-config restart-app'
+
 namespace :config do
   desc 'Create apache config file and add selinux context'
   task :vhost do

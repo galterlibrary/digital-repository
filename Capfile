@@ -17,7 +17,7 @@ require 'capistrano/deploy'
 #
 # require 'capistrano/rbenv'
 # require 'capistrano/chruby'
-# require 'capistrano/passenger'
+require 'capistrano/passenger'
 require 'capistrano/rvm'
 require 'capistrano/bundler'
 require 'capistrano/rails/assets'
