@@ -1,3 +1,5 @@
+require 'byebug'
+
 set :application, 'galter_digital_repo'
 set :use_sudo, false
 set :format, :pretty
@@ -40,6 +42,11 @@ set :passenger_restart_with_sudo, true
 # REMOVEME see: https://github.com/capistrano/passenger/issues/33
 set :passenger_restart_command,
   'PASSENGER_TMPDIR=/var/www/apps/tmp passenger-config restart-app'
+
+set :fits_zip, '/tmp/fits-0.8.6_1.zip'
+set :fits_sh, '/var/www/apps/fits-0.8.6/fits.sh'
+set :fits_url,
+  'http://projects.iq.harvard.edu/files/fits/files/fits-0.8.6_1.zip'
 
 namespace :config do
   desc 'Create apache config file and add selinux context'
@@ -128,7 +135,19 @@ PassengerPreStart http://#{www_host_name}/
   # REMOVEME https://github.com/capistrano/rails/issues/111
   task :fix_absent_manifest_bug do
     on roles(:web) do
-      execute :touch, fetch(:release_path).join('public/assets', 'manifest-fix.temp')
+      execute :touch, fetch(:release_path).join(
+        'public/assets', 'manifest-fix.temp')
+    end
+  end
+
+  task :install_fits do
+    on roles(:app) do
+      if !test("[ -f #{fetch(:fits_sh)} ]")
+        execute(:curl, fetch(:fits_url), '>', fetch(:fits_zip))
+        execute(:unzip, fetch(:fits_zip), '-d' '/var/www/apps')
+        execute(:rm, fetch(:fits_zip))
+      end
+      execute(:chmod, '+x', fetch(:fits_sh))
     end
   end
 end

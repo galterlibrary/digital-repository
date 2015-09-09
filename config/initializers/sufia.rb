@@ -424,7 +424,7 @@ Sufia.config do |config|
   config.redis_namespace = "sufia"
 
   # Specify the path to the file characterization tool:
-  config.fits_path = "/home/deploy/fits-0.8.4/fits.sh"
+  config.fits_path = ENV['FITS_PATH'] || ENV['FITS_PATH_GLOBAL']
 
   # Specify how many seconds back from the current time that we should show by default of the user's activity on the user's dashboard
   # config.activity_to_show_default_seconds_since_now = 24*60*60

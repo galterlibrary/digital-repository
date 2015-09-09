@@ -15,3 +15,5 @@ ENV['DEFAULT_EMAIL_SENDER'] = 'ghsl-is@northwestern.edu'
 ENV['SERVER_ADMIN_EMAIL'] = 'galter-is@listserv.it.northwestern.edu'
 
 ENV['VIVO_PROFILES'] = 'http://vfsmvivo.fsm.northwestern.edu/vivo/individual?uri=http%3A%2F%2Fvivo.northwestern.edu%2Findividual%2F'
+
+ENV['FITS_PATH_GLOBAL'] = '/var/www/apps/fits-0.8.6/fits.sh'
