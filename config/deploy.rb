@@ -58,6 +58,9 @@ namespace :config do
         www_host_name = 'vfsmghslrepo01.fsm.northwestern.edu'
       end
 
+      cert_host_name = www_host_name.gsub('.', '_')
+      cert_path = '/home/deploy/https_certs'
+
       vhost_config = StringIO.new(%{
 NameVirtualHost *:80
 NameVirtualHost *:443
@@ -86,9 +89,9 @@ NameVirtualHost *:443
   DocumentRoot #{fetch(:deploy_to)}/current/public
 
   SSLEngine On
-  SSLCertificateFile /etc/pki/tls/certs/nubic.northwestern.edu.crt
-  SSLCertificateChainFile /etc/pki/tls/certs/rapidssl_intermediate.crt
-  SSLCertificateKeyFile /etc/pki/tls/private/nubic.northwestern.edu.key
+  SSLCertificateFile #{cert_path}/#{cert_host_name}_cert.cer
+  SSLCertificateChainFile #{cert_path}/#{cert_host_name}_interm.cer
+  SSLCertificateKeyFile #{cert_path}/#{cert_host_name}_key.cer
 
   #{"RailsEnv staging" if fetch(:rails_env) == 'staging'}
   RailsBaseURI /
@@ -117,7 +120,7 @@ ExpiresByType image/vnd.microsoft.icon "access plus 1 month"
 PassengerPreStart http://#{www_host_name}/
       })
       tmp_file = "/tmp/#{fetch(:application)}.conf"
-      httpd_file = "/etc/httpd/conf.d/#{fetch(:application)}.conf"
+      httpd_file = "/etc/httpd/conf.d/aaa_#{fetch(:application)}.conf"
       upload! vhost_config, tmp_file
       execute :sudo, :mv, tmp_file, httpd_file
       execute :sudo, :chmod, "644", httpd_file
