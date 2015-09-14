@@ -32,12 +32,14 @@ en:
   simple_form:
     labels:
       generic_file:
+        resource_type: 'Resource type(s)'
         description: 'Description'
         mesh: 'Subject: MESH'
         lcsh: 'Subject: LCSH'
         subject_geographic: 'Subject: Geographic Name'
         subject_name: 'Subject: Name'
       collection:
+        resource_type: 'Resource type(s)'
         multi_page: 'Multi-page?'
         description: 'Description'
         mesh: 'Subject: MESH'
