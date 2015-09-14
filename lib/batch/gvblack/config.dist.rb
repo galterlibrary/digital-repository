@@ -14,9 +14,7 @@ Fx_debug = false # true or false
 
 Ead_file = './gvbfind(20100923).xml'
 
-# URL for the rest api. Include userid:password as necessary.
-
-Base_url = "http://fedoraAdmin:asd89jio32kj@steve-2315.fsm.northwestern.edu:8080/fedora"
+Base_url = "nope"
 
 # Full path to the foxml  and contentmeta erb templates.
 
