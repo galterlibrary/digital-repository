@@ -17,3 +17,11 @@
 //= require blacklight/blacklight
 //= require_tree .
 //= require sufia
+
+$(function () {
+    $('body').on('click', function (e) {
+        $('.popover').each(function () {
+          $('[aria-describedby="' + this.id + '"]').click();
+        });
+    });
+});
