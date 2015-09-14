@@ -66,10 +66,6 @@ class Collection < Sufia::Collection
     members.reject {|o| o.page_number.blank? }.sort_by {|o| o.page_number.to_i }
   end
 
-  def bytes
-    'FIXME in app/models/collection.rb'
-  end
-
   def processing?
   end
 

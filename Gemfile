@@ -37,7 +37,7 @@ gem 'ruby-prof',        group: :development
 gem 'unicorn'
 gem 'thin'
 
-gem 'active-fedora', '9.1.1'
+gem 'active-fedora', '9.1.2'
 #gem 'sufia', :git => 'https://github.com/phebal/sufia.git', :branch => 'fix/master/dashboard_sort_toggle_fix'
 #gem 'sufia', :git => 'https://github.com/projecthydra/sufia.git', :branch => 'master'
 gem 'sufia', '6.3.0'

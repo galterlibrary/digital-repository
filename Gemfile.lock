@@ -29,7 +29,7 @@ GEM
       erubis (~> 2.7.0)
       rails-dom-testing (~> 1.0, >= 1.0.5)
       rails-html-sanitizer (~> 1.0, >= 1.0.1)
-    active-fedora (9.1.1)
+    active-fedora (9.1.2)
       active-triples (~> 0.6.0)
       activesupport (>= 4.1.0)
       deprecation
@@ -37,7 +37,6 @@ GEM
       linkeddata
       nom-xml (>= 0.5.1)
       om (~> 3.1)
-      rdf-ldp
       rdf-rdfxml (~> 1.1.0)
       rsolr (~> 1.0.10)
     active-triples (0.6.1)
@@ -425,9 +424,6 @@ GEM
       rails (>= 3.2.13, < 5.0)
       rest-client
     rack (1.6.4)
-    rack-linkeddata (1.1.0)
-      linkeddata (>= 1.1.0)
-      rack (>= 1.4)
     rack-protection (1.5.3)
       rack
     rack-test (0.6.3)
@@ -470,15 +466,6 @@ GEM
       rdf (>= 1.1)
     rdf-json (1.1.2)
       rdf (~> 1.1)
-    rdf-ldp (0.2.0)
-      json-ld
-      link_header
-      rack
-      rack-linkeddata
-      rdf (~> 1.1)
-      rdf-turtle (~> 1.1)
-      rdf-vocab
-      sinatra
     rdf-microdata (2.0.1)
       htmlentities (~> 4.3)
       nokogiri (~> 1.6)
@@ -615,7 +602,7 @@ GEM
       nokogiri
       stomp
       xml-simple
-    sparql (1.1.7)
+    sparql (1.1.8)
       builder (~> 3.2)
       ebnf (~> 0.3, >= 0.3.9)
       rdf (~> 1.1, >= 1.1.13)
@@ -623,7 +610,7 @@ GEM
       rdf-xsd (~> 1.1)
       sparql-client (~> 1.1)
       sxp (~> 0.1)
-    sparql-client (1.1.5)
+    sparql-client (1.1.6)
       net-http-persistent (~> 2.9)
       rdf (~> 1.1)
     spring (1.2.0)
@@ -731,7 +718,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  active-fedora (= 9.1.1)
+  active-fedora (= 9.1.2)
   better_errors
   byebug
   capistrano
