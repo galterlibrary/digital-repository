@@ -88,3 +88,8 @@ div#announcement {
   background-color: white;
   color: black;
 }
+
+select[name="generic_file[resource_type][]"],
+select[name="collection[resource_type][]"] {
+  height: 12em;
+}
