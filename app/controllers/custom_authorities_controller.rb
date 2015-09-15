@@ -30,6 +30,7 @@ class CustomAuthoritiesController < ApplicationController
         results[:verified] = true
         results[:first] = ldap_results.first['givenName'].try(:first)
         results[:last] = ldap_results.first['sn'].try(:first)
+        results[:middle] = ldap_results.first['nuMiddleName'].try(:first)
         results[:netid] = ldap_results.first['uid'].try(:first)
       end
     else
@@ -68,7 +69,7 @@ class CustomAuthoritiesController < ApplicationController
       "(|(&#{ldap_cn_query})(uid=#{params[:q].strip}*))")
     formatted_results = ldap_results.map do |entry|
       { id: entry['uid'].try(:first),
-        label: "#{entry['sn'].try(:first)}, #{entry['givenName'].try(:first)}" }
+        label: "#{entry['sn'].try(:first)}, #{entry['givenName'].try(:first)} #{entry['nuMiddleName'].try(:first)}".strip }
     end
     render :layout => false, :text => formatted_results.to_json
   end

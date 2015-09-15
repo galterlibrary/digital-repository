@@ -257,6 +257,38 @@ describe 'generic file', :type => :feature do
             end
           end
 
+          context 'with middle name' do
+            before do
+              allow_any_instance_of(Nuldap).to receive(:multi_search).and_return([
+                {
+                  'givenName' => ['Zbyszko'], 'sn' => ['Bogdanca'],
+                  'uid' => ['zby101'], 'nuMiddleName' => ['z']
+                }
+              ])
+            end
+
+            it 'triggers name validation for appropriate fields' do
+              click_link 'Edit'
+              execute_script("$('#generic_file_creator').val('Zbys').trigger('blur')")
+              within 'div.generic_file_creator' do
+                wait_for_ajax
+                expect(page).to have_text('"Bogdanca, Zbyszko z" is a valid')
+                expect(find('input#generic_file_creator').value).to eq(
+                  'Bogdanca, Zbyszko z')
+                expect(page).not_to have_link('Vivo Profile')
+              end
+
+              execute_script(
+                "$('#generic_file_contributor').val('Zbys').trigger('blur')")
+              within 'div.generic_file_contributor' do
+                expect(page).to have_text('"Bogdanca, Zbyszko z" is a valid')
+                expect(find('input#generic_file_contributor').value).to eq(
+                  'Bogdanca, Zbyszko z')
+                expect(page).not_to have_link('Vivo Profile')
+              end
+            end
+          end
+
           context 'vivo profile' do
             before do
               create(:net_id_to_vivo_id, netid: 'zby101', vivoid: 'vivo101')
@@ -314,6 +346,7 @@ describe 'generic file', :type => :feature do
             end
 
             execute_script("$('#generic_file_creator1').val('Zbys').trigger('blur')")
+            wait_for_ajax
             within 'li#generic_file_creator1-ver' do
               expect(page).to have_text('"Bogdanca, Zbyszko" is a valid')
             end
@@ -324,7 +357,7 @@ describe 'generic file', :type => :feature do
               click_button('Add')
             end
             execute_script("$('#generic_file_contributor1').val('Zbys').trigger('blur')")
-
+            wait_for_ajax
             within 'li#generic_file_contributor1-ver' do
               expect(page).to have_text('"Bogdanca, Zbyszko" is a valid')
             end
@@ -443,6 +476,24 @@ describe 'generic file', :type => :feature do
             execute_script("$('#generic_file_mesh2').val('FF').trigger('keydown')")
           end
           expect(page).to have_text('FFF')
+        end
+
+        context 'with middle name' do
+          before do
+            allow_any_instance_of(Nuldap).to receive(:multi_search).and_return([
+              {
+                'givenName' => ['User'], 'sn' => ['X'],
+                'uid' => ['zby101'], 'nuMiddleName' => ['YZ']
+              }
+            ])
+          end
+
+          it 'shows the middle name in the full name' do
+            click_link 'Edit'
+            execute_script("$('#generic_file_creator').val('Use').trigger('keydown')")
+            expect(page).to have_text('X, User YZ')
+
+          end
         end
       end
     end

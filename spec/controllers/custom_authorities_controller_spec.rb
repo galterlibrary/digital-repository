@@ -134,7 +134,9 @@ RSpec.describe CustomAuthoritiesController, :type => :controller do
       describe 'multiple users found in LDAP' do
         before do
           allow_any_instance_of(Nuldap).to receive(:multi_search).and_return([
-            { 'uid' => ['id1'], 'givenName' => ['Zbyszko'], 'sn' => ['Bogdanca'] },
+            { 'uid' => ['id1'], 'givenName' => ['Zbyszko'], 'sn' => ['Bogdanca'],
+              'nuMiddleName' => ['z']
+            },
             { 'uid' => ['id2'], 'givenName' => ['Trysko'], 'sn' => ['Tutanca'] }
           ])
         end
@@ -145,7 +147,7 @@ RSpec.describe CustomAuthoritiesController, :type => :controller do
 
         it 'returns a properly formatted names' do
           expect(JSON.parse(subject.body)).to include({
-            'id' => 'id1', 'label' => 'Bogdanca, Zbyszko'
+            'id' => 'id1', 'label' => 'Bogdanca, Zbyszko z'
           })
           expect(JSON.parse(subject.body)).to include({
             'id' => 'id2', 'label' => 'Tutanca, Trysko'

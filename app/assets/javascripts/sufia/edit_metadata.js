@@ -69,14 +69,19 @@ Blacklight.onLoad(function() {
     });
   }
 
+  function formatted_name(data) {
+    var formatted_name = data.last + ', ' + data.first;
+    if (data.middle !== null) { formatted_name += ' ' + data.middle }
+    return formatted_name;
+  }
+
   function verify_user(query, node, input) {
     $.getJSON('/authorities/generic_files/verify_user?q=' + query, function(data) {
       if (data.verified) {
-        var formatted_name = data.last + ', ' + data.first
         node.html(
             '<span class="glyphicon glyphicon-ok" style="color:green" aria-hidden="true"></span> '
-            + '"' + formatted_name + '" is a valid NU directory name.');
-        input.val(formatted_name);
+            + '"' + formatted_name(data) + '" is a valid NU directory name.');
+        input.val(formatted_name(data));
         input.css('background-color', '#F0FFF0');
         if (!jQuery.isEmptyObject(data.vivo)) {
             node.append(
