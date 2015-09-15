@@ -21,7 +21,7 @@ set :deploy_via, :remote_cache
 # Paths
 set :keep_releases, 5
 set :deploy_to, "/var/www/apps/#{fetch(:application)}"
-set :linked_dirs, %w{log tmp public/system public/assets solr/default solr/pids}
+set :linked_dirs, %w{log tmp public/system public/assets solr/default solr/pids public/uploads}
 set :linked_files, ['config/local_env.rb']
 
 # Rails stuff
