@@ -1,7 +1,7 @@
 menubar: false
 browser_spellcheck : true
 toolbar1: styleselect | formatselect | fontselect | fontsizeselect | bold italic underline | forecolor backcolor | outdent indent
-toolbar2:  link anchor uploadimage | hr | bullist numlist | table  | fullscreen | undo redo | code
+toolbar2:  link anchor uploadimage | media | hr | bullist numlist | table  | fullscreen | undo redo | code
 plugins:
   - table
   - fullscreen
@@ -11,3 +11,5 @@ plugins:
   - anchor
   - textcolor
   - code
+  - media
+upload_extensions: "gif,jpg,png,pdf,bmp"
