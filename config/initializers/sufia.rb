@@ -447,6 +447,9 @@ Sufia.config do |config|
 
   #config.enable_local_ingest = true
 
+  # Contact Email
+  config.contact_email = ENV['SERVER_ADMIN_EMAIL']
+  config.from_email = 'ghsl-bogus@northwestern.edu'
 end
 
 Date::DATE_FORMATS[:standard] = "%m/%d/%Y"
