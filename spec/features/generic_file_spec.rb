@@ -496,6 +496,14 @@ describe 'generic file', :type => :feature do
           end
         end
       end
+
+      describe 'single-value fields' do
+        it 'displays help icon' do
+          click_link 'Edit'
+          expect(subject.html).to include('generic_file_page_number_help')
+          expect(subject.html).to include('Numbers added by the submitter')
+        end
+      end
     end
   end
 end

@@ -14,3 +14,14 @@
  *= require_tree .
  *= require_self
  */
+
+.single_value_with_help {
+  margin-left: 0;
+  max-width: 40em;
+  padding-left: 0;
+}
+
+.collection_multi_page label:not(.boolean_with_help) {
+  height: 20px;
+  padding-left: 15px;
+}

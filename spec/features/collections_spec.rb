@@ -152,7 +152,7 @@ feature "Collections", :type => :feature do
     end
   end
 
-  describe 'editing' do
+  describe 'new' do
     context 'logged in owner' do
       before do
         login_as(user, :scope => :user)
@@ -333,6 +333,12 @@ feature "Collections", :type => :feature do
         end
       end # autocomplete
 
+      describe 'boolean fields' do
+        it 'displays help icon' do
+          expect(subject.html).to include('collection_multi_page_help')
+          expect(subject.html).to include('Check if this is a multi-page')
+        end
+      end
     end
   end
 end
