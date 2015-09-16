@@ -1,7 +1,9 @@
 require 'rails_helper'
 
 feature "HomePage", :type => :feature do
+  subject { page }
   let(:user) { FactoryGirl.create(:user) }
+
   describe 'tag cloud' do
     let!(:cancer) {
       make_generic_file(user, {
@@ -15,15 +17,15 @@ feature "HomePage", :type => :feature do
       })
     }
 
+    before { visit '/' }
+
     it 'lists all the subjects in the cloud', js: true do
-      visit '/'
       expect(page).to have_link('cancer')
       expect(page).to have_link('neoplasm')
       expect(page).to have_link('something')
     end
 
     it 'links the subjects in the cloud to the catalog', js: true do
-      visit '/'
       click_link 'neoplasm'
       expect(page).to have_text('neoplasm')
       expect(find('span.selected.facet-count').text).to eq('2')
@@ -31,6 +33,16 @@ feature "HomePage", :type => :feature do
       expect(page).to have_link('something')
       expect(page).to have_text('ABC')
       expect(page).to have_text('BCD')
+    end
+  end
+
+  describe 'navigation bar' do
+    before { visit '/' }
+    it { is_expected.to have_link('News') }
+
+    it 'links to the news page' do
+      click_link 'News'
+      expect(current_path).to eq('/news')
     end
   end
 end
