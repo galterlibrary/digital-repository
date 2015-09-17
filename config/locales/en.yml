@@ -48,7 +48,7 @@ en:
         subject_name: 'Subject: Name'
     metadata_help:
       collection:
-        resource_type: 'Pre-defined categories to describe the type of content being uploaded, such as "article" or “clinical trial." More than one type may be selected.'
+        resource_type: 'Pre-defined categories to describe the type of content being uploaded, such as "article" or "clinical trial." More than one type may be selected.'
         multi_page: 'Check if this is a multi-page collection such as book; allows for displaying pages using the IIIF viewer.'
         title: 'A name chosen by the depositor to aid in identifying the submitted content. If not filled in, it will automatically default to the file name. &lt;em&gt;This is a required field&lt;/em&gt;.'
         creator_html: 'The person or group responsible for the content being submitted. Usually this is the author of the content. Personal names should be entered with the last name first, e.g. &quot;Smith, John.&quot;.'
@@ -69,7 +69,8 @@ en:
         related_url: 'A link to a website or other specific content (PDF document) related to the file, for example, the URL of a research project from which the file was derived or a dataset stored in a data repository.'
         page_number: 'Numbers added by the submitter to each page or image, when creating a collection from a set of pages or images, to allow for orderly display in the image viewer.'
       generic_file:
-        title_html: 'A name chosen by the depositor to aid in identifying the submitted content. If not filled in, it will automatically default to the file name. &lt;em&gt;This is a required field&lt;/em&gt;.'
+        resource_type: 'Pre-defined categories to describe the type of content being uploaded, such as "article" or "clinical trial." More than one type may be selected.'
+        title: 'A name chosen by the depositor to aid in identifying the submitted content. If not filled in, it will automatically default to the file name. &lt;em&gt;This is a required field&lt;/em&gt;.'
         creator_html: 'The person or group responsible for the content being submitted. Usually this is the author of the content. Personal names should be entered with the last name first, e.g. &quot;Smith, John.&quot; &lt;em&gt;This is a required field&lt;/em&gt;.'
         contributor_html: 'A person or group you want to recognize for playing a role in the creation of the content, but not the primary role. If there is a specific role you would like noted, include it in parentheses, e.g. &quot;Jones, Mary (advisor).&quot;'
         description: 'Free-text notes about the content or the file.'
