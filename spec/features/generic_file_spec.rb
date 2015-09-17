@@ -41,6 +41,12 @@ describe 'generic file', :type => :feature do
       expect(page).to have_text('Digital')
     end
 
+    it 'hides links to Mendeley and Zotero' do
+      visit "/files/#{@file.id}"
+      expect(page).not_to have_text('Mendeley')
+      expect(page).not_to have_text('Zotero')
+    end
+
     describe 'file details' do
       before do
         allow_any_instance_of(GenericFile).to receive(
