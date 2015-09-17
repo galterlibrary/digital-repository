@@ -23,5 +23,6 @@
 
 .collection_multi_page label:not(.boolean_with_help) {
   height: 20px;
-  padding-left: 15px;
+  width: 16px;
+  margin-left: 15px;
 }
