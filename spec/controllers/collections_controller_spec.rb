@@ -33,15 +33,13 @@ describe CollectionsController do
 
   describe "#show" do
     before do
-      @collection = Collection.new(
-        title: 'something',
+      @collection = make_collection(
+        @user, title: 'something', tag: ['tag'],
         abstract: ['testa'], bibliographic_citation: ['cit'],
         digital_origin: ['digo'], mesh: ['mesh'], lcsh: ['lcsh'],
         subject_geographic: ['geo'], subject_name: ['subjn'],
         page_number: 11, multi_page: true
       )
-      @collection.apply_depositor_metadata(@user.user_key)
-      @collection.save!
     end
 
     it "should assign proper collection" do
@@ -63,7 +61,7 @@ describe CollectionsController do
     it 'creates collection' do
       expect {
         post :create, id: @collection, collection: {
-          title: 'something', description: 'desc',
+          title: 'something', description: 'desc', tag: ['tag'],
           abstract: ['testa'], bibliographic_citation: ['cit'],
           digital_origin: ['digo'], mesh: ['mesh'], lcsh: ['lcsh'],
           subject_geographic: ['geo'], subject_name: ['subjn'],
@@ -74,7 +72,7 @@ describe CollectionsController do
 
     it 'populates the custom attributes' do
       post :create, id: @collection, collection: {
-        title: 'something', description: 'desc',
+        title: 'something', description: 'desc', tag: ['tag'],
         abstract: ['testa'], bibliographic_citation: ['cit'],
         digital_origin: ['digo'], mesh: ['mesh'], lcsh: ['lcsh'],
         subject_geographic: ['geo'], subject_name: ['subjn'],
@@ -94,15 +92,13 @@ describe CollectionsController do
 
   describe "#update" do
     before do
-      @collection = Collection.new(
-        title: 'something',
+      @collection = make_collection(
+        @user, title: 'something', tag: ['tag'],
         abstract: ['testa'], bibliographic_citation: ['cit'],
         digital_origin: ['digo'], mesh: ['mesh'], lcsh: ['lcsh'],
         subject_geographic: ['geo'], subject_name: ['subjn'],
         page_number: 11, multi_page: true
       )
-      @collection.apply_depositor_metadata(@user.user_key)
-      @collection.save!
     end
 
     context 'visibility' do

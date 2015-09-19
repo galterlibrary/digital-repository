@@ -11,6 +11,7 @@ end
 
 def make_collection(user, args = {})
   args[:title] = 'testing' unless args[:title].present?
+  args[:tag] = ['tag'] unless args[:tag].present?
   col = Collection.new(args)
   col.apply_depositor_metadata(user.user_key)
   col.save!

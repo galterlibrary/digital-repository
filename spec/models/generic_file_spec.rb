@@ -115,7 +115,7 @@ RSpec.describe GenericFile do
   context 'parent relationship' do
     let(:user) { FactoryGirl.create(:user) }
     let(:collection) {
-      col = Collection.new(title: 'hello')
+      col = Collection.new(title: 'hello', tag: ['tag'])
       col.apply_depositor_metadata(user.user_key)
       col.save!
       col

@@ -1,6 +1,7 @@
 class Collection < Sufia::Collection
   include Hydra::Collections::Actions
 
+  validates :tag, presence: true
   before_create :open_visibility
 
   def open_visibility

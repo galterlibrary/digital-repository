@@ -171,6 +171,11 @@ feature "Collections", :type => :feature do
       end
 
       it { is_expected.to have_button('Save') }
+      it { is_expected.not_to have_text('* Resource type(s)') }
+      it { is_expected.to have_text('* Title') }
+      it { is_expected.not_to have_text('* Creator') }
+      it { is_expected.to have_text('* Keyword') }
+      it { is_expected.not_to have_text('* Rights') }
 
       describe 'descriptions' do
         it 'can access the descriptions tab' do

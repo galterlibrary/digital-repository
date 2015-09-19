@@ -64,7 +64,7 @@ RSpec.describe IiifApisController, :type => :controller do
     let(:collection) { Collection.new(
       id: 'col1', title: 'something', description: 'blahbalh',
       rights: ['http://creativecommons.org/publicdomain/mark/1.0/'],
-      abstract: ['abs'], mesh: ['bcd', 'efg']
+      abstract: ['abs'], mesh: ['bcd', 'efg'], tag: ['tag']
     ) }
 
     let(:col_parent) { make_collection(user, { id: 'col_parent' }) }
@@ -87,7 +87,7 @@ RSpec.describe IiifApisController, :type => :controller do
       it { is_expected.to have_http_status(:success) }
 
       it "returns IIIF manifest json" do
-        expect(subject.body).to eq('{"@context":"http://iiif.io/api/presentation/2/context.json","@id":"http://test.host/iiif-api/collection/col1/manifest","@type":"sc:Manifest","label":"something","description":"blahbalh","license":"http://creativecommons.org/publicdomain/mark/1.0/","within":"http://test.host/collections/col_parent","metadata":[{"label":"Abstract","value":["abs"]},{"label":"Subject: MESH","value":["bcd","efg"]}],"sequences":[{"@id":"http://test.host/iiif-api/collection/col1/sequence/basic","@type":"sc:Sequence","label":"basic","canvases":[{"@id":"http://test.host/iiif-api/generic_file/testa1/canvas/p1","@type":"sc:Canvas","label":"p1","height":0,"width":0,"images":[{"@id":"http://test.host/iiif-api/generic_file/testa1/annotation/p1","@type":"oa:Annotation","on":"http://test.host/iiif-api/generic_file/testa1/canvas/p1","motivation":"sc:painting","resource":{"@id":"http://test.host/image-service/testa1/full/full/0/native.jpg","@type":"dcterms:Image","format":"image/jpeg","height":0,"width":0,"service":{"@id":"http://test.host/image-service/testa1","@context":"http://iiif.io/api/image/2/context.json","profile":"http://iiif.io/api/image/2/profiles/level2.json"}}}]},{"@id":"http://test.host/iiif-api/generic_file/testa2/canvas/p2","@type":"sc:Canvas","label":"p2","height":0,"width":0,"images":[{"@id":"http://test.host/iiif-api/generic_file/testa2/annotation/p2","@type":"oa:Annotation","on":"http://test.host/iiif-api/generic_file/testa2/canvas/p2","motivation":"sc:painting","resource":{"@id":"http://test.host/image-service/testa2/full/full/0/native.jpg","@type":"dcterms:Image","format":"image/jpeg","height":0,"width":0,"service":{"@id":"http://test.host/image-service/testa2","@context":"http://iiif.io/api/image/2/context.json","profile":"http://iiif.io/api/image/2/profiles/level2.json"}}}]},{"@id":"http://test.host/iiif-api/generic_file/testa3/canvas/p3","@type":"sc:Canvas","label":"p3","height":0,"width":0,"images":[{"@id":"http://test.host/iiif-api/generic_file/testa3/annotation/p3","@type":"oa:Annotation","on":"http://test.host/iiif-api/generic_file/testa3/canvas/p3","motivation":"sc:painting","resource":{"@id":"http://test.host/image-service/testa3/full/full/0/native.jpg","@type":"dcterms:Image","format":"image/jpeg","height":0,"width":0,"service":{"@id":"http://test.host/image-service/testa3","@context":"http://iiif.io/api/image/2/context.json","profile":"http://iiif.io/api/image/2/profiles/level2.json"}}}]}]}]}')
+        expect(subject.body).to eq('{"@context":"http://iiif.io/api/presentation/2/context.json","@id":"http://test.host/iiif-api/collection/col1/manifest","@type":"sc:Manifest","label":"something","description":"blahbalh","license":"http://creativecommons.org/publicdomain/mark/1.0/","within":"http://test.host/collections/col_parent","metadata":[{"label":"Abstract","value":["abs"]},{"label":"Keyword","value":["tag"]},{"label":"Subject: MESH","value":["bcd","efg"]}],"sequences":[{"@id":"http://test.host/iiif-api/collection/col1/sequence/basic","@type":"sc:Sequence","label":"basic","canvases":[{"@id":"http://test.host/iiif-api/generic_file/testa1/canvas/p1","@type":"sc:Canvas","label":"p1","height":0,"width":0,"images":[{"@id":"http://test.host/iiif-api/generic_file/testa1/annotation/p1","@type":"oa:Annotation","on":"http://test.host/iiif-api/generic_file/testa1/canvas/p1","motivation":"sc:painting","resource":{"@id":"http://test.host/image-service/testa1/full/full/0/native.jpg","@type":"dcterms:Image","format":"image/jpeg","height":0,"width":0,"service":{"@id":"http://test.host/image-service/testa1","@context":"http://iiif.io/api/image/2/context.json","profile":"http://iiif.io/api/image/2/profiles/level2.json"}}}]},{"@id":"http://test.host/iiif-api/generic_file/testa2/canvas/p2","@type":"sc:Canvas","label":"p2","height":0,"width":0,"images":[{"@id":"http://test.host/iiif-api/generic_file/testa2/annotation/p2","@type":"oa:Annotation","on":"http://test.host/iiif-api/generic_file/testa2/canvas/p2","motivation":"sc:painting","resource":{"@id":"http://test.host/image-service/testa2/full/full/0/native.jpg","@type":"dcterms:Image","format":"image/jpeg","height":0,"width":0,"service":{"@id":"http://test.host/image-service/testa2","@context":"http://iiif.io/api/image/2/context.json","profile":"http://iiif.io/api/image/2/profiles/level2.json"}}}]},{"@id":"http://test.host/iiif-api/generic_file/testa3/canvas/p3","@type":"sc:Canvas","label":"p3","height":0,"width":0,"images":[{"@id":"http://test.host/iiif-api/generic_file/testa3/annotation/p3","@type":"oa:Annotation","on":"http://test.host/iiif-api/generic_file/testa3/canvas/p3","motivation":"sc:painting","resource":{"@id":"http://test.host/image-service/testa3/full/full/0/native.jpg","@type":"dcterms:Image","format":"image/jpeg","height":0,"width":0,"service":{"@id":"http://test.host/image-service/testa3","@context":"http://iiif.io/api/image/2/context.json","profile":"http://iiif.io/api/image/2/profiles/level2.json"}}}]}]}]}')
       end
     end
 
@@ -125,11 +125,13 @@ RSpec.describe IiifApisController, :type => :controller do
       end
 
       it 'generates correct metadata' do
-        expect(subject['metadata'].count).to eq(2)
+        expect(subject['metadata'].count).to eq(3)
         expect(subject['metadata'].find {|o|
           o['label'] == 'Abstract' }['value']).to eq(['abs'])
         expect(subject['metadata'].find {|o|
           o['label'] == 'Subject: MESH' }['value']).to eq(['bcd', 'efg'])
+        expect(subject['metadata'].find {|o|
+          o['label'] == 'Keyword' }['value']).to eq(['tag'])
       end
 
       it 'generates correct description' do
@@ -152,7 +154,9 @@ RSpec.describe IiifApisController, :type => :controller do
   end
 
   describe "GET sequence" do
-    let(:collection) { Collection.new(id: 'col1', title: 'something') }
+    let(:collection) {
+      Collection.new(id: 'col1', title: 'something', tag: ['tag'])
+    }
 
     describe '#canvas' do
       before do

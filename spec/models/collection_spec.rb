@@ -2,7 +2,9 @@ require 'rails_helper'
 RSpec.describe Collection do
   let(:user) { FactoryGirl.create(:user) }
   context '#pagable_members' do
-    let(:collection) { Collection.new(id: 'col1', title: 'something') }
+    let(:collection) {
+      Collection.new(id: 'col1', title: 'something', tag: ['tag'])
+    }
 
     describe 'is pagable' do
       before do
@@ -231,8 +233,28 @@ RSpec.describe Collection do
     end
   end
 
+  context 'validations' do
+    it 'checks that title is not blank' do
+      col = Collection.new(tag: ['abc'])
+      col.apply_depositor_metadata(user.username)
+      expect{ col.save! }.to raise_error{ ActiveFedora::RecordInvalid }
+    end
+
+    it 'checks that tag is not blank' do
+      col = Collection.new(title: 'abc')
+      col.apply_depositor_metadata(user.username)
+      expect{ col.save! }.to raise_error{ ActiveFedora::RecordInvalid }
+    end
+
+    it 'saves a record with tag and title filled in' do
+      col = Collection.new(title: 'abc', tag: ['bcd'])
+      col.apply_depositor_metadata(user.username)
+      expect(col.save!).to be_truthy
+    end
+  end
+
   context 'visibility' do
-    let(:collection) { Collection.new(title: 'something') }
+    let(:collection) { Collection.new(title: 'something', tag: ['tag']) }
     it 'is open visibility upon create' do
       collection.apply_depositor_metadata(user.username)
       collection.save
@@ -250,7 +272,7 @@ RSpec.describe Collection do
 
   describe 'date_uploaded' do
     it 'sets the date_uploaded upon create' do
-      collection = Collection.new(id: 'col1', title: 'something')
+      collection = Collection.new(id: 'col1', title: 'something', tag: ['tag'])
       collection.apply_depositor_metadata(user.username)
       collection.save!
       expect(collection.date_uploaded).to be_present
@@ -260,7 +282,7 @@ RSpec.describe Collection do
 
   describe 'date_modified' do
     it 'sets the date_modified upon save' do
-      collection = Collection.new(id: 'col1', title: 'something')
+      collection = Collection.new(id: 'col1', title: 'something', tag: ['tag'])
       collection.apply_depositor_metadata(user.username)
       collection.save!
       expect(collection.date_modified).to be_present

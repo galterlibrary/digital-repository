@@ -200,6 +200,12 @@ describe 'generic file', :type => :feature do
       describe 'common elements' do
         before { click_link 'Edit' }
         it { is_expected.to have_button('Save') }
+        it { is_expected.to have_text('* Resource type(s)') }
+        it { is_expected.to have_text('* Title') }
+        it { is_expected.to have_text('* Creator') }
+        it { is_expected.to have_text('* Keyword') }
+        it { is_expected.to have_text('* Rights') }
+
       end
 
       describe 'changing permissions' do
