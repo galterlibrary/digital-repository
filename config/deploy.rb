@@ -156,6 +156,7 @@ PassengerPreStart http://#{www_host_name}/
 end
 
 before :deploy, 'config:mail_forwarding'
+before :deploy, 'config:install_fits'
 before 'deploy:publishing', 'resque:stop'
 #before :deploy, 'config:db_backup_tasks'
 # REMOVEME https://github.com/capistrano/rails/issues/111

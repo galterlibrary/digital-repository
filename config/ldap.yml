@@ -52,7 +52,7 @@ staging:
   # <<: *AUTHORIZATIONS
 
 production:
-  host: localhost
+  host: registry.northwestern.edu
   port: 636
   attribute: uid
   base: ou=people,dc=northwestern,dc=edu
