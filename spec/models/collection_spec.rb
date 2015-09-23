@@ -142,15 +142,6 @@ RSpec.describe Collection do
       end
     end
 
-    describe "page_number" do
-      it "has it" do
-        expect(subject.page_number).to be_nil
-        subject.page_number = 22
-        subject.save(validate: false)
-        expect(subject.reload.page_number).to eq(22)
-      end
-    end
-
     describe "multi_page" do
       it "has it" do
         expect(subject.multi_page).to be_nil

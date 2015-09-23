@@ -41,20 +41,23 @@ class Collection < Sufia::Collection
     index.as :stored_searchable, :facetable
   end
 
-  property :subject_geographic, predicate: ::RDF::Vocab::MODS.subjectGeographic, multiple: true do |index|
+  property :subject_geographic,
+           :predicate => ::RDF::URI.new(
+             'http://id.worldcat.org/fast/ontology/1.0/#facet-Geographic'),
+           :multiple => true do |index|
     index.as :stored_searchable
   end
 
-  property :subject_name, predicate: ::RDF::Vocab::MODS.subjectName, multiple: true do |index|
+  property :subject_name,
+           :predicate => ::RDF::URI.new('http://id.loc.gov/authorities/names'),
+           :multiple => true do |index|
     index.as :stored_searchable
   end
 
-  property :page_number, predicate: ::RDF::URI.new('http://opaquenamespace.org/hydra/pageNumber'), multiple: false do |index|
-    index.as :stored_searchable
-    index.type :integer
-  end
-
-  property :multi_page, predicate: ::RDF::URI.new('http://opaquenamespace.org/hydra/multiPage'), multiple: false do |index|
+  property :multi_page,
+           :predicate => ::RDF::URI.new(
+             'http://www.w3.org/TR/xmlschema-2/#boolean'),
+           :multiple => false do |index|
     index.as :stored_searchable
     index.type :boolean
   end

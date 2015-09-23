@@ -23,8 +23,7 @@ class GalterCollectionPresenter < Sufia::CollectionPresenter
       :identifier,
       :based_near,
       :related_url,
-      :digital_origin,
-      :page_number
+      :digital_origin
     ]
   end
 

@@ -67,7 +67,7 @@ en:
         identifier: 'A unique string of characters such as DOI for a journal article, PubMed ID, PubMed Central ID, or an ISBN for a book. The type of identifier used should be entered in parentheses before the identifier itself, e.g. “(PMID) 26269873.'
         based_near_html: 'The name of the location where the work was published or otherwise made available to the public. Calls upon the GeoNames web service (&lt;a href=&quot;http://www.geonames.org&quot; target=&quot;_blank&quot; &gt;http://www.geonames.org&lt;a&gt;).'
         related_url: 'A link to a website or other specific content (PDF document) related to the file, for example, the URL of a research project from which the file was derived or a dataset stored in a data repository.'
-        page_number: 'Numbers added by the submitter to each page or image, when creating a collection from a set of pages or images, to allow for orderly display in the image viewer.'
+
       generic_file:
         resource_type: 'Pre-defined categories to describe the type of content being uploaded, such as "article" or "clinical trial." More than one type may be selected.'
         title: 'A name chosen by the depositor to aid in identifying the submitted content. If not filled in, it will automatically default to the file name. &lt;em&gt;This is a required field&lt;/em&gt;.'

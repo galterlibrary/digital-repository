@@ -7,10 +7,10 @@ feature "Collections", :type => :feature do
     make_collection(user, { title: 'Chinese box' })
   }
   let(:red_box) {
-    make_collection(user, { title: 'Red box', page_number: 1 })
+    make_collection(user, { title: 'Red box' })
   }
   let(:black_box) {
-    make_collection(user, { title: 'Black box', page_number: 2 })
+    make_collection(user, { title: 'Black box' })
   }
   let(:ring) {
     make_generic_file(user, { title: ['Ring of dexterity +9999'] })
