@@ -8,7 +8,7 @@ describe 'generic file', :type => :feature do
       abstract: ['testa'], bibliographic_citation: ['cit'],
       digital_origin: ['digo'], mesh: ['mesh'], lcsh: ['lcsh'],
       subject_geographic: ['geo'], subject_name: ['subjn'],
-      visibility: 'open'
+      visibility: 'open', page_number: ''
     )
     @file.apply_depositor_metadata(@user.user_key)
     @file.save!
@@ -39,6 +39,7 @@ describe 'generic file', :type => :feature do
       expect(page).not_to have_text('Location')
       expect(page).not_to have_text('Related URL')
       expect(page).to have_text('Digital')
+      expect(page).not_to have_text('Page number')
     end
 
     it 'hides links to Mendeley and Zotero' do
