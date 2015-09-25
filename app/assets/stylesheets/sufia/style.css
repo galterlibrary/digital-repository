@@ -6,6 +6,29 @@ a:hover {
   color: #4E015C;
 }
 
+
+#NMLogo {
+    background: rgba(0, 0, 0, 0) url("/assets/NM-FSM-sprite.png") no-repeat scroll 0 0;
+  display: block;
+  height: 40px;
+  margin-top: 20px;
+  position: relative;
+  width: 200px;
+}
+
+#scholarHubTopLink {
+  color: #61468b;
+  font-size: 40px;
+  font-family: "Calibri Light", Calibri, Arial;
+}
+
+#betaLabel {
+  font-size: 36px;
+  font-family: "Calibri Light", Calibri, Arial;
+  padding-bottom: 4px;
+  font-weight: 400;
+}
+
 #home_header {
   background-image: url("/assets/spec_col_crop_top.jpg");
   border-top: 8px solid #FFF;
