@@ -21,6 +21,10 @@
   padding-left: 0;
 }
 
+.single_text_with_help {
+  max-width: 500px;
+}
+
 .collection_multi_page label:not(.boolean_with_help) {
   height: 20px;
   width: 16px;
