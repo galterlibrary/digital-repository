@@ -340,8 +340,15 @@ feature "Collections", :type => :feature do
 
       describe 'boolean fields' do
         it 'displays help icon' do
-          expect(subject.html).to include('collection_multi_page_help')
+          expect(subject).to have_link('collection_multi_page_help')
           expect(subject.html).to include('Check if this is a multi-page')
+        end
+      end
+
+      describe 'title field' do
+        it 'displays help icon' do
+          expect(subject).to have_link('collection_title_help')
+          expect(subject.html).to include('name chosen by the depositor')
         end
       end
     end
