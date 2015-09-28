@@ -351,6 +351,13 @@ feature "Collections", :type => :feature do
           expect(subject.html).to include('name chosen by the depositor')
         end
       end
+
+      describe 'description field' do
+        it 'displays help icon' do
+          expect(subject).to have_link('collection_description_help')
+          expect(subject.html).to include('Free-text notes')
+        end
+      end
     end
   end
 end
