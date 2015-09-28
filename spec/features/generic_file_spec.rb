@@ -517,6 +517,14 @@ describe 'generic file', :type => :feature do
           expect(subject.html).to include('Numbers added by the submitter')
         end
       end
+
+      describe 'rights field' do
+        it 'displays help icon' do
+          click_link 'Edit'
+          expect(subject).to have_link('generic_file_rights_help_modal')
+          expect(subject.html).to include('Creative Commons licenses')
+        end
+      end
     end
   end
 end
