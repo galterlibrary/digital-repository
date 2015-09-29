@@ -21,7 +21,8 @@ class CustomAuthoritiesController < ApplicationController
   private :ldap_cn_query
 
   def verify_user_in_ldap(results)
-    ldap_results = Nuldap.new.multi_search("(&#{ldap_cn_query})")
+    ldap_results = Nuldap.new.multi_search(
+      "cn=#{params['q'].strip.gsub(/, +/, ',')}")
 
     if ldap_results.present?
       if ldap_results.count > 1
