@@ -30,3 +30,27 @@
   width: 16px;
   margin-left: 15px;
 }
+
+body {
+  word-wrap: break-word;
+}
+
+tr[id^="document"] div[class="media"] div[class="media-body"] div[class="media-heading"] {
+  word-break: break-all;
+}
+
+table[id="activity"] tbody tr td:first-child {
+  word-break: break-all;
+}
+
+div[id="notifications"] tbody tr td:nth-child(3) {
+  word-break: break-all;
+}
+
+table[id="outgoing-transfers"] tbody tr td:first-child {
+  word-break: break-all;
+}
+
+table[id="incoming-transfers"] tbody tr td:first-child {
+  word-break: break-all;
+}
