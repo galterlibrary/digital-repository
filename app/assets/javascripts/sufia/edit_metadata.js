@@ -93,7 +93,7 @@ Blacklight.onLoad(function() {
         node.html(
             '<span class="glyphicon glyphicon-exclamation-sign" style="color:red" aria-hidden="true"></span>'
             + data.message);
-        input.css('background-color', '#FFD6CC');
+        input.css('background-color', '#FFF8DC');
       }
     });
   }
