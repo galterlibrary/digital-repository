@@ -29,6 +29,28 @@ feature 'Catalog', :type => :feature do
       })
     }
 
+    it 'does not display blank fields' do
+      visit '/catalog'
+      expect(page).not_to have_text('Description')
+      expect(page).not_to have_text('Keywords')
+    end
+
+    it 'displays description when available' do
+      gf_public.description = ['Testing 123']
+      gf_public.save
+      visit '/catalog'
+      expect(page).to have_text('Description')
+      expect(page).to have_text('Testing 123')
+    end
+
+    it 'displays keywords when available' do
+      gf_public.tag = ['tag1', 'tag2']
+      gf_public.save
+      visit '/catalog'
+      expect(page).to have_text('Keywords')
+      expect(page).to have_text('tag1, tag2')
+    end
+
     context 'anonymous user' do
       before { visit '/catalog' }
 
