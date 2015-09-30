@@ -1,9 +1,9 @@
 a {
-  color: #4E015C;
+  color: #0082BF;
 }
 
 a:hover {
-  color: #4E015C;
+  color: #0082BF;
 }
 
 
@@ -16,10 +16,15 @@ a:hover {
   width: 200px;
 }
 
-#scholarHubTopLink {
+#digitalHubTopLink {
   color: #61468b;
   font-size: 40px;
   font-family: "Calibri Light", Calibri, Arial;
+  text-decoration: none;
+}
+
+a#digitalHubTopLink:hover {
+  opacity: .75;
 }
 
 #betaLabel {
@@ -41,7 +46,7 @@ a:hover {
 }
 
 ul.tagcloud a {
-  color: #4E015C !important;
+  color: #0082BF !important;
 }
 
 #footer{

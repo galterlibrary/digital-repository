@@ -54,3 +54,7 @@ table[id="outgoing-transfers"] tbody tr td:first-child {
 table[id="incoming-transfers"] tbody tr td:first-child {
   word-break: break-all;
 }
+
+tr[id^="trophyrow_"] td:nth-child(2) {
+  word-break: break-all;
+}

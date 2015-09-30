@@ -23,12 +23,23 @@ en:
   sufia:
     institution_name: "Northwestern University"
     institution_name_full: "Northwestern University"
+    deposit_agreement: "DigitalHub's Deposit Agreement"
+    product_name: "DigitalHub"
     visibility:
       open: "Open Access (recommended)"
     collection:
       collections_list:
         empty: 'Not a member of any collections'
         heading: 'Member of:'
+    search:
+      form:
+        q:
+          label:          "Search DigitalHub"
+          placeholder:    "Enter search terms"
+        option:
+          all:
+            label_short:  "All"
+            label_long:   "All of DigitalHub"
   simple_form:
     labels:
       generic_file:

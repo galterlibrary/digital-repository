@@ -55,7 +55,7 @@ namespace :config do
       if fetch(:rails_env) == 'staging'
         www_host_name = 'vtfsmghslrepo01.fsm.northwestern.edu'
       else
-        www_host_name = 'vfsmghslrepo01.fsm.northwestern.edu'
+        www_host_name = 'digitalhub.northwestern.edu'
       end
 
       cert_host_name = www_host_name.gsub('.', '_')
