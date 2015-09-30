@@ -46,8 +46,8 @@ RSpec.describe CustomAuthoritiesController, :type => :controller do
         end
 
         it 'returns users first and last name' do
-          expect(JSON.parse(subject.body)['first']).to eq('Zbyszko')
-          expect(JSON.parse(subject.body)['last']).to eq('Bogdanca')
+          expect(JSON.parse(subject.body)['standardized_name']).to eq(
+            'Bogdanca, Zbyszko')
         end
 
         it 'returns an empty vivo hash for non-matching netid' do

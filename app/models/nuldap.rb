@@ -11,6 +11,19 @@ class Nuldap
                                 .set_option(LDAP::LDAP_OPT_PROTOCOL_VERSION, 3)
   end
 
+  def self.standardized_name(entry)
+    name = "#{entry['sn'].try(:first)}, #{entry['givenName'].try(:first)}".strip
+
+    mn = entry['nuMiddleName'].try(:first).to_s.strip
+    return name if mn.blank?
+
+    if (mn.length > 1 && !name.match(/#{mn}/i)) ||
+        (mn.length == 1 && !name.match(/ #{mn} |#{mn}\z/i))
+      name +=  " #{mn}"
+    end
+    name.strip
+  end
+
   def ldap_server_up?
     # There's no good way to check Ruby/LDAP timeout, so we do this...
     timeout(5) do

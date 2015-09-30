@@ -63,7 +63,7 @@ class User < ActiveRecord::Base
     return if results.empty?
     attrs = {}
     attrs[:email] = results['mail'].first rescue nil
-    attrs[:display_name] = "#{results['sn'].try(:first)}, #{results['givenName'].try(:first)} #{results['nuMiddleName'].try(:first)}".strip
+    attrs[:display_name] = Nuldap.standardized_name(results)
     attrs[:address] = results['postalAddress'].first.gsub('$', "\n") rescue nil
     #attrs[:department] = results[:psdepartment].first rescue nil
     attrs[:title] = results['title'].first rescue nil
