@@ -1,0 +1,14 @@
+namespace :resque do
+  desc "Restart Resque Pool"
+  task :restart do
+    on roles(:all) do
+      execute :sudo, :systemctl, :restart, 'galter-resque'
+    end
+  end
+
+  task :status do
+    on roles(:all) do
+      execute :sudo, :systemctl, :status, 'galter-resque'
+    end
+  end
+end

@@ -30,10 +30,6 @@ set :bundle_without, %w{development test ci}.join(' ')
 set :bundle_flags, "--deployment --path=#{fetch(:deploy_to)}/shared/gems"
 set :migration_role, 'migrator'
 
-# Resque
-set :resque_environment_task, true
-set :workers, { '*' => 1 }
-
 set :passenger_environment_variables, {
   path: '/usr/share/gems/gems/passenger-4.0.56/bin:$PATH',
   passenger_tmpdir: '/var/www/apps/tmp'
@@ -157,11 +153,8 @@ end
 
 before :deploy, 'config:mail_forwarding'
 before :deploy, 'config:install_fits'
-before 'deploy:publishing', 'resque:stop'
-#before :deploy, 'config:db_backup_tasks'
 # REMOVEME https://github.com/capistrano/rails/issues/111
 after 'deploy:updating', 'config:fix_absent_manifest_bug'
+after 'deploy:publishing', 'resque:restart'
 after 'deploy:publishing', 'config:vhost'
-#after 'deploy:publishing', 'httpd:restart'
-before 'deploy:publishing', 'resque:start'
 after 'deploy:publishing', 'deploy:cleanup'
