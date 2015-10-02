@@ -2,28 +2,28 @@ class GalterCollectionPresenter < Sufia::CollectionPresenter
   def self.terms
     [
       :multi_page,
-      :resource_type,
       :title,
-      :total_items,
-      :size,
+      :resource_type,
+      :tag,
+      :rights,
       :creator,
       :contributor,
       :description,
       :abstract,
       :bibliographic_citation,
-      :tag,
-      :rights,
+      :related_url,
       :publisher,
       :date_created,
+      :identifier,
+      :language,
       :mesh,
       :lcsh,
       :subject_geographic,
       :subject_name,
-      :language,
-      :identifier,
       :based_near,
-      :related_url,
-      :digital_origin
+      :digital_origin,
+      :total_items,
+      :size
     ]
   end
 

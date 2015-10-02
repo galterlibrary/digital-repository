@@ -35,10 +35,17 @@ body {
   word-wrap: break-word;
 }
 
+/* Notifications Page */
+div[id="Data"] tbody tr td:nth-child(3) {
+  word-break: break-all;
+}
+
+/* My Files/Collections */
 tr[id^="document"] div[class="media"] div[class="media-body"] div[class="media-heading"] {
   word-break: break-all;
 }
 
+/* Dashboard */
 table[id="activity"] tbody tr td:first-child {
   word-break: break-all;
 }
@@ -55,6 +62,12 @@ table[id="incoming-transfers"] tbody tr td:first-child {
   word-break: break-all;
 }
 
+/* Porfile */
 tr[id^="trophyrow_"] td:nth-child(2) {
+  word-break: break-all;
+}
+
+/* File upload */
+table#file-table td.name {
   word-break: break-all;
 }
