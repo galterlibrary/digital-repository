@@ -386,14 +386,16 @@ Sufia.config do |config|
 
   # Enable displaying usage statistics in the UI
   # Defaults to FALSE
-  # Requires a Google Analytics id and OAuth2 keyfile.  See README for more info
-  config.analytics = false
+  if Rails.env.production?
+    # Requires a Google Analytics id and OAuth2 keyfile.  See README for more info
+    config.analytics = true
 
-  # Specify a Google Analytics tracking ID to gather usage statistics
-  # config.google_analytics_id = 'UA-99999999-1'
+    # Specify a Google Analytics tracking ID to gather usage statistics
+    config.google_analytics_id = 'UA-68381622-1'
 
-  # Specify a date you wish to start collecting Google Analytic statistics for.
-  # config.analytic_start_date = DateTime.new(2014,9,10)
+    # Specify a date you wish to start collecting Google Analytic statistics for.
+    config.analytic_start_date = DateTime.new(2015,10,1)
+  end
 
   # Where to store tempfiles, leave blank for the system temp directory (e.g. /tmp)
   # config.temp_file_base = '/home/developer1'

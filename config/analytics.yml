@@ -1,9 +1,6 @@
-#
-# To integrate your app with Google Analytics, uncomment the lines below and add your API key information.
-#
-# analytics:
-#   app_name: GOOGLE_OAUTH_APP_NAME
-#   app_version: GOOGLE_OAUTH_APP_VERSION
-#   privkey_path: GOOGLE_OAUTH_PRIVATE_KEY_PATH
-#   privkey_secret: GOOGLE_OAUTH_PRIVATE_KEY_SECRET
-#   client_email: GOOGLE_OAUTH_CLIENT_EMAIL
+analytics:
+  app_name: Digital Hub
+  app_version: 1.0
+  privkey_path: <% ENV['OAUTH_CLIENT_PATH'] %>
+  privkey_secret: <% ENV['OAUTH_SECRET'] %>
+  client_email: <% ENV['OAUTH_EMAIL'] %>
