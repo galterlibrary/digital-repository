@@ -1,6 +1,0 @@
-analytics:
-  app_name: Digital Hub
-  app_version: 1.0
-  privkey_path: <% ENV['OAUTH_CLIENT_PATH'] %>
-  privkey_secret: <% ENV['OAUTH_SECRET'] %>
-  client_email: <% ENV['OAUTH_EMAIL'] %>

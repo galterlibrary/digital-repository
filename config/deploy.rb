@@ -22,7 +22,7 @@ set :deploy_via, :remote_cache
 set :keep_releases, 5
 set :deploy_to, "/var/www/apps/#{fetch(:application)}"
 set :linked_dirs, %w{log tmp public/system public/assets solr/default solr/pids public/uploads}
-set :linked_files, ['config/local_env.rb']
+set :linked_files, ['config/local_env.rb', 'config/analytics.yml']
 
 # Rails stuff
 set :rvm_ruby_version, 'ruby-2.2.2'

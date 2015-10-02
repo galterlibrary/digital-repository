@@ -388,7 +388,7 @@ Sufia.config do |config|
   # Defaults to FALSE
   if Rails.env.production?
     # Requires a Google Analytics id and OAuth2 keyfile.  See README for more info
-    config.analytics = true
+    config.analytics = false
 
     # Specify a Google Analytics tracking ID to gather usage statistics
     config.google_analytics_id = 'UA-68381622-1'
