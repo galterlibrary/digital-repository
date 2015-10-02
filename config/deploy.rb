@@ -63,21 +63,7 @@ NameVirtualHost *:443
 
 <VirtualHost *:80>
   ServerName #{www_host_name}
-  DocumentRoot #{fetch(:deploy_to)}/current/public
-
-  #{"RailsEnv staging" if fetch(:rails_env) == 'staging'}
-  RailsBaseURI /
-  PassengerRuby /usr/local/rvm/wrappers/#{fetch(:rvm_ruby_version)}/ruby
-  PassengerFriendlyErrorPages off
-  PassengerDebugLogFile /var/log/httpd/#{fetch(:application)}-passenger.log
-  PassengerMinInstances 3
-
-  <Directory #{fetch(:deploy_to)}/current/public >
-    Options -MultiViews
-    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript
-    Order allow,deny
-    Allow from all
-  </Directory>
+  Redirect permanent / https://digitalhub.northwestern.edu/
 </VirtualHost>
 
 <VirtualHost *:443>
@@ -113,7 +99,7 @@ ExpiresByType application/javascript "access plus 1 year"
 AddType image/vnd.microsoft.icon .ico
 ExpiresByType image/vnd.microsoft.icon "access plus 1 month"
 
-PassengerPreStart http://#{www_host_name}/
+PassengerPreStart https://#{www_host_name}/
       })
       tmp_file = "/tmp/#{fetch(:application)}.conf"
       httpd_file = "/etc/httpd/conf.d/aaa_#{fetch(:application)}.conf"
