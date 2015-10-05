@@ -3,8 +3,8 @@ class GalterCollectionPresenter < Sufia::CollectionPresenter
     [
       :multi_page,
       :title,
-      :resource_type,
       :tag,
+      :resource_type,
       :rights,
       :creator,
       :contributor,
