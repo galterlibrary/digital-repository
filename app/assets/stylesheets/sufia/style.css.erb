@@ -6,6 +6,10 @@ a:hover {
   color: #0082BF;
 }
 
+#wrapper {
+  background: #d4d5d6 none repeat scroll 0 0 !important;
+}
+
 #nmTop {
   border-bottom: 1px solid #e6e6e6;
 }
@@ -21,14 +25,14 @@ a:hover {
 
 #feinbergTopLink, #feinbergBottomLink {
   margin-top: 10px;
-  color: #54585a;
+  color: #FFF;
   font-size: 16px;
   font-family: "Helvetica Neue", Helvetica, Arial;
   text-decoration: none;
 }
 
 #digitalHubTopLink {
-  color: #514689;
+  color: #FFF;
   font-size: 40px;
   font-family: "Calibri Light", Calibri, Arial;
   text-decoration: none;
@@ -55,8 +59,12 @@ a#digitalHubTopLink:hover, a#feinbergTopLink:hover, a#NMLogo:hover {
   margin-left: 5px;
 }
 
+#nmBottom {
+  background-color: #514689;
+}
+
 #home_header {
-  background-image: url(<%= asset_data_uri("spec_col_crop_top.jpg") %>);
+  background-image: url(<%= asset_data_uri('spec_col_crop_top.jpg') %>);
   border-top: 8px solid #FFF;
   border-bottom: 8px solid #FFF;
 }

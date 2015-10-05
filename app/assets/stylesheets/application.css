@@ -35,6 +35,11 @@ body {
   word-wrap: break-word;
 }
 
+/* Catalog */
+ol.catalog table.table tbody tr:first-child td {
+  word-break: break-all;
+}
+
 /* Notifications Page */
 div[id="Data"] tbody tr td:nth-child(3) {
   word-break: break-all;
