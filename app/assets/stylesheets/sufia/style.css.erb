@@ -10,6 +10,11 @@ a:hover {
   background: #d4d5d6 none repeat scroll 0 0 !important;
 }
 
+#masthead {
+  min-height: 6em;
+  background: white;
+}
+
 #nmTop {
   border-bottom: 1px solid #e6e6e6;
 }
@@ -65,13 +70,81 @@ a#digitalHubTopLink:hover, a#feinbergTopLink:hover, a#NMLogo:hover {
 
 #home_header {
   background-image: url(<%= asset_data_uri('spec_col_crop_top.jpg') %>);
-  border-top: 8px solid #FFF;
-  border-bottom: 8px solid #FFF;
+  border-top: 8px solid #d4d5d6;
+  border-bottom: 0px;
 }
 
-#masthead {
-  min-height: 6em;
-  background: white;
+#home_content {
+  padding-bottom: 0px;
+  padding-top: 0px;
+}
+
+#homeTabs {
+  padding-top: 7px;
+  margin-left: -15px;
+  margin-right: -15px;
+  padding-left: 7px;
+}
+
+#featured_container > h2 {
+  display: none;
+}
+
+#home_content > div {
+  border-top: 8px solid #d4d5d6;
+}
+
+#home_content > div:nth-child(2) {
+  padding-left: 8px;
+  padding-right: 8px;
+  background-color: rgb(212, 213, 214);
+}
+
+#home_content > div:nth-child(2) > div {
+  background-color: #FFF;
+  padding: 7px;
+}
+
+#home_content > div:nth-child(2) h2 {
+  margin-top: 0px;
+}
+
+#home_content > div:nth-child(2) > div:nth-child(1) h2 {
+  padding-bottom: 7px;
+  margin-left: -7px;
+  margin-right: -7px;
+  padding-left: 7px;
+  padding-right: 7px;
+  border-bottom: 1px solid #d4d5d6;
+}
+
+#home_content > div:nth-child(2) > div:nth-child(2) {
+  border-top: 8px solid #d4d5d6;
+  padding: 7px;
+}
+
+#home_content > div:nth-child(2) > div:nth-child(2) > div {
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+#home_content > div:nth-child(2) > div:nth-child(2) div > h2 {
+  margin-bottom: 0px;
+  padding-bottom: 10px;
+}
+
+a.tag-toggle-list {
+  margin-top: 0px;
+  float: right;
+  margin-bottom: 0px;
+}
+
+div#tag-cloud {
+  border-top: 1px solid #d4d5d6;
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-top: 0px;
+  padding-top: 7px;
 }
 
 ul.tagcloud a {
@@ -95,9 +168,13 @@ ul.tagcloud a {
   border-bottom: none;
   background-color: #E6E6E6;
 }
+
 #masthead_controls .navbar {
   background-color: #E6E6E6;
   margin-bottom: 0px;
+  font-family: Calibri,"Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-weight: 400;
+  font-size: 20px;
 }
 #masthead_controls .navbar li:first-child {
   border-left: 2px solid #FFF;
@@ -117,10 +194,15 @@ ul.tagcloud a {
 
 #masthead_controls .navbar-default .navbar-nav > .active > a, #masthead_controls .navbar-default .navbar-nav > .active > a:hover, #masthead_controls .navbar-default .navbar-nav > .active > a:focus {
   background-color: #FFF;
-  color: #0082BF;
+  color: #54585A;
   border-top: 3px solid #B1ACCE;
   border-bottom: 2px solid white;
   margin-top: -4px;
+  padding-bottom: 17px;
+}
+
+#masthead_controls .navbar-default .navbar-nav > :not(.active) > a {
+  padding-bottom: 18px;
 }
 
 .dashboard .panel-default > .dashboard-panel {
