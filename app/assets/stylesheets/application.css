@@ -76,3 +76,8 @@ tr[id^="trophyrow_"] td:nth-child(2) {
 table#file-table td.name {
   word-break: break-all;
 }
+
+#content-header > div h1 {
+  font-weight: 700;
+  color: #54585A;
+}
