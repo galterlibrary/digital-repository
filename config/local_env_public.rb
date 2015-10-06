@@ -11,7 +11,7 @@ ENV['OPENAM_COOKIE_NAME'] = 'openAMssoToken'
 
 # Email
 ENV['SMTP_SERVER'] = 'ns.northwestern.edu'
-ENV['SERVER_ADMIN_EMAIL'] = 'galter-is@listserv.it.northwestern.edu'
+ENV['SERVER_ADMIN_EMAIL'] = 'digitalhub@northwestern.edu'
 
 ENV['VIVO_PROFILES'] = 'http://vfsmvivo.fsm.northwestern.edu/vivo/individual?uri=http%3A%2F%2Fvivo.northwestern.edu%2Findividual%2F'
 

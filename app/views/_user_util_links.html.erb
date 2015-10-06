@@ -12,7 +12,7 @@
         <% if can? :create, GenericFile %>
           <li><%= link_to raw('<span class="glyphicon glyphicon-upload"></span> upload'), sufia.new_generic_file_path, id: 'upload_nav_link' %></li>
         <% end %>
-        <li><%= link_to raw('<span class="glyphicon glyphicon-dashboard"></span> dashboard'), sufia.dashboard_index_path, id: 'dashboard_nav_link' %></li>
+        <li><%= link_to raw('<span class="glyphicon glyphicon-dashboard"></span> my dashboard'), sufia.dashboard_index_path, id: 'dashboard_nav_link' %></li>
         <li><%= link_to raw('<span class="glyphicon glyphicon-user"></span> my profile'), sufia.profile_path(current_user), id: 'profile_nav_link' %></li>
         <%= render partial: 'users/user_util_links_extra' %>
         <li class="divider"></li>
@@ -20,7 +20,7 @@
       </ul>
     </div><!-- /.btn-group -->
 <% else %>
-    <div class="btn-group login_button pull-right">
+    <div class="btn-group login_button">
     <%= link_to raw('<span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> Login'), new_user_session_path, class: "btn btn-default btn-group", title: "Login" %>
     </div>
 <% end %>
