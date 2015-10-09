@@ -1,7 +1,7 @@
 <div id="footer" class="container-fluid">
   <div class="row">
 
-    <div class="col-sm-2">
+    <div class="col-sm-4">
       <dl>
         <dt><a href="http://www.galter.northwestern.edu">Galter Health Sciences Library</a></dt>
         <dd>Feinberg School of Medicine</dd>
@@ -12,10 +12,10 @@
       </dl>
     </div>
 
-    <div class="col-sm-3">
+    <div class="col-sm-1">
     </div>
 
-    <div class="col-sm-4">
+    <div class="col-sm-3">
       <br />
       <%= link_to 'About us', 'http://www.galter.northwestern.edu/about-us' %>
       <br />
@@ -28,11 +28,43 @@
 
     <div class="col-sm-1">
     </div>
-    <div class="col-sm-2">
+
+    <div class="col-sm-3">
       <a id='feinbergBottomLink' href='http://www.feinberg.northwestern.edu/index.html'>
         Northwestern University Feinberg School of Medicine
       </a>
     </div>
   </div><!-- /.row -->
 </div><!-- /footer -->
+
+<div id="footer2" class="container-fluid">
+  <div class="row">
+    <div class="col-md-3 col-sm-4" id='nuFootImage'>
+      <%= link_to image_tag('logo-nu-footer.png', width: 100),
+        'http://www.northwestern.edu/', target: '_blank' %>
+    </div>
+
+    <div class="col-md-9 col-sm-8">
+      <a target='_blank' href="http://www.northwestern.edu/contact.html">
+        Contact Northwestern University
+      </a>
+      &nbsp;|&nbsp;
+      <a target='_blank' href="http://www.northwestern.edu/hr/careers/">
+        Careers
+      </a>
+      &nbsp;|&nbsp;
+      <a target='_blank' href="http://www.northwestern.edu/disclaimer.html">
+        Disclaimer
+      </a>
+      &nbsp;|&nbsp;
+      <a target='_blank' href="http://www.northwestern.edu/emergency/index.html">
+        Campus Emergency Information
+      </a>
+      &nbsp;|&nbsp;
+      <a target='_blank' href="http://policies.northwestern.edu/">
+        University Policies
+      </a>
+    </div>
+  </div>
+</div>
 
