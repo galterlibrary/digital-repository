@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150817173442) do
+ActiveRecord::Schema.define(version: 20151012152920) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -334,6 +334,7 @@ ActiveRecord::Schema.define(version: 20150817173442) do
     t.string   "arkivo_subscription"
     t.binary   "zotero_token"
     t.string   "zotero_userid"
+    t.string   "formal_name"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

@@ -63,9 +63,9 @@ class User < ActiveRecord::Base
     return if results.empty?
     attrs = {}
     attrs[:email] = results['mail'].first rescue nil
-    attrs[:display_name] = Nuldap.standardized_name(results)
+    attrs[:display_name] = results['displayName'].first rescue nil
+    attrs[:formal_name] = Nuldap.standardized_name(results)
     attrs[:address] = results['postalAddress'].first.gsub('$', "\n") rescue nil
-    #attrs[:department] = results[:psdepartment].first rescue nil
     attrs[:title] = results['title'].first rescue nil
     attrs[:chat_id] = results['pschatname'].first rescue nil
     update_attributes!(attrs)
@@ -109,6 +109,13 @@ class User < ActiveRecord::Base
       end
       add_role(formatted_name)
     end
+  end
+
+  def name
+    if caller.grep(/actor.rb/).present?
+      return formal_name
+    end
+    super
   end
 
   class << self

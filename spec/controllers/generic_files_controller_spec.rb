@@ -57,23 +57,27 @@ describe GenericFilesController do
     end
   end
 
-  describe "#create" do
+  describe '#create' do
+    let(:user) { create(:user, display_name: 'Display Name',
+                        :formal_name => 'Name, Formal') }
+    let(:mock) { GenericFile.new(id: 'test123') }
+    let(:batch) { Batch.create }
+    let(:batch_id) { batch.id }
+    let(:file) { fixture_file_upload('/system.png', 'image/png') }
+
     before do
-      @mock_upload_directory = 'spec/mock_upload_directory'
-      Dir.mkdir @mock_upload_directory unless File.exists? @mock_upload_directory
-      FileUtils.copy('spec/fixtures/system.png', @mock_upload_directory)
+      allow(GenericFile).to receive(:new).and_return(mock)
+      expect_any_instance_of(Sufia::GenericFile::Actor).to receive(
+        :create_content).with(
+          file, 'system.png', 'content', 'image/png').and_return(true)
+      sign_in user
     end
 
-    after do
-      expect_any_instance_of(FileContentDatastream).to receive(:live?).and_return(true)
-    end
-
-    it "should ingest files from the filesystem" do
-      pending "Figure out how to tests file-update"
-      expect(
-        post :create, local_file: ["system.png"], batch_id: "xw42n7934"
-      ).to change(GenericFile, :count).by(1)
-
+    it 'sets creator to formal_name of the depositor' do
+      post :create, files: [file], 'Filename' => 'The system',
+           :batch_id => batch_id, permission: { group: { public: 'read' } },
+           :terms_of_service => '1'
+      expect(assigns(:generic_file).creator).to eq(['Name, Formal'])
     end
   end
 

@@ -261,4 +261,21 @@ RSpec.describe User do
       expect(user.groups).to include('no-desc')
     end
   end
+
+  describe '#name' do
+    let(:user) { build(
+      :user, display_name: 'Display Name', formal_name: 'Name, Formal') }
+
+    subject { user.name }
+
+    it { is_expected.to eq('Display Name') }
+
+    context 'called from file with `actor.rb` in the name' do
+      before do
+        expect(user).to receive(:caller).and_return(['/blah/actor.rb:321'])
+      end
+
+      it { is_expected.to eq('Name, Formal') }
+    end
+  end
 end
