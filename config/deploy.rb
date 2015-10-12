@@ -3,7 +3,7 @@ require 'byebug'
 set :application, 'galter_digital_repo'
 set :use_sudo, false
 set :format, :pretty
-set :log_level, :debug
+set :log_level, :info # :debug, :error or :info
 set :pty, true
 
 # SVC stuff
@@ -29,6 +29,7 @@ set :rvm_ruby_version, 'ruby-2.2.2'
 set :bundle_without, %w{development test ci}.join(' ')
 set :bundle_flags, "--deployment --path=#{fetch(:deploy_to)}/shared/gems"
 set :migration_role, 'migrator'
+set :assets_roles, [:web, :app]
 
 set :passenger_environment_variables, {
   path: '/usr/share/gems/gems/passenger-4.0.56/bin:$PATH',
@@ -117,14 +118,6 @@ PassengerPreStart https://#{www_host_name}/
     end
   end
 
-  # REMOVEME https://github.com/capistrano/rails/issues/111
-  task :fix_absent_manifest_bug do
-    on roles(:web) do
-      execute :touch, fetch(:release_path).join(
-        'public/assets', 'manifest-fix.temp')
-    end
-  end
-
   task :install_fits do
     on roles(:app) do
       if !test("[ -f #{fetch(:fits_sh)} ]")
@@ -139,8 +132,7 @@ end
 
 before :deploy, 'config:mail_forwarding'
 before :deploy, 'config:install_fits'
-# REMOVEME https://github.com/capistrano/rails/issues/111
-after 'deploy:updating', 'config:fix_absent_manifest_bug'
+after 'deploy:compile_assets', 'deploy:cleanup_assets'
 after 'deploy:publishing', 'resque:restart'
 after 'deploy:publishing', 'config:vhost'
 after 'deploy:publishing', 'deploy:cleanup'
