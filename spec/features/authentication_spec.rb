@@ -3,7 +3,9 @@ require 'rails_helper'
 feature "Authentication", :type => :feature do
   before do
     visit '/'
-    click_link 'Login'
+    within '#user_utility_lg' do
+      click_link 'Login'
+    end
   end
 
   describe 'user is not in LDAP' do
