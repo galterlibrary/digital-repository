@@ -12,6 +12,7 @@ unless Rails.env.test? || Rails.env.ci?
   vars = ['LDAP_PASS',
           'LDAP_USER',
           'NEW_RELIC_LICENSE',
+          'GOOGLE_ANALYTICS_ID',
           'FEDORA_USER',
           'FEDORA_PASS',
           'DB_NAME',
