@@ -370,6 +370,7 @@ GEM
       net-ssh (>= 2.6.5)
     net-ssh (3.0.1)
     netrc (0.10.2)
+    newrelic_rpm (3.9.4.245)
     noid (0.8.0)
     nokogiri (1.6.6.2)
       mini_portile (~> 0.6.0)
@@ -730,6 +731,7 @@ DEPENDENCIES
   jettywrapper
   jquery-rails
   kaminari!
+  newrelic_rpm
   osullivan
   pg
   poltergeist
