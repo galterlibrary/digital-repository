@@ -1,9 +1,7 @@
 require 'rails_helper'
 describe 'generic file', :type => :feature do
   before do
-    GenericFile.delete_all
     @user = FactoryGirl.create(:user)
-    #@routes = Sufia::Engine.routes
     @file = GenericFile.new(
       abstract: ['testa'], bibliographic_citation: ['cit'],
       digital_origin: ['digo'], mesh: ['mesh'], lcsh: ['lcsh'],
@@ -12,10 +10,6 @@ describe 'generic file', :type => :feature do
     )
     @file.apply_depositor_metadata(@user.user_key)
     @file.save!
-  end
-
-  after do
-    ::GenericFile.delete_all
   end
 
   describe 'show' do
@@ -40,6 +34,7 @@ describe 'generic file', :type => :feature do
       expect(page).not_to have_text('Related URL')
       expect(page).to have_text('Digital')
       expect(page).not_to have_text('Page number')
+      expect(page).not_to have_text('User Activity')
     end
 
     it 'hides links to Mendeley and Zotero' do
@@ -85,6 +80,35 @@ describe 'generic file', :type => :feature do
         expect(page).to have_text('Mime type')
         expect(page).to have_text('File size')
         expect(page).to have_text('48.5 kB')
+      end
+    end
+
+    describe 'activity log' do
+      it 'hides log from the unprivileged users' do
+        login_as(create(:user), :scope => :user)
+        visit "/files/#{@file.id}"
+        expect(page).not_to have_text('User Activity')
+      end
+
+      it 'hides details from the anonymous users' do
+        visit "/files/#{@file.id}"
+        expect(page).not_to have_text('User Activity')
+      end
+
+      it 'shows details to the owner' do
+        login_as(@user, :scope => :user)
+        visit "/files/#{@file.id}"
+        expect(page).to have_text('User Activity')
+      end
+
+      it 'shows details to the privileged users' do
+        user = create(:user)
+        allow_any_instance_of(GenericFile).to receive(
+          :file_format).and_return('png')
+        user.add_role(Role.create(name: 'editor').name)
+        login_as(user, :scope => :user)
+        visit "/files/#{@file.id}"
+        expect(page).to have_text('User Activity')
       end
     end
   end
