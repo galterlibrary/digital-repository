@@ -1,13 +1,11 @@
 <div id="show_actions">
 <h2 class="non lower">Actions</h2>
-    <p>
+    <p id='main_gf_actions'>
       <%= render_download_link %>
       <% if Sufia.config.analytics %>
-        &nbsp;|&nbsp;
         <%= link_to "Analytics", sufia.stats_generic_file_path(@generic_file), id: 'stats' %>
       <% end %>
       <% if can? :edit, @generic_file %>
-          &nbsp;|&nbsp;
           <% if @generic_file.processing? %>
             <%= t('sufia.upload.processing') %>
           <% else %>
@@ -16,10 +14,8 @@
       <% end %>
       <% if can?(:create, FeaturedWork) && @generic_file.public? %>
         <% if FeaturedWork.can_create_another? && !@generic_file.featured?%>
-          &nbsp;|&nbsp;
           <%= link_to "Feature", sufia.featured_work_path(@generic_file, format: :json), data: {behavior: 'feature'} %>
         <% elsif @generic_file.featured? %>
-          &nbsp;|&nbsp;
           <%= link_to "Unfeature", sufia.featured_work_path(@generic_file, format: :json), data: {behavior: 'unfeature-page'} %>
         <% end %>
       <% end %>
