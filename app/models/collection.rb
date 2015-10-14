@@ -67,7 +67,9 @@ class Collection < Sufia::Collection
   end
 
   def pagable_members
-    members.reject {|o| o.page_number.blank? }.sort_by {|o| o.page_number.to_i }
+    members.reject {|o|
+      !o.respond_to?(:page_number) || o.page_number.blank?
+    }.sort_by {|o| o.page_number.to_i }
   end
 
   def processing?

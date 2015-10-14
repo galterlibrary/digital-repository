@@ -6,6 +6,30 @@ RSpec.describe Collection do
       Collection.new(id: 'col1', title: 'something', tag: ['tag'])
     }
 
+    describe 'with a Collection member' do
+      before do
+        collection.multi_page = true
+        allow(collection).to receive(:members).and_return([
+          GenericFile.new(id: 'gf3', page_number: '11'),
+          GenericFile.new(id: 'gf1', page_number: '9'),
+          GenericFile.new(id: 'gf2', page_number: '10'),
+          GenericFile.new(id: 'gf4'),
+          Collection.new(id: 'col1')
+        ])
+      end
+
+      subject { collection.pagable_members }
+
+      it 'excludes the collection from pagable members' do
+        expect(subject.map(&:id)).to include('gf1')
+        expect(subject.map(&:id)).to include('gf2')
+        expect(subject.map(&:id)).to include('gf3')
+        expect(subject.map(&:id)).not_to include('gf4')
+        expect(subject.map(&:id)).not_to include('col1')
+        expect(subject.map(&:page_number)).to eq(['9', '10', '11'])
+      end
+    end
+
     describe 'is pagable' do
       before do
         collection.multi_page = true
