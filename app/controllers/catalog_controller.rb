@@ -34,6 +34,19 @@ class CatalogController < ApplicationController
 
   skip_before_filter :default_html_head
 
+  def index
+    super
+    all_collections_params = search_params_logic - [
+      :only_generic_files_and_collections,
+      :add_facet_fq_to_solr,
+      :add_facetting_to_solr,
+      :add_paging_to_solr,
+      :add_group_config_to_solr,
+      :add_facet_paging_to_solr
+    ] + [:show_only_collections]
+    (r, @user_collections) = search_results({}, all_collections_params)
+  end
+
   def self.uploaded_field
     solr_name('date_uploaded', :stored_sortable, type: :date)
   end

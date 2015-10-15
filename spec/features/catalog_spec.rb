@@ -29,6 +29,18 @@ feature 'Catalog', :type => :feature do
       })
     }
 
+    let!(:col_user) {
+      make_collection(user, {
+        visibility: 'restricted', title: 'UserCol', id: 'col_user',
+      })
+    }
+
+    let!(:col_stranger) {
+      make_collection(user, {
+        visibility: 'restricted', title: 'StrangeCol', id: 'col_stranger',
+      })
+    }
+
     it 'does not display blank fields' do
       visit '/catalog'
       expect(page).not_to have_text('Description')
@@ -58,6 +70,8 @@ feature 'Catalog', :type => :feature do
       it { is_expected.not_to have_text('BCD') }
       it { is_expected.not_to have_text('DEF') }
       it { is_expected.not_to have_text('ZZZ') }
+      it { is_expected.not_to have_button('Add to Collection') }
+      it { is_expected.not_to have_selector('#catalogCollections') }
     end
 
     context 'authenticated user' do
@@ -70,6 +84,8 @@ feature 'Catalog', :type => :feature do
       it { is_expected.to have_text('BCD') }
       it { is_expected.to have_text('DEF') }
       it { is_expected.not_to have_text('ZZZ') }
+      it { is_expected.not_to have_button('Add to Collection') }
+      it { is_expected.not_to have_selector('#catalogCollections') }
 
       context 'with admin role' do
         before do
@@ -82,6 +98,10 @@ feature 'Catalog', :type => :feature do
         it { is_expected.to have_text('BCD') }
         it { is_expected.to have_text('DEF') }
         it { is_expected.to have_text('ZZZ') }
+        it { is_expected.to have_button('Add to Collection') }
+        it { is_expected.to have_selector('#catalogCollections') }
+        it { is_expected.to have_selector('input#id_col_user') }
+        it { is_expected.to have_selector('input#id_col_stranger') }
       end
 
       context 'with editor role' do

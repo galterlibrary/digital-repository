@@ -77,6 +77,10 @@ table#file-table td.name {
   word-break: break-all;
 }
 
+table h4.media-heading {
+  word-break: break-all;
+}
+
 #content-header > div h1 {
   font-weight: 700;
   color: #54585A;

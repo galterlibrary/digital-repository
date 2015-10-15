@@ -1,0 +1,11 @@
+<%# container for all documents in index view -%>
+<div id="search-results">
+  <ol class="catalog" start="<%= document_counter_with_offset(0) %>">
+    <%= render documents, as: :document %>
+  </ol>
+</div>
+<% if can?(:edit, :any_collection) %>
+  <div id='catalogCollections'>
+    <%= render '/collections/form_for_select_collection', user_collections: @user_collections %>
+  </div>
+<% end %>

@@ -1,23 +1,23 @@
-<table class="table">
+<table class='table'>
   <tr>
-    <th><span class="attribute-label h4">Title:</span></th>
+    <th><span class='attribute-label h4'>Title:</span></th>
     <td><%= truncate(work.title, length: 45) %></td>
   </tr>
 
   <tr>
-    <th><span class="attribute-label h4">Depositor:</span></div>
-    <td><%= link_to_profile work.depositor("no depositor value") %></td>
+    <th><span class='attribute-label h4'>Depositor:</span></div>
+    <td><%= link_to_profile work.depositor('no depositor value') %></td>
   </tr>
 
   <tr>
-    <th><span class="attribute-label h4">Creator:</span></th>
+    <th><span class='attribute-label h4'>Creator:</span></th>
     <td><%= work.creator %></td>
   </tr>
 
   <% if work.description.present? %>
 
     <tr>
-      <th><span class="attribute-label h4">Description:</span></th>
+      <th><span class='attribute-label h4'>Description:</span></th>
       <td><%= iconify_auto_link(work.description) %></th>
     </tr>
 
@@ -26,14 +26,18 @@
   <% if work.tags.present? %>
 
     <tr>
-      <th><span class="attribute-label h4">Keywords:</span></th>
+      <th><span class='attribute-label h4'>Keywords:</span></th>
       <td><%= work.tags.join(', ') %></td>
     </tr>
 
   <% end %>
 
   <tr>
-    <th><span class="attribute-label h4">Date Uploaded:</span></th>
+    <th><span class='attribute-label h4'>Date Uploaded:</span></th>
     <td><%= work.date_uploaded %></td>
   </tr>
 </table>
+<% if can?(:edit, :any_collection) %>
+  <%= button_tag 'Add to Collection', class: 'btn btn-primary cat-cal-modal',
+    data: { toggle: 'modal', target: '#collection-list-container', id: work.id } %>
+<% end %>

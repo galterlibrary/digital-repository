@@ -65,5 +65,13 @@ module Galtersufia
       adjust_permissions
       super
     end
+
+    def after_update_error
+      respond_to do |format|
+        format.html { redirect_to collections.edit_collection_path(@collection) }
+        format.json { render json: @collection.errors, status: :unprocessable_entity }
+      end
+    end
+
   end
 end
