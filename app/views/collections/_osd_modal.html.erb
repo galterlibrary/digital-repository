@@ -7,6 +7,7 @@
       </div>
       <div class="modal-body">
         <div id="osdViewer" class="openseadragon" style='width:100%;height:600px;'>
+          <%= openseadragon_picture_tag(@collection.osd_tile_sources) %>
         </div>
       </div>
       <div class="modal-footer">
@@ -15,17 +16,3 @@
     </div>
   </div>
 </div>
-
-<script>
-$(function() {
-  OpenSeadragon({
-      id:            "osdViewer",
-      prefixUrl:     "/assets/openseadragon/",
-      tileSources:   [
-        <% @collection.osd_tile_sources.each do |tile| %>
-          <%= "\"#{tile}\",".html_safe %>
-        <% end %>
-      ]
-  });
-});
-</script>

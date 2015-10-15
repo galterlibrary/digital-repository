@@ -82,3 +82,5 @@ gem 'capistrano-rvm'
 gem 'capistrano-passenger'
 
 gem 'newrelic_rpm'
+
+gem 'openseadragon'
