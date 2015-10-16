@@ -87,7 +87,8 @@ describe GenericFilesController do
         abstract: ['testa'], bibliographic_citation: ['cit'],
         digital_origin: ['digo'], mesh: ['mesh'], lcsh: ['lcsh'],
         subject_geographic: ['geo'], subject_name: ['subjn'],
-        page_number: 11
+        page_number: 11, creator: ['ABC'], tag: ['tag'],
+        resource_type: ['restype'], rights: ['rights'], title: ['title']
       )
       @file.apply_depositor_metadata(@user.user_key)
       @file.save!
@@ -148,6 +149,54 @@ describe GenericFilesController do
       expect(response).to redirect_to(
         @routes.url_helpers.generic_file_path(@file))
       expect(assigns(:generic_file).page_number).to eq('22')
+    end
+
+    context 'visibility' do
+      it 'allows for visibility settings changes to more restrictive' do
+        @file.visibility = 'restricted'
+        @file.save!
+        patch(
+          :update,
+          id: @file,
+          visibility: 'restricted'
+        )
+        expect(@file.reload.visibility).to eq('restricted')
+      end
+
+      it 'allows for visibility settings changes to less restrictive' do
+        expect(@file.visibility).to eq('restricted')
+        patch(
+          :update,
+          id: @file,
+          visibility: 'authenticated'
+        )
+        expect(@file.reload.visibility).to eq('authenticated')
+      end
+
+      it 'disallows for visibility settings changes to an unexpected value' do
+        expect {
+          patch(
+            :update,
+            id: @file,
+            visibility: 'bogus'
+          )
+        }.to raise_exception { ArgumentError }
+      end
+
+      it 'disallows for visibility settings changes for file with blank required fields' do
+        bad_file = make_generic_file(
+          @user, id: 'badfile', title: ["I'm bad"], visibility: 'restricted')
+        expect(
+          patch(
+            :update,
+            id: bad_file,
+            visibility: 'open'
+          )
+        ).to redirect_to('/files/badfile/edit')
+        expect(flash['alert']).to include(
+          'Please fill out the required fields before changing the visibility')
+        expect(bad_file.reload.visibility).to eq('restricted')
+      end
     end
   end
 end
