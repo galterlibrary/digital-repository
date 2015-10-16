@@ -163,6 +163,35 @@ feature "Collections", :type => :feature do
     end
   end
 
+  describe 'updating' do
+    context 'logged in owner' do
+      before do
+        login_as(user, :scope => :user)
+        visit "/collections/#{chi_box.id}/edit"
+      end
+
+      describe 'adding members', js: true do
+        before do
+          red_box; ring
+          chi_box.update_attributes(multi_page: true)
+          visit '/dashboard/files'
+        end
+
+        it 'adds the ring in the Chinese Box and keeps the multi page settings' do
+          check "batch_document_#{ring.id}"
+          click_button 'Add to Collection'
+          choose "id_#{chi_box.id}"
+          click_button 'Update Collection'
+          expect(page).to have_text('Collection was successfully updated')
+          expect(page).to have_link('Ring of dexterity +9999')
+          expect(page).to have_text('Number of pages')
+          expect(page).to have_text('Collection was successfully updated')
+          expect(chi_box.reload.multi_page).to be_truthy
+        end
+      end
+    end
+  end
+
   describe 'editing' do
     context 'logged in owner' do
       before do

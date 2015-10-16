@@ -9,7 +9,11 @@ module Galtersufia
 
     def collection_params
       clean_params = form_class.model_attributes(params[:collection])
-      clean_params[:multi_page] = ActiveRecord::ConnectionAdapters::Column::TRUE_VALUES.include?(clean_params[:multi_page])
+      if clean_params.has_key?(:multi_page)
+        clean_params[:multi_page] =
+          ActiveRecord::ConnectionAdapters::Column::TRUE_VALUES.include?(
+            clean_params[:multi_page])
+      end
       clean_params
     end
 
