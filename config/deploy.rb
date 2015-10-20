@@ -88,6 +88,8 @@ NameVirtualHost *:443
     AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript
     Order allow,deny
     Allow from all
+    # Block Northwestern Google bot, it was hitting us 500/minutes for days
+    Deny from 129.105.16.40
   </Directory>
 </VirtualHost>
 
