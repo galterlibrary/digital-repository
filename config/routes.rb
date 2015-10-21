@@ -1,6 +1,12 @@
 Rails.application.routes.draw do
   root to: 'homepage#index'
 
+  delete '/content_blocks/:id',
+    as: 'destroy_content_block',
+    to: 'galter_content_blocks#destroy'
+  patch '/content_blocks/:id/refeature_researcher',
+    as: 'refeature_researcher',
+    to: 'galter_content_blocks#refeature_researcher'
   get 'help' => 'pages#show', id: 'help_page'
   get 'terms' => 'pages#show', id: 'terms_page'
   get 'agreement' => 'pages#show', id: 'agreement_page'

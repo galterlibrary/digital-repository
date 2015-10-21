@@ -45,4 +45,76 @@ feature "HomePage", :type => :feature do
       expect(current_path).to eq('/news')
     end
   end
+
+  describe 'Featured Researcher' do
+    let(:admin_user) { FactoryGirl.create(:admin_user) }
+    let!(:researcher1) {
+      FactoryGirl.create(
+        :content_block, name: 'featured_researcher', value: 'Tesla')
+    }
+    let!(:researcher2) {
+      FactoryGirl.create(
+        :content_block, name: 'featured_researcher',
+        :value => 'Edison', created_at: 7.days.ago)
+    }
+
+    before do
+      visit '/'
+    end
+
+    it { is_expected.to have_text('Tesla') }
+    it { is_expected.not_to have_text('Edison') }
+
+    context 'admin functions' do
+      describe 'anonymous user' do
+        before { click_link 'View other featured researchers' }
+
+        it { is_expected.not_to have_link('Delete') }
+        it { is_expected.not_to have_link('Re-feature') }
+      end
+
+      describe 'logged in user' do
+        before do
+          login_as(user)
+          click_link 'View other featured researchers'
+        end
+
+        it { is_expected.to have_link(user.name) }
+        it { is_expected.not_to have_link('Delete') }
+        it { is_expected.not_to have_link('Re-feature') }
+      end
+
+      describe 'logged in admin user' do
+        before do
+          login_as(admin_user)
+          click_link 'View other featured researchers'
+        end
+
+        it { is_expected.to have_link('Delete') }
+        it { is_expected.to have_link('Re-feature') }
+
+        it 'can re-feature researcher' do
+          within("#featuredResearcher#{researcher2.id}") do
+            expect {
+              click_link 'Re-feature'
+            }.not_to change { ContentBlock.count }
+          end
+          expect(current_path).to eq('/')
+          expect(page).to have_text('Edison')
+          expect(page).not_to have_text('Tesla')
+        end
+
+        it 'can delete a researcher' do
+          within("#featuredResearcher#{researcher1.id}") do
+            expect {
+              click_link 'Delete'
+            }.to change { ContentBlock.count }.by(-1)
+          end
+          expect(current_path).to eq('/')
+          expect(page).to have_text('Edison')
+          expect(page).not_to have_text('Tesla')
+        end
+      end
+    end
+  end
 end

@@ -1,0 +1,19 @@
+<div class='featured-researcher' id='featuredResearcher<%=featured_researcher_block.id%>'>
+  <%= editable_content_block featured_researcher_block %>
+  <% if can?(:edit, featured_researcher_block) %>
+    <div class='row'>
+      <div class='col-md-12'>
+        <%= link_to 'Delete',
+          destroy_content_block_path(featured_researcher_block),
+          method: 'delete',
+          data: { confirm: 'Are you sure?'},
+          class: 'btn btn-danger' %>
+        <%= link_to 'Re-feature',
+          refeature_researcher_path(featured_researcher_block),
+          method: 'patch',
+          data: { confirm: 'Are you sure?'},
+          class: 'btn btn-danger' %>
+      </div>
+    </div>
+  <% end %>
+</div>
