@@ -531,6 +531,10 @@ GEM
       rails (> 3.2.0)
     rsolr (1.0.12)
       builder (>= 2.1.2)
+    rspec-activemodel-mocks (1.0.2)
+      activemodel (>= 3.0)
+      activesupport (>= 3.0)
+      rspec-mocks (>= 2.99, < 4.0)
     rspec-core (3.1.7)
       rspec-support (~> 3.1.0)
     rspec-expectations (3.1.2)
@@ -744,6 +748,7 @@ DEPENDENCIES
   rdf-vocab
   riiif
   rsolr
+  rspec-activemodel-mocks
   rspec-rails
   ruby-ldap
   ruby-prof

@@ -49,6 +49,7 @@ gem "devise-guests"
 
 group :development, :test do
   gem "rspec-rails"
+  gem 'rspec-activemodel-mocks'
   gem "jettywrapper"
   gem 'factory_girl_rails'
   gem "capybara"

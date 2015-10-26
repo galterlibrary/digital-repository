@@ -9,6 +9,17 @@ def make_generic_file(user, args = {})
   gf
 end
 
+def make_page(user, args = {})
+  args[:title] = ['testing'] unless args[:title].present?
+  gf = Page.new(args)
+  gf.apply_depositor_metadata(user.user_key)
+  if args[:visibility].present?
+    gf.visibility = args[:visibility]
+  end
+  gf.save!
+  gf
+end
+
 def make_collection(user, args = {})
   args[:title] = 'testing' unless args[:title].present?
   args[:tag] = ['tag'] unless args[:tag].present?

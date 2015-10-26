@@ -84,11 +84,20 @@ class Collection < Sufia::Collection
     pagable_members.map {|gf| "/image-service/#{gf.id}/info.json" }
   end
 
-  def file_model
-    if multi_page
-      ::Page.to_class_uri
-    else
-      super
-    end
+  def bytes
+    rows = members.count
+    return 0 if rows == 0
+
+    raise "Collection must be saved to query for bytes" if new_record?
+
+    query = '_query_:"{!raw f=has_model_ssim}Page" OR _query_:"{!raw f=has_model_ssim}GenericFile"'
+    args = {
+      fq: "{!join from=hasCollectionMember_ssim to=id}id:#{id}",
+      fl: "id, #{file_size_field}",
+      rows: rows
+    }
+
+    files = ActiveFedora::SolrService.query(query, args)
+    files.reduce(0) { |sum, f| sum + f[file_size_field].to_i }
   end
 end
