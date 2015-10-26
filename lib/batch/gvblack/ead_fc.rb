@@ -337,6 +337,7 @@ module Ead_fc
       if rh['fname']
         puts "Processed #{fname}"
       else
+        # Root collection
         store_collection(rh)
       end
       #print "Wrote foxml: #{wfx_name} pid: #{rh['pid']} id: #{rh['id']}\n"
@@ -352,9 +353,13 @@ module Ead_fc
 
       nset = @xml.xpath("//*/#{@ns}archdesc/#{@ns}dsc")
       container_parse(nset, "")
+      Page.where('title_tesim' => ' - Combined').each {|o| o.update_index }
 
     end # initialize
 
+    def parent_collection_matches_title?(parent_pid, parent_title)
+      @cn_loh.any? {|o| o['pid'] == parent_pid && o['title'] =~ /#{parent_title}/ }
+    end
 
     def create_file_objects(rh_orig)
 
@@ -474,7 +479,7 @@ module Ead_fc
           end
         end
       end
-      puts "Missing File Path for: #{file_id}"
+      puts "Missing File Path for: title: #{rh['title']}, id: #{file_id}"
     end
 
     def store_collection(rh)
@@ -509,6 +514,8 @@ module Ead_fc
       end
 
       c.title = title
+      c.tag = ['GV Black']
+      c.creator = ['Greene Vardiman Black']
       c.visibility = 'open'
       c.subject = rh['subject']
       c.mesh = rh['mesh']
@@ -574,7 +581,7 @@ module Ead_fc
       fname = rh['fname']
       pages = get_all_files_for_item(fname, rh['file_id'])
       pages[nil] = fname
-      #puts pages
+      puts pages
       pages.each do |page, path|
         store_gf(rh, page, path)
       end
@@ -621,14 +628,14 @@ module Ead_fc
       end
 
       @generic_file = nil
-      @generic_file = GenericFile.where(
+      @generic_file = Page.where(
         'title_sim' => unescape_and_clean(rh['title'])).where(
           Solrizer.solr_name('page_number') => page).first
 
-      @generic_file = GenericFile.where('title_sim' => full_title).first if @generic_file.blank?
+      @generic_file = Page.where('title_sim' => full_title).first if @generic_file.blank?
 
       if rh['type'] == 'letter'
-        files = GenericFile.where(
+        files = Page.where(
           'identifier_tesim' => rh['file_id']
         ).where(Solrizer.solr_name('page_number') => page.to_s)
         binding.pry if files.count > 1
@@ -640,7 +647,7 @@ module Ead_fc
       end
 
       if @generic_file.blank?
-        @generic_file = GenericFile.create! do |f|
+        @generic_file = Page.create! do |f|
           f.apply_depositor_metadata(@current_user.user_key)
           f.label = File.basename(path)
           time_in_utc = DateTime.now.new_offset(0)
@@ -650,7 +657,6 @@ module Ead_fc
                      mime_type: mime_type(File.extname(path)))
         end
         @generic_file.record_version_committer(@current_user)
-        @generic_file.creator = ['Galter Health Sciences Library']
         @generic_file.title = [unescape_and_clean(rh['title'])]
         Sufia.queue.push(CharacterizeJob.new(@generic_file.id))
       end
@@ -661,6 +667,7 @@ module Ead_fc
       end
 
       @generic_file.title = [full_title]
+      @generic_file.creator = ['Greene Vardiman Black']
       @generic_file.visibility = 'open'
       @generic_file.subject = rh['subject']
       @generic_file.mesh = rh['mesh']
@@ -675,8 +682,16 @@ module Ead_fc
       @generic_file.digital_origin = ['Reformatted Digital']
       @generic_file.page_number = page
 
-      @generic_file.parent = rh['collection']
-      @generic_file.save! if @generic_file.changed?
+      @generic_file.parent_id = rh['collection'].id
+
+      if !page.present?
+        @generic_file.combined_file_id = rh['collection'].id
+      end
+
+      if @generic_file.changed?
+        @generic_file.save!
+      end
+
       if page.present?
         rh['collection'].members << @generic_file
       else
@@ -1086,7 +1101,7 @@ module Ead_fc
               end
 
               if @cn_loh[-2]['title'] =~ /Series IV/
-                p = Digital_assets_home + '/Photographs'
+                p = Digital_assets_home
               end
 
               if p
@@ -1104,10 +1119,15 @@ module Ead_fc
                 rh['type'] = 'letter'
               end
 
+              # Reseting limiter
+              onetime = false
+              onetime = true if rh['title'].include?('Balance ')
+              (@cn_loh.pop() and next) unless onetime
+
               #Uncomment to start processing from a specific identifier
               #@gotime = true if rh['file_id'] == 'cassidy18921019'
+              #
               #(@cn_loh.pop() and next) unless @gotime
-
               store_collection(rh)
               make_file(rh)
               rh['collection'].save! if rh['collection'].changed?

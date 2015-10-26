@@ -76,6 +76,5 @@ module Galtersufia
         format.json { render json: @collection.errors, status: :unprocessable_entity }
       end
     end
-
   end
 end

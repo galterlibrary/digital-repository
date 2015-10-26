@@ -24,7 +24,8 @@
                <%= render_hash_as_hidden_fields(params_for_search.except(:per_page, :sort)) %>
                &nbsp;&nbsp;&nbsp;
                <button class="btn btn-info"><span class="glyphicon glyphicon-refresh"></span> Refresh</button>
-                <% if @collection.pagable? %>
+                <#FIXME#>
+                <% if false && @collection.pagable? %>
                   <a href="#BOGUS" id="openSeaDragonViewer" data-toggle="modal" data-target="#osdModal" class="btn btn-info">
                     <i class="glyphicon glyphicon-book"></i> Launch Viewer
                   </a>

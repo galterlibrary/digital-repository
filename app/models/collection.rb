@@ -12,10 +12,14 @@ class Collection < Sufia::Collection
   def update_permissions
   end
 
-  has_many :children, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf,
+  has_many :children,
+    predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf,
     class_name: 'ActiveFedora::Base'
-  belongs_to :parent, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf,
+
+  belongs_to :parent,
+    predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf,
     class_name: 'Collection'
+
   belongs_to :combined_file,
     predicate: ActiveFedora::RDF::Fcrepo::RelsExt.hasEquivalent,
     class_name: 'GenericFile'
@@ -78,5 +82,13 @@ class Collection < Sufia::Collection
   def osd_tile_sources
     return [] unless pagable?
     pagable_members.map {|gf| "/image-service/#{gf.id}/info.json" }
+  end
+
+  def file_model
+    if multi_page
+      ::Page.to_class_uri
+    else
+      super
+    end
   end
 end

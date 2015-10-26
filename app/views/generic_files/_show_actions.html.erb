@@ -20,6 +20,14 @@
         <% end %>
       <% end %>
     </p>
+    <% if @generic_file.combined_file_id.present? && can?(:show, @generic_file.combined_file_id) %>
+      <p>
+      <span class="label label-default">
+        <%= link_to 'View the Related Multi-Page Collection',
+          collections.collection_path(@generic_file.combined_file_id) %>
+      </span>
+      </p>
+    <% end %>
     <p>Export to:
       <%= link_to 'EndNote', sufia.generic_file_path(@generic_file, format: 'endnote') %>
       <!--

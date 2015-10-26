@@ -7,7 +7,7 @@
   <% if(@collection.combined_file_id.present? && can?(:show, @collection.combined_file_id)) %>
     <br /><span class="label label-default">
       <%= link_to 'View Combined Pages',
-        sufia.generic_file_path(@collection.combined_file) %>
+        sufia.generic_file_path(@collection.combined_file_id) %>
     </span>
   <% end %>
 </div>
