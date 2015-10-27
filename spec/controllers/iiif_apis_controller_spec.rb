@@ -7,6 +7,11 @@ RSpec.describe IiifApisController, :type => :controller do
   describe 'authorization' do
     let(:col) { make_collection(user, visibility: 'restricted', id: 'col1') }
     let(:gf) { make_generic_file(user, visibility: 'restricted', id: 'gf1') }
+    before do
+      allow_any_instance_of(Collection).to receive(
+        :pageable_members).and_return([])
+    end
+
     context 'unauthorized user' do
       it 'is unable to to view manifest' do
         expect(
@@ -72,14 +77,16 @@ RSpec.describe IiifApisController, :type => :controller do
     describe '#manifest' do
       before do
         collection.apply_depositor_metadata(user.user_key)
+        collection.save!
         (1..3).each do |nr|
-          generic_file = GenericFile.new(id: "testa#{nr}", page_number: nr)
-          generic_file.apply_depositor_metadata(user.user_key)
-          generic_file.save!
+          generic_file = make_generic_file(
+            user, id: "testa#{nr}", page_number: nr)
           collection.members << generic_file
         end
         collection.parent = col_parent
         collection.save!
+        allow_any_instance_of(Collection).to receive(
+          :pageable_members).and_return(collection.members)
       end
 
       subject { get :manifest, { id: 'col1' } }
@@ -101,6 +108,8 @@ RSpec.describe IiifApisController, :type => :controller do
         allow(collection).to receive(:parent).and_return(
           Collection.new(id: 'col_parent')
         )
+        allow(collection).to receive(:pageable_members).and_return(
+          collection.members)
       end
 
       subject { controller.send(:generate_manifest, collection) }
@@ -161,13 +170,14 @@ RSpec.describe IiifApisController, :type => :controller do
     describe '#canvas' do
       before do
         collection.apply_depositor_metadata(user.user_key)
+        collection.save!
         (1..3).each do |nr|
-          generic_file = GenericFile.new(id: "testa#{nr}", page_number: nr)
-          generic_file.apply_depositor_metadata(user.user_key)
-          generic_file.save!
+          generic_file = make_generic_file(
+            user, id: "testa#{nr}", page_number: nr)
           collection.members << generic_file
         end
-        collection.save!
+        allow_any_instance_of(Collection).to receive(
+          :pageable_members).and_return(collection.members)
       end
 
       subject { get :sequence, { id: 'col1', name: 'blah' } }
@@ -182,10 +192,12 @@ RSpec.describe IiifApisController, :type => :controller do
     describe '#generate_sequence' do
       before do
         allow(collection).to receive(:members).and_return([
-          GenericFile.new(id: 'gf3', page_number: '11'),
           GenericFile.new(id: 'gf1', page_number: '9'),
-          GenericFile.new(id: 'gf2', page_number: '10')
+          GenericFile.new(id: 'gf2', page_number: '10'),
+          GenericFile.new(id: 'gf3', page_number: '11')
         ])
+        allow(collection).to receive(:pageable_members).and_return(
+          collection.members)
       end
 
       subject { controller.send(:generate_sequence, collection, 'awesome') }

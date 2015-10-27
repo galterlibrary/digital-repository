@@ -3,6 +3,14 @@ module Sufia
     def generate_solr_document
       super.tap do |solr_doc|
         solr_doc[Solrizer.solr_name('tags', :facetable)] = object.all_tags
+
+        solr_doc[
+          Solrizer.solr_name(:width, :type => :integer)
+        ] = object.width
+
+        solr_doc[
+          Solrizer.solr_name(:height, :type => :integer)
+        ] = object.height
       end
     end
   end

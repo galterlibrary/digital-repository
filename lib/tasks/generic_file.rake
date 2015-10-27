@@ -3,7 +3,7 @@ namespace :generic_file do
   task migrate_page_numbers: :environment do
     Collection.where('multi_page_bsi' => 'true').each do |col|
       @current = 0
-      col.pagable_members.each_with_index do |gf, idx|
+      col.pageable_members.each_with_index do |gf, idx|
         puts "Page Number blank for #{gf.id}: #{gf.title}" if gf.page_number.blank?
         @current += 1
         gf.page_number_actual = @current

@@ -26,7 +26,7 @@ feature "MutiPageCollections", :type => :feature do
 
     subject { page }
 
-    it { pending 'Fix soon'; is_expected.to have_link('Launch Viewer') }
+    it { is_expected.to have_link('Launch Viewer') }
     it { is_expected.to have_text('Number of pages') }
     it { is_expected.not_to have_text('Total Items') }
     it { is_expected.to have_text('Pages in this Collection') }

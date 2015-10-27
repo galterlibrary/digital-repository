@@ -1,7 +1,7 @@
 require 'rails_helper'
 RSpec.describe Collection do
   let(:user) { FactoryGirl.create(:user) }
-  context '#pagable_members' do
+  context '#pageable_members' do
     let(:collection) {
       Collection.new(id: 'col1', title: 'something', tag: ['tag'])
     }
@@ -9,71 +9,36 @@ RSpec.describe Collection do
     describe 'with a Collection member' do
       before do
         collection.multi_page = true
-        allow(collection).to receive(:members).and_return([
-          GenericFile.new(id: 'gf3', page_number: '11'),
-          GenericFile.new(id: 'gf1', page_number: '9'),
-          GenericFile.new(id: 'gf2', page_number: '10'),
-          GenericFile.new(id: 'gf4'),
-          Collection.new(id: 'col1')
-        ])
+        collection.apply_depositor_metadata(user)
+        collection.members = [
+          make_generic_file(user, id: 'gf3', page_number: '11'),
+          make_generic_file(user, id: 'gf1', page_number: '10'),
+          make_generic_file(user, id: 'gf2', page_number: '9'),
+          make_generic_file(user, id: 'gf4'),
+          make_collection(user, id: 'col2')
+        ]
+        collection.save
       end
 
-      subject { collection.pagable_members }
+      subject { collection.pageable_members.map{|o| o['id'] } }
 
-      it 'excludes the collection from pagable members' do
-        expect(subject.map(&:id)).to include('gf1')
-        expect(subject.map(&:id)).to include('gf2')
-        expect(subject.map(&:id)).to include('gf3')
-        expect(subject.map(&:id)).not_to include('gf4')
-        expect(subject.map(&:id)).not_to include('col1')
-        expect(subject.map(&:page_number)).to eq(['9', '10', '11'])
-      end
-    end
-
-    describe 'is pagable' do
-      before do
-        collection.multi_page = true
-        allow(collection).to receive(:members).and_return([
-          GenericFile.new(id: 'gf3', page_number: '11'),
-          GenericFile.new(id: 'gf1', page_number: '9'),
-          GenericFile.new(id: 'gf2', page_number: '10'),
-          GenericFile.new(id: 'gf4')
-        ])
-      end
-
-      subject { collection.pagable_members }
-
-      it 'returns all pagable members in order' do
-        expect(subject.map(&:page_number)).to eq(['9', '10', '11'])
-      end
-    end
-
-    describe 'is not pagable' do
-      before do
-        collection.multi_page = false
-        allow(collection).to receive(:members).and_return([
-          GenericFile.new(id: 'gf3'),
-          GenericFile.new(id: 'gf1'),
-          GenericFile.new(id: 'gf2'),
-          GenericFile.new(id: 'gf4')
-        ])
-      end
-
-      subject { collection.pagable_members }
-
-      it 'returns all pagable members in order' do
-        expect(subject.map(&:page_number)).to be_blank
+      it 'excludes the collection from pageable members' do
+        expect(subject).to include('gf1')
+        expect(subject).to include('gf2')
+        expect(subject).to include('gf3')
+        expect(subject).not_to include('gf4')
+        expect(subject).not_to include('col1')
       end
     end
   end
 
-  context '#pagable?' do
+  context '#pageable?' do
     let(:collection) { Collection.new(id: 'col1', title: 'something') }
 
-    describe 'is pagable' do
+    describe 'is pageable' do
       before do
         collection.multi_page = true
-        allow(collection).to receive(:members).and_return([
+        allow(collection).to receive(:pageable_members).and_return([
           GenericFile.new(id: 'gf3', page_number: '11'),
           GenericFile.new(id: 'gf1', page_number: '9'),
           GenericFile.new(id: 'gf2', page_number: '10'),
@@ -81,14 +46,14 @@ RSpec.describe Collection do
         ])
       end
 
-      subject { collection.pagable? }
+      subject { collection.pageable? }
 
       it { is_expected.to be_truthy }
     end
 
-    describe 'is not pagable' do
+    describe 'non-multi-page collection is not pageable' do
       before do
-        allow(collection).to receive(:members).and_return([
+        allow(collection).to receive(:pageable_members).and_return([
           GenericFile.new(id: 'gf3', page_number: '11'),
           GenericFile.new(id: 'gf1', page_number: '9'),
           GenericFile.new(id: 'gf2', page_number: '10'),
@@ -96,7 +61,7 @@ RSpec.describe Collection do
         ])
       end
 
-      subject { collection.pagable? }
+      subject { collection.pageable? }
 
       it { is_expected.to be_falsy }
     end

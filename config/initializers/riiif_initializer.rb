@@ -1,34 +1,18 @@
 # Tell RIIIF to get files via HTTP (not from the local disk)
 Riiif::Image.file_resolver = Riiif::HTTPFileResolver.new
 
-# This tells RIIIF how to resolve the identifier to a URI in Fedora
-DATASTREAM = 'imageContent'
 Riiif::Image.file_resolver.id_to_uri = lambda do |id|
-  ::GenericFile.find(id).content.uri
+  GenericFile.find(id).content.uri
 end
 
-# In order to return the info.json endpoint, we have to have the full height and width of
-# each image. If you are using hydra-file_characterization, you have the height & width 
-# cached in Solr. The following block directs the info_service to return those values:
-HEIGHT_SOLR_FIELD = 'height_isi'
-WIDTH_SOLR_FIELD = 'width_isi'
 Riiif::Image.info_service = lambda do |id, gf|
-  gf ||= ::GenericFile.find(id)
-  #resp = get_solr_response_for_doc_id id
-  #doc = resp.first['response']['docs'].first
-  { height: gf.height.try(:first).try(:to_i),
-    width: gf.width.try(:first).try(:to_i),
+  {
+    height: gf.height.try(:to_i),
+    width: gf.width.try(:to_i),
     scale_factors: [1, 2, 4, 8, 16, 32],
-    qualities: ["native", "bitonal", "grey", "color"] }
+    qualities: ["native", "bitonal", "grey", "color"]
+  }
 end
-
-# FIXME: Investigate stack level too deep when including this
-#include Blacklight::SearchHelper
-def blacklight_config
-  CatalogController.blacklight_config
-end
-
-### ActiveSupport::Benchmarkable (used in Blacklight::SolrHelper) depends on a logger method
 
 def logger
   Rails.logger
@@ -42,9 +26,18 @@ Riiif::Engine.config.cache_duration_in_days = 30
 
 Rails.configuration.to_prepare do
   Riiif::ImagesController.class_eval do
+    include Hydra::Controller::ControllerBehavior
+    include Blacklight::Catalog::SearchContext
+    include Sufia::Controller
+    include Blacklight::SearchHelper
+    include Hydra::Controller::SearchBuilder
+
     before_filter do
-      @gf = GenericFile.find(params['id'])
-      authorize!(:read, @gf)
+      self.search_params_logic += [:add_access_controls_to_solr_params]
+      (_, docs) = search_results(
+        {q: "id:#{params['id']}"}, self.search_params_logic)
+      @gf = docs.try(:first)
+      redirect_to('/users/sign_in') if @gf.blank? && current_user.blank?
     end
 
     alias_method :super_show, :show

@@ -66,22 +66,33 @@ class Collection < Sufia::Collection
     index.type :boolean
   end
 
-  def pagable?
-    multi_page && pagable_members.present?
+  def pageable?
+    multi_page && pageable_members.present?
   end
 
-  def pagable_members
-    members.reject {|o|
-      !o.respond_to?(:page_number) || o.page_number.blank?
-    }.sort_by {|o| o.page_number.to_i }
+  def pageable_members
+    rows = members.count
+    return 0 if rows == 0
+
+    raise "Collection must be saved to query for pageable members" if new_record?
+
+    query = '(has_model_ssim:Page OR has_model_ssim:GenericFile) AND page_number_actual_isi:[1 TO *]'
+    args = {
+      fq: "{!join from=hasCollectionMember_ssim to=id}id:#{id}",
+      fl: 'id',
+      rows: rows,
+      sort: 'page_number_actual_isi asc'
+    }
+
+    ActiveFedora::SolrService.query(query, args)
   end
 
   def processing?
   end
 
   def osd_tile_sources
-    return [] unless pagable?
-    pagable_members.map {|gf| "/image-service/#{gf.id}/info.json" }
+    return [] unless pageable?
+    pageable_members.map {|gf| "/image-service/#{gf['id']}/info.json" }
   end
 
   def bytes
