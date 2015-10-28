@@ -267,6 +267,7 @@ module Ead_fc
     attr_reader :pid
 
     def initialize(fname, debug)
+      @current_user ||= User.find(6)
 
       # read the EAD
       # pull info from collection, make foxml
@@ -510,7 +511,7 @@ module Ead_fc
       if !c
         c = Collection.new
         c.title = title
-        c.apply_depositor_metadata("galter-is@listserv.it.northwestern.edu")
+        c.apply_depositor_metadata(@current_user.user_key)
       end
 
       c.title = title
@@ -617,6 +618,33 @@ module Ead_fc
       end
     end
 
+    def create_gf(full_title, path)
+      tries ||= 3
+      time_in_utc ||= DateTime.now.new_offset(0)
+      @generic_file = Page.create!(
+        title: [full_title],
+        label: File.basename(path),
+        date_uploaded: time_in_utc,
+        date_modified: time_in_utc
+      ) do |file|
+        file.apply_depositor_metadata(@current_user.user_key)
+        file.add_file(
+          File.open(path),
+          path: 'content',
+          original_name: file.label,
+          mime_type: mime_type(File.extname(path))
+        )
+      end
+      @generic_file.record_version_committer(@current_user)
+     rescue Ldp::Gone => e
+       if tries > 0
+         tries -= 1
+         retry
+       else
+         binding.pry
+       end
+    end
+
     def store_gf(rh, page, path)
       full_title = unescape_and_clean(rh['title'])
       full_title = "#{full_title} (#{rh['original_date']})" if rh['type'] == 'letter'
@@ -642,30 +670,15 @@ module Ead_fc
       end
 
       if @generic_file.blank?
-        puts "Couldn't find file for #{path}, #{full_title}"
-      end
-
-      if @generic_file.blank?
-        @generic_file = Page.create! do |f|
-          f.apply_depositor_metadata(@current_user.user_key)
-          f.label = File.basename(path)
-          time_in_utc = DateTime.now.new_offset(0)
-          f.date_uploaded = time_in_utc
-          f.date_modified = time_in_utc
-          f.add_file(File.open(path), path: 'content', original_name: f.label,
-                     mime_type: mime_type(File.extname(path)))
-        end
-        @generic_file.record_version_committer(@current_user)
-        @generic_file.title = [unescape_and_clean(rh['title'])]
+        puts "Couldn't find an existing page for #{path}, #{full_title}"
+        create_gf(full_title, path)
         Sufia.queue.push(CharacterizeJob.new(@generic_file.id))
       end
 
-      if @generic_file.title.first != unescape_and_clean(rh['title']) &&
-          @generic_file.title.first != full_title
-        #binding.pry
+      if @generic_file.title.first != full_title
+        binding.pry
       end
 
-      @generic_file.title = [full_title]
       @generic_file.creator = ['Greene Vardiman Black']
       @generic_file.visibility = 'open'
       @generic_file.subject = rh['subject']
@@ -1119,14 +1132,22 @@ module Ead_fc
               end
 
               # Reseting limiter
-              #onetime = false
-              #onetime = true if rh['title'].include?('Balance ')
-              #(@cn_loh.pop() and next) unless onetime
+              if ENV['GVB_PROCESS_ONLY'].present?
+                onetime = false
+                if rh['title'].include?(ENV['GVB_PROCESS_ONLY'])
+                  onetime = true
+                end
+                (@cn_loh.pop() and next) unless onetime
+              end
 
-              #Uncomment to start processing from a specific identifier
-              #@gotime = true if rh['file_id'] == 'cassidy18921019'
-              #
-              #(@cn_loh.pop() and next) unless @gotime
+              # Persistent limiter
+              if ENV['GVB_PROCESS_ONLY'].blank? && ENV['GVB_START_FROM'].present?
+                if rh['title'].include?(ENV['GVB_START_FROM'])
+                  @gotime = true
+                end
+                (@cn_loh.pop() and next) unless @gotime
+              end
+
               store_collection(rh)
               make_file(rh)
               rh['collection'].save! if rh['collection'].changed?
