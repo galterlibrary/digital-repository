@@ -528,7 +528,6 @@ module Ead_fc
       c.rights = ['http://creativecommons.org/publicdomain/mark/1.0/']
       c.digital_origin = ['Reformatted Digital']
       c.description = unescape_and_clean("#{rh['description']} #{rh['note']}")
-      c.rights = ['http://creativecommons.org/publicdomain/mark/1.0/']
       c.save! if c.changed?
       ActiveFedora::SolrService.instance.conn.commit
       rh['collection'] = c
@@ -1120,9 +1119,9 @@ module Ead_fc
               end
 
               # Reseting limiter
-              onetime = false
-              onetime = true if rh['title'].include?('Balance ')
-              (@cn_loh.pop() and next) unless onetime
+              #onetime = false
+              #onetime = true if rh['title'].include?('Balance ')
+              #(@cn_loh.pop() and next) unless onetime
 
               #Uncomment to start processing from a specific identifier
               #@gotime = true if rh['file_id'] == 'cassidy18921019'

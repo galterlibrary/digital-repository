@@ -1,0 +1,10 @@
+<div id="content" class="col-md-12 col-sm-12">
+  <h2>Top-level Collections</h2>
+  <ul>
+  <% @document_list.each_with_index do |col, idx| %>
+    <li>
+      <%= link_to col.title, collections.collection_path(col.id) %>
+    </li>
+  <% end %>
+</ul>
+</div>

@@ -39,6 +39,33 @@ module Galtersufia
       super
     end
 
+    def index_collections_search_builder(access_level = nil)
+      @collections_search_builder ||= collections_search_builder_class.new(
+          index_collection_params_logic, self).tap do |builder|
+        builder.current_ability = current_ability
+        builder.discovery_perms = access_levels[access_level] if access_level
+      end
+    end
+
+    def index_collection_params_logic
+      [
+        :default_solr_parameters, :add_query_to_solr,
+        :add_access_controls_to_solr_params, :add_collection_filter,
+        :all_rows, :root_collections
+      ]
+    end
+
+
+    def collections_search_builder_class
+      GalterCollectionsSearchBuilder
+    end
+
+    def index
+      index_collections_search_builder
+      super
+      flash['notice'] = nil
+    end
+
     # Ugly but allows us to do permissions in the same way
     # as they're done for GenericFile.
     def adjust_permissions
