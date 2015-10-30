@@ -495,7 +495,6 @@ module Ead_fc
     def the_resource_type(rh)
       r = []
       title = unescape_and_clean(rh['title'])
-      binding.pry if title.include?('Correspondence - World')
       if title.include?('Series II.') ||
          (title.include?('Correspondence') &&  rh['type'] == 'subseries')
         r = ['Collected Correspondence']
@@ -510,7 +509,7 @@ module Ead_fc
         r = ['Ephemera']
       elsif title.include?('Series IV.')
         r = ['Photographs']
-      elsif the_parent_title_include?(rh, 'Series IV.') ||
+      elsif the_parent_title_include?(rh, 'Series IV.')
         r = ['Image']
       end
       r
