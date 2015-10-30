@@ -573,15 +573,16 @@ module Ead_fc
       end
 
       c.title = title
-      c.tag = ['GV Black']
       c.creator = [the_creator(rh)]
       c.resource_type = the_resource_type(rh)
       c.visibility = 'open'
-      c.subject = rh['subject']
       c.mesh = rh['mesh']
       c.lcsh = rh['lcsh']
       c.subject_geographic = rh['geoname']
       c.subject_name = (rh['corpname'] || []) + (rh['persname'] || [])
+      c.tag = [rh['subject']].compact.flatten + c.mesh + c.lcsh +
+        c.subject_geographic + c.subject_name
+      c.tag = ['GV Black'] if c.tag.blank?
       c.date_created = [rh['create_date']].compact
       c.abstract = [unescape_and_clean(rh['abstract'])].compact
       c.identifier = [rh['file_id']].compact
@@ -757,11 +758,14 @@ module Ead_fc
       # Do not include for pages
       #@generic_file.resource_type = the_resource_type(rh)
       @generic_file.visibility = 'open'
-      @generic_file.subject = rh['subject']
       @generic_file.mesh = rh['mesh']
       @generic_file.lcsh = rh['lcsh']
       @generic_file.subject_geographic = rh['geoname']
       @generic_file.subject_name = (rh['corpname'] || []) + (rh['persname'] || [])
+      @generic_file.tag = [rh['subject']].compact.flatten +
+        @generic_file.mesh +
+        @generic_file.lcsh + @generic_file.subject_geographic +
+        @generic_file.subject_name
       @generic_file.description = [rh['note'].to_s + rh['description'].to_s].compact
       @generic_file.date_created = [rh['create_date']].compact
       @generic_file.abstract = [rh['abstract']].compact
