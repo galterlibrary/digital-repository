@@ -214,6 +214,38 @@ describe 'generic file', :type => :feature do
     end
   end
 
+  describe 'edit Page' do
+    describe 'common elements' do
+      before do
+        make_page(@user, visibility: 'open', id: 'page1')
+        login_as(@user, :scope => :user)
+        visit '/files/page1'
+        click_link 'Edit'
+      end
+
+      specify do
+        expect(page).to have_button('Save')
+        expect(page).to have_text('* Resource type(s)')
+        expect(page).to have_text('* Title')
+        expect(page).to have_text('* Creator')
+        expect(page).to have_text('* Keyword')
+        expect(page).to have_text('* Rights')
+      end
+
+      it 'can save changes to fields' do
+        select 'Animation', from: 'Resource type'
+        fill_in 'Keyword', with: 'KEY'
+        fill_in 'Creator', with: 'God'
+        within '#descriptions_display' do
+          click_button 'Save'
+        end
+        expect(page).to have_text('Animation')
+        expect(page).to have_text('KEY')
+        expect(page).to have_text('God')
+      end
+    end
+  end
+
   describe 'edit' do
     subject { page }
     context 'logged in owner' do
@@ -224,13 +256,14 @@ describe 'generic file', :type => :feature do
 
       describe 'common elements' do
         before { click_link 'Edit' }
-        it { is_expected.to have_button('Save') }
-        it { is_expected.to have_text('* Resource type(s)') }
-        it { is_expected.to have_text('* Title') }
-        it { is_expected.to have_text('* Creator') }
-        it { is_expected.to have_text('* Keyword') }
-        it { is_expected.to have_text('* Rights') }
-
+        specify do
+          expect(page).to have_button('Save')
+          expect(page).to have_text('* Resource type(s)')
+          expect(page).to have_text('* Title')
+          expect(page).to have_text('* Creator')
+          expect(page).to have_text('* Keyword')
+          expect(page).to have_text('* Rights')
+        end
       end
 
       describe 'changing permissions' do

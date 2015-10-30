@@ -1,5 +1,6 @@
 <div id="descriptions_display" class="tab-pane active">
-  <%= simple_form_for [sufia, @form], html: { multipart: true } do |f| %>
+  <%= simple_form_for [sufia, @form], as: 'generic_file',
+      url: sufia.generic_file_path(@form), html: { multipart: true } do |f| %>
     <%= hidden_field_tag('redirect_tab', 'descriptions') %>
     <h1>Descriptions <span class="pull-right required"><abbr title="required">*</abbr> indicates required fields</span></h1>
       <div class="well">
