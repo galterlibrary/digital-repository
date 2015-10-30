@@ -643,7 +643,7 @@ module Ead_fc
       pages[nil] = fname
       puts pages
       pages.each do |page, path|
-        store_gf(rh, page, path)
+        store_gf(rh, page, path, pages.count)
       end
     end
 
@@ -716,11 +716,11 @@ module Ead_fc
       title
     end
 
-    def store_gf(rh, page, path)
+    def store_gf(rh, page, path, pages_count)
       full_title = base_title(rh)
       if page.present?
         full_title = "#{full_title} - Page #{page}"
-      else
+      elsif pages_count > 1
         full_title = "#{full_title} - Combined"
       end
 
@@ -789,8 +789,12 @@ module Ead_fc
       else
         rh['collection'].combined_file = @generic_file
         rh['collection'].multi_page = true
-        rh['collection'].member_ids = rh['collection'].member_ids.delete_if {|id|
-          id == @generic_file.id }
+        if pages_count > 1
+          rh['collection'].member_ids = rh['collection'].member_ids.delete_if {|id|
+            id == @generic_file.id }
+        else
+          rh['collection'].members << @generic_file
+        end
       end
     end
 
