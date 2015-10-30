@@ -487,13 +487,7 @@ module Ead_fc
       return if rh['type'].to_s.blank?
 
       normalize_date(rh)
-      title = unescape_and_clean( rh['title'])
-      if rh['type'] == 'subseries'
-        title = "#{title} - World's Columbian Dental Congress"
-      elsif rh['type'] == 'letter'
-        binding.pry unless rh['original_date'].present?
-        title = "#{title} (#{rh['original_date']})"
-      end
+      title = base_title(rh)
 
       if rh['type'] == 'letter'
         docs = Blacklight.default_index.connection.select(
@@ -645,9 +639,19 @@ module Ead_fc
        end
     end
 
+    def base_title(rh)
+      title = unescape_and_clean(rh['title'])
+      if rh['type'] == 'subseries'
+        title = "#{title} - World's Columbian Dental Congress"
+      elsif rh['type'] == 'letter'
+        binding.pry unless rh['original_date'].present?
+        title = "#{title} (#{rh['original_date']})"
+      end
+      title
+    end
+
     def store_gf(rh, page, path)
-      full_title = unescape_and_clean(rh['title'])
-      full_title = "#{full_title} (#{rh['original_date']})" if rh['type'] == 'letter'
+      full_title = base_title(rh)
       if page.present?
         full_title = "#{full_title} - Page #{page}"
       else
@@ -656,7 +660,7 @@ module Ead_fc
 
       @generic_file = nil
       @generic_file = Page.where(
-        'title_sim' => unescape_and_clean(rh['title'])).where(
+        'title_sim' => full_title).where(
           Solrizer.solr_name('page_number') => page).first
 
       @generic_file = Page.where('title_sim' => full_title).first if @generic_file.blank?
@@ -669,14 +673,19 @@ module Ead_fc
         @generic_file = files.first
       end
 
+      if @generic_file.present? && @generic_file.title.first != full_title
+        if rh['type'] == 'letter'
+          @generic_file.delete
+          @generic_file = nil
+        else
+          binding.pry
+        end
+      end
+
       if @generic_file.blank?
         puts "Couldn't find an existing page for #{path}, #{full_title}"
         create_gf(full_title, path)
         Sufia.queue.push(CharacterizeJob.new(@generic_file.id))
-      end
-
-      if @generic_file.title.first != full_title
-        binding.pry
       end
 
       @generic_file.creator = ['Greene Vardiman Black']
@@ -1127,7 +1136,7 @@ module Ead_fc
             if rh['fname']
               parent = @cn_loh.find {|o| o['pid'] == rh['parent_pid'] }['collection']
               rh['type'] = 'item'
-              if ['m039k503z', 'm039k506s'].include?(parent.id)
+              if parent.title.include?('Correspondence')
                 rh['type'] = 'letter'
               end
 

@@ -60,7 +60,7 @@ feature "Collections", :type => :feature do
     subject { page }
 
     it { is_expected.not_to have_text('Number of pages') }
-    it { is_expected.to have_text('Total Items') }
+    it { is_expected.to have_text('Total Items 3') }
     specify {
       expect(find_link('Display all details of Red box')['href']).to eq(
         "/collections/#{red_box.id}")
@@ -97,6 +97,53 @@ feature "Collections", :type => :feature do
     context 'as an authenticated user with edit permissions' do
       before do
         login_as(user, :scope => :user)
+      end
+
+      describe 'shows all filled out fields' do
+        before do
+          chi_box.update_attributes(
+            :tag => ['TAG'],
+            :resource_type => ['RES'],
+            :rights => ['RIGH'],
+            :creator => ['CRE'],
+            :contributor => ['CONT'],
+            :description => 'BLAH',
+            :abstract => ['ABST'],
+            :bibliographic_citation => ['CIT'],
+            :related_url => ['URL'],
+            :publisher => ['PUB'],
+            :identifier => ['ID'],
+            :language => ['LANG'],
+            :mesh => ['MESH'],
+            :lcsh => ['LCSH'],
+            :subject_geographic => ['GEO'],
+            :subject_name => ['NAME'],
+            :based_near => ['NEAR'],
+            :digital_origin => ['ORIG'],
+          )
+          visit("/collections/#{chi_box.id}")
+        end
+
+        it 'shows the fields' do
+          expect(page).to have_text('TAG')
+          expect(page).to have_text('RES')
+          expect(page).to have_text('RIGH')
+          expect(page).to have_text('CRE')
+          expect(page).to have_text('CONT')
+          expect(page).to have_text('BLAH')
+          expect(page).to have_text('ABST')
+          expect(page).to have_text('CIT')
+          expect(page).to have_text('URL')
+          expect(page).to have_text('PUB')
+          expect(page).to have_text('ID')
+          expect(page).to have_text('LANG')
+          expect(page).to have_text('MESH')
+          expect(page).to have_text('LCSH')
+          expect(page).to have_text('GEO')
+          expect(page).to have_text('NAME')
+          expect(page).to have_text('NEAR')
+          expect(page).to have_text('ORIG')
+        end
       end
 
       it 'lists the open visibility' do

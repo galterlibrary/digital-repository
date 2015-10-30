@@ -1,4 +1,8 @@
 class GalterCollectionPresenter < Sufia::CollectionPresenter
+  def terms
+    self.class.terms
+  end
+
   def self.terms
     [
       :multi_page,
