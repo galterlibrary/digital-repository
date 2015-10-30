@@ -483,6 +483,45 @@ module Ead_fc
       puts "Missing File Path for: title: #{rh['title']}, id: #{file_id}"
     end
 
+    def the_parent(rh)
+      parent = @cn_loh.find {|o| o['pid'] == rh['parent_pid'] }['collection']
+    end
+
+    def the_parent_title_include?(rh, name)
+      the_parent(rh).try(:title).to_s.include?(name)
+    end
+
+    def the_creator(rh)
+      title = unescape_and_clean(rh['title'])
+      c = 'Black, G. V. (Greene Vardiman), 1836-1915.'
+      # Top-level collection
+      if title.include?('G.V. Black Manuscripts,')
+        c = ''
+      # Series 3 and 4
+      elsif title.include?('Series I') && !title.include?('Series I.')
+        c = ''
+      # Collections in series 3 and 4
+      elsif the_parent_title_include?(rh, 'Series III.') ||
+            the_parent_title_include?(rh, 'Series IV.') ||
+            (
+              !rh['type'] == 'letter' &&
+              the_parent_title_include?(rh, 'Columbian Dental')
+            )
+        c = ''
+      elsif rh['type'] == 'letter'
+        # Parse out creator from letter title if not from GVB
+        if title.include?(' to G.V. Black')
+          c = title.gsub(' to G.V. Black', '')
+          name = ((rh['corpname'] || []) + (rh['persname'] || [])).find {|o|
+            o.include?(c.split.last) }
+          c = name if name.present?
+        end
+        # Full name of Mckay
+        c = 'Mckay, Frederick, S.' if c.include?('McKay')
+      end
+      c
+    end
+
     def store_collection(rh)
       return if rh['type'].to_s.blank?
 
@@ -510,7 +549,7 @@ module Ead_fc
 
       c.title = title
       c.tag = ['GV Black']
-      c.creator = ['Greene Vardiman Black']
+      c.creator = [the_creator(rh)]
       c.visibility = 'open'
       c.subject = rh['subject']
       c.mesh = rh['mesh']
@@ -688,7 +727,7 @@ module Ead_fc
         Sufia.queue.push(CharacterizeJob.new(@generic_file.id))
       end
 
-      @generic_file.creator = ['Greene Vardiman Black']
+      @generic_file.creator = [the_creator(rh)]
       @generic_file.visibility = 'open'
       @generic_file.subject = rh['subject']
       @generic_file.mesh = rh['mesh']
@@ -1160,9 +1199,9 @@ module Ead_fc
               store_collection(rh)
               make_file(rh)
               rh['collection'].save! if rh['collection'].changed?
-              puts "Processed #{rh['title']}: #{rh['fname']}"
+              puts "Processed #{base_title(rh)}, #{rh['fname']}"
             else
-              puts "No file for #{rh['title']}"
+              puts "No file for #{base_title(rh)}"
             end
           end
 
