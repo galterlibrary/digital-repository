@@ -484,11 +484,36 @@ module Ead_fc
     end
 
     def the_parent(rh)
-      parent = @cn_loh.find {|o| o['pid'] == rh['parent_pid'] }['collection']
+      @cn_loh.find {|o|
+        o['pid'] == rh['parent_pid'] }.try(:[],'collection') || Collection.new
     end
 
     def the_parent_title_include?(rh, name)
       the_parent(rh).try(:title).to_s.include?(name)
+    end
+
+    def the_resource_type(rh)
+      r = []
+      title = unescape_and_clean(rh['title'])
+      binding.pry if title.include?('Correspondence - World')
+      if title.include?('Series II.') ||
+         (title.include?('Correspondence') &&  rh['type'] == 'subseries')
+        r = ['Collected Correspondence']
+      elsif the_parent_title_include?(rh, 'Series I.')
+        r = ['Manuscript']
+      elsif the_parent_title_include?(rh, 'Correspondence - World') ||
+            the_parent_title_include?(rh, 'Series II.')
+        r = ['Letter']
+      elsif the_parent_title_include?(rh, 'Series III.') ||
+            title.include?('Series III.')
+            the_parent_title_include?(rh, 'Columbian Dental Congress')
+        r = ['Ephemera']
+      elsif title.include?('Series IV.')
+        r = ['Photographs']
+      elsif the_parent_title_include?(rh, 'Series IV.') ||
+        r = ['Image']
+      end
+      r
     end
 
     def the_creator(rh)
@@ -550,6 +575,7 @@ module Ead_fc
       c.title = title
       c.tag = ['GV Black']
       c.creator = [the_creator(rh)]
+      c.resource_type = the_resource_type(rh)
       c.visibility = 'open'
       c.subject = rh['subject']
       c.mesh = rh['mesh']
@@ -728,6 +754,8 @@ module Ead_fc
       end
 
       @generic_file.creator = [the_creator(rh)]
+      # Do not include for pages
+      #@generic_file.resource_type = the_resource_type(rh)
       @generic_file.visibility = 'open'
       @generic_file.subject = rh['subject']
       @generic_file.mesh = rh['mesh']
