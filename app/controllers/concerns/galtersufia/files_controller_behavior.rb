@@ -33,5 +33,12 @@ module Galtersufia
         response.location = sufia.edit_generic_file_path
       end
     end
+
+    def show
+      super
+      if @generic_file.class == Page
+        response.headers['X-Robots-Tag'] = 'noindex'
+      end
+    end
   end
 end

@@ -55,6 +55,22 @@ describe GenericFilesController do
       expect(assigns(:generic_file).subject_name).to eq(['subjn'])
       expect(assigns(:generic_file).page_number).to eq(11)
     end
+
+    context 'generic file is of type Page' do
+      before do
+        make_page(@user, id: 'p1', title: ['Page1'])
+        get :show, id: 'p1'
+      end
+
+      it 'assigns the page to @generic_file' do
+        expect(assigns(:generic_file)).to be_an_instance_of(Page)
+        expect(assigns(:generic_file).title).to eq(['Page1'])
+      end
+
+      it 'prevents search bots from indexing' do
+        expect(response.headers['X-Robots-Tag']).to eq('noindex')
+      end
+    end
   end
 
   describe '#create' do
