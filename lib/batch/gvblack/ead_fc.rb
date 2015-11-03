@@ -695,13 +695,13 @@ module Ead_fc
         )
       end
       @generic_file.record_version_committer(@current_user)
-     rescue Ldp::Gone => e
-       if tries > 0
-         tries -= 1
-         retry
-       else
-         binding.pry
-       end
+    rescue Ldp::Gone => e
+      if tries > 0
+        tries -= 1
+        retry
+      else
+        binding.pry
+      end
     end
 
     def base_title(rh)
@@ -740,8 +740,7 @@ module Ead_fc
 
       if @generic_file.present? && @generic_file.title.first != full_title
         if rh['type'] == 'letter'
-          @generic_file.delete
-          @generic_file = nil
+          @generic_file.title = [full_title],
         else
           binding.pry
         end
