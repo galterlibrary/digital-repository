@@ -15,6 +15,20 @@ feature "MutiPageCollections", :type => :feature do
     make_generic_file(user, { title: ['Yep and Nope'] })
   }
 
+  describe 'viewing single-page collection' do
+    before do
+      collection.members = [lie1]
+      collection.combined_file = all_lies
+      collection.save!
+      login_as(user, :scope => :user)
+      visit("/collections/#{collection.id}")
+    end
+
+    subject { page }
+
+    it { is_expected.to have_link('Launch Viewer') }
+  end
+
   describe 'viewing collection' do
     before do
       collection.members = [lie1, lie2]
