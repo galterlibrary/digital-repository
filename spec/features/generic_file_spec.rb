@@ -12,6 +12,8 @@ describe 'generic file', :type => :feature do
     @file.save!
   end
 
+  subject { page }
+
   describe 'show' do
     it 'hides descriptions with blank values' do
       visit "/files/#{@file.id}"
@@ -109,6 +111,27 @@ describe 'generic file', :type => :feature do
         login_as(user, :scope => :user)
         visit "/files/#{@file.id}"
         expect(page).to have_text('User Activity')
+      end
+    end
+    describe 'IIIF preview' do
+      context 'Riff-supported type' do
+        before do
+          allow_any_instance_of(GenericFile).to receive(
+            :mime_type).and_return('image/png')
+          visit "/files/#{@file.id}"
+        end
+
+        it { is_expected.to have_text('Launch Preview') }
+      end
+
+      context 'Riff-supported type' do
+        before do
+          allow_any_instance_of(GenericFile).to receive(
+            :mime_type).and_return('application/pdf')
+          visit "/files/#{@file.id}"
+        end
+
+        it { is_expected.not_to have_text('Launch Preview') }
       end
     end
   end

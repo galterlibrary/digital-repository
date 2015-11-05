@@ -28,6 +28,15 @@
       </span>
       </p>
     <% end %>
+    <% if %W{png jpg tiff jp jp2}.any?{|type| @generic_file.mime_type.include?(type) } %>
+      <p>
+        <a href="#BOGUS" id="openSeaDragonViewer" data-toggle="modal" data-target="#osdModal" class="btn btn-info">
+          <i class="glyphicon glyphicon-book"></i> Launch Preview
+        </a>
+        <%= render 'osd_modal' %>
+      </p>
+    <% end %>
+
     <p>Export to:
       <%= link_to 'EndNote', sufia.generic_file_path(@generic_file, format: 'endnote') %>
       <!--
