@@ -28,7 +28,7 @@
       </span>
       </p>
     <% end %>
-    <% if %W{png jpg tiff jp jp2}.any?{|type| @generic_file.mime_type.include?(type) } %>
+    <% if %W{png jpg tiff jp jp2}.any?{|type| @generic_file.mime_type.to_s.include?(type) } %>
       <p>
         <a href="#BOGUS" id="openSeaDragonViewer" data-toggle="modal" data-target="#osdModal" class="btn btn-info">
           <i class="glyphicon glyphicon-book"></i> Launch Preview
