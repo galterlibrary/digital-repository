@@ -64,7 +64,7 @@ NameVirtualHost *:443
 
 <VirtualHost *:80>
   ServerName #{www_host_name}
-  Redirect permanent / https://digitalhub.northwestern.edu/
+  Redirect permanent / https://#{www_host_name}/
 </VirtualHost>
 
 <VirtualHost *:443>
