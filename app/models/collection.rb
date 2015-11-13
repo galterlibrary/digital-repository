@@ -72,7 +72,7 @@ class Collection < Sufia::Collection
 
   def pageable_members
     rows = members.count
-    return 0 if rows == 0
+    return [] if rows == 0
 
     raise "Collection must be saved to query for pageable members" if new_record?
 

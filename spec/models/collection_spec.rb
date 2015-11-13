@@ -30,6 +30,33 @@ RSpec.describe Collection do
         expect(subject).not_to include('col1')
       end
     end
+
+    describe 'with a no pageable members' do
+      before do
+        collection.multi_page = true
+        collection.apply_depositor_metadata(user)
+        collection.members = [
+          make_generic_file(user, id: 'gf3')
+        ]
+        collection.save
+      end
+
+      subject { collection.pageable_members }
+
+      it { is_expected.to eq([]) }
+    end
+
+    describe 'with a no members' do
+      before do
+        collection.multi_page = true
+        collection.apply_depositor_metadata(user)
+        collection.save
+      end
+
+      subject { collection.pageable_members }
+
+      it { is_expected.to eq([]) }
+    end
   end
 
   context '#pageable?' do
