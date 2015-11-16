@@ -49,7 +49,7 @@ def netids_in_csv(filename)
               headers: true) do |row|
     next if row['netid'].blank?
     netid = row['netid'].strip.downcase
-    next if %w(rkk654 ekj703 jwt810 curry arl019 mlc926).index(netid)
+    next if %w(bar499 rkk654 ekj703 jwt810 curry arl019 mlc926).index(netid)
     next unless netid_in_ldap?(netid)
     yield netid
   end
@@ -88,10 +88,11 @@ Role.find_or_create_by(name: 'IPHAM-Admin', description: 'IPHAM-Admin')
 
 begin
   institute = Collection.find('ipham')
-rescue ActiveFedora::ObjectNotFoundError, Ldp::Gone
-    Collection.eradicate('ipham')
+rescue ActiveFedora::ObjectNotFoundError
   institute = Collection.new(
     title: 'Institute for Public Health and Medicine', id: 'ipham')
+rescue Ldp::Gone
+  Collection.eradicate('ipham')
 end
 institute.tag = ['ipham']
 institute.apply_depositor_metadata('ipham-system')
@@ -101,9 +102,10 @@ CENTERS.each do |center_name|
   id = center_name.tr(' ', '-').tr(',', '').downcase
   begin
     center = Collection.find(id)
-  rescue ActiveFedora::ObjectNotFoundError, Ldp::Gone
-    Collection.eradicate(id)
+  rescue ActiveFedora::ObjectNotFoundError
     center = Collection.new(title: center_name, id: id)
+  rescue Ldp::Gone
+    Collection.eradicate(id)
   end
   center.tag = ['ipham']
   center.apply_depositor_metadata('ipham-system')
