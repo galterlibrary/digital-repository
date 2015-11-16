@@ -2,24 +2,28 @@
 
   <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 
-    <div class="panel panel-default">
-      <div class="panel-heading" role="tab" id="headingOne">
-        <h4 class="panel-title">
-          <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-            Galter Health Sciences Library Collections
-          </a>
-        </h4>
-      </div>
-      <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-        <div class="panel-body">
-          <% galter_docs do |col, idx| %>
-            <%= link_to col.title, collections.collection_path(col.id),
-                        class: 'list-group-item small' %>
-          <% end %>
+    <% collection_groups.each do |depositor, name| %>
+      <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="heading-<%=depositor%>">
+          <h4 class="panel-title">
+            <a role="button" data-toggle="collapse" data-parent="#accordion"
+               href="#collapse-<%=depositor%>" aria-expanded="true"
+               aria-controls="collapse-<%=depositor%>">
+              <%= name %>
+            </a>
+          </h4>
+        </div>
+        <div id="collapse-<%=depositor%>" class="panel-collapse collapse in"
+             role="tabpanel" aria-labelledby="heading-<%=depositor%>">
+          <div class="panel-body">
+            <% collection_docs_with_depositor(depositor) do |col, idx| %>
+              <%= link_to col.title, collections.collection_path(col.id),
+                          class: 'list-group-item small' %>
+            <% end %>
+          </div>
         </div>
       </div>
-    </div>
-
+    <% end %>
 
     <div class="panel panel-default">
       <div class="panel-heading" role="tab" id="headingTwo">
@@ -32,7 +36,7 @@
 
       <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
         <div class="panel-body">
-          <% non_galter_docs do |col, idx| %>
+          <% users_collection_docs do |col, idx| %>
             <%= link_to col.title, collections.collection_path(col.id),
                         class: 'list-group-item small' %>
           <% end %>

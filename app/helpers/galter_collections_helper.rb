@@ -1,15 +1,22 @@
 module GalterCollectionsHelper
-  def galter_docs
-    @document_list.select {|o|
-        o.depositor == 'galter-is'
+  def collection_groups
+    {
+      'galter-is' => 'Galter Health Sciences Library Collections',
+      'ipham-system' => 'Institute for Public Health and Medicine'
+    }
+  end
+
+  def collection_docs_with_depositor(depositor)
+    @document_list.select {|doc|
+        doc.depositor == depositor
     }.each_with_index do |col, idx|
       yield col, idx
     end
   end
 
-  def non_galter_docs
+  def users_collection_docs
     @document_list.reject {|o|
-        o.depositor == 'galter-is'
+        collection_groups.include?(o.depositor)
     }.each_with_index do |col, idx|
       yield col, idx
     end

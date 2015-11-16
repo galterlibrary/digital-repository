@@ -49,9 +49,12 @@ module Galtersufia
 
     def index_collection_params_logic
       [
-        :default_solr_parameters, :add_query_to_solr,
-        :add_access_controls_to_solr_params, :add_collection_filter,
-        :all_rows, :root_collections
+        :default_solr_parameters,
+        :add_query_to_solr,
+        :add_access_controls_to_solr_params,
+        :add_collection_filter,
+        :all_rows,
+        :root_collections
       ]
     end
 
