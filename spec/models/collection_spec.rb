@@ -365,4 +365,11 @@ RSpec.describe Collection do
       end
     end
   end
+
+  describe '#to_solr' do
+    it 'generates label' do
+      subject.title = 'asdf'
+      expect(subject.to_solr['label_si']).to eq('asdf')
+    end
+  end
 end

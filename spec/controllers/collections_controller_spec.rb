@@ -7,6 +7,48 @@ describe CollectionsController do
     sign_in @user
   end
 
+  describe "#index" do
+    before do
+      make_collection(@user, title: 'w_user', visibility: 'restricted')
+      make_collection(@user, title: 'a_User')
+      make_collection(@user, title: 'd_user')
+      make_collection(@user, title: 'b_galter')
+      make_collection(@user, title: 'a_galter')
+      make_collection(@user, title: 'B_IPHAM')
+      make_collection(@user, title: 'A_ipham')
+    end
+
+    it "should assign proper collection" do
+      get :index
+      expect(response).to be_successful
+      expect(assigns(:document_list).map(&:title)).to eq([
+        'a_galter',
+        'A_ipham',
+        'a_User',
+        'b_galter',
+        'B_IPHAM',
+        'd_user',
+        'w_user'
+      ])
+    end
+
+    context 'anonymous user' do
+      before { sign_out @user }
+      it "should assign proper collection" do
+        get :index
+        expect(response).to be_successful
+        expect(assigns(:document_list).map(&:title)).to eq([
+          'a_galter',
+          'A_ipham',
+          'a_User',
+          'b_galter',
+          'B_IPHAM',
+          'd_user'
+        ])
+      end
+    end
+  end
+
   describe "#destroy" do
     before do
       @file = make_collection(@user, id: 'nukeme')

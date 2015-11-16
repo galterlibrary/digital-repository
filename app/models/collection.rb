@@ -111,4 +111,10 @@ class Collection < Sufia::Collection
     files = ActiveFedora::SolrService.query(query, args)
     files.reduce(0) { |sum, f| sum + f[file_size_field].to_i }
   end
+
+  class << self
+    def indexer
+      Sufia::GalterCollectionIndexingService
+    end
+  end
 end

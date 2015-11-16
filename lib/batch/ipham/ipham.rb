@@ -83,8 +83,9 @@ def add_group_to_collection(collection, role, perm)
   end
 end
 
-ipham_user = User.find_or_create_by(username: 'ipham-system')
-Role.find_or_create_by(name: 'IPHAM-Admin', description: 'IPHAM-Admin')
+User.find_or_create_by(username: 'ipham-system')
+User.find_or_create_by(username: 'ipham-top-system', email: 'a@b.c')
+Role.find_or_create_by(name: 'IPHAM-Admin', description: 'IPHAM-Admin',)
 
 begin
   institute = Collection.find('ipham')
@@ -95,7 +96,7 @@ rescue Ldp::Gone
   Collection.eradicate('ipham')
 end
 institute.tag = ['ipham']
-institute.apply_depositor_metadata('ipham-system')
+institute.apply_depositor_metadata('ipham-system-top')
 institute.save!
 
 CENTERS.each do |center_name|

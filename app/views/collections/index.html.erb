@@ -26,15 +26,15 @@
     <% end %>
 
     <div class="panel panel-default">
-      <div class="panel-heading" role="tab" id="headingTwo">
+      <div class="panel-heading" role="tab" id="userColHeading">
         <h4 class="panel-title">
-          <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#userColCollapse" aria-expanded="false" aria-controls="userColCollapse">
             Researchers' Collections
           </a>
         </h4>
       </div>
 
-      <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+      <div id="userColCollapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="userColHeading">
         <div class="panel-body">
           <% users_collection_docs do |col, idx| %>
             <%= link_to col.title, collections.collection_path(col.id),

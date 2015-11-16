@@ -7,6 +7,10 @@ module Galtersufia
     extend ActiveSupport::Concern
     include Sufia::CollectionsControllerBehavior
 
+    included do
+      skip_before_action :authenticate_user!, :only => :index
+    end
+
     def collection_params
       clean_params = form_class.model_attributes(params[:collection])
       if clean_params.has_key?(:multi_page)
@@ -54,7 +58,8 @@ module Galtersufia
         :add_access_controls_to_solr_params,
         :add_collection_filter,
         :all_rows,
-        :root_collections
+        :root_collections,
+        :add_sorting_to_solr
       ]
     end
 
@@ -64,6 +69,7 @@ module Galtersufia
     end
 
     def index
+      params[:sort] = "#{Solrizer.solr_name('label', :sortable)} asc"
       index_collections_search_builder
       super
       flash['notice'] = nil
