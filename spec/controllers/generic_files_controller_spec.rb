@@ -37,7 +37,8 @@ describe GenericFilesController do
         abstract: ['testa'], bibliographic_citation: ['cit'],
         digital_origin: ['digo'], mesh: ['mesh'], lcsh: ['lcsh'],
         subject_geographic: ['geo'], subject_name: ['subjn'],
-        page_number: 11
+        page_number: 11, acknowledgments: ['ack'],
+        grants_and_funding: ['gaf']
       )
       @file.apply_depositor_metadata(@user.user_key)
       @file.save!
@@ -54,6 +55,8 @@ describe GenericFilesController do
       expect(assigns(:generic_file).subject_geographic).to eq(['geo'])
       expect(assigns(:generic_file).subject_name).to eq(['subjn'])
       expect(assigns(:generic_file).page_number).to eq(11)
+      expect(assigns(:generic_file).acknowledgments).to eq(['ack'])
+      expect(assigns(:generic_file).grants_and_funding).to eq(['gaf'])
     end
 
     context 'generic file is of type Page' do
@@ -125,12 +128,27 @@ describe GenericFilesController do
       expect(assigns(:generic_file).bibliographic_citation).to eq(['dudu'])
     end
 
+    it "should update acknowledgments" do
+      patch :update, id: @file, generic_file: { acknowledgments: ['ack2'] }
+      expect(response).to redirect_to(
+        @routes.url_helpers.generic_file_path(@file))
+      expect(assigns(:generic_file).acknowledgments).to eq(['ack2'])
+    end
+
+    it "should update grants_and_funding" do
+      patch :update, id: @file, generic_file: { grants_and_funding: ['gaf2'] }
+      expect(response).to redirect_to(
+        @routes.url_helpers.generic_file_path(@file))
+      expect(assigns(:generic_file).grants_and_funding).to eq(['gaf2'])
+    end
+
     it "should update subject_name" do
       patch :update, id: @file, generic_file: { subject_name: ['dudu'] }
       expect(response).to redirect_to(
         @routes.url_helpers.generic_file_path(@file))
       expect(assigns(:generic_file).subject_name).to eq(['dudu'])
     end
+
 
     it "should update subject_geographic" do
       patch :update, id: @file, generic_file: { subject_geographic: ['dudu'] }

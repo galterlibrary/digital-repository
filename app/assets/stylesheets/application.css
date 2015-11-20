@@ -15,10 +15,10 @@
  *= require_self
  */
 
-.single_value_with_help {
+input.single_value_with_help {
   margin-left: 0;
   max-width: 40em;
-  padding-left: 0;
+  padding-left: 12px;
 }
 
 .single_text_with_help {

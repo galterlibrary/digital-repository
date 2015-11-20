@@ -6,7 +6,8 @@ describe 'generic file', :type => :feature do
       abstract: ['testa'], bibliographic_citation: ['cit'],
       digital_origin: ['digo'], mesh: ['mesh'], lcsh: ['lcsh'],
       subject_geographic: ['geo'], subject_name: ['subjn'],
-      visibility: 'open', page_number: ''
+      visibility: 'open', page_number: '', acknowledgments: ['ack1'],
+      grants_and_funding: ['gaf1']
     )
     @file.apply_depositor_metadata(@user.user_key)
     @file.save!
@@ -37,6 +38,10 @@ describe 'generic file', :type => :feature do
       expect(page).to have_text('Digital')
       expect(page).not_to have_text('Page number')
       expect(page).not_to have_text('User Activity')
+      expect(page).to have_text('Acknowledgments')
+      expect(page).to have_text('ack1')
+      expect(page).to have_text('Grants and funding')
+      expect(page).to have_text('gaf1')
     end
 
     it 'hides links to Mendeley and Zotero' do
@@ -156,8 +161,10 @@ describe 'generic file', :type => :feature do
           select 'Attribution 3.0 United States', from: 'generic_file_rights'
 
           # Custom
-          fill_in 'generic_file_abstract', with: 'abs'
+          fill_in 'generic_file_]abstract', with: 'abs'
           fill_in 'generic_file_bibliographic_citation', with: 'cit'
+          fill_in 'generic_file_acknowledgments', with: 'ack1'
+          fill_in 'generic_file_grants_and_funding', with: 'gaf1'
           fill_in 'generic_file_lcsh', with: 'lcsh'
           fill_in 'generic_file_mesh', with: 'mesh'
           fill_in 'generic_file_subject_geographic', with: 'geo'
@@ -173,6 +180,8 @@ describe 'generic file', :type => :feature do
           @new_file.reload
           expect(@new_file.abstract).to eq(['abs'])
           expect(@new_file.bibliographic_citation).to eq(['cit'])
+          expect(@new_file.acknowledgments).to eq(['ack1'])
+          expect(@new_file.grants_and_funding).to eq(['gaf1'])
           expect(@new_file.lcsh).to eq(['lcsh'])
           expect(@new_file.mesh).to eq(['mesh'])
           expect(@new_file.subject_geographic).to eq(['geo'])
@@ -214,6 +223,8 @@ describe 'generic file', :type => :feature do
         # We trust the upstream tested this.
         it 'lists the custom fields' do
           expect(page).to have_link('Abstract')
+          expect(page).to have_link('Acknowledgments')
+          expect(page).to have_link('Grants and funding')
           expect(page).not_to have_link('Digital origin')
           expect(page).to have_link('Bibliographic citation')
           expect(page).to have_link('Subject: LCSH')

@@ -19,6 +19,24 @@ RSpec.describe GenericFile do
       end
     end
 
+    describe "grants_and_funding" do
+      it "has it" do
+        expect(subject.grants_and_funding).to eq([])
+        subject.grants_and_funding = ['abc']
+        subject.save(validate: false)
+        expect(subject.reload.grants_and_funding).to eq(['abc'])
+      end
+    end
+
+    describe "acknowledgments" do
+      it "has it" do
+        expect(subject.acknowledgments).to eq([])
+        subject.acknowledgments = ['abc']
+        subject.save(validate: false)
+        expect(subject.reload.acknowledgments).to eq(['abc'])
+      end
+    end
+
     describe "subject_name" do
       it "has it" do
         expect(subject.subject_name).to eq([])

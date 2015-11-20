@@ -20,6 +20,8 @@ class GalterGenericFilePresenter < Sufia::GenericFilePresenter
     :subject_name,
     :based_near,
     :digital_origin,
-    :page_number
+    :page_number,
+    :acknowledgments,
+    :grants_and_funding
   ]
 end

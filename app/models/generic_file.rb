@@ -13,6 +13,22 @@ class GenericFile < ActiveFedora::Base
     index.as :stored_searchable
   end
 
+  property :acknowledgments,
+           :predicate => ::RDF::URI.new(
+             'http://galter.northwestern.edu/rdf/acknowledgments'),
+           :multiple => true do |index|
+    index.type :text
+    index.as :stored_searchable
+  end
+
+  property :grants_and_funding,
+           :predicate => ::RDF::URI.new(
+             'http://galter.northwestern.edu/rdf/grants_and_funding'),
+           :multiple => true do |index|
+    index.type :text
+    index.as :stored_searchable
+  end
+
   property :digital_origin, predicate: ::RDF::Vocab::MODS.digitalOrigin, multiple: true do |index|
     index.as :stored_searchable
   end
