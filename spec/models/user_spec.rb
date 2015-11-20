@@ -48,9 +48,9 @@ RSpec.describe User do
 
         it "creates roles if they don't yet exist and adds user to them" do
           user_roles = subject.groups
-          expect(user_roles).to include('Black Hats')
+          expect(user_roles).to include('Black-Hats')
           expect(user_roles).to include('DDoSers')
-          expect(user_roles).to include('Script Kiddies')
+          expect(user_roles).to include('Script-Kiddies')
           expect(Role.find_by(name: 'Script-Kiddies')).to be_an_instance_of(Role)
           expect(Role.find_by(name: 'Black-Hats')).to be_an_instance_of(Role)
           expect(Role.find_by(name: 'DDoSers')).to be_an_instance_of(Role)
@@ -244,11 +244,11 @@ RSpec.describe User do
       expect(user.groups).not_to include('registered')
     end
 
-    it 'returns descriptions if present' do
+    it 'returns name event if descriptions present' do
       role_desc = Role.create(name: 'something', description: 'Other stuff')
       user.add_to_group('something')
-      expect(user.groups).not_to include('something')
-      expect(user.groups).to include('Other stuff')
+      expect(user.groups).to include('something')
+      expect(user.groups).not_to include('Other stuff')
     end
 
     it 'returns name if no description' do
@@ -256,8 +256,8 @@ RSpec.describe User do
       role_name = Role.create(name: 'no-desc')
       user.add_to_group('something')
       user.add_to_group('no-desc')
-      expect(user.groups).not_to include('something')
-      expect(user.groups).to include('Other stuff')
+      expect(user.groups).to include('something')
+      expect(user.groups).not_to include('Other stuff')
       expect(user.groups).to include('no-desc')
     end
   end

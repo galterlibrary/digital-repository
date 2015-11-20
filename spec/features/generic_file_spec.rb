@@ -161,7 +161,7 @@ describe 'generic file', :type => :feature do
           select 'Attribution 3.0 United States', from: 'generic_file_rights'
 
           # Custom
-          fill_in 'generic_file_]abstract', with: 'abs'
+          fill_in 'generic_file_abstract', with: 'abs'
           fill_in 'generic_file_bibliographic_citation', with: 'cit'
           fill_in 'generic_file_acknowledgments', with: 'ack1'
           fill_in 'generic_file_grants_and_funding', with: 'gaf1'

@@ -43,7 +43,7 @@ class User < ActiveRecord::Base
 
   def groups
     all_groups = roles.map do |role|
-      role.description ? role.description : role.name
+      role.name
     end
 
     if username.present? && username != 'guest'
