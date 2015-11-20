@@ -60,7 +60,10 @@ def find_or_crete_user(netid)
   if user.blank?
     user = User.new(username: netid)
     user.populate_attributes
-    user.save!
+    if !user.save
+      puts "Couldn't save user #{netid}, errors: #{user.errors.full_messages.to_sentence}"
+      user = nil
+    end
   end
   user
 end
@@ -71,7 +74,11 @@ end
 
 def find_center_users(center)
   filename = FILE_NAMES[CENTERS.index(center)]
-  netids_in_csv(filename) {|netid| yield find_or_crete_user(netid) }
+  netids_in_csv(filename) do |netid|
+    user = find_or_crete_user(netid)
+    next if user.blank?
+    yield user
+  end
 end
 
 def add_group_to_collection(collection, role, perm)
