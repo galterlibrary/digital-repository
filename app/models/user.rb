@@ -112,7 +112,8 @@ class User < ActiveRecord::Base
   end
 
   def name
-    if caller.grep(/actor.rb/).present?
+    if caller.grep(/actor.rb/).present? ||
+        caller.grep(/batch_controller_behavior.*edit_form/).present?
       return formal_name
     end
     super

@@ -1,7 +1,7 @@
 require 'rails_helper'
 describe 'generic file', :type => :feature do
   before do
-    @user = FactoryGirl.create(:user)
+    @user = FactoryGirl.create(:user, formal_name: 'Name, Formal')
     @file = GenericFile.new(
       abstract: ['testa'], bibliographic_citation: ['cit'],
       digital_origin: ['digo'], mesh: ['mesh'], lcsh: ['lcsh'],
@@ -157,6 +157,8 @@ describe 'generic file', :type => :feature do
           click_button('Show Additional Fields')
           # Mandatory
           fill_in 'generic_file_tag', with: 'something'
+          expect(page).to have_field(
+            'generic_file_creator', with: 'Name, Formal')
           fill_in 'generic_file_creator', with: 'someone'
           select 'Attribution 3.0 United States', from: 'generic_file_rights'
 
