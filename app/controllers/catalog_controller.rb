@@ -131,6 +131,8 @@ class CatalogController < ApplicationController
     config.add_show_field solr_name("description", :stored_searchable), label: "Description"
     config.add_show_field solr_name("bibliographic_citation", :stored_searchable), label: "Bibliographic Citation"
     config.add_show_field solr_name("abstract", :stored_searchable), label: "Abstract"
+    config.add_show_field solr_name("grants_and_funding", :stored_searchable), label: "Grants and Funding"
+    config.add_show_field solr_name("acknowledgments", :stored_searchable), label: "Acknowledgments"
     config.add_show_field solr_name("tag", :stored_searchable), label: "Keyword"
     config.add_show_field solr_name("subject", :stored_searchable), label: "Subject"
     config.add_show_field solr_name("mesh", :stored_searchable), label: "Subject: MESH"
