@@ -66,12 +66,15 @@ feature 'Catalog', :type => :feature do
     context 'anonymous user' do
       before { visit '/catalog' }
 
-      it { is_expected.to have_text('ABC') }
-      it { is_expected.not_to have_text('BCD') }
-      it { is_expected.not_to have_text('DEF') }
-      it { is_expected.not_to have_text('ZZZ') }
-      it { is_expected.not_to have_button('Add to Collection') }
-      it { is_expected.not_to have_selector('#catalogCollections') }
+      specify do
+        expect(page).to have_text('ABC')
+        expect(page).not_to have_text('BCD')
+        expect(page).not_to have_text('DEF')
+        expect(page).not_to have_text('ZZZ')
+        expect(page).not_to have_button('Add to Collection')
+        expect(page).not_to have_selector('#catalogCollections')
+        expect(page).not_to have_link('Delete')
+      end
     end
 
     context 'authenticated user' do
@@ -80,12 +83,15 @@ feature 'Catalog', :type => :feature do
         visit '/catalog'
       end
 
-      it { is_expected.to have_text('ABC') }
-      it { is_expected.to have_text('BCD') }
-      it { is_expected.to have_text('DEF') }
-      it { is_expected.not_to have_text('ZZZ') }
-      it { is_expected.not_to have_button('Add to Collection') }
-      it { is_expected.not_to have_selector('#catalogCollections') }
+      specify do
+        expect(page).to have_text('ABC')
+        expect(page).to have_text('BCD')
+        expect(page).to have_text('DEF')
+        expect(page).not_to have_text('ZZZ')
+        expect(page).not_to have_button('Add to Collection')
+        expect(page).not_to have_selector('#catalogCollections')
+        expect(page).not_to have_link('Delete')
+      end
 
       context 'with admin role' do
         before do
@@ -94,14 +100,24 @@ feature 'Catalog', :type => :feature do
           visit '/catalog'
         end
 
-        it { is_expected.to have_text('ABC') }
-        it { is_expected.to have_text('BCD') }
-        it { is_expected.to have_text('DEF') }
-        it { is_expected.to have_text('ZZZ') }
-        it { is_expected.to have_button('Add to Collection') }
-        it { is_expected.to have_selector('#catalogCollections') }
-        it { is_expected.to have_selector('input#id_col_user') }
-        it { is_expected.to have_selector('input#id_col_stranger') }
+        specify do
+          expect(page).to have_text('ABC')
+          expect(page).to have_text('BCD')
+          expect(page).to have_text('DEF')
+          expect(page).to have_text('ZZZ')
+          expect(page).to have_button('Add to Collection')
+          expect(page).to have_selector('#catalogCollections')
+          expect(page).to have_selector('input#id_col_user')
+          expect(page).to have_selector('input#id_col_stranger')
+          expect(page).to have_link('Delete')
+        end
+
+        it 'can delete an object' do
+          expect {
+            click_link('deleteButton-col_stranger')
+          }.to change { Collection.count }.by(-1)
+          expect { col_stranger.reload }.to raise_error(Ldp::Gone)
+        end
       end
 
       context 'with editor role' do
@@ -111,10 +127,17 @@ feature 'Catalog', :type => :feature do
           visit '/catalog'
         end
 
-        it { is_expected.to have_text('ABC') }
-        it { is_expected.to have_text('BCD') }
-        it { is_expected.to have_text('DEF') }
-        it { is_expected.to have_text('ZZZ') }
+        specify do
+          expect(page).to have_text('ABC')
+          expect(page).to have_text('BCD')
+          expect(page).to have_text('DEF')
+          expect(page).to have_text('ZZZ')
+          expect(page).to have_button('Add to Collection')
+          expect(page).to have_selector('#catalogCollections')
+          expect(page).to have_selector('input#id_col_user')
+          expect(page).to have_selector('input#id_col_stranger')
+          expect(page).not_to have_link('Delete')
+        end
       end
     end
   end

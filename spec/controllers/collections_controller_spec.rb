@@ -130,44 +130,129 @@ describe CollectionsController do
   end
 
   describe "#update" do
-    before do
-      @collection = make_collection(
-        @user, title: 'something', tag: ['tag'],
-        abstract: ['testa'], bibliographic_citation: ['cit'],
-        digital_origin: ['digo'], mesh: ['mesh'], lcsh: ['lcsh'],
-        subject_geographic: ['geo'], subject_name: ['subjn'],
-        multi_page: true
-      )
+    let(:collection) { make_collection(
+      @user, title: 'something', tag: ['tag'],
+      abstract: ['testa'], bibliographic_citation: ['cit'],
+      digital_origin: ['digo'], mesh: ['mesh'], lcsh: ['lcsh'],
+      subject_geographic: ['geo'], subject_name: ['subjn'],
+      multi_page: true
+    ) }
+
+    context 'institutional collections' do
+      let(:inst_col) { make_collection(
+        create(:user), title: 'Inst', id: 'ic1',
+        institutional_collection: true
+      ) }
+      let(:inst_role) { create(:role, name: 'Center1') }
+      let(:inst_admin_role) { create(:role, name: 'Center1-Admin') }
+      let(:inst_user) { create(:user, username: 'c1_prof') }
+      let(:inst_admin) { create(:user, username: 'c1_admin') }
+
+      describe 'unauthenticated' do
+        before { sign_out @user }
+        subject { patch :update, id: inst_col }
+
+        it { is_expected.to redirect_to('/users/sign_in') }
+      end
+
+      describe 'authenticated unauthorized user' do
+        before { patch :update, id: inst_col }
+
+        specify do
+          expect(response).to redirect_to('/')
+          expect(flash.alert).to include('not authorized')
+        end
+      end
+
+      describe 'authenticated authorized user' do
+        before do 
+          inst_user.add_role(inst_role.name)
+          inst_col.permissions.create(
+            name: 'Center1', type: 'group', access: 'edit',
+            access_to: inst_col.id)
+          inst_col.save!
+          sign_out @user
+          sign_in inst_user
+        end
+
+        context 'adding members' do
+          let(:gf) { make_generic_file(inst_user) }
+          specify do
+            expect {
+              patch :update, id: inst_col,
+                    :collection => { 'members' => 'add' },
+                    :batch_document_ids => [gf.id]
+            }.to change { inst_col.reload.member_ids.count }.by(1)
+            expect(response).to redirect_to('/collections/ic1')
+          end
+
+        end
+
+        context 'updating non-member attributes' do
+          it 'does not update the title' do
+            patch :update, id: inst_col,
+                  :collection => { 'title' => 'New Title' }
+            expect(inst_col.reload.title).to eq('Inst')
+            expect(response).to redirect_to('/collections/ic1')
+          end
+        end
+      end
+
+      describe 'authenticated authorized admin' do
+        before do
+          inst_admin.add_role(inst_admin_role.name)
+          inst_col.permissions.create(
+            name: 'Center1-Admin', type: 'group', access: 'edit',
+            access_to: inst_col.id)
+          inst_col.save!
+          sign_out @user
+          sign_in inst_admin
+        end
+
+        context 'updating uttributes' do
+          let(:gf) { make_generic_file(inst_admin) }
+          specify do
+            expect {
+              patch :update, id: inst_col,
+                    :collection => { 'members' => 'add', title: 'New Title' },
+                    :batch_document_ids => [gf.id]
+            }.to change { inst_col.reload.member_ids.count }.by(1)
+            expect(inst_col.reload.title).to eq('New Title')
+            expect(response).to redirect_to('/collections/ic1')
+          end
+        end
+      end
+
     end
 
     context 'visibility' do
       it 'allows for visibility settings changes to more restrictive' do
         patch(
           :update,
-          id: @collection,
+          id: collection,
           collection: {},
           visibility: 'restricted'
         )
-        expect(@collection.reload.visibility).to eq('restricted')
+        expect(collection.reload.visibility).to eq('restricted')
       end
 
       it 'allows for visibility settings changes to less restrictive' do
-        @collection.visibility = 'restricted'
-        @collection.save!
+        collection.visibility = 'restricted'
+        collection.save!
         patch(
           :update,
-          id: @collection,
+          id: collection,
           collection: {},
           visibility: 'authenticated'
         )
-        expect(@collection.reload.visibility).to eq('authenticated')
+        expect(collection.reload.visibility).to eq('authenticated')
       end
 
       it 'disallows for visibility settings changes to an unexpected value' do
         expect {
           patch(
             :update,
-            id: @collection,
+            id: collection,
             visibility: 'bogus'
           )
         }.to raise_exception { ArgumentError }
@@ -180,7 +265,7 @@ describe CollectionsController do
           it 'merges the permissions_attributes' do
             patch(
               :update,
-              id: @collection,
+              id: collection,
               collection: {
                 permissions_attributes: {
                   '7' => {
@@ -204,10 +289,10 @@ describe CollectionsController do
             ).to be_present
 
             expect(
-              @collection.reload.permissions.map(&:agent_name)
+              collection.reload.permissions.map(&:agent_name)
             ).to include('from_col')
             expect(
-              @collection.reload.permissions.map(&:agent_name)
+              collection.reload.permissions.map(&:agent_name)
             ).to include('from_gen')
           end
         end
@@ -216,7 +301,7 @@ describe CollectionsController do
           it 'populates the permissions_attributes' do
             patch(
               :update,
-              id: @collection,
+              id: collection,
               generic_file: {
                 permissions_attributes: {
                   '5' => {
@@ -231,25 +316,25 @@ describe CollectionsController do
             ).to be_present
 
             expect(
-              @collection.reload.permissions.map(&:agent_name)
+              collection.reload.permissions.map(&:agent_name)
             ).to include('from_gen')
           end
         end
 
         it 'can delete an existing permission' do
-          @collection.permissions_attributes = {
+          collection.permissions_attributes = {
             '5' => {
               'type' => 'user', 'name' => 'goodguy', 'access' => 'read'
             }
           }
-          @collection.save!
+          collection.save!
 
-          pid = @collection.reload.permissions.to_a.find {|o|
+          pid = collection.reload.permissions.to_a.find {|o|
             o.agent_name == 'goodguy' }.id
 
           patch(
             :update,
-            id: @collection,
+            id: collection,
             collection: {
               permissions_attributes: { '5' => { 'id' => pid, 'access'=>'read' } }
             },
@@ -259,25 +344,25 @@ describe CollectionsController do
           )
 
           expect(
-            @collection.reload.permissions.map(&:agent_name)
+            collection.reload.permissions.map(&:agent_name)
           ).not_to include('goodguy')
         end
 
         it 'can update an existing permission' do
-          @collection.permissions_attributes = {
+          collection.permissions_attributes = {
             '5' => {
               'type' => 'user', 'name' => 'goodguy', 'access' => 'read'
             }
           }
-          @collection.save!
+          collection.save!
 
-          permission = @collection.reload.permissions.to_a.find {|o|
+          permission = collection.reload.permissions.to_a.find {|o|
             o.agent_name == 'goodguy' }
           expect(permission.access).to eq('read')
 
           patch(
             :update,
-            id: @collection,
+            id: collection,
             collection: {
               permissions_attributes: {
                 '5' => { 'id' => permission.id, 'access'=>'edit' }
@@ -287,7 +372,7 @@ describe CollectionsController do
 
           # permission.reload.access doesn't work, hece this
           expect(
-            @collection.reload.permissions.to_a.find {|o|
+            collection.reload.permissions.to_a.find {|o|
               o.agent_name == 'goodguy'
             }.access
           ).to eq('edit')
@@ -296,59 +381,59 @@ describe CollectionsController do
     end
 
     it "should update abstract" do
-      patch :update, id: @collection, collection: { abstract: ['dudu'] }
+      patch :update, id: collection, collection: { abstract: ['dudu'] }
       expect(response).to redirect_to(
-        @routes.url_helpers.collection_path(@collection))
+        @routes.url_helpers.collection_path(collection))
       expect(assigns(:collection).abstract).to eq(['dudu'])
     end
 
     it "should update bibliographic_citation" do
-      patch :update, id: @collection, collection: {
+      patch :update, id: collection, collection: {
         bibliographic_citation: ['dudu'] }
       expect(response).to redirect_to(
-        @routes.url_helpers.collection_path(@collection))
+        @routes.url_helpers.collection_path(collection))
       expect(assigns(:collection).bibliographic_citation).to eq(['dudu'])
     end
 
     it "should update subject_name" do
-      patch :update, id: @collection, collection: { subject_name: ['dudu'] }
+      patch :update, id: collection, collection: { subject_name: ['dudu'] }
       expect(response).to redirect_to(
-        @routes.url_helpers.collection_path(@collection))
+        @routes.url_helpers.collection_path(collection))
       expect(assigns(:collection).subject_name).to eq(['dudu'])
     end
 
     it "should update subject_geographic" do
-      patch :update, id: @collection, collection: { subject_geographic: ['dudu'] }
+      patch :update, id: collection, collection: { subject_geographic: ['dudu'] }
       expect(response).to redirect_to(
-        @routes.url_helpers.collection_path(@collection))
+        @routes.url_helpers.collection_path(collection))
       expect(assigns(:collection).subject_geographic).to eq(['dudu'])
     end
 
     it "should update mesh" do
-      patch :update, id: @collection, collection: { mesh: ['dudu'] }
+      patch :update, id: collection, collection: { mesh: ['dudu'] }
       expect(response).to redirect_to(
-        @routes.url_helpers.collection_path(@collection))
+        @routes.url_helpers.collection_path(collection))
       expect(assigns(:collection).mesh).to eq(['dudu'])
     end
 
     it "should update lcsh" do
-      patch :update, id: @collection, collection: { lcsh: ['dudu'] }
+      patch :update, id: collection, collection: { lcsh: ['dudu'] }
       expect(response).to redirect_to(
-        @routes.url_helpers.collection_path(@collection))
+        @routes.url_helpers.collection_path(collection))
       expect(assigns(:collection).lcsh).to eq(['dudu'])
     end
 
     it "should not allow to update digital_origin" do
-      patch :update, id: @collection, collection: { digital_origin: ['dudu'] }
+      patch :update, id: collection, collection: { digital_origin: ['dudu'] }
       expect(response).to redirect_to(
-        @routes.url_helpers.collection_path(@collection))
+        @routes.url_helpers.collection_path(collection))
       expect(assigns(:collection).digital_origin).to eq(['digo'])
     end
 
     it "should update multi_page" do
-      patch :update, id: @collection, collection: { multi_page: false }
+      patch :update, id: collection, collection: { multi_page: false }
       expect(response).to redirect_to(
-        @routes.url_helpers.collection_path(@collection))
+        @routes.url_helpers.collection_path(collection))
       expect(assigns(:collection).multi_page).to eq(false)
     end
   end

@@ -9,7 +9,23 @@ module Galtersufia
 
     included do
       skip_before_action :authenticate_user!, :only => :index
+      skip_authorize_resource :only => :update
+      load_resource :only => :update
+      before_filter :update_authorization, :only => :update
     end
+
+    def update_authorization
+      if cannot?(:update, @collection)
+        filter_params_for_institutions
+        authorize!(:add_members, @collection)
+      end
+    end
+    private :update_authorization
+
+    def filter_params_for_institutions
+      params['collection'] = { 'members' => 'add' }
+    end
+    private :filter_params_for_institutions
 
     def collection_params
       clean_params = form_class.model_attributes(params[:collection])

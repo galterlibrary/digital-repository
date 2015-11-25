@@ -66,6 +66,14 @@ class Collection < Sufia::Collection
     index.type :boolean
   end
 
+  property :institutional_collection,
+           :predicate => ::RDF::URI.new(
+             'http://galter.northwestern.edu/rdf/institutional_collection'),
+           :multiple => false do |index|
+    index.as :stored_searchable
+    index.type :boolean
+  end
+
   def pageable?
     multi_page && pageable_members.present?
   end
@@ -110,6 +118,10 @@ class Collection < Sufia::Collection
 
     files = ActiveFedora::SolrService.query(query, args)
     files.reduce(0) { |sum, f| sum + f[file_size_field].to_i }
+  end
+
+  def is_institutional?
+    self.institutional_collection
   end
 
   class << self

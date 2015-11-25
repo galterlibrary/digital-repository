@@ -41,6 +41,10 @@ class User < ActiveRecord::Base
   end
   alias_method :remove_role, :remove_from_group
 
+  def is_admin?
+    (u.groups & ['admin', 'editor']).present?
+  end
+
   def groups
     all_groups = roles.map do |role|
       role.name

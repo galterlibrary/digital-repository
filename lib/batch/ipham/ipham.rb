@@ -69,7 +69,9 @@ def find_or_crete_user(netid)
 end
 
 def find_center_admins(center)
-  ['qew348', 'pls126'].map {|netid| find_or_crete_user(netid) }
+  [
+    'qew348', 'pls126', 'viq454', 'phb010'
+  ].map {|netid| find_or_crete_user(netid) }
 end
 
 def find_center_users(center)
@@ -87,6 +89,7 @@ def add_group_to_collection(collection, role, perm)
   }
   if permission.blank?
     collection.permissions.create(type: 'group', name: role, access: perm)
+    collection.save!
   end
 end
 
@@ -98,12 +101,18 @@ begin
   institute = Collection.find('ipham')
 rescue ActiveFedora::ObjectNotFoundError
   institute = Collection.new(
-    title: 'Institute for Public Health and Medicine', id: 'ipham')
+    title: 'Institute for Public Health and Medicine', id: 'ipham',
+    institutional: true
+  )
 rescue Ldp::Gone
   Collection.eradicate('ipham')
 end
 institute.tag = ['ipham']
 institute.apply_depositor_metadata('ipham-system-top')
+find_center_admins('ipham').each do |admin|
+  admin.add_role('IPHAM-Admin')
+end
+add_group_to_collection(institute, 'IPHAM-Admin', 'edit')
 institute.save!
 
 CENTERS.each do |center_name|
