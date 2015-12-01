@@ -17,6 +17,10 @@ class Ability
       test_edit(collection.id)
     end
 
+    can [:add_members], String do |collection_id|
+      test_edit(collection_id)
+    end
+
     # Editors can do everything but delete things
     if current_user.has_role?('editor')
       can :manage, :all

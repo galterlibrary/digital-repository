@@ -94,6 +94,27 @@ feature "Collections", :type => :feature do
   end
 
   describe 'viewing' do
+    before do
+      chi_box.members << black_box
+      chi_box.save!
+    end
+
+    context 'as an authenticated admin user' do
+      before do
+        login_as(create(:admin_user))
+      end
+
+      it 'lists the action menu for Black Box', js: true do
+        visit "/collections/#{chi_box.id}"
+        within ("#document_#{black_box.id}") do
+          click_button('Select an action')
+          expect(page).to have_link('Delete Collection')
+          expect(page).to have_link('Add to Collection')
+          expect(page).to have_link('Edit Collection')
+        end
+      end
+    end
+
     context 'as an authenticated user with edit permissions' do
       before do
         login_as(user, :scope => :user)
@@ -146,6 +167,16 @@ feature "Collections", :type => :feature do
         end
       end
 
+      it 'lists the action menu for Black Box', js: true do
+        visit "/collections/#{chi_box.id}"
+        within ("#document_#{black_box.id}") do
+          click_button('Select an action')
+          expect(page).not_to have_link('Delete Collection')
+          expect(page).to have_link('Add to Collection')
+          expect(page).to have_link('Edit Collection')
+        end
+      end
+
       it 'lists the open visibility' do
         visit "/collections/#{chi_box.id}"
         within(:css, 'h1.visibility') do
@@ -179,6 +210,13 @@ feature "Collections", :type => :feature do
         login_as(create(:user), :scope => :user)
       end
 
+      it 'does not list the action menu for Black Box' do
+        visit "/collections/#{chi_box.id}"
+        within ("#document_#{black_box.id}") do
+          expect(page).not_to have_button('Select an action')
+        end
+      end
+
       it 'lists the open visibility without a link' do
         visit "/collections/#{chi_box.id}"
         within(:css, 'h1.visibility') do
@@ -189,6 +227,13 @@ feature "Collections", :type => :feature do
     end
 
     context 'as an unauthenticated user' do
+      it 'does not list the action menu for Black Box' do
+        visit "/collections/#{chi_box.id}"
+        within ("#document_#{black_box.id}") do
+          expect(page).not_to have_button('Select an action')
+        end
+      end
+
       it 'lists the open visibility without a link' do
         visit "/collections/#{chi_box.id}"
         within(:css, 'h1.visibility') do
