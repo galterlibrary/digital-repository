@@ -65,7 +65,8 @@ RSpec.describe User do
           expect(subject).not_to eq(@user)
         end
 
-        it "creates a local user" do
+        it "creates a local user even if one with blank email exists" do
+          User.create(username: 'badone', email: '')
           expect { subject }.to change{ User.count }.by(1)
         end
       end

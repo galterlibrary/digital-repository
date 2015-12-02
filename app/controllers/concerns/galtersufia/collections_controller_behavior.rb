@@ -52,6 +52,14 @@ module Galtersufia
       super
     end
 
+    def collection_member_search_logic
+      if current_user.present? && current_user.is_admin?
+        super - [:add_access_controls_to_solr_params]
+      else
+        super
+      end
+    end
+
     def edit
       if @collection.multi_page && params['sort'].blank?
         params['sort'] = 'page_number_actual_isi asc'

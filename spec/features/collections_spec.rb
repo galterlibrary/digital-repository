@@ -100,8 +100,19 @@ feature "Collections", :type => :feature do
     end
 
     context 'as an authenticated admin user' do
+      let(:priv_col) {
+        make_collection(user, { title: 'Invisible', visibility: 'open' }) }
       before do
         login_as(create(:admin_user))
+      end
+
+      it 'lists private members for admin users' do
+        chi_box.members << ring
+        chi_box.members << priv_col
+        chi_box.save!
+        visit "/collections/#{chi_box.id}"
+        expect(page).to have_link('Ring of dexterity +9999')
+        expect(page).to have_link('Invisible')
       end
 
       it 'lists the action menu for Black Box', js: true do
@@ -129,7 +140,6 @@ feature "Collections", :type => :feature do
       end
 
       it 'can remove a file member', js: true do
-        pending 'make private files visible to admins'
         chi_box.members << ring
         chi_box.save!
         visit "/collections/#{chi_box.id}"
