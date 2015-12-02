@@ -109,9 +109,37 @@ feature "Collections", :type => :feature do
         within ("#document_#{black_box.id}") do
           click_button('Select an action')
           expect(page).to have_link('Delete Collection')
-          expect(page).to have_link('Add to Collection')
+          expect(page).not_to have_link('Add to Collection')
           expect(page).to have_link('Edit Collection')
+          expect(page).to have_link('Remove from Collection')
         end
+      end
+
+      it 'can remove a collection member', js: true do
+        chi_box.members << red_box
+        chi_box.save!
+        visit "/collections/#{chi_box.id}"
+        within ("#document_#{black_box.id}") do
+          click_button('Select an action')
+          expect {
+            click_link('Remove from Collection')
+          }.to change { chi_box.reload.members.count }.by(-1)
+        end
+        expect(chi_box.member_ids).to eq([red_box.id])
+      end
+
+      it 'can remove a file member', js: true do
+        pending 'make private files visible to admins'
+        chi_box.members << ring
+        chi_box.save!
+        visit "/collections/#{chi_box.id}"
+        within ("#document_#{ring.id}") do
+          click_button('Select an action')
+          expect {
+            click_link('Remove from Collection')
+          }.to change { chi_box.reload.members.count }.by(-1)
+        end
+        expect(chi_box.member_ids).to eq([black_box.id])
       end
     end
 
@@ -172,9 +200,36 @@ feature "Collections", :type => :feature do
         within ("#document_#{black_box.id}") do
           click_button('Select an action')
           expect(page).not_to have_link('Delete Collection')
-          expect(page).to have_link('Add to Collection')
+          expect(page).not_to have_link('Add to Collection')
           expect(page).to have_link('Edit Collection')
+          expect(page).to have_link('Remove from Collection')
         end
+      end
+
+      it 'can remove a collection member', js: true do
+        chi_box.members << red_box
+        chi_box.save!
+        visit "/collections/#{chi_box.id}"
+        within ("#document_#{black_box.id}") do
+          click_button('Select an action')
+          expect {
+            click_link('Remove from Collection')
+          }.to change { chi_box.reload.members.count }.by(-1)
+        end
+        expect(chi_box.member_ids).to eq([red_box.id])
+      end
+
+      it 'can remove a file member', js: true do
+        chi_box.members << ring
+        chi_box.save!
+        visit "/collections/#{chi_box.id}"
+        within ("#document_#{ring.id}") do
+          click_button('Select an action')
+          expect {
+            click_link('Remove from Collection')
+          }.to change { chi_box.reload.members.count }.by(-1)
+        end
+        expect(chi_box.member_ids).to eq([black_box.id])
       end
 
       it 'lists the open visibility' do

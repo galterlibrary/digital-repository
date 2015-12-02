@@ -10,7 +10,7 @@ FactoryGirl.define do
 
     factory :admin_user do
       after :create do |user|
-        FactoryGirl.create(:role, name: 'admin')
+        Role.find_or_create_by(name: 'admin')
         user.add_role('admin')
       end
     end

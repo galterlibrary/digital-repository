@@ -34,6 +34,5 @@ class Ability
     if !current_user.admin?
        cannot [:destroy], :all
     end
-
   end
 end

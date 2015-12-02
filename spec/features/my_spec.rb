@@ -25,6 +25,7 @@ feature 'Catalog', :type => :feature do
       it 'can add a collection to another', js: true do
         within('#document_col_user2') do
           click_button('Select an action')
+          expect(page).not_to have_link('Remove from Collection')
           click_link('Add to Collection')
         end
         choose 'UserCol'
