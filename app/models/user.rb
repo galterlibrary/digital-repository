@@ -64,7 +64,7 @@ class User < ActiveRecord::Base
       return
     end
 
-    return if results.empty?
+    raise 'Empty LDAP response' if results.empty?
     attrs = {}
     attrs[:email] = results['mail'].first rescue nil
     attrs[:display_name] = results['displayName'].first rescue nil
@@ -136,9 +136,8 @@ class User < ActiveRecord::Base
       if ::Devise.ldap_create_user && resource.new_record? &&
           resource.valid_ldap_authentication?(attributes[:password])
         resource.ldap_before_save if resource.respond_to?(:ldap_before_save)
-        resource.save!
-        resource.add_to_nuldap_groups
         resource.populate_attributes
+        resource.add_to_nuldap_groups
       end
 
       resource

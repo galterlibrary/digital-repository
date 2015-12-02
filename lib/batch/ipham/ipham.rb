@@ -93,8 +93,10 @@ def add_group_to_collection(collection, role, perm)
   end
 end
 
-User.find_or_create_by(username: 'ipham-system')
-User.find_or_create_by(username: 'ipham-top-system', email: 'a@b.c')
+ipham_sys = User.find_or_create_by(username: 'ipham-system')
+ipham_sys.update_attributes(email: 'ipham-system@northwestern.edu')
+ipham_top_sys = User.find_or_create_by(username: 'ipham-top-system')
+ipham_top_sys.update_attributes(email: 'ipham-top-system@northwestern.edu')
 Role.find_or_create_by(name: 'IPHAM-Admin', description: 'IPHAM-Admin',)
 
 begin
