@@ -11,6 +11,12 @@ describe BatchController do
     let(:batch) { Batch.create }
 
     before do
+      allow_any_instance_of(Nuldap).to receive(
+        :search).and_return([true, {
+          'mail' => ['a@b.c'],
+          'sn' => ['Name'],
+          'givenName' => ['Formal']
+        }])
       sign_in user
     end
 

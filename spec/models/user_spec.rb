@@ -41,8 +41,6 @@ RSpec.describe User do
             :valid_ldap_authentication?).and_return(true)
           expect_any_instance_of(User).to receive(
             :populate_attributes).and_call_original
-          expect_any_instance_of(Nuldap).to receive(
-            :search).and_return([true, { 'mail' => ['a@b.c'] }])
           expect_any_instance_of(User).to receive(:nuldap_groups).and_return(
             ['Black Hats', 'DDoSers', 'Script Kiddies']
           )

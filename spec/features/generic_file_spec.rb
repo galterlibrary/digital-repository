@@ -148,6 +148,12 @@ describe 'generic file', :type => :feature do
         @new_file = make_generic_file(@user, { label: 'Newnew' })
         @new_file.batch = @batch
         @new_file.save
+        allow_any_instance_of(Nuldap).to receive(
+          :search).and_return([true, {
+            'mail' => ['a@b.c'],
+            'sn' => ['Name'],
+            'givenName' => ['Formal']
+          }])
         login_as(@user, :scope => :user)
         visit "/batches/#{@batch.id}/edit"
       end

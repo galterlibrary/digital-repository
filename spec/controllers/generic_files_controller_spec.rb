@@ -89,6 +89,12 @@ describe GenericFilesController do
       expect_any_instance_of(Sufia::GenericFile::Actor).to receive(
         :create_content).with(
           file, 'system.png', 'content', 'image/png').and_return(true)
+      allow_any_instance_of(Nuldap).to receive(
+        :search).and_return([true, {
+          'mail' => ['a@b.c'],
+          'sn' => ['Name'],
+          'givenName' => ['Formal']
+        }])
       sign_in user
     end
 

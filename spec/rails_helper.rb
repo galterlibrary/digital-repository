@@ -43,7 +43,8 @@ RSpec.configure do |config|
   end
 
   config.before :each do |example|
-    allow_any_instance_of(User).to receive(:populate_attributes)
+    allow_any_instance_of(Nuldap).to receive(
+      :search).and_return([true, { 'mail' => ['a@b.c'] }])
     unless (example.metadata[:type] == :view || example.metadata[:no_clean])
       ActiveFedora::Cleaner.clean!
     end

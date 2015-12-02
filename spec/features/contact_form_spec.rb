@@ -8,6 +8,11 @@ feature "HomePage", :type => :feature do
   describe 'submiting contact form' do
     context 'signed in user' do
       before do
+        allow_any_instance_of(Nuldap).to receive(
+          :search).and_return([true, {
+            'mail' => ['test@net.com'],
+            'displayName' => ['Display Name']
+          }])
         login_as(user, :scope => :user)
         visit '/contact'
       end

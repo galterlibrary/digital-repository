@@ -64,6 +64,11 @@ feature "Authentication", :type => :feature do
       before do
         fill_in 'NetID', with: 'noonoo'
         fill_in 'Password', with: 'realdeal'
+        allow_any_instance_of(Nuldap).to receive(
+          :search).and_return([true, {
+            'mail' => ['a@b.c'],
+            'displayName' => ['Noonoo The First']
+          }])
         click_button 'Log in'
       end
       subject { page }
