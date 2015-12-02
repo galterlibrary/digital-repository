@@ -202,7 +202,7 @@ describe 'generic file', :type => :feature do
           click_button('Show Additional Fields')
 
           allow_any_instance_of(Qa::Authorities::Mesh).to(
-            receive(:results).and_return({ id: 1, label: 'ABC' })
+            receive(:search).and_return({ id: 1, label: 'ABC' })
           )
           execute_script("$('#generic_file_mesh').val('AB').trigger('keydown')")
           expect(page).to have_text('ABC')
@@ -247,7 +247,7 @@ describe 'generic file', :type => :feature do
           click_link('Subject: MESH')
 
           allow_any_instance_of(Qa::Authorities::Mesh).to(
-            receive(:results).and_return({ id: 1, label: 'ABC' })
+            receive(:search).and_return({ id: 1, label: 'ABC' })
           )
           execute_script("$('#generic_file_mesh').val('AB').trigger('keydown')")
           expect(page).to have_text('ABC')
@@ -450,7 +450,7 @@ describe 'generic file', :type => :feature do
           end
 
           it 'triggers name validation for multi fields on newly added fields' do
-            pending 'too js heavy to work all the time'
+            skip 'too js heavy to work all the time'
             click_link 'Edit'
 
             fill_in 'generic_file_creator', with: 'Testa'
@@ -513,7 +513,7 @@ describe 'generic file', :type => :feature do
           click_link 'Edit'
 
           allow_any_instance_of(Qa::Authorities::Mesh).to(
-            receive(:results).and_return({ id: 1, label: 'ABC' })
+            receive(:search).and_return({ id: 1, label: 'ABC' })
           )
           execute_script("$('#generic_file_mesh').val('AB').trigger('keydown')")
           expect(page).to have_text('ABC')
@@ -544,7 +544,7 @@ describe 'generic file', :type => :feature do
           click_link 'Edit'
           # Also tests id corrections for new multi-fields
           allow_any_instance_of(Qa::Authorities::Mesh).to(
-            receive(:results).and_return({ id: 1, label: 'ABC' })
+            receive(:search).and_return({ id: 1, label: 'ABC' })
           )
           fill_in 'generic_file_mesh', with: 'Advanced coloring'
           within(:css, 'div.generic_file_mesh') do
@@ -554,7 +554,7 @@ describe 'generic file', :type => :feature do
           expect(page).to have_text('ABC')
 
           allow_any_instance_of(Qa::Authorities::Mesh).to(
-            receive(:results).and_return({ id: 1, label: 'BCD' })
+            receive(:search).and_return({ id: 1, label: 'BCD' })
           )
           within(:css, 'div.generic_file_mesh') do
             click_button('Add')
@@ -570,19 +570,19 @@ describe 'generic file', :type => :feature do
           click_link 'Edit'
 
           allow_any_instance_of(Qa::Authorities::Mesh).to(
-            receive(:results).and_return({ id: 1, label: 'BCD' })
+            receive(:search).and_return({ id: 1, label: 'BCD' })
           )
           execute_script("$('#generic_file_mesh1').val('BC').trigger('keydown')")
           expect(page).to have_text('BCD')
 
           allow_any_instance_of(Qa::Authorities::Mesh).to(
-            receive(:results).and_return({ id: 1, label: 'CDE' })
+            receive(:search).and_return({ id: 1, label: 'CDE' })
           )
           execute_script("$('#generic_file_mesh2').val('CD').trigger('keydown')")
           expect(page).to have_text('CDE')
 
           allow_any_instance_of(Qa::Authorities::Mesh).to(
-            receive(:results).and_return({ id: 1, label: 'FFF' })
+            receive(:search).and_return({ id: 1, label: 'FFF' })
           )
           within(:css, 'div.generic_file_mesh') do
             click_button('Add')

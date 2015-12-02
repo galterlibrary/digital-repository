@@ -1,8 +1,9 @@
 class CustomAuthoritiesController < ApplicationController
   def query_mesh
     authority = Qa::Authorities::Mesh.new
-    authority.search(params[:q])
-    render :layout => false, :text => authority.results.to_json
+    #REMOVEME Temp fix for a qa gem bug.
+    authority.instance_variable_set(:@q, params[:q])
+    render :layout => false, :text => authority.search(params[:q]).to_json
   end
 
   def lcsh_names

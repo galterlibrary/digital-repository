@@ -444,7 +444,7 @@ feature "Collections", :type => :feature do
           visit "/collections/#{chi_box.id}/edit"
 
           allow_any_instance_of(Qa::Authorities::Mesh).to(
-            receive(:results).and_return({ id: 1, label: 'ABC' })
+            receive(:search).and_return({ id: 1, label: 'ABC' })
           )
           execute_script("$('#collection_mesh').val('AB').trigger('keydown')")
           expect(page).to have_text('ABC')
@@ -476,7 +476,7 @@ feature "Collections", :type => :feature do
 
           # Also tests id corrections for new multi-fields
           allow_any_instance_of(Qa::Authorities::Mesh).to(
-            receive(:results).and_return({ id: 1, label: 'ABC' })
+            receive(:search).and_return({ id: 1, label: 'ABC' })
           )
           fill_in 'collection_mesh', with: 'Advanced coloring'
           within(:css, 'div.collection_mesh') do
@@ -486,7 +486,7 @@ feature "Collections", :type => :feature do
           expect(page).to have_text('ABC')
 
           allow_any_instance_of(Qa::Authorities::Mesh).to(
-            receive(:results).and_return({ id: 1, label: 'BCD' })
+            receive(:search).and_return({ id: 1, label: 'BCD' })
           )
           within(:css, 'div.collection_mesh') do
             click_button('Add')
@@ -502,19 +502,19 @@ feature "Collections", :type => :feature do
           visit "/collections/#{chi_box.id}/edit"
 
           allow_any_instance_of(Qa::Authorities::Mesh).to(
-            receive(:results).and_return({ id: 1, label: 'BCD' })
+            receive(:search).and_return({ id: 1, label: 'BCD' })
           )
           execute_script("$('#collection_mesh1').val('BC').trigger('keydown')")
           expect(page).to have_text('BCD')
 
           allow_any_instance_of(Qa::Authorities::Mesh).to(
-            receive(:results).and_return({ id: 1, label: 'CDE' })
+            receive(:search).and_return({ id: 1, label: 'CDE' })
           )
           execute_script("$('#collection_mesh2').val('CD').trigger('keydown')")
           expect(page).to have_text('CDE')
 
           allow_any_instance_of(Qa::Authorities::Mesh).to(
-            receive(:results).and_return({ id: 1, label: 'FFF' })
+            receive(:search).and_return({ id: 1, label: 'FFF' })
           )
           within(:css, 'div.collection_mesh') do
             click_button('Add')
