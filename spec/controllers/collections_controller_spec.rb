@@ -185,7 +185,6 @@ describe CollectionsController do
             }.to change { inst_col.reload.member_ids.count }.by(1)
             expect(response).to redirect_to('/collections/ic1')
           end
-
         end
 
         context 'updating non-member attributes' do

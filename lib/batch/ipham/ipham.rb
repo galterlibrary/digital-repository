@@ -104,11 +104,13 @@ begin
 rescue ActiveFedora::ObjectNotFoundError
   institute = Collection.new(
     title: 'Institute for Public Health and Medicine', id: 'ipham',
-    institutional: true
+    institutional_collection: true
   )
 rescue Ldp::Gone
   Collection.eradicate('ipham')
 end
+institute.update_attributes(institutional_collection: true) unless institute.institutional_collection
+
 institute.tag = ['ipham']
 institute.apply_depositor_metadata('ipham-system-top')
 find_center_admins('ipham').each do |admin|
@@ -122,10 +124,12 @@ CENTERS.each do |center_name|
   begin
     center = Collection.find(id)
   rescue ActiveFedora::ObjectNotFoundError
-    center = Collection.new(title: center_name, id: id)
+    center = Collection.new(
+      title: center_name, id: id, institutional_collection: true)
   rescue Ldp::Gone
     Collection.eradicate(id)
   end
+  center.institutional_collection = true
   center.tag = ['ipham']
   center.apply_depositor_metadata('ipham-system')
   center.save!
