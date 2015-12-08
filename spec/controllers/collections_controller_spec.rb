@@ -226,6 +226,44 @@ describe CollectionsController do
           sign_in inst_admin
         end
 
+        context 'removing members' do
+          let(:gf) { make_generic_file(inst_admin) }
+          before do
+            inst_col.members << gf
+            gf.save
+            inst_col.save
+          end
+
+          specify do
+            expect(inst_col.reload.member_ids.count).to eq(1)
+            expect {
+              patch :update, id: inst_col,
+                    :collection => { 'members' => 'remove' },
+                    :batch_document_ids => [gf.id]
+            }.to change {
+              inst_col.reload.member_ids.count
+            }.by(-1)
+          end
+
+          describe 'permission update' do
+            let(:col1) { make_collection(inst_admin) }
+
+            it 'schedules add permission update jobs' do
+              job1 =  double('one')
+              expect(RemoveInstitutionalAdminPermissionsJob).to receive(
+                :new).with(gf.id, inst_col.id).and_return(job1)
+              job2 =  double('two')
+              expect(RemoveInstitutionalAdminPermissionsJob).to receive(
+                :new).with(col1.id, inst_col.id).and_return(job2)
+              expect(Sufia.queue).to receive(:push).with(job1)
+              expect(Sufia.queue).to receive(:push).with(job2)
+              patch :update, id: inst_col,
+                    :collection => { 'members' => 'remove' },
+                    :batch_document_ids => [gf.id, col1.id]
+            end
+          end
+        end
+
         context 'updating uttributes' do
           let(:gf) { make_generic_file(inst_admin) }
           specify do

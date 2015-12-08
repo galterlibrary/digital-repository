@@ -25,7 +25,6 @@ module Galtersufia
                     member_id, params[:id])
         end
       elsif params['collection']['members'] == 'remove'
-        return
         params['batch_document_ids'].each do |member_id|
           jobs << RemoveInstitutionalAdminPermissionsJob.new(
                     member_id, params[:id])

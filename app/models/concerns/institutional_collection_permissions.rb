@@ -30,6 +30,11 @@ module InstitutionalCollectionPermissions
   end
   private :missing_parent_permissions
 
+  def common_permissions(parent_id)
+    admin_edit_perms_for(parent_id) & admin_edit_perms_for(id)
+  end
+  private :common_permissions
+
   def add_institutional_admin_permissions(parent_id)
     return unless is_institutional_collection?(parent_id)
     # Using #changed? to detect permission_ids changes doesn't work
@@ -40,5 +45,19 @@ module InstitutionalCollectionPermissions
       self.permissions.create(name: group_name, type: 'group', access: 'edit')
     end
     self.update_index if permissions_changed
+  end
+
+  def remove_institutional_admin_permissions(parent_id)
+    return unless is_institutional_collection?(parent_id)
+    # Using #changed? to detect permission_ids changes doesn't work
+    # and Solr index doesn't get updated with new permissions.
+    permissions_changed = false
+    if to_remove = common_permissions(parent_id)
+      permissions_changed = true
+      self.permissions.each do |perm|
+        perm.destroy if to_remove.include?(perm.agent_name)
+      end
+    end
+    self.reload.update_index if permissions_changed
   end
 end

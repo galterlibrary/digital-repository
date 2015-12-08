@@ -445,4 +445,106 @@ RSpec.describe Collection do
       end
     end
   end
+
+  describe '#remove_institutional_admin_permissions' do
+    let(:child_collection) { make_collection(
+      user, institutional_collection: false, id: 'child_col') }
+    let(:child_collection2) { make_collection(
+      user, institutional_collection: false, id: 'child_col2') }
+    let(:institutional_parent) { make_collection(
+      user, institutional_collection: true, id: 'inst_col',
+      member_ids: [child_collection.id, child_collection2.id]
+    ) }
+    let(:non_institutional_parent) { make_collection(
+      user, institutional_collection: false, id: 'non_inst_col',
+      member_ids: [child_collection.id, child_collection2.id]
+    ) }
+
+    before do
+      [child_collection, institutional_parent].each do |c|
+        c.permissions.create(name: 'Inst-Admin', type: 'group', access: 'edit')
+        c.update_index
+      end
+    end
+
+    context 'parent is not an institutional_collection' do
+      before do
+        non_institutional_parent.permissions.create(
+          name: 'Inst-Admin', type: 'group', access: 'edit')
+        non_institutional_parent.update_index
+        child_collection.remove_institutional_admin_permissions(
+          non_institutional_parent.id)
+      end
+
+      it 'does not change the child permissions' do
+        expect(child_collection.reload.permissions.count).to eq(3)
+        expect(
+          non_institutional_parent.reload.permissions.map(&:agent_name)
+        ).to include('Inst-Admin')
+        expect(child_collection.reload.permissions.count).to eq(3)
+        expect(
+          child_collection.permissions.map(&:agent_name)
+        ).to include('Inst-Admin')
+      end
+    end
+
+    context 'parent collection does not exist' do
+      it 'throws an exception' do
+        expect {
+          child_collection.remove_institutional_admin_permissions('bad')
+        }.to raise_exception(Blacklight::Exceptions::InvalidSolrID)
+      end
+    end
+
+    context 'parent is an institutional_collection' do
+      let(:root_inst_col) { make_collection(
+        user, member_ids: [institutional_parent.id]) }
+      before do
+        root_inst_col.permissions.create(
+          name: 'Root-Admin', type: 'group', access: 'edit')
+        root_inst_col.update_index
+        institutional_parent.permissions.create(
+          name: 'Inst2-Admin', type: 'group', access: 'edit')
+        institutional_parent.permissions.create(
+          name: 'Root-Admin', type: 'group', access: 'edit')
+        institutional_parent.update_index
+        child_collection.permissions.create(
+          name: 'Root-Admin', type: 'group', access: 'edit')
+        child_collection.update_index
+        expect(child_collection.reload.permissions.count).to eq(4)
+        child_collection.remove_institutional_admin_permissions(
+          institutional_parent.id)
+      end
+
+      it 'changes the child permissions' do
+        expect(child_collection.reload.permissions.count).to eq(2)
+        expect(child_collection.permissions.map(&:agent_name)).not_to include(
+          'Inst-Admin')
+        expect(child_collection.permissions.map(&:agent_name)).not_to include(
+          'Root-Admin')
+      end
+
+      describe 'Special meaning of institutional -Admin group' do
+        before do
+          institutional_parent.permissions.create(
+            name: 'Inst-User', type: 'group', access: 'edit')
+          institutional_parent.update_index
+          child_collection.permissions.create(
+            name: 'Inst-User', type: 'group', access: 'edit')
+          child_collection.update_index
+          expect(child_collection.reload.permissions.count).to eq(3)
+          child_collection.remove_institutional_admin_permissions(
+            institutional_parent.id)
+        end
+
+        it 'ignores the non-admin permissions' do
+          expect(child_collection.reload.permissions.count).to eq(3)
+          expect(child_collection.permissions.map(&:agent_name)).not_to include(
+            'Inst-Admin')
+          expect(child_collection.permissions.map(&:agent_name)).to include(
+            'Inst-User')
+        end
+      end
+    end
+  end
 end
