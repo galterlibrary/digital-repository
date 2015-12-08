@@ -372,4 +372,77 @@ RSpec.describe Collection do
       expect(subject.to_solr['label_si']).to eq('asdf')
     end
   end
+
+  describe '#add_institutional_admin_permissions' do
+    let(:institutional_parent) { make_collection(
+      user, institutional_collection: true, id: 'inst_col') }
+    let(:non_institutional_parent) { make_collection(
+      user, institutional_collection: false, id: 'non_inst_col') }
+    let(:child_collection) { make_collection(
+      user, institutional_collection: false, id: 'child_col') }
+
+    context 'parent is not an institutional_collection' do
+      before do
+        non_institutional_parent.permissions.create(
+          name: 'Inst-Admin', type: 'group', access: 'edit')
+        non_institutional_parent.update_index
+        child_collection.add_institutional_admin_permissions(
+          non_institutional_parent.id)
+      end
+
+      it 'does not change the child permissions' do
+        expect(
+          non_institutional_parent.reload.permissions.map(&:agent_name)
+        ).to include('Inst-Admin')
+        expect(child_collection.reload.permissions.count).to eq(2)
+        expect(child_collection.permissions.map(&:agent_name)).not_to include(
+          'Inst-Admin')
+      end
+    end
+
+    context 'parent collection does not exist' do
+      it 'throws an exception' do
+        expect {
+          child_collection.add_institutional_admin_permissions('bad')
+        }.to raise_exception(Blacklight::Exceptions::InvalidSolrID)
+      end
+    end
+
+    context 'parent is an institutional_collection' do
+      before do
+        institutional_parent.permissions.create(
+          name: 'Inst-Admin', type: 'group', access: 'edit')
+        institutional_parent.permissions.create(
+          name: 'Inst2-Admin', type: 'group', access: 'edit')
+        institutional_parent.update_index
+        child_collection.add_institutional_admin_permissions(
+          institutional_parent.id)
+      end
+
+      it 'changes the child permissions' do
+        expect(child_collection.reload.permissions.count).to eq(4)
+        expect(child_collection.permissions.map(&:agent_name)).to include(
+          'Inst-Admin')
+        expect(child_collection.permissions.map(&:agent_name)).to include(
+          'Inst2-Admin')
+      end
+
+      describe 'Special meaning of institutional -Admin group' do
+        before do
+          institutional_parent.permissions.create(
+            name: 'Inst-User', type: 'group', access: 'edit')
+        end
+
+        it 'ignores the non-admin permissions' do
+          expect(child_collection.reload.permissions.count).to eq(4)
+          expect(child_collection.permissions.map(&:agent_name)).to include(
+            'Inst-Admin')
+          expect(child_collection.permissions.map(&:agent_name)).to include(
+            'Inst2-Admin')
+          expect(child_collection.permissions.map(&:agent_name)).not_to include(
+            'Inst-User')
+        end
+      end
+    end
+  end
 end

@@ -1,5 +1,7 @@
 class GenericFile < ActiveFedora::Base
   include Sufia::GenericFile
+  include InstitutionalCollectionPermissions
+
   belongs_to :parent,
     predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf,
     class_name: "Collection"

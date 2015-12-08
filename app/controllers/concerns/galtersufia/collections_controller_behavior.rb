@@ -12,7 +12,28 @@ module Galtersufia
       skip_authorize_resource :only => :update
       load_resource :only => :update
       before_filter :update_authorization, :only => :update
+      before_filter :adjust_institutional_permissions, :only => :update
     end
+
+    def adjust_institutional_permissions
+      return if params['collection'].blank?
+      return if params['batch_document_ids'].blank?
+      jobs = []
+      if params['collection']['members'] == 'add'
+        params['batch_document_ids'].each do |member_id|
+          jobs << AddInstitutionalAdminPermissionsJob.new(
+                    member_id, params[:id])
+        end
+      elsif params['collection']['members'] == 'remove'
+        return
+        params['batch_document_ids'].each do |member_id|
+          jobs << RemoveInstitutionalAdminPermissionsJob.new(
+                    member_id, params[:id])
+        end
+      end
+      jobs.each {|job| Sufia.queue.push(job) }
+    end
+    private :adjust_institutional_permissions
 
     def update_authorization
       if cannot?(:update, @collection)

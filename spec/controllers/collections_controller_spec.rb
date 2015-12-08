@@ -165,7 +165,7 @@ describe CollectionsController do
       end
 
       describe 'authenticated authorized user' do
-        before do 
+        before do
           inst_user.add_role(inst_role.name)
           inst_col.permissions.create(
             name: 'Center1', type: 'group', access: 'edit',
@@ -184,6 +184,24 @@ describe CollectionsController do
                     :batch_document_ids => [gf.id]
             }.to change { inst_col.reload.member_ids.count }.by(1)
             expect(response).to redirect_to('/collections/ic1')
+          end
+
+          describe 'permission update' do
+            let(:col1) { make_collection(inst_user) }
+
+            it 'schedules add permission update jobs' do
+              job1 =  double('one')
+              expect(AddInstitutionalAdminPermissionsJob).to receive(:new).with(
+                  gf.id, inst_col.id).and_return(job1)
+              job2 =  double('two')
+              expect(AddInstitutionalAdminPermissionsJob).to receive(:new).with(
+                  col1.id, inst_col.id).and_return(job2)
+              expect(Sufia.queue).to receive(:push).with(job1)
+              expect(Sufia.queue).to receive(:push).with(job2)
+              patch :update, id: inst_col,
+                    :collection => { 'members' => 'add' },
+                    :batch_document_ids => [gf.id, col1.id]
+            end
           end
         end
 
@@ -219,9 +237,26 @@ describe CollectionsController do
             expect(inst_col.reload.title).to eq('New Title')
             expect(response).to redirect_to('/collections/ic1')
           end
+
+          describe 'permission update' do
+            let(:col1) { make_collection(inst_user) }
+
+            it 'schedules add permission update jobs' do
+              job1 =  double('one')
+              expect(AddInstitutionalAdminPermissionsJob).to receive(:new).with(
+                  gf.id, inst_col.id).and_return(job1)
+              job2 =  double('two')
+              expect(AddInstitutionalAdminPermissionsJob).to receive(:new).with(
+                  col1.id, inst_col.id).and_return(job2)
+              expect(Sufia.queue).to receive(:push).with(job1)
+              expect(Sufia.queue).to receive(:push).with(job2)
+              patch :update, id: inst_col,
+                    :collection => { 'members' => 'add' },
+                    :batch_document_ids => [gf.id, col1.id]
+            end
+          end
         end
       end
-
     end
 
     context 'visibility' do

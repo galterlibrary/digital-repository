@@ -1,5 +1,7 @@
 require 'rails_helper'
 RSpec.describe GenericFile do
+  # Tested in collection_spec
+  it { is_expected.to respond_to(:add_institutional_admin_permissions) }
   context 'custom metadata' do
     describe "abstract" do
       it "has it" do

@@ -1,37 +1,14 @@
 class Collection < Sufia::Collection
   include Hydra::Collections::Actions
-  include Hydra::PermissionsQuery
-  include Blacklight::SearchHelper
+  include InstitutionalCollectionPermissions
 
   validates :tag, presence: true
   before_create :open_visibility
-  before_save :institutional_collection_inheritence
 
   def open_visibility
     self.visibility = 'open'
   end
   private :open_visibility
-
-  def admin_edit_perms_for(col_id)
-    doc = get_permissions_solr_response_for_doc_id(col_id)
-    return [] if doc.nil?
-    (doc[Ability.edit_group_field] || []).select {|agent_name|
-      agent_name.match(/-Admin\z/) }
-  end
-
-  def institutional_collection_inheritence
-    if institutional_collection && self.attribute_changed?(:member_ids)
-      parent_groups = admin_edit_perms_for(id)
-      member_ids.each do |member_id|
-        obj = nil
-        (parent_groups - admin_edit_perms_for(member_id)).each do |name|
-          obj = ActiveFedora::Base.find(member_id)
-          obj.permissions.create(name: name, type: 'group', access: 'edit')
-        end
-        obj.save! if obj.present?
-      end
-    end
-  end
 
   def update_permissions
   end
