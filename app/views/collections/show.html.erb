@@ -9,6 +9,9 @@
         <%= @presenter.title %>
         <%= render_collection_visibility(@collection) %>
       </h1>
+      <% if @collection.institutional_collection %>
+        <div class="label label-info">Institutional Collection</div>
+      <% end %>
       <p class="collection_description"><%= @presenter.description %></p>
     </header>
     <% unless has_collection_search_parameters? %>
