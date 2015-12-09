@@ -70,7 +70,7 @@ end
 
 def find_center_admins(center)
   [
-    'qew348', 'pls126', 'viq454', 'phb010'
+    'qew348', 'pls126', 'viq454', 'phb010', 'lco918'
   ].map {|netid| find_or_crete_user(netid) }
 end
 
