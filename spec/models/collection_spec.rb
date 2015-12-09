@@ -547,4 +547,16 @@ RSpec.describe Collection do
       end
     end
   end
+
+  describe 'invalid characters' do
+    it 'can save a file with UTF control characters in the metadata' do
+      subject.title = "Northwestern University, \vChicago"
+      subject.tag = ['abc', "\vChicago"]
+      subject.apply_depositor_metadata('nope')
+      expect(subject.save!).to be_truthy
+      expect(subject.title).to eq("Northwestern University, Chicago")
+      expect(subject.tag).to include('abc')
+      expect(subject.tag).to include('Chicago')
+    end
+  end
 end

@@ -2,6 +2,7 @@ require 'rails_helper'
 RSpec.describe GenericFile do
   # Tested in collection_spec
   it { is_expected.to respond_to(:add_institutional_admin_permissions) }
+
   context 'custom metadata' do
     describe "abstract" do
       it "has it" do
@@ -180,6 +181,15 @@ RSpec.describe GenericFile do
       subject.subject_name = ['f']
       subject.subject = []
       expect(subject.all_tags.sort).to eq(['a', 'b', 'c', 'f'])
+    end
+  end
+
+  describe 'invalid characters' do
+    it 'can save a file with UTF control characters in the metadata' do
+      subject.title = ["Northwestern University, \vChicago"]
+      subject.apply_depositor_metadata('nope')
+      expect(subject.save!).to be_truthy
+      expect(subject.title).to eq(["Northwestern University, Chicago"])
     end
   end
 

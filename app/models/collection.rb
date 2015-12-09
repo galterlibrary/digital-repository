@@ -1,6 +1,7 @@
 class Collection < Sufia::Collection
   include Hydra::Collections::Actions
   include InstitutionalCollectionPermissions
+  include CleanAttributeValues
 
   validates :tag, presence: true
   before_create :open_visibility
