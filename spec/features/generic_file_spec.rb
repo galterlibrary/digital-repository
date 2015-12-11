@@ -7,7 +7,7 @@ describe 'generic file', :type => :feature do
       digital_origin: ['digo'], mesh: ['mesh'], lcsh: ['lcsh'],
       subject_geographic: ['geo'], subject_name: ['subjn'],
       visibility: 'open', page_number: '', acknowledgments: ['ack1'],
-      grants_and_funding: ['gaf1']
+      grants_and_funding: ['gaf1'], doi: ['doi1'], ark: ['ark1']
     )
     @file.apply_depositor_metadata(@user.user_key)
     @file.save!
@@ -42,6 +42,8 @@ describe 'generic file', :type => :feature do
       expect(page).to have_text('ack1')
       expect(page).to have_text('Grants and funding')
       expect(page).to have_text('gaf1')
+      expect(page).to have_text('doi1')
+      expect(page).to have_text('ark1')
     end
 
     it 'hides links to Mendeley and Zotero' do
@@ -177,6 +179,8 @@ describe 'generic file', :type => :feature do
           fill_in 'generic_file_mesh', with: 'mesh'
           fill_in 'generic_file_subject_geographic', with: 'geo'
           fill_in 'generic_file_subject_name', with: 'subjn'
+          fill_in 'generic_file_doi', with: 'doi'
+          fill_in 'generic_file_ark', with: 'ark'
 
           expect(page).not_to have_text('Digital origin')
 
@@ -194,6 +198,8 @@ describe 'generic file', :type => :feature do
           expect(@new_file.mesh).to eq(['mesh'])
           expect(@new_file.subject_geographic).to eq(['geo'])
           expect(@new_file.subject_name).to eq(['subjn'])
+          expect(@new_file.doi).to eq(['doi'])
+          expect(@new_file.ark).to eq(['ark'])
         end
       end
 

@@ -191,6 +191,22 @@ describe GenericFilesController do
       expect(assigns(:generic_file).page_number).to eq('22')
     end
 
+    it "should update doi" do
+      expect(@file.doi).to be_blank
+      patch :update, id: @file, generic_file: { doi: ['doi'] }
+      expect(response).to redirect_to(
+        @routes.url_helpers.generic_file_path(@file))
+      expect(assigns(:generic_file).doi).to eq(['doi'])
+    end
+
+    it "should update ark" do
+      expect(@file.ark).to be_blank
+      patch :update, id: @file, generic_file: { ark: ['ark'] }
+      expect(response).to redirect_to(
+        @routes.url_helpers.generic_file_path(@file))
+      expect(assigns(:generic_file).ark).to eq(['ark'])
+    end
+
     context 'visibility' do
       it 'allows for visibility settings changes to more restrictive' do
         @file.visibility = 'restricted'

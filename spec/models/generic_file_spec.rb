@@ -131,6 +131,24 @@ RSpec.describe GenericFile do
         expect(subject.reload.page_number_actual).to eq(nil)
       end
     end
+
+    describe 'doi' do
+      specify do
+        expect(subject.doi).to eq([])
+        subject.doi = ['10.6666/XXX']
+        subject.save(validate: false)
+        expect(subject.reload.doi).to eq(['10.6666/XXX'])
+      end
+    end
+
+    describe 'ark' do
+      specify do
+        expect(subject.ark).to eq([])
+        subject.ark = ['10.6666/XXX']
+        subject.save(validate: false)
+        expect(subject.reload.ark).to eq(['10.6666/XXX'])
+      end
+    end
   end
 
   context 'parent relationship' do

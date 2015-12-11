@@ -73,6 +73,19 @@ class GenericFile < ActiveFedora::Base
     index.type :integer
   end
 
+  property :doi,
+           :predicate => ::RDF::Vocab::Bibframe.doi,
+           :multiple => true do |index|
+    index.as :stored_searchable
+  end
+
+  property :ark,
+           :predicate => ::RDF::URI.new(
+             'http://galter.northwestern.edu/rdf/doi'),
+           :multiple => true do |index|
+    index.as :stored_searchable
+  end
+
   before_save :store_the_actual_page_number
 
   def store_the_actual_page_number
