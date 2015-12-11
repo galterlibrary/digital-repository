@@ -119,6 +119,18 @@ describe GenericFilesController do
       @file.save!
     end
 
+    describe 'doi minting job scheduling' do
+      it 'schedules the job' do
+        job1 =  double('one')
+        job2 =  double('two')
+        expect(MintDoiJob).to receive(:new).with(@file.id).and_return(job1)
+        expect(ContentUpdateEventJob).to receive(:new).and_return(job2)
+        expect(Sufia.queue).to receive(:push).with(job1)
+        expect(Sufia.queue).to receive(:push).with(job2)
+        patch :update, id: @file, generic_file: { abstract: ['dudu'] }
+      end
+    end
+
     it "should update abstract" do
       patch :update, id: @file, generic_file: { abstract: ['dudu'] }
       expect(response).to redirect_to(

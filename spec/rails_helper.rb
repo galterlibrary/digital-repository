@@ -45,6 +45,7 @@ RSpec.configure do |config|
   config.before :each do |example|
     allow_any_instance_of(Nuldap).to receive(
       :search).and_return([true, { 'mail' => ['a@b.c'] }])
+    allow_any_instance_of(GenericFile).to receive(:check_doi_presence)
     unless (example.metadata[:type] == :view || example.metadata[:no_clean])
       ActiveFedora::Cleaner.clean!
     end

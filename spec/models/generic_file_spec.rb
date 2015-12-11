@@ -211,6 +211,99 @@ RSpec.describe GenericFile do
     end
   end
 
+  describe '#check_doi_presence' do
+    let(:user) { create(:user) }
+
+    before do
+      allow_any_instance_of(GenericFile).to receive(
+        :check_doi_presence).and_call_original
+    end
+
+    describe 'missing the id' do
+      subject { GenericFile.new(title: ['abc'], creator: ['bcd']) }
+
+      it 'does nothing' do
+        subject.check_doi_presence
+        expect(subject.doi).to be_blank
+      end
+    end
+
+    describe 'missing the title' do
+      subject { make_generic_file(user, creator: ['bcd']) }
+
+      it 'does nothing' do
+        subject.update_attributes(title: [])
+        expect(subject.reload.title).to be_blank
+        subject.check_doi_presence
+        expect(subject.reload.doi).to be_blank
+        expect(subject.reload.ark).to be_blank
+      end
+    end
+
+    describe 'missing the creator' do
+      subject { make_generic_file(user) }
+
+      it 'does nothing' do
+        expect(subject.reload.creator).to be_blank
+        subject.check_doi_presence
+        expect(subject.reload.doi).to be_blank
+        expect(subject.reload.ark).to be_blank
+      end
+    end
+
+    describe 'all required metadata present' do
+      subject { make_generic_file(
+        user, title: ['title'], creator: ['bcd'],
+        date_uploaded: Date.new(2013), id: 'mahid'
+      ) }
+      let(:identifier) { double('ezid-id', id: 'doi', shadowedby: 'ark') }
+
+      context 'no date_uploaded' do
+        before { subject.update_attributes(date_uploaded: nil) }
+
+        it 'sets doi and ark' do
+          expect(Ezid::Identifier).to receive(:create).with(
+            Ezid::Metadata.new({
+              'datacite.creator' => 'bcd',
+              'datacite.title' => 'title',
+              'datacite.publisher' => 'Galter Health Science Library',
+              'datacite.publicationyear' => Time.zone.today.year.to_s,
+              '_target' => 'https://digitalhub.northwestern.edu/files/mahid'
+            })
+          ).and_return(identifier)
+          subject.check_doi_presence
+          expect(subject.reload.doi).to eq(['doi'])
+          expect(subject.reload.ark).to eq(['ark'])
+        end
+      end
+
+      context 'doi already present' do
+        before { subject.update_attributes(doi: ['doi1']) }
+
+        it 'sets doi and ark' do
+          subject.check_doi_presence
+          expect(subject.reload.doi).to eq(['doi1'])
+          expect(subject.reload.ark).to eq([])
+        end
+      end
+
+      it 'sets doi and ark' do
+        expect(Ezid::Identifier).to receive(:create).with(
+          Ezid::Metadata.new({
+            'datacite.creator' => 'bcd',
+            'datacite.title' => 'title',
+            'datacite.publisher' => 'Galter Health Science Library',
+            'datacite.publicationyear' => '2013',
+            '_target' => 'https://digitalhub.northwestern.edu/files/mahid'
+          })
+        ).and_return(identifier)
+        subject.check_doi_presence
+        expect(subject.reload.doi).to eq(['doi'])
+        expect(subject.reload.ark).to eq(['ark'])
+      end
+    end
+  end
+
   describe '#to_solr' do
     it 'generates tags_sim' do
       subject.mesh = ['a']

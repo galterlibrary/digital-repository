@@ -10,7 +10,15 @@ module Galtersufia
     included do
       self.presenter_class = GalterGenericFilePresenter
       self.edit_form_class = Sufia::Forms::GalterGenericFileEditForm
+      after_action :schedule_doi_job, only: [:create, :update]
     end
+
+    def schedule_doi_job
+      if @generic_file.persisted?
+        Sufia.queue.push(MintDoiJob.new(@generic_file.id))
+      end
+    end
+    private :schedule_doi_job
 
     def adjust_visibility_update_params?
       required = GenericFilesController.edit_form_class.required_fields
