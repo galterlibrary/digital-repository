@@ -7,7 +7,7 @@ describe 'generic file', :type => :feature do
       digital_origin: ['digo'], mesh: ['mesh'], lcsh: ['lcsh'],
       subject_geographic: ['geo'], subject_name: ['subjn'],
       visibility: 'open', page_number: '', acknowledgments: ['ack1'],
-      grants_and_funding: ['gaf1'], doi: ['doi1'], ark: ['ark1']
+      grants_and_funding: ['gaf1'], doi: ['doi:abcdoi'], ark: ['ark:/ark1']
     )
     @file.apply_depositor_metadata(@user.user_key)
     @file.save!
@@ -42,8 +42,8 @@ describe 'generic file', :type => :feature do
       expect(page).to have_text('ack1')
       expect(page).to have_text('Grants and funding')
       expect(page).to have_text('gaf1')
-      expect(page).to have_text('doi1')
-      expect(page).to have_text('ark1')
+      expect(page).to have_link('abcdoi', href: 'http://dx.doi.org/abcdoi')
+      expect(page).to have_link('ark:/ark1', href: 'http://n2t.net/ark:/ark1')
     end
 
     it 'hides links to Mendeley and Zotero' do
