@@ -259,6 +259,50 @@ RSpec.describe GenericFile do
       ) }
       let(:identifier) { double('ezid-id', id: 'doi', shadowedby: 'ark') }
 
+      context 'generic file of type Page' do
+        subject do
+          page = Page.new(
+            :title => 'yes', title: ['title'], creator: ['bcd'],
+            :date_uploaded => Date.new(2013), id: 'mahid',
+            resource_type: ['Book'], page_number: '1'
+          )
+          page.apply_depositor_metadata('abc')
+          page.save
+          page
+        end
+
+        it 'does nothing' do
+          expect(Ezid::Identifier).not_to receive(:create)
+          expect(Ezid::Identifier).not_to receive(:find)
+          subject.check_doi_presence
+          expect(subject.reload.doi).to eq([])
+          expect(subject.ark).to eq([])
+        end
+
+        describe 'with no page_number metadata' do
+          before do
+            subject.update_attributes(page_number: nil)
+            expect(Ezid::Identifier).to receive(:create)
+              .with(
+                Ezid::Metadata.new({
+                  'datacite.creator' => 'bcd',
+                  'datacite.title' => 'title',
+                  'datacite.publisher' => 'Galter Health Science Library',
+                  'datacite.publicationyear' => '2013',
+                  #'datacite.resourcetype' => 'Book',
+                  '_target' => 'https://digitalhub.northwestern.edu/files/mahid'
+                })
+              ).and_return(identifier)
+          end
+
+          it 'updates the metadata remotely but not the ids locally' do
+            subject.check_doi_presence
+            expect(subject.reload.doi).to eq(['doi'])
+            expect(subject.ark).to eq(['ark'])
+          end
+        end
+      end
+
       context 'no date_uploaded' do
         before { subject.update_attributes(date_uploaded: nil) }
 

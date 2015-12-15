@@ -27,10 +27,20 @@ module EzidGenerator
   end
   private :update_doi_metadata
 
+  def can_get_doi?
+    # Only generate if required metadata is there
+    return false unless self.id.present? &&
+                        self.creator.present? &&
+                        self.title.present?
+    # Only generate for combined pages
+    return false if self.is_a?(Page) &&
+                    self.page_number.present?
+    true
+  end
+  private :can_get_doi?
+
   def check_doi_presence
-    return unless self.id.present? &&
-                  self.creator.present? &&
-                  self.title.present?
+    return unless can_get_doi?
     if self.doi.present?
       update_doi_metadata
     else
