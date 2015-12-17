@@ -224,6 +224,7 @@ RSpec.describe GenericFile do
 
       it 'does nothing' do
         subject.check_doi_presence
+        expect(subject.check_doi_presence).to eq('metadata')
         expect(subject.doi).to be_blank
       end
     end
@@ -234,7 +235,7 @@ RSpec.describe GenericFile do
       it 'does nothing' do
         subject.update_attributes(title: [])
         expect(subject.reload.title).to be_blank
-        subject.check_doi_presence
+        expect(subject.check_doi_presence).to eq('metadata')
         expect(subject.reload.doi).to be_blank
         expect(subject.ark).to be_blank
       end
@@ -245,7 +246,7 @@ RSpec.describe GenericFile do
 
       it 'does nothing' do
         expect(subject.reload.creator).to be_blank
-        subject.check_doi_presence
+        expect(subject.check_doi_presence).to eq('metadata')
         expect(subject.reload.doi).to be_blank
         expect(subject.ark).to be_blank
       end
@@ -262,7 +263,7 @@ RSpec.describe GenericFile do
       context 'generic file of type Page' do
         subject do
           page = Page.new(
-            :title => 'yes', title: ['title'], creator: ['bcd'],
+            :title => ['title'], creator: ['bcd'],
             :date_uploaded => Date.new(2013), id: 'mahid',
             resource_type: ['Book'], page_number: '1'
           )
@@ -274,7 +275,7 @@ RSpec.describe GenericFile do
         it 'does nothing' do
           expect(Ezid::Identifier).not_to receive(:create)
           expect(Ezid::Identifier).not_to receive(:find)
-          subject.check_doi_presence
+          expect(subject.check_doi_presence).to eq('page')
           expect(subject.reload.doi).to eq([])
           expect(subject.ark).to eq([])
         end
@@ -295,8 +296,8 @@ RSpec.describe GenericFile do
               ).and_return(identifier)
           end
 
-          it 'updates the metadata remotely but not the ids locally' do
-            subject.check_doi_presence
+          it 'creates the doi and ark' do
+            expect(subject.check_doi_presence).to eq('generated')
             expect(subject.reload.doi).to eq(['doi'])
             expect(subject.ark).to eq(['ark'])
           end
@@ -317,7 +318,7 @@ RSpec.describe GenericFile do
               '_target' => 'https://digitalhub.northwestern.edu/files/mahid'
             })
           ).and_return(identifier)
-          subject.check_doi_presence
+          expect(subject.check_doi_presence).to eq('generated')
           expect(subject.reload.doi).to eq(['doi'])
           expect(subject.ark).to eq(['ark'])
         end
@@ -335,7 +336,7 @@ RSpec.describe GenericFile do
           end
 
           it 'does nothing' do
-            subject.check_doi_presence
+            expect(subject.check_doi_presence).to be_nil
             expect(subject.reload.doi).to eq(['doi1'])
             expect(subject.ark).to eq([])
           end
@@ -360,7 +361,7 @@ RSpec.describe GenericFile do
           end
 
           it 'updates the metadata remotely but not the ids locally' do
-            subject.check_doi_presence
+            expect(subject.check_doi_presence).to eq('updated')
             expect(subject.reload.doi).to eq(['doi1'])
             expect(subject.ark).to eq([])
           end
@@ -390,7 +391,7 @@ RSpec.describe GenericFile do
           end
 
           it 'updates the metadata remotely but not the ids locally' do
-            subject.check_doi_presence
+            expect(subject.check_doi_presence).to eq('updated')
             expect(subject.reload.doi).to eq(['doi1', 'doi2', 'doi3'])
             expect(subject.ark).to eq([])
           end
@@ -408,7 +409,7 @@ RSpec.describe GenericFile do
             '_target' => 'https://digitalhub.northwestern.edu/files/mahid'
           })
         ).and_return(identifier)
-        subject.check_doi_presence
+        expect(subject.check_doi_presence).to eq('generated')
         expect(subject.reload.doi).to eq(['doi'])
         expect(subject.ark).to eq(['ark'])
       end

@@ -23,8 +23,10 @@ describe BatchController do
       it 'schedules the job for both generic files' do
         job1 =  double('one')
         job2 =  double('two')
-        expect(MintDoiJob).to receive(:new).with(gf1.id).and_return(job1)
-        expect(MintDoiJob).to receive(:new).with(gf2.id).and_return(job2)
+        expect(MintDoiJob).to receive(:new).with(
+          gf1.id, user.username).and_return(job1)
+        expect(MintDoiJob).to receive(:new).with(
+          gf2.id, user.username).and_return(job2)
         expect(Sufia.queue).to receive(:push).with(job1)
         expect(Sufia.queue).to receive(:push).with(job2)
         patch :update, id: batch, visibility: 'open',

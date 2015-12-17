@@ -1,6 +1,8 @@
 module EzidGenerator
   extend ActiveSupport::Concern
 
+  attr_accessor :doi_message
+
   def ezid_metadata
     Ezid::Metadata.new(
       'datacite.creator' => self.creator.first,
@@ -20,6 +22,7 @@ module EzidGenerator
         identifier = Ezid::Identifier.find(doi_str)
         identifier.update_metadata(ezid_metadata)
         identifier.save
+        self.doi_message = 'updated'
       rescue Ezid::Error
         next
       end
@@ -29,24 +32,29 @@ module EzidGenerator
 
   def can_get_doi?
     # Only generate if required metadata is there
-    return false unless self.id.present? &&
-                        self.creator.present? &&
-                        self.title.present?
+    unless self.id.present? && self.creator.present? && self.title.present?
+      self.doi_message = 'metadata'
+      return false
+    end
     # Only generate for combined pages
-    return false if self.is_a?(Page) &&
-                    self.page_number.present?
+    if self.is_a?(Page) && self.page_number.present?
+      self.doi_message = 'page'
+      return false
+    end
     true
   end
   private :can_get_doi?
 
   def check_doi_presence
-    return unless can_get_doi?
+    return self.doi_message unless can_get_doi?
     if self.doi.present?
       update_doi_metadata
     else
       identifier = Ezid::Identifier.create(ezid_metadata)
       self.update_attributes(
         doi: [identifier.id], ark: [identifier.shadowedby])
+      self.doi_message = 'generated'
     end
+    self.doi_message
   end
 end

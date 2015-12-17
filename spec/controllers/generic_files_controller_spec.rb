@@ -123,7 +123,8 @@ describe GenericFilesController do
       it 'schedules the job' do
         job1 =  double('one')
         job2 =  double('two')
-        expect(MintDoiJob).to receive(:new).with(@file.id).and_return(job1)
+        expect(MintDoiJob).to receive(:new).with(
+          @file.id, @user.username).and_return(job1)
         expect(ContentUpdateEventJob).to receive(:new).and_return(job2)
         expect(Sufia.queue).to receive(:push).with(job1)
         expect(Sufia.queue).to receive(:push).with(job2)

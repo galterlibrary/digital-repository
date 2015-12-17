@@ -15,7 +15,7 @@ module Galtersufia
 
     def schedule_doi_job
       if @generic_file.persisted?
-        Sufia.queue.push(MintDoiJob.new(@generic_file.id))
+        Sufia.queue.push(MintDoiJob.new(@generic_file.id, current_user.username))
       end
     end
     private :schedule_doi_job
