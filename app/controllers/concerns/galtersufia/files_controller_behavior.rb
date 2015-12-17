@@ -10,7 +10,7 @@ module Galtersufia
     included do
       self.presenter_class = GalterGenericFilePresenter
       self.edit_form_class = Sufia::Forms::GalterGenericFileEditForm
-      after_action :schedule_doi_job, only: [:create, :update]
+      after_action :schedule_doi_job, only: [:update]
     end
 
     def schedule_doi_job
