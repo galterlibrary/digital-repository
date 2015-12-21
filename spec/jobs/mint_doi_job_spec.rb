@@ -40,6 +40,20 @@ describe MintDoiJob do
       end
     end
 
+    describe 'when doi was generated for non-public file' do
+      before do
+        expect(subject.object).to receive(
+          :check_doi_presence).and_return('generated_reserved')
+      end
+
+      it 'notifies the user of file generation' do
+        subject.run
+        expect(user.mailbox.inbox.first.subject).to eq('DOI generated')
+        expect(user.mailbox.inbox.first.messages.first.body).to match(
+          /DOI was generated for <a href='.*gf1'>.*DOI is inactive/)
+      end
+    end
+
     describe 'when doi metadata was updated' do
       before do
         expect(subject.object).to receive(
@@ -51,6 +65,20 @@ describe MintDoiJob do
         expect(user.mailbox.inbox.first.subject).to eq('DOI metadata updated')
         expect(user.mailbox.inbox.first.messages.first.body).to include(
           "DOI metadata was updated for <a href='/files/gf1'>")
+      end
+    end
+
+    describe 'when doi metadata was updated for file changing to non-public' do
+      before do
+        expect(subject.object).to receive(
+          :check_doi_presence).and_return('updated_unavailable')
+      end
+
+      it 'notifies the user of DOI metadata update' do
+        subject.run
+        expect(user.mailbox.inbox.first.subject).to eq('DOI metadata updated')
+        expect(user.mailbox.inbox.first.messages.first.body).to match(
+          /DOI metadata was updated for <a href=.*gf1'>.*has been deactivated/)
       end
     end
 

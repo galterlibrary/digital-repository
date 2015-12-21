@@ -253,12 +253,15 @@ RSpec.describe GenericFile do
     end
 
     describe 'all required metadata present' do
+      let(:identifier) { double(
+        'ezid-id', id: 'doi', shadowedby: 'ark', status: 'reserved'
+      ) }
+
       subject { make_generic_file(
         user, title: ['title'], creator: ['bcd'],
         date_uploaded: Date.new(2013), id: 'mahid',
         resource_type: ['Book']
       ) }
-      let(:identifier) { double('ezid-id', id: 'doi', shadowedby: 'ark') }
 
       context 'generic file of type Page' do
         subject do
@@ -291,13 +294,14 @@ RSpec.describe GenericFile do
                   'datacite.publisher' => 'Galter Health Science Library',
                   'datacite.publicationyear' => '2013',
                   #'datacite.resourcetype' => 'Book',
+                  '_status' => 'reserved',
                   '_target' => 'https://digitalhub.northwestern.edu/files/mahid'
                 })
               ).and_return(identifier)
           end
 
           it 'creates the doi and ark' do
-            expect(subject.check_doi_presence).to eq('generated')
+            expect(subject.check_doi_presence).to eq('generated_reserved')
             expect(subject.reload.doi).to eq(['doi'])
             expect(subject.ark).to eq(['ark'])
           end
@@ -305,6 +309,10 @@ RSpec.describe GenericFile do
       end
 
       context 'no date_uploaded' do
+        let(:identifier) { double(
+          'ezid-id', id: 'doi', shadowedby: 'ark', status: 'reserved'
+        ) }
+
         before { subject.update_attributes(date_uploaded: nil) }
 
         it 'sets doi and ark' do
@@ -315,10 +323,11 @@ RSpec.describe GenericFile do
               'datacite.publisher' => 'Galter Health Science Library',
               'datacite.publicationyear' => Time.zone.today.year.to_s,
               #'datacite.resourcetype' => 'Book',
+              '_status' => 'reserved',
               '_target' => 'https://digitalhub.northwestern.edu/files/mahid'
             })
           ).and_return(identifier)
-          expect(subject.check_doi_presence).to eq('generated')
+          expect(subject.check_doi_presence).to eq('generated_reserved')
           expect(subject.reload.doi).to eq(['doi'])
           expect(subject.ark).to eq(['ark'])
         end
@@ -342,8 +351,14 @@ RSpec.describe GenericFile do
           end
         end
 
-        describe 'originates from Galter' do
+        describe 'originates from Galter and visibility set to open' do
+          let(:identifier) { double(
+            'ezid-id', id: 'doi', shadowedby: 'ark', status: 'public'
+          ) }
+
           before do
+            subject.visibility = 'open'
+            subject.save!
             expect(Ezid::Identifier).to receive(:find).with(
               'doi1').and_return(Ezid::Identifier.new)
             expect_any_instance_of(Ezid::Identifier).to receive(
@@ -354,6 +369,7 @@ RSpec.describe GenericFile do
                   'datacite.publisher' => 'Galter Health Science Library',
                   'datacite.publicationyear' => '2013',
                   #'datacite.resourcetype' => 'Book',
+                  '_status' => 'public',
                   '_target' => 'https://digitalhub.northwestern.edu/files/mahid'
                 })
               )
@@ -367,7 +383,33 @@ RSpec.describe GenericFile do
           end
         end
 
-        context 'multiple dois one originating from Galter' do
+        describe 'originates from Galter' do
+          before do
+            expect(Ezid::Identifier).to receive(:find).with(
+              'doi1').and_return(Ezid::Identifier.new)
+            expect_any_instance_of(Ezid::Identifier).to receive(
+              :update_metadata).with(
+                Ezid::Metadata.new({
+                  'datacite.creator' => 'bcd',
+                  'datacite.title' => 'title',
+                  'datacite.publisher' => 'Galter Health Science Library',
+                  'datacite.publicationyear' => '2013',
+                  #'datacite.resourcetype' => 'Book',
+                  '_status' => 'unavailable',
+                  '_target' => 'https://digitalhub.northwestern.edu/files/mahid'
+                })
+              )
+            expect_any_instance_of(Ezid::Identifier).to receive(:save)
+          end
+
+          it 'updates the metadata remotely but not the ids locally' do
+            expect(subject.check_doi_presence).to eq('updated_unavailable')
+            expect(subject.reload.doi).to eq(['doi1'])
+            expect(subject.ark).to eq([])
+          end
+        end
+
+        describe 'multiple dois one originating from Galter' do
           before do
             subject.update_attributes(doi: ['doi1', 'doi2', 'doi3'])
             expect(Ezid::Identifier).to receive(:find).with(
@@ -384,6 +426,7 @@ RSpec.describe GenericFile do
                   'datacite.publisher' => 'Galter Health Science Library',
                   'datacite.publicationyear' => '2013',
                   #'datacite.resourcetype' => 'Book',
+                  '_status' => 'unavailable',
                   '_target' => 'https://digitalhub.northwestern.edu/files/mahid'
                 })
               )
@@ -391,7 +434,7 @@ RSpec.describe GenericFile do
           end
 
           it 'updates the metadata remotely but not the ids locally' do
-            expect(subject.check_doi_presence).to eq('updated')
+            expect(subject.check_doi_presence).to eq('updated_unavailable')
             expect(subject.reload.doi).to eq(['doi1', 'doi2', 'doi3'])
             expect(subject.ark).to eq([])
           end
@@ -406,12 +449,38 @@ RSpec.describe GenericFile do
             'datacite.publisher' => 'Galter Health Science Library',
             'datacite.publicationyear' => '2013',
             #'datacite.resourcetype' => 'Book',
+            '_status' => 'reserved',
             '_target' => 'https://digitalhub.northwestern.edu/files/mahid'
           })
         ).and_return(identifier)
-        expect(subject.check_doi_presence).to eq('generated')
+        expect(subject.check_doi_presence).to eq('generated_reserved')
         expect(subject.reload.doi).to eq(['doi'])
         expect(subject.ark).to eq(['ark'])
+      end
+
+      context 'when visibility set to public' do
+        let(:identifier) { double(
+          'ezid-id', id: 'doi', shadowedby: 'ark', status: 'public'
+        ) }
+
+        before { subject.visibility = 'open'; subject.save! }
+
+        it 'sets doi and ark' do
+          expect(Ezid::Identifier).to receive(:create).with(
+            Ezid::Metadata.new({
+              'datacite.creator' => 'bcd',
+              'datacite.title' => 'title',
+              'datacite.publisher' => 'Galter Health Science Library',
+              'datacite.publicationyear' => '2013',
+              #'datacite.resourcetype' => 'Book',
+              '_status' => 'public',
+              '_target' => 'https://digitalhub.northwestern.edu/files/mahid'
+            })
+          ).and_return(identifier)
+          expect(subject.check_doi_presence).to eq('generated')
+          expect(subject.reload.doi).to eq(['doi'])
+          expect(subject.ark).to eq(['ark'])
+        end
       end
     end
   end

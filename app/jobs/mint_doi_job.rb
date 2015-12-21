@@ -17,11 +17,11 @@ class MintDoiJob < ActiveFedoraIdBasedJob
     object.title.first
   end
 
-  def body(status)
+  def body_generic(status)
     case status
-    when 'generated'
+    when /generated/
       "DOI was generated for <a href='/files/#{self.id}'>#{title}</a>"
-    when 'updated'
+    when /updated/
       "DOI metadata was updated for <a href='/files/#{self.id}'>#{title}</a>"
     when 'page'
       "DOI was not generated for <a href='/files/#{self.id}'>#{title}</a>, because the file is a page in a document."
@@ -30,11 +30,22 @@ class MintDoiJob < ActiveFedoraIdBasedJob
     end
   end
 
+  def body(status)
+    body = body_generic(status)
+    case status
+    when 'generated_reserved'
+      body += " Because your document lacks permission for public viewing, the DOI is inactive. Please modify the file's visibility to 'open' for the DOI to be activated."
+    when 'updated_unavailable'
+      body += " Because your document lacks permission for public viewing, the DOI has been deactivated. Please modify the file's visibility to 'open' for the DOI to be activated."
+    end
+    body
+  end
+
   def subject(status)
     case status
-    when 'generated'
+    when /generated/
       'DOI generated'
-    when 'updated'
+    when /updated/
       'DOI metadata updated'
     when 'page', 'metadata'
       'DOI not generated'

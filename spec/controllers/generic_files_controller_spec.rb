@@ -113,22 +113,86 @@ describe GenericFilesController do
         digital_origin: ['digo'], mesh: ['mesh'], lcsh: ['lcsh'],
         subject_geographic: ['geo'], subject_name: ['subjn'],
         page_number: 11, creator: ['ABC'], tag: ['tag'],
-        resource_type: ['restype'], rights: ['rights'], title: ['title']
+        resource_type: ['restype'], rights: ['rights'], title: ['title'],
+        doi: ['doi1', 'doi2', 'doi3']
       )
       @file.apply_depositor_metadata(@user.user_key)
       @file.save!
     end
 
-    describe 'doi minting job scheduling' do
-      it 'schedules the job' do
-        job1 =  double('one')
-        job2 =  double('two')
-        expect(MintDoiJob).to receive(:new).with(
-          @file.id, @user.username).and_return(job1)
-        expect(ContentUpdateEventJob).to receive(:new).and_return(job2)
-        expect(Sufia.queue).to receive(:push).with(job1)
-        expect(Sufia.queue).to receive(:push).with(job2)
-        patch :update, id: @file, generic_file: { abstract: ['dudu'] }
+    describe 'doi job scheduling' do
+      before do
+        job =  double('two')
+        allow(ContentUpdateEventJob).to receive(:new).and_return(job)
+        allow(Sufia.queue).to receive(:push).with(job)
+      end
+
+      context 'deactivation job' do
+        before do
+          job =  double('mint')
+          allow(MintDoiJob).to receive(:new).and_return(job)
+          allow(Sufia.queue).to receive(:push).with(job)
+        end
+
+        describe 'dois are replaced' do
+          it 'schedules the job' do
+            job1 =  double('one')
+            job2 =  double('two')
+            expect(DeactivateDoiJob).to receive(:new).with(
+              @file.id, 'doi2', @user.username, 'title').and_return(job1)
+            expect(DeactivateDoiJob).to receive(:new).with(
+              @file.id, 'doi3', @user.username, 'title').and_return(job2)
+            expect(Sufia.queue).to receive(:push).with(job1)
+            expect(Sufia.queue).to receive(:push).with(job2)
+            patch :update,
+                  :id => @file.id,
+                  :generic_file => { doi: ['doi1', 'doi4', 'doi5', ''] }
+          end
+        end
+
+        describe 'dois are removed' do
+          it 'schedules the job' do
+            job1 =  double('one')
+            job2 =  double('two')
+            expect(DeactivateDoiJob).to receive(:new).with(
+              @file.id, 'doi1', @user.username, 'title').and_return(job1)
+            expect(DeactivateDoiJob).to receive(:new).with(
+              @file.id, 'doi2', @user.username, 'title').and_return(job2)
+            expect(Sufia.queue).to receive(:push).with(job1)
+            expect(Sufia.queue).to receive(:push).with(job2)
+            patch :update,
+                  :id => @file.id,
+                  :generic_file => { doi: ['doi3', ''] }
+          end
+        end
+
+        describe 'new dois are added' do
+          it 'does not schedule the job' do
+            expect(DeactivateDoiJob).not_to receive(:new)
+            patch :update,
+                  :id => @file.id,
+                  :generic_file => { doi: ['doi1', 'doi2', 'doi3', 'doi4'] }
+          end
+        end
+
+        describe 'dois are not changed' do
+          it 'does not schedule the job' do
+            expect(DeactivateDoiJob).not_to receive(:new)
+            patch :update,
+                  :id => @file.id,
+                  :generic_file => { doi: ['doi1', 'doi2', 'doi3', ''] }
+          end
+        end
+      end
+
+      context 'minting job' do
+        it 'schedules the job' do
+          job1 =  double('one')
+          expect(MintDoiJob).to receive(:new).with(
+            @file.id, @user.username).and_return(job1)
+          expect(Sufia.queue).to receive(:push).with(job1)
+          patch :update, id: @file, generic_file: { abstract: ['dudu'] }
+        end
       end
     end
 
@@ -205,7 +269,7 @@ describe GenericFilesController do
     end
 
     it "should update doi" do
-      expect(@file.doi).to be_blank
+      expect(@file.doi).to match_array(['doi1', 'doi2', 'doi3'])
       patch :update, id: @file, generic_file: { doi: ['doi'] }
       expect(response).to redirect_to(
         @routes.url_helpers.generic_file_path(@file))
@@ -265,6 +329,49 @@ describe GenericFilesController do
         expect(flash['alert']).to include(
           'Please fill out the required fields before changing the visibility')
         expect(bad_file.reload.visibility).to eq('restricted')
+      end
+    end
+  end
+
+  describe "#destroy" do
+    let(:admin_user) { create(:admin_user, username: 'admin') }
+    before { sign_in admin_user }
+
+    describe 'doi deactivation job scheduling' do
+      before do
+        job =  double('job')
+        expect(ContentDeleteEventJob).to receive(:new).and_return(job)
+        expect(Sufia.queue).to receive(:push).with(job)
+      end
+
+      describe 'file containing DOIs' do
+        let(:file) { make_generic_file(
+          admin_user, title: ['Some Title'], doi: ['doi1', 'doi2'],
+          id: 'will_die'
+        ) }
+
+        it 'schedules the jobs' do
+          job1 =  double('one')
+          job2 =  double('two')
+          expect(DeactivateDoiJob).to receive(:new).with(
+            'will_die', 'doi1', 'admin', 'Some Title').and_return(job1)
+          expect(DeactivateDoiJob).to receive(:new).with(
+            'will_die', 'doi2', 'admin', 'Some Title').and_return(job2)
+          expect(Sufia.queue).to receive(:push).with(job1)
+          expect(Sufia.queue).to receive(:push).with(job2)
+          delete :destroy, :id => file.id
+        end
+      end
+
+      describe 'file not containing DOIs' do
+        let(:file) { make_generic_file(
+          admin_user, title: ['Some Title'], doi: [], id: 'will_die'
+        ) }
+
+        it 'schedules the jobs' do
+          expect(DeactivateDoiJob).not_to receive(:new)
+          delete :destroy, :id => file.id
+        end
       end
     end
   end
