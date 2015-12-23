@@ -1,0 +1,6 @@
+<% Array(record[key]).reject(&:blank?).each do |v| %>
+  <span itemprop="ARK" itemscope itemtype="http://schema.org/Thing">
+    <%= link_to v, "http://n2t.net/#{v}" %>
+  </span>
+  <br />
+<% end %>

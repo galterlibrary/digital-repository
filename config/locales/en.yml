@@ -49,6 +49,8 @@ en:
         lcsh: 'Subject: LCSH'
         subject_geographic: 'Subject: Geographic Name'
         subject_name: 'Subject: Name'
+        doi: 'DOI'
+        ark: 'ARK'
       collection:
         resource_type: 'Resource type(s)'
         multi_page: 'Multi-page?'

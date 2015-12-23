@@ -193,6 +193,8 @@ GEM
     eventmachine (1.0.8)
     execjs (2.6.0)
     extlib (0.9.16)
+    ezid-client (1.2.0)
+      hashie
     factory_girl (4.5.0)
       activesupport (>= 3.0.0)
     factory_girl_rails (4.5.0)
@@ -233,6 +235,7 @@ GEM
       signet (~> 0.6)
     haml (4.0.7)
       tilt
+    hashie (3.4.3)
     htmlentities (4.3.4)
     httmultiparty (0.3.16)
       httparty (>= 0.7.3)
@@ -733,6 +736,7 @@ DEPENDENCIES
   devise-guests
   devise_ldap_authenticatable
   escape
+  ezid-client
   factory_girl_rails
   http_logger
   hydra-role-management

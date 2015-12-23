@@ -85,3 +85,5 @@ gem 'capistrano-passenger'
 gem 'newrelic_rpm'
 
 gem 'openseadragon'
+
+gem 'ezid-client'

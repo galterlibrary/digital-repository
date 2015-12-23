@@ -22,6 +22,8 @@ class GalterGenericFilePresenter < Sufia::GenericFilePresenter
     :digital_origin,
     :page_number,
     :acknowledgments,
-    :grants_and_funding
+    :grants_and_funding,
+    :doi,
+    :ark
   ]
 end

@@ -30,7 +30,7 @@ feature 'Catalog', :type => :feature do
         end
         choose 'UserCol'
         expect {
-          click_button('Update Collection')
+          click_button('Update Collection', wait: 2)
         }.to change { col_user.reload.members.count }.by(1)
         expect(current_path).to eq('/collections/col_user')
         within '.table-zebra-striped' do
