@@ -1,5 +1,5 @@
 <% Array(record[key]).reject(&:blank?).each do |v| %>
-  <span itemprop="<%= key %>" itemscope itemtype="http://schema.org/Thing">
+  <span itemprop="DOI" itemscope itemtype="http://schema.org/Thing">
     <%= link_to v.gsub('doi:', ''), "http://dx.doi.org/#{v.gsub('doi:', '')}" %>
   </span>
   <br />
