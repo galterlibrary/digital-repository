@@ -82,7 +82,7 @@ class GenericFile < ActiveFedora::Base
 
   property :ark,
            :predicate => ::RDF::URI.new(
-             'http://galter.northwestern.edu/rdf/doi'),
+             'http://galter.northwestern.edu/rdf/ark'),
            :multiple => true do |index|
     index.as :stored_searchable
   end
