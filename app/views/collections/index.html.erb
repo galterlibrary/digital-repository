@@ -6,14 +6,14 @@
       <div class="panel panel-default">
         <div class="panel-heading" role="tab" id="heading-<%=depositor%>">
           <h4 class="panel-title">
-            <a role="button" data-toggle="collapse" data-parent="#accordion"
+            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion"
                href="#collapse-<%=depositor%>" aria-expanded="true"
                aria-controls="collapse-<%=depositor%>">
               <%= name %>
             </a>
           </h4>
         </div>
-        <div id="collapse-<%=depositor%>" class="panel-collapse collapse in"
+        <div id="collapse-<%=depositor%>" class="panel-collapse collapse"
              role="tabpanel" aria-labelledby="heading-<%=depositor%>">
           <div class="panel-body">
             <% collection_docs_with_depositor(depositor) do |col, idx| %>
