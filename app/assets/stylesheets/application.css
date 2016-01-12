@@ -99,3 +99,7 @@ p#main_gf_actions > a {
   vertical-align: baseline;
   border-radius: 0.25em;
 }
+
+#file_download figure img {
+  width: 100%
+}

@@ -88,7 +88,7 @@ describe GenericFilesController do
       allow(GenericFile).to receive(:new).and_return(mock)
       expect_any_instance_of(Sufia::GenericFile::Actor).to receive(
         :create_content).with(
-          file, 'system.png', 'content', 'image/png').and_return(true)
+          file, 'system.png', 'content', 'image/png', nil).and_return(true)
       allow_any_instance_of(Nuldap).to receive(
         :search).and_return([true, {
           'mail' => ['a@b.c'],

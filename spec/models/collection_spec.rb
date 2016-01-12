@@ -356,6 +356,7 @@ RSpec.describe Collection do
       before do
         allow(file).to receive(:content).and_return(bitstream)
         allow(page).to receive(:content).and_return(bitstream)
+        allow(bitstream).to receive(:has_content?).and_return(false)
         file.update_index
         page.update_index
       end

@@ -387,7 +387,8 @@ Sufia.config do |config|
     config.analytic_start_date = DateTime.new(2015,10,1)
   end
 
-  # Where to store tempfiles, leave blank for the system temp directory (e.g. /tmp)
+  config.geonames_username = 'galterlibrary'
+# Where to store tempfiles, leave blank for the system temp directory (e.g. /tmp)
   # config.temp_file_base = '/home/developer1'
 
   # Specify the form of hostpath to be used in Endnote exports

@@ -536,7 +536,7 @@ describe 'generic file', :type => :feature do
           execute_script("$('#generic_file_contributor').val('Use').trigger('keydown')")
           expect(page).to have_text('Y, User')
 
-          allow_any_instance_of(GeoNamesResource).to(
+          allow(GeoNamesResource).to(
             receive(:find_location).and_return([
               { label: 'Chicago', value: 'Chicago' },
               { label: 'Ho Chi', value: 'Ho Chi' }
