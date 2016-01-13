@@ -388,6 +388,9 @@ Sufia.config do |config|
   end
 
   config.geonames_username = 'galterlibrary'
+# Enables a link to the citations page for a generic_file.
+# Default is false
+  config.citations = true
 # Where to store tempfiles, leave blank for the system temp directory (e.g. /tmp)
   # config.temp_file_base = '/home/developer1'
 

@@ -5,6 +5,9 @@
       <% if Sufia.config.analytics %>
         <%= link_to "Analytics", sufia.stats_generic_file_path(@generic_file), id: 'stats' %>
       <% end %>
+      <% if Sufia.config.citations %>
+        <%= link_to "Citations", sufia.citation_generic_file_path(@generic_file), id: 'citations' %>
+      <% end %>
       <% if can? :edit, @generic_file %>
           <% if @generic_file.processing? %>
             <%= t('sufia.upload.processing') %>
