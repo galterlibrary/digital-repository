@@ -77,32 +77,78 @@ describe GenericFilesController do
   end
 
   describe '#create' do
-    let(:user) { create(:user, display_name: 'Display Name',
-                        :formal_name => 'Name, Formal') }
-    let(:mock) { GenericFile.new(id: 'test123') }
-    let(:batch) { Batch.create }
-    let(:batch_id) { batch.id }
-    let(:file) { fixture_file_upload('/system.png', 'image/png') }
+    describe 'formal name' do
+      let(:user) { create(:user, display_name: 'Display Name',
+                          :formal_name => 'Name, Formal') }
+      let(:mock) { GenericFile.new(id: 'test123') }
+      let(:batch) { Batch.create }
+      let(:batch_id) { batch.id }
+      let(:file) { fixture_file_upload('/system.png', 'image/png') }
 
-    before do
-      allow(GenericFile).to receive(:new).and_return(mock)
-      expect_any_instance_of(Sufia::GenericFile::Actor).to receive(
-        :create_content).with(
-          file, 'system.png', 'content', 'image/png', nil).and_return(true)
-      allow_any_instance_of(Nuldap).to receive(
-        :search).and_return([true, {
-          'mail' => ['a@b.c'],
-          'sn' => ['Name'],
-          'givenName' => ['Formal']
-        }])
-      sign_in user
+      before do
+        allow(GenericFile).to receive(:new).and_return(mock)
+        expect_any_instance_of(Sufia::GenericFile::Actor).to receive(
+          :create_content).with(
+            file, 'system.png', 'content', 'image/png', nil).and_return(true)
+        allow_any_instance_of(Nuldap).to receive(
+          :search).and_return([true, {
+            'mail' => ['a@b.c'],
+            'sn' => ['Name'],
+            'givenName' => ['Formal']
+          }])
+        sign_in user
+      end
+
+      it 'sets creator to formal_name of the depositor' do
+        allow_any_instance_of(GenericFilesController).to receive(
+          :add_institutional_permissions)
+        post :create, files: [file], 'Filename' => 'The system',
+            :batch_id => batch_id, permission: { group: { public: 'read' } },
+            :terms_of_service => '1'
+        expect(assigns(:generic_file).creator).to eq(['Name, Formal'])
+      end
     end
 
-    it 'sets creator to formal_name of the depositor' do
-      post :create, files: [file], 'Filename' => 'The system',
-           :batch_id => batch_id, permission: { group: { public: 'read' } },
-           :terms_of_service => '1'
-      expect(assigns(:generic_file).creator).to eq(['Name, Formal'])
+    describe 'uploading to a collection' do
+      describe 'institutional collection permission update' do
+        let(:col1) { make_collection(@user) }
+        let(:actor) {
+          double('actor', generic_file: make_generic_file(@user))
+        }
+
+        before do
+          allow_any_instance_of(GenericFilesController).to receive(
+            :create_from_upload)
+          allow_any_instance_of(GenericFilesController).to receive(:render)
+        end
+
+        it 'schedules add permission update jobs' do
+          allow_any_instance_of(GenericFilesController).to receive(
+            :actor).and_return(actor)
+          job =  double('one')
+          expect(
+            AddInstitutionalAdminPermissionsJob
+          ).to receive(:new).with(
+            actor.generic_file.id, col1.id).and_return(job)
+          expect(Sufia.queue).to receive(:push).with(job)
+          post :create, collection: col1.id
+        end
+      end
+    end
+
+    describe 'not uploading to a collection' do
+      describe 'institutional collection permission update' do
+        before do
+          allow_any_instance_of(GenericFilesController).to receive(
+            :create_from_upload)
+          allow_any_instance_of(GenericFilesController).to receive(:render)
+        end
+
+        it 'schedules add permission update jobs' do
+          expect(Sufia.queue).not_to receive(:push)
+          post :create, collection: '-1'
+        end
+      end
     end
   end
 

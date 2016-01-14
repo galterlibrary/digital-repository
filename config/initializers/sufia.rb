@@ -388,9 +388,25 @@ Sufia.config do |config|
   end
 
   config.geonames_username = 'galterlibrary'
-# Enables a link to the citations page for a generic_file.
-# Default is false
+  # Enables a link to the citations page for a generic_file.
+  # Default is false
   config.citations = true
+  # Enables a select menu on the batch upload page to select a collection into which to add newly uploaded files.
+  # Default is false
+  config.upload_to_collection = true
+
+  # How many times to retry to acquire the lock before raising UnableToAcquireLockError
+  # Default is 600ms
+  # config.lock_retry_count = 600 # Up to 2 minutes of trying at intervals up to 200ms
+
+  # How long to hold the lock in milliseconds
+  # Default is 60_000ms
+  # config.lock_time_to_live = 60_000 # milliseconds
+
+  # Maximum wait time in milliseconds before retrying. Wait time is a random value between 0 and retry_delay.
+  # Default is 200ms
+  # config.lock_retry_delay = 200 # milliseconds
+
 # Where to store tempfiles, leave blank for the system temp directory (e.g. /tmp)
   # config.temp_file_base = '/home/developer1'
 

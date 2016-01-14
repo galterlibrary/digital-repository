@@ -14,7 +14,18 @@ module Galtersufia
       self.edit_form_class = Sufia::Forms::GalterGenericFileEditForm
       around_action :update_doi_jobs, only: [:update]
       before_action :destroy_doi_deactivation_jobs, only: [:destroy]
+      after_action :add_institutional_permissions, only: [:create]
     end
+
+    def add_institutional_permissions
+      unless params[:collection] == '-1'
+        Sufia.queue.push(
+          AddInstitutionalAdminPermissionsJob.new(
+            actor.generic_file.id, params[:collection])
+        )
+      end
+    end
+    private :add_institutional_permissions
 
     def destroy_doi_deactivation_jobs
       schedule_doi_deactivation_jobs(@generic_file)
