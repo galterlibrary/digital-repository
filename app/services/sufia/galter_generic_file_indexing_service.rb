@@ -11,6 +11,10 @@ module Sufia
         solr_doc[
           Solrizer.solr_name(:height, :type => :integer)
         ] = object.height
+
+        if object.rights.present?
+          solr_doc[Solrizer.solr_name('rights', :facetable)] = object.rights
+        end
       end
     end
   end

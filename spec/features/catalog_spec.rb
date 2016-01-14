@@ -7,7 +7,8 @@ feature 'Catalog', :type => :feature do
   describe '#index' do
     let!(:gf_public) {
       make_generic_file(user, {
-        mesh: ['cancer'], lcsh: ['neoplasm'], visibility: 'open', title: ['ABC']
+        mesh: ['cancer'], lcsh: ['neoplasm'], visibility: 'open',
+        title: ['ABC'], rights: ['Restricted']
       })
     }
     let!(:gf_private) {
@@ -32,6 +33,7 @@ feature 'Catalog', :type => :feature do
     let!(:col_user) {
       make_collection(user, {
         visibility: 'restricted', title: 'UserCol', id: 'col_user',
+        rights: ['GNU']
       })
     }
 
@@ -40,6 +42,11 @@ feature 'Catalog', :type => :feature do
         visibility: 'restricted', title: 'StrangeCol', id: 'col_stranger',
       })
     }
+
+    it 'shows the Rights Statement facet' do
+      visit '/catalog'
+      expect(page).to have_text('Rights Statement')
+    end
 
     it 'does not display blank fields' do
       visit '/catalog'

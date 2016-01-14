@@ -486,6 +486,11 @@ RSpec.describe GenericFile do
   end
 
   describe '#to_solr' do
+    it 'generates rights_sim for Rights Statement' do
+      subject.rights = ['GNU']
+      expect(subject.to_solr['rights_sim']).to eq(['GNU'])
+    end
+
     it 'generates tags_sim' do
       subject.mesh = ['a']
       subject.lcsh = ['b', 'c']
