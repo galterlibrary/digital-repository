@@ -11,6 +11,7 @@ describe 'generic_files/upload/_form.html.erb' do
     RSpec.configure do |config|
       config.include Devise::TestHelpers, :type => :view
     end
+    allow(view).to receive(:options_from_collection_for_select).and_return([])
     ProxyDepositRights.create(grantor_id: jaja.id, grantee_id: user.id)
     ProxyDepositRights.create(grantor_id: tata.id, grantee_id: user.id)
     assign(:generic_file, gf)
