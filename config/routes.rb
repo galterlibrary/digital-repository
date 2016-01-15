@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  mount BrowseEverything::Engine => '/browse'
   root to: 'homepage#index'
 
   delete '/content_blocks/:id',
