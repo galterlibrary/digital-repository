@@ -207,35 +207,19 @@ RSpec.describe CustomAuthoritiesController, :type => :controller do
           expect(subject.map{|o| o['label'] }).to include('Best Name')
         end
       end
+    end
+  end # lcsh_names
 
-      describe 'multiple users found in LDAP' do
-        before do
-          allow_any_instance_of(Nuldap).to receive(:multi_search).and_return([
-            { 'uid' => ['id1'], 'givenName' => ['Zbyszko'], 'sn' => ['Bogdanca'] },
-            { 'uid' => ['id2'], 'givenName' => ['Trysko'], 'sn' => ['Tutanca'] }
-          ])
-        end
+  describe '#query_mesh' do
+    before do
+      Qa::SubjectMeshTerm.create(term_id: 'A', term: 'Aaa', term_lower: 'abc')
+      Qa::SubjectMeshTerm.create(term_id: 'B', term: 'Bbb', term_lower: 'bbb')
+      Qa::SubjectMeshTerm.create(term_id: 'C', term: 'BBc', term_lower: 'bbc')
+    end
 
-        subject { get :query_users, q: 'anca' }
-
-        it { is_expected.to have_http_status(:success) }
-
-        it 'returns a properly formatted names' do
-          expect(JSON.parse(subject.body)).to include({
-            'id' => 'id1', 'label' => 'Bogdanca, Zbyszko'
-          })
-          expect(JSON.parse(subject.body)).to include({
-            'id' => 'id2', 'label' => 'Tutanca, Trysko'
-          })
-        end
-      end
-
-      describe 'user not found in LDAP' do
-        before do
-          allow_any_instance_of(Nuldap).to receive(:multi_search).and_return([])
-        end
-
-        subject { get :query_users, q: 'Sbyszko Z Bogdanca' }
+    context 'invalid query' do
+      describe 'no params passed' do
+        subject { get :query_mesh}
 
         it { is_expected.to have_http_status(:success) }
 
@@ -244,5 +228,27 @@ RSpec.describe CustomAuthoritiesController, :type => :controller do
         end
       end
     end
-  end # query_users
+
+    context 'valid query' do
+      context 'lower case query' do
+        subject { JSON.parse(get(:query_mesh, q: 'bb').body) }
+
+        it 'returns both names' do
+          expect(subject.count).to eq(2)
+          expect(subject.map{|o| o['label'] }).to include('Bbb')
+          expect(subject.map{|o| o['label'] }).to include('BBc')
+        end
+      end
+
+      context 'upper case query' do
+        subject { JSON.parse(get(:query_mesh, q: 'BB').body) }
+
+        it 'returns both names' do
+          expect(subject.count).to eq(2)
+          expect(subject.map{|o| o['label'] }).to include('Bbb')
+          expect(subject.map{|o| o['label'] }).to include('BBc')
+        end
+      end
+    end
+  end
 end
