@@ -13,7 +13,9 @@ module Sufia
         ] = object.height
 
         if object.rights.present?
-          solr_doc[Solrizer.solr_name('rights', :facetable)] = object.rights
+          solr_doc[Solrizer.solr_name('rights', :facetable)] = (
+            object.rights.map {|cr| Sufia.config.cc_licenses.key(cr) }
+          )
         end
       end
     end

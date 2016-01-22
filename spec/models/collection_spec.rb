@@ -374,8 +374,8 @@ RSpec.describe Collection do
     end
 
     it 'generates rights_sim for Rights Statement' do
-      subject.rights = ['GNU']
-      expect(subject.to_solr['rights_sim']).to eq(['GNU'])
+      subject.rights = ['http://creativecommons.org/publicdomain/mark/1.0/']
+      expect(subject.to_solr['rights_sim']).to eq(['Public Domain Mark 1.0'])
     end
   end
 

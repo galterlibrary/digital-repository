@@ -487,8 +487,8 @@ RSpec.describe GenericFile do
 
   describe '#to_solr' do
     it 'generates rights_sim for Rights Statement' do
-      subject.rights = ['GNU']
-      expect(subject.to_solr['rights_sim']).to eq(['GNU'])
+      subject.rights = ['http://creativecommons.org/publicdomain/zero/1.0/']
+      expect(subject.to_solr['rights_sim']).to eq(['CC0 1.0 Universal'])
     end
 
     it 'generates tags_sim' do
