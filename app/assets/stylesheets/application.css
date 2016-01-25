@@ -45,6 +45,11 @@ div[id="Data"] tbody tr td:nth-child(3) {
   word-break: break-all;
 }
 
+/* My Files */
+.file_listing_thumbnail {
+  margin-right: 5px;
+}
+
 /* My Files/Collections */
 tr[id^="document"] div[class="media"] div[class="media-body"] div[class="media-heading"] {
   word-break: break-all;
