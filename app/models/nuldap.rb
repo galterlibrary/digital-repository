@@ -65,34 +65,29 @@ class Nuldap
 
   def multi_search(filter)
     bind_ldap_connection
-    begin
-      search_results = []
-      @ldap_connection.search(
-        'dc=northwestern,dc=edu', LDAP::LDAP_SCOPE_SUBTREE, filter, []) {|o|
-          search_results << o.to_hash }
-      search_results
-    rescue LDAP::ResultError
-      Rails.logger.error("LDAP eror: #{@ldap_connection.perror('search')}")
-      return false, {}
-    end
+    search_results = []
+    @ldap_connection.search(
+      'dc=northwestern,dc=edu', LDAP::LDAP_SCOPE_SUBTREE, filter, []) {|o|
+        search_results << o.to_hash }
+    search_results
+  rescue LDAP::ResultError, RuntimeError
+    ldap_error_handling
+    return {}
   end
 
   def search(filter)
-    return false, {} unless ldap_server_up?
-    conn = LDAP::SSLConn.new(@ldap_server, @ldap_port.to_i, nil, nil, nil)
-    conn.set_option(LDAP::LDAP_OPT_PROTOCOL_VERSION, 3)
-    conn.bind(@ldap_username, @ldap_password, LDAP::LDAP_AUTH_SIMPLE) do
-      @ldap_user = {}
-
-      begin
-        conn.search('dc=northwestern,dc=edu', LDAP::LDAP_SCOPE_SUBTREE,
-                    filter, []) { |entry| @ldap_user =  entry.to_hash }
-      rescue LDAP::ResultError
-        Rails.logger.error("LDAP eror: #{conn.perror('search')}")
-        return false, {}
-      end
-    end
-
+    bind_ldap_connection
+    @ldap_connection.search('dc=northwestern,dc=edu', LDAP::LDAP_SCOPE_SUBTREE,
+      filter, []) { |entry| @ldap_user =  entry.to_hash }
     [true, @ldap_user]
+  rescue LDAP::ResultError, RuntimeError
+    ldap_error_handling
+    return false, {}
   end
+
+  def ldap_error_handling
+    error = @ldap_connection.err2string(@ldap_connection.err)
+    Rails.logger.error("LDAP eror: #{error}")
+  end
+  private :ldap_error_handling
 end

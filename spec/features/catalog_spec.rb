@@ -8,7 +8,7 @@ feature 'Catalog', :type => :feature do
     let!(:gf_public) {
       make_generic_file(user, {
         mesh: ['cancer'], lcsh: ['neoplasm'], visibility: 'open',
-        title: ['ABC'], rights: ['Restricted']
+        title: ['ABC'], rights: ['All rights reserved']
       })
     }
     let!(:gf_private) {
@@ -33,7 +33,7 @@ feature 'Catalog', :type => :feature do
     let!(:col_user) {
       make_collection(user, {
         visibility: 'restricted', title: 'UserCol', id: 'col_user',
-        rights: ['GNU']
+        rights: ['http://creativecommons.org/publicdomain/mark/1.0']
       })
     }
 
