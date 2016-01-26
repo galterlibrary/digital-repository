@@ -108,3 +108,8 @@ p#main_gf_actions > a {
 #file_download figure img {
   width: 100%
 }
+
+.sort-toggle {
+  display: table;
+  width: 100%;
+}
