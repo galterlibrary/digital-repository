@@ -87,3 +87,4 @@ gem 'newrelic_rpm'
 gem 'openseadragon'
 
 gem 'ezid-client'
+gem 'browser'

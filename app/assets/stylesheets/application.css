@@ -55,6 +55,22 @@ tr[id^="document"] div[class="media"] div[class="media-body"] div[class="media-h
   word-break: break-all;
 }
 
+/* Editing a collection */
+@media (min-width: 768px) {
+  .file-listing-title {
+    word-break: break-all;
+  }
+}
+
+@media (max-width: 767px) {
+  .file-listing-title {
+    text-overflow: ellipsis;
+    overflow: hidden !important;
+    max-width: 130px;
+  }
+}
+
+
 /* Dashboard */
 table[id="activity"] tbody tr td:first-child {
   word-break: break-all;
@@ -112,4 +128,20 @@ p#main_gf_actions > a {
 .sort-toggle {
   display: table;
   width: 100%;
+}
+
+#openSeaDragonViewer {
+  margin-top: 3px;
+}
+
+#descriptions_display > h2 {
+  display: table;
+  width: 100%;
+}
+
+@media (max-width: 500px) {
+  #descriptions_display > h2 > small {
+    float: none !important;
+    display: block;
+  }
 }

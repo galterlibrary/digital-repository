@@ -1,0 +1,7 @@
+<% if @collection.pageable? %>
+  <a href="#BOGUS" id="openSeaDragonViewer" data-toggle="modal"
+      data-target="#osdModal" class="btn btn-info">
+    <i class="glyphicon glyphicon-book"></i> Launch Viewer
+  </a>
+  <%= render 'osd_modal' %>
+<% end %>

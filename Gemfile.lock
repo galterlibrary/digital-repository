@@ -121,6 +121,7 @@ GEM
       ruby-box
       sass-rails
       skydrive
+    browser (1.1.0)
     builder (3.2.2)
     byebug (8.1.0)
     cancancan (1.13.1)
@@ -730,6 +731,7 @@ PLATFORMS
 
 DEPENDENCIES
   better_errors
+  browser
   byebug
   capistrano
   capistrano-bundler
