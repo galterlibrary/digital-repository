@@ -32,6 +32,10 @@ Rails.application.routes.draw do
   get '/iiif-api/generic_file/:id/annotation/:name', to: 'iiif_apis#annotation', as: 'iiif_apis_annotation'
   get '/iiif-api/generic_file/:id/list/:name', to: 'iiif_apis#list', as: 'iiif_apis_list'
 
+  Sufia::Engine.routes.draw do
+    resources :pages, :path => :generic_files
+  end
+
   # This must be the very last route in the file because it has a catch-all route for 404 errors.
   # This behavior seems to show up only in production mode.
   mount Sufia::Engine => '/'

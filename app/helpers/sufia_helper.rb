@@ -27,4 +27,8 @@ module SufiaHelper
     return terms if can?(:view, :all_details)
     terms.select {|k, v| [:mime_type, :file_size].include?(k) }
   end
+
+  def track_page_path(*args)
+    track_solr_document_path(*args)
+  end
 end
