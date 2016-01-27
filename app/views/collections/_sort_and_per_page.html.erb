@@ -1,4 +1,5 @@
 <div class="batch-info">
+  <%= render 'osd_modal' %>
   <div>
     <%= render partial: 'collections/form_for_select_collection', locals: { user_collections: @user_collections }  %>
   </div>
@@ -28,10 +29,7 @@
               Refresh
             </button>
             <% if @collection.pageable? %>
-              <a href="#BOGUS" id="openSeaDragonViewer" data-toggle="modal" data-target="#osdModal" class="btn btn-info">
-                <i class="glyphicon glyphicon-book"></i> Launch Viewer
-              </a>
-              <%= render 'osd_modal' %>
+              <%= render 'osd' %>
             <% end %>
           </fieldset>
           <fieldset class="visible-xs-block">
