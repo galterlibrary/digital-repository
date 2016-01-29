@@ -70,6 +70,22 @@ tr[id^="document"] div[class="media"] div[class="media-body"] div[class="media-h
   }
 }
 
+/* Viewing a collection */
+@media (min-width: 768px) {
+  .media-heading > a {
+    word-break: break-all;
+  }
+}
+
+@media (max-width: 767px) {
+  .media-heading > a {
+    text-overflow: ellipsis;
+    overflow: hidden !important;
+    max-width: 130px;
+  }
+}
+
+
 
 /* Dashboard */
 table[id="activity"] tbody tr td:first-child {
@@ -149,5 +165,33 @@ p#main_gf_actions > a {
 @media (max-width:991px) and (min-width:768px) {
   #user_utility_links > .dropdown-toggle {
     padding-right: 5px;
+    padding-left: 5px;
   }
 }
+
+.col-action {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.view-type {
+  margin-bottom: 5px;
+}
+
+@media (min-width: 768px) {
+  #collection_search {
+    width: 200px;
+  }
+}
+@media (max-width: 767px) {
+  .col-search {
+    float: none !important;
+  }
+  #collection_search {
+    width: 100%;
+  }
+  .form-search {
+    width: auto;
+  }
+}
+

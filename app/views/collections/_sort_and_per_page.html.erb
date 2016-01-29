@@ -47,9 +47,7 @@
             </button>
             <%= render 'osd' %>
           </fieldset>
-          <% unless browser.mobile? %>
-            <%= render 'view_type_group' %>
-          <% end %>
+          <%= render 'view_type_group' %>
         <% end %>
       <% else %>
         <%= render 'osd' %>

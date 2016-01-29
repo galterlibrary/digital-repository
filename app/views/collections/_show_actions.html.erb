@@ -1,18 +1,44 @@
 <h2 class="sr-only">Actions</h2>
-<div class="actions-controls-collections">
+<div class="btn-group col-action">
+  <button type="button" class="btn btn-primary dropdown-toggle col-action-btn"
+      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Actions <span class="caret"></span>
+  </button>
+
+  <ul class="dropdown-menu">
   <% if can? :edit, @collection %>
-    <span class="label label-default"><%= link_to t("sufia.collection.show.edit.label"), collections.edit_collection_path, title: t("sufia.collection.show.edit.label") %></span> &nbsp;&nbsp;
-    <span class="label label-default"><%= link_to t("sufia.collection.show.add_files.label"),  sufia.dashboard_files_path( add_files_to_collection: @collection.id ), title: t("sufia.collection.show.add_files.label") %></span>
+    <li>
+    <%= link_to t("sufia.collection.show.edit.label"),
+      collections.edit_collection_path,
+      title: t("sufia.collection.show.edit.label") %>
+    </li>
+    <li>
+    <%= link_to t("sufia.collection.show.add_files.label"),
+      sufia.dashboard_files_path( add_files_to_collection: @collection.id ),
+      title: t("sufia.collection.show.add_files.label") %>
+    </li>
+    <li>
     <% if Sufia.config.upload_to_collection %>
-      <div class="actions-controls-collections-line2">
-        <span class="label label-default"><%= link_to t("sufia.collection.show.upload_files.label"),  sufia.new_generic_file_path( collection: @collection.id ), title: t("sufia.collection.show.upload_files.desc") %></span>
-      </div>
+      <%= link_to t("sufia.collection.show.upload_files.label"),
+        sufia.new_generic_file_path( collection: @collection.id ),
+        title: t("sufia.collection.show.upload_files.desc") %>
     <% end %>
+    </li>
   <% end %>
-  <% if(@collection.combined_file_id.present? && can?(:show, @collection.combined_file_id)) %>
-    <br /><span class="label label-default">
-      <%= link_to 'View Combined Pages',
-        sufia.generic_file_path(@collection.combined_file_id) %>
-    </span>
+  <% if(@collection.combined_file_id.present? &&
+        can?(:show, @collection.combined_file_id)) %>
+    <li>
+    <%= link_to 'View Combined Pages',
+      sufia.generic_file_path(@collection.combined_file_id) %>
+    </li>
   <% end %>
+  </ul>
 </div>
+
+<script>
+$(function() {
+    if($(window).width() < 767) {
+      $('.col-action-btn').addClass('btn-lg');
+    }
+})
+</script>
