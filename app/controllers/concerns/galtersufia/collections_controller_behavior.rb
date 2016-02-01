@@ -66,8 +66,12 @@ module Galtersufia
     end
 
     def show
-      if @collection.multi_page && params['sort'].blank?
-        params['sort'] = 'page_number_actual_isi asc'
+      if params['sort'].blank?
+        if @collection.multi_page
+          params['sort'] = 'page_number_actual_isi asc'
+        else
+          params['sort'] = 'label_si asc'
+        end
       end
       super
     end
@@ -113,7 +117,7 @@ module Galtersufia
     end
 
     def index
-      params[:sort] = "#{Solrizer.solr_name('label', :sortable)} asc"
+      params[:sort] = "label_si asc"
       index_collections_search_builder
       super
       flash['notice'] = nil

@@ -496,5 +496,11 @@ RSpec.describe GenericFile do
       subject.lcsh = ['b', 'c']
       expect(subject.to_solr['tags_sim'].sort).to eq(['a', 'b', 'c'])
     end
+
+    it 'generates sortable label' do
+      subject.title = ['asdf']
+      expect(subject.to_solr['label_si']).to eq('asdf')
+    end
+
   end
 end

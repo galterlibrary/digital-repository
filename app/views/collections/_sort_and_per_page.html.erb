@@ -32,6 +32,8 @@
               <%= render 'osd' %>
             <% end %>
           </fieldset>
+        <% end %>
+        <%= form_tag collections.collection_path(@collection), method: :get, class: 'per_page form-inline' do %>
           <fieldset class="visible-xs-block">
             <legend class="sr-only"><%= t('sufia.sort_label') %></legend>
             <%= label_tag(:sort, "<span>Sort By:</span>".html_safe) %>

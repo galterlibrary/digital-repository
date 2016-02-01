@@ -17,6 +17,12 @@ module Sufia
             object.rights.map {|cr| Sufia.config.cc_licenses.key(cr) }
           )
         end
+
+        if object.title.present?
+          solr_doc[
+            Solrizer.solr_name('label', :sortable)
+          ] = object.title.first.downcase
+        end
       end
     end
   end
