@@ -6,12 +6,11 @@
 
 <body> 
 <div  id="wrapper"> 
-  <div class="container">
-    <div id="page-positioner">
+  <div id="page-positioner" class="container">
       <%= render partial: '/masthead' %>
       <%= render partial: '/controls' %>
       <%= render partial: '/flash_msg' %>
-      <div id="content-wrapper"> 
+      <div id="content-wrapper" class="row"> 
         <div id="content">
           <div class="col-xs-12">
             <%= yield %>
@@ -19,8 +18,7 @@
         </div><!-- /#content -->
       </div><!-- /#content-wrapper -->
       <%= render partial: '/footer' %>
-    </div><!-- /#page-positioner -->
-  </div><!-- /.container -->
+  </div><!-- /#page-positioner -->
 </div><!-- /#wrapper -->
 <%= render 'shared/ajax_modal' %>
 </body>

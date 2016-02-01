@@ -5,7 +5,6 @@ a {
 a:hover {
   color: #0082BF;
 }
-
 #wrapper {
   background: #d4d5d6 none repeat scroll 0 0 !important;
 }
@@ -15,15 +14,18 @@ a:hover {
   background: white;
 }
 
-#nmTop {
-  border-bottom: 1px solid #e6e6e6;
+#NMLogo a .alt {
+  display: none;
 }
 
-#NMLogo {
-  display: block;
-  height: 50px;
-  margin-left: -15px;
-  position: relative;
+#NMLogo a {
+  background: transparent url(<%= asset_data_uri('nm_nucats_cobrand_crop.png') %>) no-repeat scroll 0px 0px;
+  background-size: auto 40px;
+  display:block;
+  float:left;
+  height:50px;
+  padding: 0px;
+  width: 100%;
 }
 
 #nmRightLinks {
@@ -31,8 +33,9 @@ a:hover {
 }
 
 #nmRightLinks a {
-  font-family: Calibri,"Helvetica Neue",Helvetica,Arial,sans-serif;
-  color: #54585A;
+  font-family:Calibri,"Helvetica Neue",Helvetica,Arial,sans-serif;
+  color: #7F8283;
+  font-size: 16px;
 }
 
 #nmRightLinks a:hover {
@@ -62,17 +65,12 @@ a#digitalHubTopLink:hover, a#feinbergTopLink:hover, a#NMLogo:hover {
   opacity: .75;
 }
 
-#betaWrap {
-  display: block;
-  padding-top: 13px
-}
-
 #betaLabel {
+  top: -1.0em;
   font-size: 16px;
   font-family: "Calibri Light", Calibri, Arial;
-  padding-bottom: 1px;
+  padding: 3px 6px;
   font-weight: 400;
-  margin-left: 5px;
 }
 
 #nmBottom {
@@ -91,7 +89,7 @@ a#digitalHubTopLink:hover, a#feinbergTopLink:hover, a#NMLogo:hover {
 
 #home_header {
   background-image: url(<%= asset_data_uri('spec_col_crop_top.jpg') %>);
-  border-top: 8px solid #d4d5d6;
+  border-top: 0px;
   border-bottom: 0px;
 }
 
@@ -117,13 +115,9 @@ a#digitalHubTopLink:hover, a#feinbergTopLink:hover, a#NMLogo:hover {
   display: none;
 }
 
-#home_content > div {
-  border-top: 8px solid #d4d5d6;
-}
-
 #home_content > div:nth-child(2) {
   padding-left: 8px;
-  padding-right: 8px;
+  padding-right: 0px;
   background-color: rgb(212, 213, 214);
 }
 
@@ -155,7 +149,6 @@ a#digitalHubTopLink:hover, a#feinbergTopLink:hover, a#NMLogo:hover {
 }
 
 #home_content > div:nth-child(2) > div:nth-child(2) {
-  border-top: 8px solid #d4d5d6;
   padding-bottom: 7px;
 }
 
@@ -200,15 +193,6 @@ div#tag-cloud {
 
 ul.tagcloud a {
   color: #0082BF !important;
-}
-
-#footer{
-  font-family: "Helvetica Neue", Helvetica, Arial;
-  background: none repeat scroll 0% 0% #61468B;
-}
-
-#footer dl {
-  margin-bottom: 0px;
 }
 
 #wrapper {
@@ -273,10 +257,6 @@ div.heading-tile .glyphicon, div.heading-tile .help-icon {
     background-color: #FFAE00;
 }
 
-#footer a {
-  color: #FFF;
-}
-
 div#announcement {
   background-color: white;
   color: black;
@@ -297,12 +277,240 @@ select[name="collection[resource_type][]"] {
   color: black;
 }
 
-#footer2 {
-  padding: 7px;
-  background-color: #D4D5D6;
-  font-family: Calibri,"Helvetica Neue",Helvetica,Arial,sans-serif
+/* NM Footer styles */
+#footer, #brandFooterNew {
+  background:#514689;
 }
 
-#footer2 a {
-  color: #54585A;
+#footer {
+  padding: 0px;
+}
+
+#brandFooterNew {
+  color:#fff;
+  font-family:Calibri,"Trebuchet MS",Helvetica,Arial,sans-serif;
+  padding-top: 2.16667%;
+  letter-spacing:.4px
+}
+
+#brandFooterNew a {
+  color:#fff;
+  text-decoration:underline
+}
+
+#brandFooterNew a:hover {
+  opacity:0.8
+}
+
+#brandFooterNew ul {
+  list-style:none;
+  padding:0
+}
+
+#brandFooterNew ul li {
+  margin:10px 0
+}
+
+#brandFooterNew ul li a {
+  padding:7px 0
+}
+
+#brandFooterNew p {
+  color:#fff;
+  line-height:1.8em;
+  margin:1em 0
+}
+
+#brandFooterNew h2 a,#brandFooterNew h2 a:link {
+  font-size:1em
+}
+
+#brandFooterNew #nuFooterNew,#brandFooterNew #footerLinks,#brandFooterNew #deptInfo,#brandFooterNew #footerMisc {
+  color:#fff;
+  line-height:1.8em;
+  word-wrap:break-word;
+  margin-bottom:1em
+}
+
+#brandFooterNew #nuFooterNew a,
+#brandFooterNew #footerLinks a,
+#brandFooterNew #deptInfo a,
+#brandFooterNew #footerMisc a {
+  color:#fff
+}
+
+#brandFooterNew #nuBrand img {
+  width: 170px;
+}
+
+#brandFooterNew #deptInfo {
+  line-height:1.3em;
+  margin-left:1.5em
+}
+#brandFooterNew #deptInfo li.fa, #brandFooterNew #deptInfo dt.fa {
+  float:left;
+  margin-top:0;
+  margin-left:-1.5em
+}
+
+#brandFooterNew #deptInfo .fa-map-marker {
+  font-size:1.5em
+}
+
+#brandFooterNew #deptInfo .fa-mobile {
+  font-size:2em
+}
+
+#brandFooterNew #footerMisc h2 {
+  font-size:1em;
+  font-weight:normal;
+  line-height:1.3em
+}
+
+#brandFooterNew #footerMisc .social-icons li {
+  float:left
+}
+
+#brandFooterNew #footerMisc .social-icons .fa {
+  color:#514689;
+  background:#fff;
+  font-size:36px;
+  width:40px;
+  height:40px;
+  line-height:40px;
+  text-align:center;
+  margin-right:.5em;
+  padding:0;
+  text-decoration:none
+}
+
+#brandFooterNew #footerMisc .social-icons .fa.fa-facebook:hover {
+  background-color:#004088
+}
+
+#brandFooterNew #footerMisc .social-icons .fa.fa-twitter:hover {
+  background-color:#00abe3
+}
+
+#brandFooterNew #footerMisc .social-icons .fa.fa-linkedin:hover {
+  background-color:#01669c
+}
+
+#brandFooterNew #footerMisc .social-icons .fa.fa-flickr:hover {
+  background-color:#FF0084
+}
+
+#brandFooterNew #footerMisc .social-icons .fa.fa-youtube:hover {
+  background-color:#CC181E
+}
+
+#brandFooterNew #footerMisc .social-icons .fa.fa-instagram:hover {
+  background-color:#517FA6
+}
+
+#brandFooterNew #footerMisc .social-icons .icon {
+  transition:all .4s ease
+}
+
+#brandFooterNew #footerMisc .social-icons .icon:hover {
+  color:#fff;
+  opacity:1
+}
+
+// NM Social Media
+a.Facebook,a.Twitter,a.Flickr,a.LinkedIn {
+  background:url(http://deptcommon.fsm.northwestern.edu/images/nm/NM-FSM-sprite.png) no-repeat scroll 0 -250px transparent;
+  display:block;
+  float:left;
+  font-size:0px;
+  height:25px;
+  margin-right:18px;
+  width:25px;
+  opacity:.7;
+  filter:alpha(opacity=70)
+}
+
+a.Facebook:hover,a.Twitter:hover,a.Flickr:hover,a.LinkedIn:hover {
+  opacity:1
+}
+
+a.Twitter {
+  background-position:-28px -250px
+}
+
+a.Flickr {
+  background-position:-55px -250px
+}
+
+a.LinkedIn {
+  background-position:-82px -250px
+}
+/* End NM styles */
+
+/* Galter Footer Styles */
+#brandFooterNew #deptInfo {
+  margin-left: auto;
+}
+
+/* Galter Social Media Styles */
+#brandFooterNew #deptInfo .social-icons li {
+  float:left
+}
+
+#brandFooterNew #deptInfo .social-icons .fa {
+  color:#514689;
+  background:#fff;
+  font-size:36px;
+  width:40px;
+  height:40px;
+  line-height:40px;
+  text-align:center;
+  margin-right:.5em;
+  padding:0;
+  text-decoration:none
+}
+
+#brandFooterNew #deptInfo .social-icons .fa.fa-facebook:hover {
+  background-color:#004088
+}
+
+#brandFooterNew #deptInfo .social-icons .fa.fa-twitter:hover {
+  background-color:#00abe3
+}
+
+#brandFooterNew #deptInfo .social-icons .fa.fa-linkedin:hover {
+  background-color:#01669c
+}
+
+#brandFooterNew #deptInfo .social-icons .fa.fa-flickr:hover {
+  background-color:#FF0084
+}
+
+#brandFooterNew #deptInfo .social-icons .fa.fa-youtube:hover {
+  background-color:#CC181E
+}
+
+#brandFooterNew #deptInfo .social-icons .fa.fa-instagram:hover {
+  background-color:#517FA6
+}
+
+#brandFooterNew #deptInfo .social-icons .icon {
+  transition:all .4s ease
+}
+
+#brandFooterNew #deptInfo .social-icons .icon:hover {
+  color:#fff;
+  opacity:1
+}
+
+
+.visuallyhidden {
+  border: 0px none;
+  clip: rect(0px, 0px, 0px, 0px);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0px;
+  position: absolute;
+  width: 1px;
 }

@@ -1,70 +1,65 @@
-<div id="footer" class="container-fluid">
-  <div class="row">
+<div id='footer' class='row'>
+  <footer id='brandFooterNew'>
+    <div class='row'>
+      <div id='footerLinks' class='col-md-3 col-xs-6 col-md-push-9 col-xs-push-1'>
+        <ul class='list-unstyled col-md-6 col-xs-12'>
+          <li><%= link_to "Home", root_path %></li>
+          <li><%= link_to "Catalog", catalog_index_path %></li>
+          <li><%= link_to 'About', 'about' %></li>
+        </ul>
 
-    <div class="col-sm-4">
-      <dl>
-        <dt><a href="http://www.galter.northwestern.edu">Galter Health Sciences Library</a></dt>
-        <dd>Feinberg School of Medicine</dd>
-        <dd>Northwestern University</dd>
-        <dd>303 E. Chicago Avenue, Chicago, IL 60611</dd>
-        <dd>Phone 312-503-8126</dd>
-        <dd><a href="/contact">Contact Us</a></dd>
-      </dl>
-    </div>
+        <ul class='list-unstyled col-md-6 col-xs-12'>
+          <li><%= link_to 'News', news_path %></li>
+          <li><%= link_to 'Help', help_path %></li>
+          <li><%= link_to 'Contact Us', 'contact' %></li>
+        </ul>
+      </div>
 
-    <div class="col-sm-1">
-    </div>
+      <div id='deptInfo' class='col-md-3 col-md-push-3 col-xs-6' itemscope itemtype='http://schema.org/Organization'>
+        <dl>
+          <dt class='fa'><i class='fa fa-map-marker'></i></dt>
+          <dt itemprop='name'>Galter Health Sciences Library</dt>
+          <dd itemprop='address'>303 E. Chicago Avenue, <span class='region'>Chicago, IL</span><span class='postal-code'> 60611</span></dd>
+          <dd itemprop='telephone'><i class='fa fa-mobile'></i> 312-503-8126</dd>
+          <dd itemprop='url'><%= link_to 'Galter Library', 'http://galter.northwestern.edu' %></dd>
+          <dd itemprop='email'>
+            <%= link_to "Contact Galter Reference", '/contact/Galter/Reference' %>
+          </dd>
+        </dl>
+        <ul id='galter-social-icons' class='social-icons cf'>
+          <li itemprop='url'><a class='icon fa fa-facebook' data-original-title='Facebook' href="https://www.facebook.com/galterlibrary"><span class='visuallyhidden'>Facebook</span></a>
+          </li>
+          <li itemprop='url'>
+            <a class='icon fa fa-twitter' data-original-title='Twitter' href="http://www.twitter.com/galterlibrary"><span class='visuallyhidden'>Twitter</span></a>
+          </li>
+        </ul>
+      </div>
 
-    <div class="col-sm-3">
-      <br />
-      <%= link_to 'About us', 'http://www.galter.northwestern.edu/about-us' %>
-      <br />
-      <br />
-      <%= link_to 'Northwestern University', 'http://www.northwestern.edu/' %>
-      <br />
-      <br />
-      <%= link_to 'Northwestern Search', 'http://googlesearch.northwestern.edu/search?output=xml_no_dtd&client=default_oneboxes&oe=UTF-8&ie=UTF-8&proxystylesheet=default_oneboxes' %>
-    </div>
+      <div class='col-xs-12 col-md-6 col-md-pull-6'>
+      <div id="footerMisc" class='col-xs-12 col-md-6 col-md-push-6'>
+        <h2>
+          <a href="http://www.feinberg.northwestern.edu">Northwestern University
+          <br>Feinberg School of Medicine</a>
+        </h2>
+        <p><a href="http://www.feinberg.northwestern.edu/giving/">Giving</a> | <a href="http://www.feinberg.northwestern.edu/communications/web/survey/index.html">Site Feedback</a></p>
+      </div>
 
-    <div class="col-sm-1">
-    </div>
-
-    <div class="col-sm-3">
-      <a id='feinbergBottomLink' href='http://www.feinberg.northwestern.edu/index.html'>
-        Northwestern University Feinberg School of Medicine
-      </a>
-    </div>
-  </div><!-- /.row -->
-</div><!-- /footer -->
-
-<div id="footer2" class="container-fluid">
-  <div class="row">
-    <div class="col-md-3 col-sm-4" id='nuFootImage'>
-      <%= link_to image_tag('logo-nu-footer.png', width: 100),
-        'http://www.northwestern.edu/', target: '_blank' %>
-    </div>
-
-    <div class="col-md-9 col-sm-8">
-      <a target='_blank' href="http://www.northwestern.edu/contact.html">
-        Contact Northwestern University
-      </a>
-      &nbsp;|&nbsp;
-      <a target='_blank' href="http://www.northwestern.edu/hr/careers/">
-        Careers
-      </a>
-      &nbsp;|&nbsp;
-      <a target='_blank' href="http://www.northwestern.edu/disclaimer.html">
-        Disclaimer
-      </a>
-      &nbsp;|&nbsp;
-      <a target='_blank' href="http://www.northwestern.edu/emergency/index.html">
-        Campus Emergency Information
-      </a>
-      &nbsp;|&nbsp;
-      <a target='_blank' href="http://policies.northwestern.edu/">
-        University Policies
-      </a>
-    </div>
-  </div>
-</div>
-
+      <div id="nuFooterNew" class='col-xs-12 col-md-6 col-md-pull-6'>
+        <div id="nuBrand" class='row'>
+          <%= link_to(image_tag('Northwestern_horizontal_white-trimmed.svg'), 'http://www.northwestern.edu', id: 'NU-Home', class: 'col-md-8', alt: 'Northwestern University logo') %>
+          <p class='col-md-12'>© 2015 Northwestern University</p>
+        </div>
+        <div id="nuLinks">
+          <ul>
+            <li><a href="http://www.northwestern.edu/contact.html">Contact Northwestern University</a></li>
+            <li><a href="http://www.northwestern.edu/hr/careers/">Careers</a></li>
+            <li><a href="http://www.northwestern.edu/disclaimer.html">Disclaimer</a></li>
+            <li><a href="http://www.northwestern.edu/emergency/index.html">Campus Emergency Information</a></li>
+            <li><a href="http://www.northwestern.edu/policy-statements/index.html">University Policies</a></li>
+          </ul>
+        </div>
+      </div> <!-- /nuFooterNew -->
+      </div>
+    </div> <!-- /row -->
+  </footer>
+</div><!-- /container /#footer -->
