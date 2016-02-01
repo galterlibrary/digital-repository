@@ -469,10 +469,10 @@ class CatalogController < ApplicationController
     config.add_sort_field "#{uploaded_field} asc", label: "date uploaded \u25B2"
     config.add_sort_field "#{modified_field} desc", label: "date modified \u25BC"
     config.add_sort_field "#{modified_field} asc", label: "date modified \u25B2"
-    config.add_sort_field "#{page_number_field} desc", label: "page number\u25BC"
-    config.add_sort_field "#{page_number_field} asc", label: "page number\u25B2"
-    config.add_sort_field "#{title_field} desc", label: "title\u25BC"
-    config.add_sort_field "#{title_field} asc", label: "title\u25B2"
+    config.add_sort_field "#{page_number_field} desc", label: "page number \u25BC"
+    config.add_sort_field "#{page_number_field} asc", label: "page number \u25B2"
+    config.add_sort_field "#{title_field} desc", label: "title \u25BC"
+    config.add_sort_field "#{title_field} asc", label: "title \u25B2"
 
     # If there are more than this many search results, no spelling ("did you
     # mean") suggestion is offered.

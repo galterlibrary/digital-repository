@@ -106,12 +106,19 @@ feature "Collections", :type => :feature do
         login_as(create(:admin_user))
       end
 
-      it {
+      it 'sorts by tile asc' do
         chi_box.members << ring
         chi_box.save!
         visit "/collections/#{chi_box.id}"
-        is_expected.to have_select('sort', selected: 'title▲')
-      }
+        is_expected.to have_select('sort', selected: 'title ▲')
+      end
+
+      it 'does not offer page number sort option' do
+        chi_box.members << ring
+        chi_box.save!
+        visit "/collections/#{chi_box.id}"
+        expect(page.html).not_to include('page number ▲')
+      end
 
       it 'lists private members for admin users' do
         chi_box.members << ring

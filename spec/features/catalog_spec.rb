@@ -29,19 +29,23 @@ feature 'Catalog', :type => :feature do
         title: ['ZZZ']
       })
     }
-
     let!(:col_user) {
       make_collection(user, {
         visibility: 'restricted', title: 'UserCol', id: 'col_user',
         rights: ['http://creativecommons.org/publicdomain/mark/1.0']
       })
     }
-
     let!(:col_stranger) {
       make_collection(user, {
         visibility: 'restricted', title: 'StrangeCol', id: 'col_stranger',
       })
     }
+
+    it 'does not offer page-number sort option' do
+      visit '/catalog'
+      expect(page.html).to include('date uploaded ▼')
+      expect(page.html).not_to include('page number ▼')
+    end
 
     it 'shows the Rights Statement facet' do
       visit '/catalog'

@@ -40,12 +40,14 @@ feature "MutiPageCollections", :type => :feature do
 
     subject { page }
 
-    it { is_expected.to have_link('Launch Viewer') }
-    it { is_expected.to have_text('Number of pages') }
-    it { is_expected.not_to have_text('Total Items') }
-    it { is_expected.to have_text('Pages in this Collection') }
-    it { is_expected.to have_link('View Combined Pages') }
-    it { is_expected.to have_select('sort', selected: 'page number▲') }
+    specify {
+      expect(page).to have_link('Launch Viewer')
+      expect(page).to have_text('Number of pages')
+      expect(page).not_to have_text('Total Items')
+      expect(page).to have_text('Pages in this Collection')
+      expect(page).to have_link('View Combined Pages')
+      expect(page).to have_select('sort', selected: 'page number ▲')
+    }
 
     it 'shows the number of pages' do
       expect(find(:xpath, '//span[@itemprop="number_of_pages"]').text).to eq('2')
