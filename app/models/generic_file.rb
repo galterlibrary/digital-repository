@@ -102,6 +102,30 @@ class GenericFile < ActiveFedora::Base
     mesh + lcsh + subject_name + subject_geographic
   end
 
+  def add_doi_to_citation(citation)
+    if doi.first.present?
+      citation.gsub!(/ +$/, '')
+      citation << " #{doi.first}"
+    end
+    citation.html_safe
+  end
+  private :add_doi_to_citation
+
+  def export_as_apa_citation
+    citation = super
+    add_doi_to_citation(citation)
+  end
+
+  def export_as_mla_citation
+    citation = super
+    add_doi_to_citation(citation)
+  end
+
+  def export_as_chicago_citation
+    citation = super
+    add_doi_to_citation(citation)
+  end
+
   class << self
     def indexer
       Sufia::GalterGenericFileIndexingService

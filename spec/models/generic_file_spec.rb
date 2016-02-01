@@ -3,6 +3,37 @@ RSpec.describe GenericFile do
   # Tested in collection_spec
   it { is_expected.to respond_to(:add_institutional_admin_permissions) }
 
+  context 'export citations' do
+    let(:gf_doi) { GenericFile.new(title: ['abc'],
+                                   creator: ['Donald Duck'],
+                                  doi: ['doi:11111/bbbb']) }
+    let(:gf_no_doi) { GenericFile.new(title: ['meow'],
+                                      creator: ['Cicero']) }
+
+    it 'adds a doi to apa-formated citations' do
+      expect(gf_doi.export_as_apa_citation).to include('doi:11111/bbbb')
+      expect(gf_doi.export_as_apa_citation).to include('Duck')
+      expect(gf_doi.export_as_apa_citation).to include('abc')
+    end
+
+    it 'adds a doi to mla-formated citations' do
+      expect(gf_doi.export_as_mla_citation).to include('doi:11111/bbbb')
+      expect(gf_doi.export_as_mla_citation).to include('Duck')
+      expect(gf_doi.export_as_mla_citation).to include('Abc')
+    end
+
+    it 'adds a doi to chicago-formated citations' do
+      expect(gf_doi.export_as_chicago_citation).to include('doi:11111/bbbb')
+      expect(gf_doi.export_as_chicago_citation).to include('Duck')
+      expect(gf_doi.export_as_chicago_citation).to include('Abc')
+    end
+
+    it 'does nothing for gf with no doi' do
+      expect(gf_no_doi.export_as_apa_citation).to include('Cicero')
+      expect(gf_no_doi.export_as_apa_citation).to include('meow')
+    end
+  end
+
   context 'custom metadata' do
     describe "abstract" do
       it "has it" do
