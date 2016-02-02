@@ -9,15 +9,15 @@
     <%= render partial: '/controls' %>
     <%= render partial: '/flash_msg' %>
 
-    <div id="content-wrapper" class="dashboard" role="main">
+    <div id="content-wrapper" class="dashboard row" role="main">
       <a name="skip_to_content"></a>
-      <div class="container-fluid">
+      <div>
         <div id="content-header" class="row"><%= yield :heading %></div>
       </div>
-      <div class="container-fluid">
-        <div id="content" class="row">
-          <div class="col-xs-12 col-sm-9 col-sm-push-3"><%= yield %></div>
-          <div id="sidebar" class="col-xs-12 col-sm-3 col-sm-pull-9"><%= yield :sidebar %></div>
+      <div>
+        <div id="content">
+          <div class="col-sm-12 col-md-9 col-md-push-3"><%= yield %></div>
+          <div id="sidebar" class="col-sm-12 col-md-3 col-md-pull-9"><%= yield :sidebar %></div>
         </div>
       </div>
     </div>

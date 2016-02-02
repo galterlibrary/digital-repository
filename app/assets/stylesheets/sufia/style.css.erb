@@ -5,6 +5,7 @@ a {
 a:hover {
   color: #0082BF;
 }
+
 #wrapper {
   background: #d4d5d6 none repeat scroll 0 0 !important;
 }
@@ -100,8 +101,6 @@ a#digitalHubTopLink:hover, a#feinbergTopLink:hover, a#NMLogo:hover {
 
 #homeTabs {
   padding-top: 7px;
-  margin-left: -15px;
-  margin-right: -15px;
   padding-left: 7px;
   background-color: #E6E6E6;
   font-family: Calibri,"Helvetica Neue",Helvetica,Arial,sans-serif;
@@ -115,64 +114,79 @@ a#digitalHubTopLink:hover, a#feinbergTopLink:hover, a#NMLogo:hover {
   display: none;
 }
 
-#home_content > div:nth-child(2) {
-  padding-left: 8px;
+#home_content > div {
+  padding-left: 7px;
   padding-right: 0px;
-  background-color: rgb(212, 213, 214);
+  border-left: 6px solid #d4d5d6;
+  border-top: 6px solid #d4d5d6;
 }
 
-#home_content > div:nth-child(2) > div {
-  background-color: #FFF;
-  padding-left: 7px;
-  padding-right: 7px;
+#home_content > div:first-child {
+  padding-left: 0px;
+  border-top: none;
+}
+
+@media (max-width: 767px) {
+  #home_content > div {
+    border-left: none;
+  }
+}
+
+@media (min-width: 768px) {
+  #home_content > div:first-child {
+    border-left: none;
+  }
+
+  #home_content > div:nth-child(2) {
+    border-top: none;
+  }
 }
 
 #home_content > div > div:first-child {
   padding-bottom: 7px;
 }
 
-#home_content > div:nth-child(2) h2 {
+#home_content div h2 {
   margin-top: 0px;
+  padding-top: 17px;
+  padding-left: 7px;
+}
+
+#home_content > div > div h2 {
+  font-family: Calibri,"Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
 #home_content > div:nth-child(2) > div:nth-child(1) h2 {
   margin-left: -7px;
-  margin-right: -7px;
-  padding-top: 9px;
-  padding-bottom: 9px;
-  padding-left: 7px;
-  padding-right: 7px;
   border-bottom: 1px solid #514689;
   background-color: #E6E6E6;
-  font-family: Calibri,"Helvetica Neue",Helvetica,Arial,sans-serif;
   color: #54585A;
 }
-
-#home_content > div:nth-child(2) > div:nth-child(2) {
-  padding-bottom: 7px;
+        
+#home_content table {
+  background-color: white;
 }
 
-#home_content > div:nth-child(2) > div:nth-child(2) > div {
-  margin-left: 0px;
-  margin-right: 0px;
+#home_content .tab-content {
+  padding-left: 1px;
+  padding-right: 1px;
 }
 
+/* Explore Tag Cloud*/
 #home_content > div:nth-child(2) > div:nth-child(2) > div.row:first-child {
-  border-bottom: 1px solid #514689;
   margin-left: -7px;
-  margin-right: -7px;
+  margin-right: 0px;
+  border-bottom: 1px solid #514689;
+  border-top: 6px solid #d4d5d6;
   background-color: #E6E6E6;
   font-family: Calibri,"Helvetica Neue",Helvetica,Arial,sans-serif;
   color: #54585A;
 }
 
-#home_content > div:nth-child(2) > div:nth-child(2) div > h2 {
-  padding-top: 9px;
-  padding-bottom: 10px;
-  padding-left: 7px;
-  padding-right: 7px;
-  margin-bottom: 0px;
-  font-family: Calibri,"Helvetica Neue",Helvetica,Arial,sans-serif;
+#tag-cloud {
+  padding-left: 8px;
+  padding-right: 15px;
+  padding-top: 7px; 
 }
 
 a.tag-toggle-list {
@@ -184,19 +198,12 @@ a.tag-toggle-list {
   margin-bottom: 0px;
 }
 
-div#tag-cloud {
-  padding-left: 15px;
-  padding-right: 15px;
-  margin-top: 0px;
-  padding-top: 7px;
+ul.tagcloud {
+  padding: 15px;
 }
 
 ul.tagcloud a {
   color: #0082BF !important;
-}
-
-#wrapper {
-  background-image: linear-gradient(to bottom, #E6E6E6 0%, #FFF 100%);
 }
 
 #masthead_controls {
@@ -212,9 +219,11 @@ ul.tagcloud a {
   font-weight: 400;
   font-size: 20px;
 }
+
 #masthead_controls .navbar li:first-child {
   border-left: 2px solid #FFF;
 }
+
 #masthead_controls .navbar li {
   border-right: 2px solid #FFF;
 }
@@ -241,6 +250,13 @@ ul.tagcloud a {
 
 #masthead_controls .navbar-default .navbar-nav > :not(.active) > a {
   padding-bottom: 18px;
+}
+
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  #masthead_controls > div:nth-child(1) {
+    border-bottom: 1px solid white;
+  }
 }
 
 .dashboard .panel-default > .dashboard-panel {
@@ -283,6 +299,7 @@ select[name="collection[resource_type][]"] {
 }
 
 #footer {
+  margin-top: 0px;
   padding: 0px;
 }
 
@@ -503,7 +520,6 @@ a.LinkedIn {
   opacity:1
 }
 
-
 .visuallyhidden {
   border: 0px none;
   clip: rect(0px, 0px, 0px, 0px);
@@ -513,4 +529,19 @@ a.LinkedIn {
   padding: 0px;
   position: absolute;
   width: 1px;
+}
+
+
+/* Dashboard */
+@media (min-width: 0px) and (max-width: 768px) {
+  .dashboard #content #sidebar, #content #sidebar #facets {
+    padding-top: 10px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1199px) {
+  .dashboard #content #sidebar > a.btn {
+    margin-top: 4px;
+  }
+  }
 }
