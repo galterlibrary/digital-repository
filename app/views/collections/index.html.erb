@@ -2,21 +2,21 @@
 
   <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 
-    <% collection_groups.each do |depositor, name| %>
+    <% collection_groups.each do |root| %>
       <div class="panel panel-default">
-        <div class="panel-heading" role="tab" id="heading-<%=depositor%>">
+        <div class="panel-heading" role="tab" id="heading-<%=root.depositor%>">
           <h4 class="panel-title">
             <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion"
-               href="#collapse-<%=depositor%>" aria-expanded="true"
-               aria-controls="collapse-<%=depositor%>">
-              <%= name %>
+               href="#collapse-<%=root.depositor%>" aria-expanded="true"
+               aria-controls="collapse-<%=root.depositor%>">
+              <%= root.title %>
             </a>
           </h4>
         </div>
-        <div id="collapse-<%=depositor%>" class="panel-collapse collapse"
-             role="tabpanel" aria-labelledby="heading-<%=depositor%>">
+        <div id="collapse-<%=root.depositor%>" class="panel-collapse collapse"
+             role="tabpanel" aria-labelledby="heading-<%=root.depositor%>">
           <div class="panel-body">
-            <% collection_docs_with_depositor(depositor) do |col, idx| %>
+            <% institutional_children(root.member_ids) do |col, idx| %>
               <%= link_to col.title, collections.collection_path(col.id),
                           class: 'list-group-item small' %>
             <% end %>

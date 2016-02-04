@@ -106,7 +106,6 @@ module Galtersufia
         :add_access_controls_to_solr_params,
         :add_collection_filter,
         :all_rows,
-        :root_collections,
         :add_sorting_to_solr
       ]
     end
