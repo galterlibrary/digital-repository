@@ -12,7 +12,7 @@ module Galtersufia
       skip_authorize_resource :only => :update
       load_resource :only => :update
       before_filter :update_authorization, :only => :update
-      before_filter :adjust_institutional_permissions, :only => :update
+      after_filter :adjust_institutional_permissions, :only => :update
     end
 
     def adjust_institutional_permissions
