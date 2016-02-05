@@ -38,6 +38,10 @@ module Galtersufia
       if cannot?(:update, @collection)
         filter_params_for_institutions
         authorize!(:add_members, @collection)
+      else
+        if params['collection'].try(:[], 'members') == 'remove'
+          authorize!(:remove_members, params['batch_document_ids'])
+        end
       end
     end
     private :update_authorization

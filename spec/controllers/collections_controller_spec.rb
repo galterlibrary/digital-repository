@@ -245,6 +245,25 @@ describe CollectionsController do
             }.by(-1)
           end
 
+          describe 'removing members including an institutional one' do
+            let(:inst_col_child) { make_collection(
+              inst_admin, institutional_collection: true) }
+            before do
+              inst_col.members << inst_col_child
+              inst_col.save
+            end
+
+            it 'does not allow action' do
+              expect(inst_col.reload.member_ids.count).to eq(2)
+              expect {
+                patch :update, id: inst_col,
+                      :collection => { 'members' => 'remove' },
+                      :batch_document_ids => [gf.id, inst_col_child.id]
+              }.not_to change { inst_col.reload.member_ids.count }
+              expect(flash.alert).to include('You are not authorized')
+            end
+          end
+
           describe 'permission update' do
             let(:col1) { make_collection(inst_admin) }
 
