@@ -25,4 +25,8 @@ class SolrDocument
   def height
      Array(self[Solrizer.solr_name(:height, :type => :integer)]).first
   end
+
+  def member_ids
+    Array(self['hasCollectionMember_ssim'])
+  end
 end

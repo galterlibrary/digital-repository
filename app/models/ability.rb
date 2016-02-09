@@ -13,6 +13,29 @@ class Ability
       !is_institutional_group_admin?(collection) if collection.is_institutional?
     end
 
+    def get_solr_doc(object_id)
+      resp = ActiveFedora::SolrService.instance.conn.get(
+        'select', params: { q: "id:#{object_id}" })
+      if resp['response']['numFound'] == 0
+        raise Blacklight::Exceptions::InvalidSolrID.new(
+           "Parent collection: #{object_id} was not found")
+      end
+      resp['response']['docs'].first
+    end
+
+    def is_institutional?(object_id)
+      get_solr_doc(object_id)['institutional_collection_bsi']
+    end
+
+    can [:remove_members], Array do |member_ids|
+      can_remove = true
+      member_ids.each do |id|
+        next unless is_institutional?(id)
+        can_remove = false
+      end
+      can_remove
+    end
+
     can [:add_members], Collection do |collection|
       test_edit(collection.id)
     end

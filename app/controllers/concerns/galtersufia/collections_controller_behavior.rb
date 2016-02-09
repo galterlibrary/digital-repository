@@ -12,7 +12,7 @@ module Galtersufia
       skip_authorize_resource :only => :update
       load_resource :only => :update
       before_filter :update_authorization, :only => :update
-      before_filter :adjust_institutional_permissions, :only => :update
+      after_filter :adjust_institutional_permissions, :only => :update
     end
 
     def adjust_institutional_permissions
@@ -38,6 +38,10 @@ module Galtersufia
       if cannot?(:update, @collection)
         filter_params_for_institutions
         authorize!(:add_members, @collection)
+      else
+        if params['collection'].try(:[], 'members') == 'remove'
+          authorize!(:remove_members, params['batch_document_ids'])
+        end
       end
     end
     private :update_authorization
@@ -106,7 +110,6 @@ module Galtersufia
         :add_access_controls_to_solr_params,
         :add_collection_filter,
         :all_rows,
-        :root_collections,
         :add_sorting_to_solr
       ]
     end
