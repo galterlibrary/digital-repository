@@ -496,6 +496,315 @@ RSpec.describe Collection do
     end
   end
 
+  describe '#convert_to_institutional' do
+    let(:unrelated_col) { make_collection(user, title: 'Unrelated') }
+    let(:user_col2) { make_collection(user, title: 'User2') }
+    let(:user_col) { make_collection(
+      user, title: 'User1', member_ids: user_col2.id) }
+    let(:user_gf) { make_generic_file(user, title: ['Gf1']) }
+    let(:user_parent) { make_collection(
+      user, title: 'Parent of the tree', member_ids: [user_col.id, user_gf.id]) }
+
+      subject { user_parent }
+
+    it 'converts the whole structure' do
+      subject.convert_to_institutional('institutional-abc')
+
+      # Sets the institutional depositor
+      expect(user_parent.reload.depositor).to eq('institutional-abc-root')
+      expect(user_col.reload.depositor).to eq('institutional-abc')
+      expect(user_col2.reload.depositor).to eq('institutional-abc')
+      # Leaves the file depositor unchanged
+      expect(user_gf.reload.depositor).to eq(user.username)
+      # Leaves the collection not in the structure unchanged
+      expect(unrelated_col.reload.depositor).to eq(user.username)
+
+      expect(User.find_by(username: 'institutional-abc-root')).to be_a(User)
+      expect(User.find_by(username: 'institutional-abc')).to be_a(User)
+
+      expect(user_parent.institutional_collection).to be_truthy
+      expect(user_col.institutional_collection).to be_truthy
+      expect(user_col2.institutional_collection).to be_truthy
+      expect(unrelated_col.institutional_collection).to be_falsy
+
+      # Creates and propagates a default root admin group
+      expect(user_parent.permissions.map(&:agent_name)).to include(
+        'Parent-of-the-tree-Admin')
+      expect(user_col.permissions.map(&:agent_name)).to include(
+        'Parent-of-the-tree-Admin')
+      expect(user_col2.permissions.map(&:agent_name)).to include(
+        'Parent-of-the-tree-Admin')
+      expect(user_gf.permissions.map(&:agent_name)).to include(
+        'Parent-of-the-tree-Admin')
+      expect(unrelated_col.permissions.map(&:agent_name)).not_to include(
+        'Parent-of-the-tree-Admin')
+    end
+
+    context 'bad depositor passed' do
+      it 'throws an error' do
+        expect{
+          subject.convert_to_institutional('abc')
+        }.to raise_error(RuntimeError)
+      end
+    end
+
+    context 'depositor containing root passed' do
+      it 'sets the depositor properly' do
+        subject.convert_to_institutional('institutional-abc-root')
+
+        # Sets the institutional depositor
+        expect(user_parent.reload.depositor).to eq('institutional-abc-root')
+        expect(user_col.reload.depositor).to eq('institutional-abc')
+        expect(user_col2.reload.depositor).to eq('institutional-abc')
+        expect(user_gf.reload.depositor).to eq(user.username)
+        expect(unrelated_col.reload.depositor).to eq(user.username)
+      end
+    end
+
+    context 'depositor containing root passed to a non-root node' do
+      subject { user_col }
+
+      describe 'no parent_id passed' do
+        it 'sets the depositor as root' do
+          subject.convert_to_institutional('institutional-abc-root')
+
+          # Sets the institutional depositor
+          expect(user_col.reload.depositor).to eq('institutional-abc-root')
+          expect(user_col2.reload.depositor).to eq('institutional-abc')
+          expect(user_gf.reload.depositor).to eq(user.username)
+          expect(unrelated_col.reload.depositor).to eq(user.username)
+          expect(user_parent.reload.depositor).to eq(user.username)
+        end
+      end
+
+      describe 'parent_id passed' do
+        it 'sets the depositor as root' do
+          subject.convert_to_institutional(
+            'institutional-abc-root', user_parent.id)
+
+          # Sets the institutional depositor
+          expect(user_col.reload.depositor).to eq('institutional-abc')
+          expect(user_col2.reload.depositor).to eq('institutional-abc')
+          expect(user_gf.reload.depositor).to eq(user.username)
+          expect(unrelated_col.reload.depositor).to eq(user.username)
+          expect(user_parent.reload.depositor).to eq(user.username)
+        end
+      end
+    end
+
+    context 'admin group specified' do
+      it 'sets the custom group instead of default' do
+        subject.convert_to_institutional('institutional-abc', nil, 'Cool-Admin')
+        # Creates and propagates a default root admin group
+        expect(user_parent.reload.permissions.map(&:agent_name)).to include(
+          'Cool-Admin')
+        expect(user_col.reload.permissions.map(&:agent_name)).to include(
+          'Cool-Admin')
+        expect(user_col2.reload.permissions.map(&:agent_name)).to include(
+          'Cool-Admin')
+        expect(user_gf.reload.permissions.map(&:agent_name)).to include(
+          'Cool-Admin')
+        expect(unrelated_col.reload.permissions.map(&:agent_name)).not_to include(
+          'Cool-Admin')
+      end
+    end
+
+    context 'non-admin group specified' do
+      it 'sets the custom group on the root but not children' do
+        subject.convert_to_institutional('institutional-abc', nil, 'Cool-Cats')
+        # Creates and propagates a default root admin group
+        expect(user_parent.reload.permissions.map(&:agent_name)).to include(
+          'Cool-Cats')
+        expect(user_col.reload.permissions.map(&:agent_name)).not_to include(
+          'Cool-Cats')
+        expect(user_col2.reload.permissions.map(&:agent_name)).not_to include(
+          'Cool-Cats')
+        expect(user_gf.reload.permissions.map(&:agent_name)).not_to include(
+          'Cool-Cats')
+        expect(unrelated_col.reload.permissions.map(&:agent_name)).not_to include(
+          'Cool-Cats')
+      end
+    end
+
+    context 'no admin group passed for a root with a long title' do
+      before do
+        user_parent.title = 'Very Very Very Very Very Very Very Long Title'
+        user_parent.save
+      end
+
+      it 'uses a shortened title for the group name' do
+        subject.convert_to_institutional('institutional-abc')
+        # Creates and propagates a default root admin group
+        expect(user_parent.reload.permissions.map(&:agent_name)).to include(
+          'Very-Very-Very-Very-Very-Very-Very-Long-T-Admin')
+        expect(user_col.reload.permissions.map(&:agent_name)).to include(
+          'Very-Very-Very-Very-Very-Very-Very-Long-T-Admin')
+        expect(user_col2.reload.permissions.map(&:agent_name)).to include(
+          'Very-Very-Very-Very-Very-Very-Very-Long-T-Admin')
+        expect(user_gf.reload.permissions.map(&:agent_name)).to include(
+          'Very-Very-Very-Very-Very-Very-Very-Long-T-Admin')
+        expect(unrelated_col.reload.permissions.map(&:agent_name)).not_to include(
+          'Very-Very-Very-Very-Very-Very-Very-Long-T-Admin')
+      end
+    end
+
+    context 'no admin group passed for a root with a non-ascii title' do
+      before do
+        user_parent.title = 'Księga grzotów i błyskawic'
+        user_parent.save
+      end
+
+      it 'uses a shortened title for the group name' do
+        subject.convert_to_institutional('institutional-abc')
+        # Creates and propagates a default root admin group
+        expect(user_parent.reload.permissions.map(&:agent_name)).to include(
+          'Ksiga-grzotw-i-byskawic-Admin')
+        expect(user_col.reload.permissions.map(&:agent_name)).to include(
+          'Ksiga-grzotw-i-byskawic-Admin')
+        expect(user_col2.reload.permissions.map(&:agent_name)).to include(
+          'Ksiga-grzotw-i-byskawic-Admin')
+        expect(user_gf.reload.permissions.map(&:agent_name)).to include(
+          'Ksiga-grzotw-i-byskawic-Admin')
+        expect(unrelated_col.reload.permissions.map(&:agent_name)).not_to include(
+          'Ksiga-grzotw-i-byskawic-Admin')
+      end
+    end
+  end
+
+  describe '#normalize_institutional' do
+    let(:user_col) { make_collection(user, title: 'User1') }
+    let(:user_gf) { make_generic_file(user, title: ['Gf1']) }
+    let(:user_parent) { make_collection(
+      user, title: 'User1', member_ids: [user_col.id, user_gf.id]) }
+
+    context 'structure has no institutional collections' do
+      subject { user_parent }
+
+      it 'does nothing' do
+        subject.normalize_institutional('abc', 'ABC-Admin')
+        expect(user_parent).not_to receive(:adjust_institutional_permissions)
+        expect(user_col).not_to receive(:adjust_institutional_permissions)
+        expect(user_gf).not_to receive(:adjust_institutional_permissions)
+      end
+    end
+
+    context 'structure has institutional collections' do
+      let(:inst_col2_1) { make_collection(
+        user, title: 'IColl2.1', institutional_collection: true) }
+      let(:inst_col1_1) { make_collection(
+        user, title: 'IColl1.1', member_ids: [inst_col2_1.id],
+        institutional_collection: true
+      ) }
+      let(:inst_col1_2) { make_collection(
+        user, title: 'IColl1.2', institutional_collection: true) }
+      let(:inst_root) { make_collection(
+        user, title: 'IRoot1', institutional_collection: true,
+        member_ids: [inst_col1_1.id, inst_col1_2.id, user_parent.id]
+      ) }
+
+      subject { inst_root }
+
+      describe 'institutional user does not exist, no permissions' do
+        specify do
+          subject.normalize_institutional('institutional-abc')
+
+          # Depositor changed for institutional collections
+          expect(inst_root.reload.depositor).to eq('institutional-abc-root')
+          expect(inst_col1_1.reload.depositor).to eq('institutional-abc')
+          expect(inst_col1_2.reload.depositor).to eq('institutional-abc')
+          expect(inst_col2_1.reload.depositor).to eq('institutional-abc')
+          expect(user_parent.reload.depositor).to eq(user.username)
+          expect(user_col.reload.depositor).to eq(user.username)
+          expect(user_gf.reload.depositor).to eq(user.username)
+
+          # Doesn't touch the institutional status
+          expect(inst_root.institutional_collection).to be_truthy
+          expect(inst_col1_1.institutional_collection).to be_truthy
+          expect(inst_col1_2.institutional_collection).to be_truthy
+          expect(inst_col2_1.institutional_collection).to be_truthy
+          expect(user_parent.institutional_collection).to be_falsy
+          expect(user_col.institutional_collection).to be_falsy
+
+          expect(User.find_by(username: 'institutional-abc-root')).to be_a(User)
+          expect(User.find_by(username: 'institutional-abc')).to be_a(User)
+        end
+      end
+
+      describe 'institutional user exist, no permissions' do
+        let!(:inst_user_root) { create(
+          :user, username: 'institutional-abc-root') }
+        let!(:inst_user) { create(:user, username: 'institutional-abc') }
+        specify do
+          expect(User).not_to receive(:create!)
+          subject.normalize_institutional('institutional-abc')
+
+          # Depositor changed for institutional collections
+          expect(inst_root.reload.depositor).to eq('institutional-abc-root')
+          expect(inst_col1_1.reload.depositor).to eq('institutional-abc')
+          expect(inst_col1_2.reload.depositor).to eq('institutional-abc')
+          expect(inst_col2_1.reload.depositor).to eq('institutional-abc')
+          expect(user_parent.reload.depositor).to eq(user.username)
+          expect(user_col.reload.depositor).to eq(user.username)
+          expect(user_gf.reload.depositor).to eq(user.username)
+
+          # Doesn't touch the institutional status
+          expect(inst_root.institutional_collection).to be_truthy
+          expect(inst_col1_1.institutional_collection).to be_truthy
+          expect(inst_col1_2.institutional_collection).to be_truthy
+          expect(inst_col2_1.institutional_collection).to be_truthy
+          expect(user_parent.institutional_collection).to be_falsy
+          expect(user_col.institutional_collection).to be_falsy
+        end
+      end
+
+      describe 'permission changes' do
+        let(:user_gf2) { make_generic_file(user) }
+        before do
+          inst_col1_2.members << user_gf2
+          inst_col1_2.save!
+          inst_col1_1.permissions.create(
+            name: 'Col11-Admin', type: 'group', access: 'edit')
+          inst_col1_1.update_index
+        end
+
+        specify do
+          subject.normalize_institutional('institutional-abc', 'ABC-Admin')
+
+          # Sanity check
+          # Depositor changed for institutional collections
+          expect(inst_root.reload.depositor).to eq('institutional-abc-root')
+          expect(inst_col1_1.reload.depositor).to eq('institutional-abc')
+          expect(inst_col1_2.reload.depositor).to eq('institutional-abc')
+          expect(inst_col2_1.reload.depositor).to eq('institutional-abc')
+          expect(user_parent.reload.depositor).to eq(user.username)
+          expect(user_col.reload.depositor).to eq(user.username)
+          expect(user_gf.reload.depositor).to eq(user.username)
+
+          # Doesn't touch the institutional status
+          expect(inst_root.institutional_collection).to be_truthy
+          expect(inst_col1_1.institutional_collection).to be_truthy
+          expect(inst_col1_2.institutional_collection).to be_truthy
+          expect(inst_col2_1.institutional_collection).to be_truthy
+          expect(user_parent.institutional_collection).to be_falsy
+          expect(user_col.institutional_collection).to be_falsy
+
+          # Adds ABC-Admin group permissions to all institutional and first
+          # child collections and files and propagates institutional Admin
+          # permissions
+          expect(inst_root.permissions.map(&:agent_name)).to include('ABC-Admin')
+          expect(inst_col1_1.permissions.map(&:agent_name)).to include('ABC-Admin')
+          expect(inst_col1_2.permissions.map(&:agent_name)).to include('ABC-Admin')
+          expect(inst_col2_1.permissions.map(&:agent_name)).to include('ABC-Admin')
+          expect(inst_col2_1.permissions.map(&:agent_name)).to include('Col11-Admin')
+          expect(user_gf2.reload.permissions.map(&:agent_name)).to include('ABC-Admin')
+          expect(user_parent.permissions.map(&:agent_name)).to include('ABC-Admin')
+          expect(user_col.permissions.map(&:agent_name)).not_to include('ABC-Admin')
+          expect(user_gf.reload.permissions.map(&:agent_name)).not_to include('ABC-Admin')
+        end
+      end
+    end
+  end
+
   describe '#remove_institutional_admin_permissions' do
     context 'parent is not an institutional_collection' do
       let(:non_institutional_parent) { make_collection(
