@@ -109,6 +109,8 @@ Blacklight.onLoad(function() {
       var $cloneElem = $(cloneElem);
       fix_clone_id($cloneElem);
 
+
+      if ($cloneElem.length === 0) { return }
       var vocab_type = clean_input_name($cloneElem.attr('name'))
           .replace(/generic_file_/, '')
           .replace(/collection_/, '');

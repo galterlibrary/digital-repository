@@ -455,6 +455,15 @@ describe 'generic file', :type => :feature do
             end
           end
 
+          it 'can add a new field to a non-autocomplete form group' do
+            click_link 'Edit'
+            fill_in 'generic_file_abstract', with: 'Testa'
+            within 'div.generic_file_abstract' do
+              click_button('Add')
+            end
+            expect(all('textarea.generic_file_abstract').count).to eq(3)
+          end
+
           it 'triggers name validation for multi fields on newly added fields' do
             skip 'too js heavy to work all the time'
             click_link 'Edit'
