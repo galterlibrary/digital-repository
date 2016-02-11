@@ -30,5 +30,6 @@ unless Rails.env.test? || Rails.env.ci?
   end
 end
 
+Deprecation.default_deprecation_behavior = :silence
 # Initialize the Rails application.
 Rails.application.initialize!

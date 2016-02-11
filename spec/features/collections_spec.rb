@@ -129,8 +129,9 @@ feature "Collections", :type => :feature do
         expect(page).to have_link('Invisible')
       end
 
-      it 'lists the action menu for Black Box', js: true do
+      it 'lists the action menus', js: true do
         visit "/collections/#{chi_box.id}"
+        expect(page).to have_button('Actions')
         within ("#document_#{black_box.id}") do
           click_button('Select an action')
           expect(page).to have_link('Delete Collection')
@@ -219,8 +220,9 @@ feature "Collections", :type => :feature do
         end
       end
 
-      it 'lists the action menu for Black Box', js: true do
+      it 'lists the action menus', js: true do
         visit "/collections/#{chi_box.id}"
+        expect(page).to have_button('Actions')
         within ("#document_#{black_box.id}") do
           click_button('Select an action')
           expect(page).not_to have_link('Delete Collection')
@@ -289,8 +291,9 @@ feature "Collections", :type => :feature do
         login_as(create(:user), :scope => :user)
       end
 
-      it 'does not list the action menu for Black Box' do
+      it 'does not list the action menus' do
         visit "/collections/#{chi_box.id}"
+        expect(page).not_to have_button('Actions')
         within ("#document_#{black_box.id}") do
           expect(page).not_to have_button('Select an action')
         end
@@ -306,8 +309,9 @@ feature "Collections", :type => :feature do
     end
 
     context 'as an unauthenticated user' do
-      it 'does not list the action menu for Black Box' do
+      it 'does not list the action menus' do
         visit "/collections/#{chi_box.id}"
+        expect(page).not_to have_button('Actions')
         within ("#document_#{black_box.id}") do
           expect(page).not_to have_button('Select an action')
         end
@@ -318,6 +322,20 @@ feature "Collections", :type => :feature do
         within(:css, 'h1.visibility') do
           expect(page).to have_text('Open Access (recommended)')
           expect(page).not_to have_link('Open Access (recommended)')
+        end
+      end
+
+      describe 'collection links to a combined file' do
+        let(:combined) { make_generic_file(user) }
+
+        before do
+          chi_box.combined_file = combined
+          chi_box.save!
+        end
+
+        it 'lists the action menu' do
+          visit "/collections/#{chi_box.id}"
+          expect(page).to have_button('Actions')
         end
       end
     end
