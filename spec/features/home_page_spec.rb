@@ -41,8 +41,10 @@ feature "HomePage", :type => :feature do
     it { is_expected.to have_link('News') }
 
     it 'links to the news page' do
-      click_link 'News'
-      expect(current_path).to eq('/news')
+      within('.navbar-nav') do
+        click_link 'News'
+        expect(current_path).to eq('/news')
+      end
     end
   end
 
