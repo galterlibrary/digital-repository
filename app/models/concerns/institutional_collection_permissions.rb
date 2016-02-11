@@ -88,14 +88,8 @@ module InstitutionalCollectionPermissions
   end
 
   def convert_to_institutional(depositor_name, parent_id=nil, root_admin=nil)
-    unless self.is_a?(Collection)
-      adjust_institutional_permissions(parent_id)
-      self.save!
-      return
-    end
-
-    set_root_admin_group(root_admin)
-    make_institutional(depositor_name, parent_id)
+    make_institutional(depositor_name, parent_id, root_admin)
+    return unless self.is_a?(Collection)
     self.members.flatten.compact.each do |child|
       child.convert_to_institutional(depositor_name, self.id)
     end
@@ -183,10 +177,13 @@ module InstitutionalCollectionPermissions
   end
   private :set_institutional_depositor
 
-  def make_institutional(depositor_name, parent_id)
+  def make_institutional(depositor_name, parent_id, root_admin)
+    if self.is_a?(Collection)
+      set_root_admin_group(root_admin)
+      self.institutional_collection = true
+    end
     adjust_institutional_permissions(parent_id)
     set_institutional_depositor(depositor_name, parent_id)
-    self.institutional_collection = true
     self.save!
   end
   private :make_institutional

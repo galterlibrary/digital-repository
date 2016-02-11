@@ -514,8 +514,7 @@ RSpec.describe Collection do
       expect(user_parent.reload.depositor).to eq('institutional-abc-root')
       expect(user_col.reload.depositor).to eq('institutional-abc')
       expect(user_col2.reload.depositor).to eq('institutional-abc')
-      # Leaves the file depositor unchanged
-      expect(user_gf.reload.depositor).to eq(user.username)
+      expect(user_gf.reload.depositor).to eq('institutional-abc')
       # Leaves the collection not in the structure unchanged
       expect(unrelated_col.reload.depositor).to eq(user.username)
 
@@ -556,7 +555,7 @@ RSpec.describe Collection do
         expect(user_parent.reload.depositor).to eq('institutional-abc-root')
         expect(user_col.reload.depositor).to eq('institutional-abc')
         expect(user_col2.reload.depositor).to eq('institutional-abc')
-        expect(user_gf.reload.depositor).to eq(user.username)
+        expect(user_gf.reload.depositor).to eq('institutional-abc')
         expect(unrelated_col.reload.depositor).to eq(user.username)
       end
     end
