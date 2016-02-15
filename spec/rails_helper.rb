@@ -18,7 +18,7 @@ Capybara.register_driver :poltergeist_no_errors do |app|
   Capybara::Poltergeist::Driver.new(app, js_errors: false)
 end
 Capybara.javascript_driver = :poltergeist
-Capybara.default_wait_time = 2
+Capybara.default_max_wait_time = 2
 
 ActiveRecord::Migration.maintain_test_schema!
 RSpec.configure do |config|

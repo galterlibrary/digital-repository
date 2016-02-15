@@ -25,7 +25,7 @@ describe 'generic file', :type => :feature do
       expect(page).to have_text('Bibliographic citation')
       expect(page).not_to have_text('Keyword')
       expect(page).not_to have_text('Rights')
-      expect(page).not_to have_text('Publisher')
+      expect(page).not_to have_text('Digital Publisher')
       expect(page).not_to have_text('Date Created')
       expect(page).to have_text('Subject: MESH')
       expect(page).to have_text('Subject: LCSH')
@@ -181,6 +181,7 @@ describe 'generic file', :type => :feature do
           fill_in 'generic_file_subject_name', with: 'subjn'
           fill_in 'generic_file_doi', with: 'doi'
           fill_in 'generic_file_ark', with: 'ark'
+          fill_in 'generic_file_original_publisher', with: 'orig'
 
           expect(page).not_to have_text('Digital origin')
 
@@ -200,6 +201,7 @@ describe 'generic file', :type => :feature do
           expect(@new_file.subject_name).to eq(['subjn'])
           expect(@new_file.doi).to eq(['doi'])
           expect(@new_file.ark).to eq(['ark'])
+          expect(@new_file.original_publisher).to eq(['orig'])
         end
       end
 

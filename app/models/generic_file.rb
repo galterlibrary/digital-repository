@@ -87,6 +87,13 @@ class GenericFile < ActiveFedora::Base
     index.as :stored_searchable
   end
 
+  property :original_publisher,
+           :predicate => ::RDF::URI.new(
+             'http://vivoweb.org/ontology/core#publisher'),
+           :multiple => true do |index|
+    index.as :stored_searchable
+  end
+
   before_save :store_the_actual_page_number
 
   def store_the_actual_page_number

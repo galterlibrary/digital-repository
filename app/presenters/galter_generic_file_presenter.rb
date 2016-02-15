@@ -11,6 +11,7 @@ class GalterGenericFilePresenter < Sufia::GenericFilePresenter
     :bibliographic_citation,
     :related_url,
     :publisher,
+    :original_publisher,
     :date_created,
     :identifier,
     :language,
@@ -24,6 +25,6 @@ class GalterGenericFilePresenter < Sufia::GenericFilePresenter
     :acknowledgments,
     :grants_and_funding,
     :doi,
-    :ark
+    :ark,
   ]
 end

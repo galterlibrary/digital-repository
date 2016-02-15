@@ -17,6 +17,7 @@ class GalterCollectionPresenter < Sufia::CollectionPresenter
       :bibliographic_citation,
       :related_url,
       :publisher,
+      :original_publisher,
       :date_created,
       :identifier,
       :language,

@@ -15,6 +15,7 @@ Sufia.config do |config|
   config.max_notifications_for_dashboard = 5
 
   config.cc_licenses = {
+    'Attribution 4.0 International' => 'http://creativecommons.org/licenses/by/4.0/',
     'Attribution 3.0 United States' => 'http://creativecommons.org/licenses/by/3.0/us/',
     'Attribution-ShareAlike 3.0 United States' => 'http://creativecommons.org/licenses/by-sa/3.0/us/',
     'Attribution-NonCommercial 3.0 United States' => 'http://creativecommons.org/licenses/by-nc/3.0/us/',

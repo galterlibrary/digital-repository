@@ -51,6 +51,7 @@ en:
         subject_name: 'Subject: Name'
         doi: 'DOI'
         ark: 'ARK'
+        publisher: 'Digital Publisher'
       collection:
         resource_type: 'Resource type(s)'
         multi_page: 'Multi-page?'
@@ -59,6 +60,7 @@ en:
         lcsh: 'Subject: LCSH'
         subject_geographic: 'Subject: Geographic Name'
         subject_name: 'Subject: Name'
+        publisher: 'Digital Publisher'
     metadata_help:
       collection:
         resource_type: 'Pre-defined categories to describe the type of content being uploaded, such as "article" or "clinical trial." More than one type may be selected.'

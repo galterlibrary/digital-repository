@@ -125,6 +125,15 @@ RSpec.describe GenericFile do
       end
     end
 
+    describe "original_publisher" do
+      it "has it" do
+        expect(subject.original_publisher).to be_empty
+        subject.original_publisher = ['abc bcd']
+        subject.save(validate: false)
+        expect(subject.reload.original_publisher).to eq(['abc bcd'])
+      end
+    end
+
     describe "page_number_actual" do
       it "has it" do
         expect(subject.page_number_actual).to be_nil

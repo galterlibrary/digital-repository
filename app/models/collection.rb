@@ -76,6 +76,13 @@ class Collection < Sufia::Collection
     index.type :boolean
   end
 
+  property :original_publisher,
+           :predicate => ::RDF::URI.new(
+             'http://vivoweb.org/ontology/core#publisher'),
+           :multiple => true do |index|
+    index.as :stored_searchable
+  end
+
   def pageable?
     multi_page && pageable_members.present?
   end

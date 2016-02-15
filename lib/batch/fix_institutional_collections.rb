@@ -3,7 +3,8 @@ galter.username = 'institutional-galter-system'
 galter.save!
 
 galter_root = User.create(username: 'institutional-galter-system-root',
-                          email: 'galter-system-root@northwestern.edu')
+                          email: 'galter-system-root@northwestern.edu',
+                          display_name: "Galter Health Sciences Library")
 
 ipham = User.find_by(username: 'ipham-system')
 ipham.username = 'institutional-ipham-system'

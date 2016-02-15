@@ -194,6 +194,7 @@ feature "Collections", :type => :feature do
             :subject_name => ['NAME'],
             :based_near => ['NEAR'],
             :digital_origin => ['ORIG'],
+            :original_publisher => ['OPUB'],
           )
           visit("/collections/#{chi_box.id}")
         end
@@ -217,6 +218,7 @@ feature "Collections", :type => :feature do
           expect(page).to have_text('NAME')
           expect(page).to have_text('NEAR')
           expect(page).to have_text('ORIG')
+          expect(page).to have_text('OPUB')
         end
       end
 

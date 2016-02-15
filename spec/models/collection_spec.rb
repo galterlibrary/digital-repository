@@ -166,6 +166,15 @@ RSpec.describe Collection do
         expect(subject.reload.multi_page).to be_truthy
       end
     end
+
+    describe "original_publisher" do
+      it "has it" do
+        expect(subject.original_publisher).to eq([])
+        subject.original_publisher = ['op']
+        subject.save(validate: false)
+        expect(subject.reload.original_publisher).to eq(['op'])
+      end
+    end
   end
 
   context 'children-parent relation' do
