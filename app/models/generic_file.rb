@@ -106,7 +106,7 @@ class GenericFile < ActiveFedora::Base
   protected :store_the_actual_page_number
 
   def all_tags
-    mesh + lcsh + subject_name + subject_geographic
+    mesh + lcsh + subject_name + subject_geographic + subject
   end
 
   def add_doi_to_citation(citation)
