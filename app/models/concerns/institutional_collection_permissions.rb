@@ -114,20 +114,23 @@ module InstitutionalCollectionPermissions
     self.collections.blank?
   end
 
+  def default_group_name
+    self.title.strip
+              .slice(0..40)
+              .encode(Encoding::US_ASCII, {
+                :invalid => :replace,
+                :undef => :replace,
+                :replace => '' })
+              .gsub(/\s/, '-') << '-Admin'
+  end
+  private :default_group_name
+
   def set_root_admin_group(root_admin)
     # Only add group permissions when:
     # - `root_admin' is specified
     # - `root_admin' is not specified and this is a root node
     return if root_admin.blank? && !is_root_node?
-    if root_admin.blank?
-      root_admin = self.title.strip
-                             .slice(0..40)
-                             .encode(Encoding::US_ASCII, {
-                               :invalid => :replace,
-                               :undef => :replace,
-                               :replace => '' })
-                             .gsub(/\s/, '-') << '-Admin'
-    end
+    root_admin = default_group_name if root_admin.blank?
     return if self.permissions.map(&:agent_name).include?(root_admin)
     self.permissions.create(name: root_admin, type: 'group', access: 'edit')
   end
@@ -169,8 +172,11 @@ module InstitutionalCollectionPermissions
   def set_institutional_depositor(depositor_name, parent_id)
     depositor_name = find_depositor_name(depositor_name, parent_id)
     unless depositor_user = User.find_by(username: depositor_name)
-      depositor_user = User.create!(username: depositor_name,
-                                    email: "#{depositor_name}@northwestern.edu")
+      depositor_user = User.create!(
+        username: depositor_name,
+        email: "#{depositor_name}@northwestern.edu",
+        display_name: depositor_name.gsub('-', ' ').titleize
+      )
     end
     return if self.depositor == depositor_user.username
     self.apply_depositor_metadata(depositor_user.username)
