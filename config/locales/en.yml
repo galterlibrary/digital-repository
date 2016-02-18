@@ -52,6 +52,7 @@ en:
         doi: 'DOI'
         ark: 'ARK'
         publisher: 'Digital Publisher'
+        original_publisher: 'Original Publisher'
       collection:
         resource_type: 'Resource type(s)'
         multi_page: 'Multi-page?'
@@ -61,6 +62,7 @@ en:
         subject_geographic: 'Subject: Geographic Name'
         subject_name: 'Subject: Name'
         publisher: 'Digital Publisher'
+        original_publisher: 'Original Publisher'
     metadata_help:
       collection:
         resource_type: 'Pre-defined categories to describe the type of content being uploaded, such as "article" or "clinical trial." More than one type may be selected.'

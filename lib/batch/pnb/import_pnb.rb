@@ -217,25 +217,32 @@ end
 def volume_collection
   root_col = root_collection
   parse_collection_metadata
+
   volume = xml.xpath('//article-meta/volume').text.strip
+  id = "pnb-#{volume}"
+
+  volume.prepend('0') if volume.length == 1
   collection_metadata[:title] = "Pediatric Neurology Briefs: Volume #{volume}"
-  find_or_create_collection("pnb-#{volume}", collection_metadata, root_col)
+
+  find_or_create_collection(id, collection_metadata, root_col)
 end
 
 def find_article_issue
   vol_col = volume_collection
   parse_collection_metadata
-  volume = xml.xpath('//article-meta/volume').text.strip
+
   issue = xml.xpath('//article-meta/issue').text.strip
-  collection_metadata[:title] = "Pediatric Neurology Briefs: Volume #{volume}, Issue #{issue}"
+  id = "#{vol_col.id}-#{issue}"
+
+  issue.prepend('0') if issue.length == 1
+  collection_metadata[:title] = "#{vol_col.title}, Issue #{issue}"
 
   year = xml.xpath('//article-meta/pub-date/year').first.text.strip.to_i
   month = xml.xpath('//article-meta/pub-date/month').first.text.strip.to_i
   day = xml.xpath('//article-meta/pub-date/day').first.text.strip.to_i
   collection_metadata[:date_created] = [Date.new(year, month, day)]
 
-  find_or_create_collection(
-    "pnb-#{volume}-#{issue}", collection_metadata, vol_col)
+  find_or_create_collection(id, collection_metadata, vol_col)
 end
 
 def add_content(gf, path)
