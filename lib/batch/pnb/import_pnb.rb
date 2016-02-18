@@ -97,7 +97,7 @@ def parse_collection_metadata
   ).map {|id_node|
     "#{id_node['journal-id-type']}: #{id_node.text.strip}"
   }.flatten.compact  + xml.xpath('//journal-meta/issn').map {|issn_node|
-    "#{issn_node['pub-type']}: #{issn_node.text.strip}"
+    "#{issn_node['pub-type'].first}-ISSN: #{issn_node.text.strip}"
   }.flatten.compact
 
   collection_metadata[:original_publisher] = [xml.xpath(
