@@ -133,6 +133,17 @@ class Collection < Sufia::Collection
     self.institutional_collection
   end
 
+  def traverse(&block)
+    yield self
+    self.members.flatten.compact.each do |child|
+      if child.is_a?(Collection)
+        child.traverse(&block)
+      else
+        yield child
+      end
+    end
+  end
+
   class << self
     def indexer
       Sufia::GalterCollectionIndexingService

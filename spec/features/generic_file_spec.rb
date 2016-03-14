@@ -284,14 +284,27 @@ describe 'generic file', :type => :feature do
 
       it 'can save changes to fields' do
         select 'Animation', from: 'Resource type'
+        select 'All rights reserved', from: 'Rights'
         fill_in 'Keyword', with: 'KEY'
         fill_in 'Creator', with: 'God'
         within '#descriptions_display' do
           click_button 'Save'
         end
+        expect(current_path).to eq('/files/page1')
         expect(page).to have_text('Animation')
         expect(page).to have_text('KEY')
         expect(page).to have_text('God')
+        expect(page).to have_link('All rights reserved')
+      end
+
+      it 'will not save unless license is selected' do
+        select 'Animation', from: 'Resource type'
+        fill_in 'Keyword', with: 'KEY'
+        fill_in 'Creator', with: 'God'
+        within '#descriptions_display' do
+          click_button 'Save'
+        end
+        expect(current_path).to eq('/files/page1/edit')
       end
     end
   end

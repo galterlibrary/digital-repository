@@ -952,4 +952,26 @@ RSpec.describe Collection do
       expect(subject.tag).to include('Chicago')
     end
   end
+
+  describe '#traverse' do
+    let(:other_col) { make_collection(user) }
+    let(:other_gf) { make_generic_file(user) }
+    let(:gf_lv_3) { make_generic_file(user) }
+    let(:c_lv_2) { make_collection(user, member_ids: [gf_lv_3.id]) }
+    let(:c_lv_1_2) { make_collection(user) }
+    let(:c_lv_1_1) { make_collection(user, member_ids: [c_lv_2.id]) }
+    let(:root) { make_collection(user, member_ids: [c_lv_1_1.id, c_lv_1_2.id]) }
+
+    subject {
+      nodes = []
+      root.traverse {|node| nodes << node.id }
+      nodes
+    }
+
+    it 'travels only nodes in the root tree' do
+      expect(subject).to match_array(
+        [root.id, c_lv_1_1.id, c_lv_1_2.id, c_lv_2.id, gf_lv_3.id]
+      )
+    end
+  end
 end
