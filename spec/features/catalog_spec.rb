@@ -47,9 +47,15 @@ feature 'Catalog', :type => :feature do
       expect(page.html).not_to include('page number ▼')
     end
 
-    it 'shows the Rights Statement facet' do
+    it 'shows the custom facets' do
+      gf_public.collection_ids = col_user.id
+      gf_public.update_index
       visit '/catalog'
-      expect(page).to have_text('Rights Statement')
+      within('#facets') do
+        expect(page).to have_link('Rights Statement')
+        expect(page).to have_link('Object Type')
+        expect(page).to have_link('Collection')
+      end
     end
 
     it 'does not display blank fields' do

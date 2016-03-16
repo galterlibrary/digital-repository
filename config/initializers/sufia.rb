@@ -417,6 +417,11 @@ Sufia.config do |config|
   # Default is 200ms
   # config.lock_retry_delay = 200 # milliseconds
 
+  # Add a collection facet to search results.  Possible values are...
+  #   nil (default) - do not include collection facet
+  #   :user - show for logged in users
+  #   :public - show for everyone (e.g. logged in and non-logged in users)
+  config.collection_facet = :public
 # Where to store tempfiles, leave blank for the system temp directory (e.g. /tmp)
   # config.temp_file_base = '/home/developer1'
 

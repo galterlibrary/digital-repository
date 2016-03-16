@@ -13,6 +13,10 @@ module Sufia
             Solrizer.solr_name('label', :sortable)
           ] = object.title.downcase
         end
+
+        if Sufia.config.collection_facet.present?
+          object.index_collection_ids(solr_doc)
+        end
       end
     end
   end

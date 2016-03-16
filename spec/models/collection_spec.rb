@@ -386,6 +386,13 @@ RSpec.describe Collection do
       subject.rights = ['http://creativecommons.org/publicdomain/mark/1.0/']
       expect(subject.to_solr['rights_sim']).to eq(['Public Domain Mark 1.0'])
     end
+
+    it 'generates collection membership' do
+      parent = make_collection(user)
+      subject.collection_ids = [parent.id]
+      expect(subject.to_solr['collection_sim']).to eq([parent.id])
+      expect(subject.to_solr['collection_tesim']).to eq([parent.id])
+    end
   end
 
   describe '#add_institutional_admin_permissions' do

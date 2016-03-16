@@ -193,6 +193,15 @@ describe CollectionsController do
             let(:col1) { make_collection(inst_user) }
 
             it 'schedules add permission update jobs' do
+              col_job = double('col_id')
+              expect(ResolrizeGenericFileJob).to receive(
+                :new).with(gf.id).and_return(col_job)
+              col_job1 = double('col_id1')
+              expect(ResolrizeGenericFileJob).to receive(
+                :new).with(col1.id).and_return(col_job1)
+              expect(Sufia.queue).to receive(:push).with(col_job)
+              expect(Sufia.queue).to receive(:push).with(col_job1)
+              job1 =  double('one')
               job1 =  double('one')
               expect(AddInstitutionalAdminPermissionsJob).to receive(:new).with(
                   gf.id, inst_col.id).and_return(job1)
@@ -271,6 +280,14 @@ describe CollectionsController do
             let(:col1) { make_collection(inst_admin) }
 
             it 'schedules add permission update jobs' do
+              col_job = double('col_id')
+              expect(ResolrizeGenericFileJob).to receive(
+                :new).with(gf.id).and_return(col_job)
+              col_job1 = double('col_id1')
+              expect(ResolrizeGenericFileJob).to receive(
+                :new).with(col1.id).and_return(col_job1)
+              expect(Sufia.queue).to receive(:push).with(col_job)
+              expect(Sufia.queue).to receive(:push).with(col_job1)
               job1 =  double('one')
               expect(RemoveInstitutionalAdminPermissionsJob).to receive(
                 :new).with(gf.id, inst_col.id).and_return(job1)
@@ -286,7 +303,7 @@ describe CollectionsController do
           end
         end
 
-        context 'updating uttributes' do
+        context 'updating attributes' do
           let(:gf) { make_generic_file(inst_admin) }
           specify do
             expect {
@@ -302,6 +319,15 @@ describe CollectionsController do
             let(:col1) { make_collection(inst_user) }
 
             it 'schedules add permission update jobs' do
+              col_job = double('col_id')
+              expect(ResolrizeGenericFileJob).to receive(
+                :new).with(gf.id).and_return(col_job)
+              col_job1 = double('col_id1')
+              expect(ResolrizeGenericFileJob).to receive(
+                :new).with(col1.id).and_return(col_job1)
+              expect(Sufia.queue).to receive(:push).with(col_job)
+              expect(Sufia.queue).to receive(:push).with(col_job1)
+              job1 =  double('one')
               job1 =  double('one')
               expect(AddInstitutionalAdminPermissionsJob).to receive(:new).with(
                   gf.id, inst_col.id).and_return(job1)
