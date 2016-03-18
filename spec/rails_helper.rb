@@ -43,8 +43,8 @@ RSpec.configure do |config|
   end
 
   config.before :each do |example|
-    allow_any_instance_of(Nuldap).to receive(
-      :search).and_return([true, { 'mail' => ['a@b.c'] }])
+    allow_any_instance_of(Nuldap).to receive(:search).and_return(
+      [true, { 'mail' => ['a@b.c'], 'displayName' => ['First Last'] }])
     allow_any_instance_of(GenericFile).to receive(:check_doi_presence)
     allow_any_instance_of(DeactivateDoiJob).to receive(:deactivate_or_remove_doi)
     unless (example.metadata[:type] == :view || example.metadata[:no_clean])

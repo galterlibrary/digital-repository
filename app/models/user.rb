@@ -15,7 +15,8 @@ class User < ActiveRecord::Base
   include Blacklight::User
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :ldap_authenticatable, :rememberable, :trackable
+  devise :omniauthable, :ldap_authenticatable, :rememberable, :trackable,
+         :omniauth_providers => [:shibboleth]
 
   # Method added by Blacklight; Blacklight uses #to_s on your
   # user class to get a user-displayable login/identifier for
@@ -124,14 +125,19 @@ class User < ActiveRecord::Base
   end
 
   class << self
+    def find_or_create_via_username(username)
+      unless user = User.find_by(username: username)
+        user = User.new(username: username)
+        user.populate_attributes
+        user.add_to_nuldap_groups
+      end
+      user
+    end
+
     def find_for_ldap_authentication(attributes={})
       return nil unless attributes[:login].present?
       auth_key_value = attributes[:login].strip.downcase
-      resource = find_by(username: auth_key_value)
-
-      if resource.blank?
-        resource = User.new(username: auth_key_value)
-      end
+      resource = find_or_initialize_by(username: auth_key_value)
 
       if ::Devise.ldap_create_user && resource.new_record? &&
           resource.valid_ldap_authentication?(attributes[:password])

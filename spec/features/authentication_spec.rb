@@ -90,7 +90,7 @@ feature "Authentication", :type => :feature do
       subject { page }
 
       it { is_expected.not_to have_link('Login') }
-      it { is_expected.to have_text('noonoo') }
+      it { is_expected.to have_text('First Last') }
 
       it 'redirect to the dashboard' do
         expect(current_path).to eq('/dashboard')

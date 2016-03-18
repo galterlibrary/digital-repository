@@ -21,7 +21,12 @@ Rails.application.routes.draw do
   mount Riiif::Engine => '/image-service'
 
   blacklight_for :catalog
-  devise_for :users
+
+  devise_for :users, :controllers => {
+    :omniauth_callbacks => "users/omniauth_callbacks",
+    :sessions => "users/sessions"
+  }
+
   mount Hydra::RoleManagement::Engine => '/'
 
   Hydra::BatchEdit.add_routes(self)

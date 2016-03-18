@@ -17,12 +17,22 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
+  private
+
   def no_bot_crawl_on_staging
     if Rails.env.staging?
       response.headers['X-Robots-Tag'] = 'noindex'
     end
   end
-  private :no_bot_crawl_on_staging
+
+  def after_sign_out_path_for(resource_or_scope)
+    if Rails.env.staging? || Rails.env.production?
+      flash.alert = 'You MUST close your browser to complete Sign-out.'
+      '/Shibboleth.sso/Logout?return=/'
+    else
+      super
+    end
+  end
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.for(:sign_up) {|u|

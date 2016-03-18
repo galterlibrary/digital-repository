@@ -280,4 +280,28 @@ RSpec.describe User do
       it { is_expected.to eq('Name, Formal') }
     end
   end
+
+  describe '#find_or_create_via_username' do
+    subject { User.find_or_create_via_username('itsame') }
+
+    context 'user does not exists' do
+      it 'returns the existing user record' do
+        expect_any_instance_of(User).to receive(:add_to_nuldap_groups)
+        expect{ subject }.to change { User.count }.by(1)
+        expect(subject.username).to eq('itsame')
+        expect(subject.display_name).to eq('First Last')
+      end
+    end
+
+    context 'user exists' do
+      let!(:user) { create(:user, username: 'itsame') }
+
+      it 'returns the existing user record' do
+        expect_any_instance_of(User).not_to receive(:add_to_nuldap_groups)
+        expect_any_instance_of(User).not_to receive(:populate_attributes)
+        expect{ subject }.not_to change { User.count }
+        expect(subject).to eq(user)
+      end
+    end
+  end
 end

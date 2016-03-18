@@ -71,6 +71,7 @@ gem 'rsolr'
 
 gem 'ruby-ldap'
 gem "devise_ldap_authenticatable"
+gem 'omniauth-shibboleth'
 gem 'hydra-role-management'
 
 gem 'poltergeist'
