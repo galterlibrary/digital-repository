@@ -94,6 +94,13 @@ class GenericFile < ActiveFedora::Base
     index.as :stored_searchable
   end
 
+  property :private_note,
+           :predicate => ::RDF::Vocab::MODS.note,
+           :multiple => true do |index|
+    index.type :text
+    index.as :stored_searchable
+  end
+
   before_save :store_the_actual_page_number
 
   def store_the_actual_page_number

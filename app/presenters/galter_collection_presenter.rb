@@ -28,7 +28,8 @@ class GalterCollectionPresenter < Sufia::CollectionPresenter
       :based_near,
       :digital_origin,
       :total_items,
-      :size
+      :size,
+      :private_note
     ]
   end
 

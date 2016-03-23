@@ -1,0 +1,8 @@
+<% if can?(:edit, record.model) %>
+  <% Array(record[key]).reject(&:blank?).each do |v| %>
+    <span itemprop="<%= key %>" itemscope itemtype="http://schema.org/Thing">
+      <%= v %>
+    </span>
+    <br />
+  <% end %>
+<% end %>

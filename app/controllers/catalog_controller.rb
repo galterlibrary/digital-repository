@@ -140,6 +140,7 @@ class CatalogController < ApplicationController
     config.add_show_field solr_name("abstract", :stored_searchable), label: "Abstract"
     config.add_show_field solr_name("grants_and_funding", :stored_searchable), label: "Grants and Funding"
     config.add_show_field solr_name("acknowledgments", :stored_searchable), label: "Acknowledgments"
+    config.add_show_field solr_name("private_note", :stored_searchable), label: "Private Note"
     config.add_show_field solr_name("doi", :stored_searchable), label: "DOI"
     config.add_show_field solr_name("ark", :stored_searchable), label: "ARK"
     config.add_show_field solr_name("tag", :stored_searchable), label: "Keyword"

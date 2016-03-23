@@ -80,7 +80,8 @@ describe CollectionsController do
         abstract: ['testa'], bibliographic_citation: ['cit'],
         digital_origin: ['digo'], mesh: ['mesh'], lcsh: ['lcsh'],
         subject_geographic: ['geo'], subject_name: ['subjn'],
-        multi_page: true, original_publisher: ['opub']
+        multi_page: true, original_publisher: ['opub'],
+        private_note: ['note']
       )
     end
 
@@ -96,6 +97,7 @@ describe CollectionsController do
       expect(assigns(:collection).subject_name).to eq(['subjn'])
       expect(assigns(:collection).multi_page).to eq(true)
       expect(assigns(:collection).original_publisher).to eq(['opub'])
+      expect(assigns(:collection).private_note).to eq(['note'])
     end
   end
 
@@ -107,7 +109,7 @@ describe CollectionsController do
           abstract: ['testa'], bibliographic_citation: ['cit'],
           digital_origin: ['digo'], mesh: ['mesh'], lcsh: ['lcsh'],
           subject_geographic: ['geo'], subject_name: ['subjn'],
-          original_publisher: ['opub']
+          original_publisher: ['opub'], private_note: ['note']
         }
       }.to change { Collection.count }.by(1)
     end
@@ -118,7 +120,8 @@ describe CollectionsController do
         abstract: ['testa'], bibliographic_citation: ['cit'],
         digital_origin: ['digo'], mesh: ['mesh'], lcsh: ['lcsh'],
         subject_geographic: ['geo'], subject_name: ['subjn'],
-        multi_page: 'true', original_publisher: ['opub']
+        multi_page: 'true', original_publisher: ['opub'],
+        private_note: ['note']
       }
       expect(assigns(:collection).abstract).to eq(['testa'])
       expect(assigns(:collection).bibliographic_citation).to eq(['cit'])
@@ -129,6 +132,7 @@ describe CollectionsController do
       expect(assigns(:collection).subject_name).to eq(['subjn'])
       expect(assigns(:collection).multi_page).to eq(true)
       expect(assigns(:collection).original_publisher).to eq(['opub'])
+      expect(assigns(:collection).private_note).to eq(['note'])
     end
   end
 
@@ -138,7 +142,8 @@ describe CollectionsController do
       abstract: ['testa'], bibliographic_citation: ['cit'],
       digital_origin: ['digo'], mesh: ['mesh'], lcsh: ['lcsh'],
       subject_geographic: ['geo'], subject_name: ['subjn'],
-      multi_page: true, original_publisher: ['opub']
+      multi_page: true, original_publisher: ['opub'],
+      private_note: ['note']
     ) }
 
     context 'institutional collections' do
@@ -562,6 +567,13 @@ describe CollectionsController do
       expect(response).to redirect_to(
         @routes.url_helpers.collection_path(collection))
       expect(assigns(:collection).original_publisher).to eq(['dudu'])
+    end
+
+    it "should update private_note" do
+      patch :update, id: collection, collection: { private_note: ['no note'] }
+      expect(response).to redirect_to(
+        @routes.url_helpers.collection_path(collection))
+      expect(assigns(:collection).private_note).to eq(['no note'])
     end
   end
 end

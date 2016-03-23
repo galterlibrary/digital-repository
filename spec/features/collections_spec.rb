@@ -99,6 +99,12 @@ feature "Collections", :type => :feature do
       chi_box.save!
     end
 
+    it 'hides private_note from unprivileged users' do
+      chi_box.update_attributes(:tag => ['TAG'], :private_note => ['NOTE'])
+      visit("/collections/#{chi_box.id}")
+      expect(page).not_to have_text('NOTE')
+    end
+
     context 'as an authenticated admin user' do
       let(:priv_col) {
         make_collection(user, { title: 'Invisible', visibility: 'open' }) }
@@ -195,6 +201,7 @@ feature "Collections", :type => :feature do
             :based_near => ['NEAR'],
             :digital_origin => ['ORIG'],
             :original_publisher => ['OPUB'],
+            :private_note => ['NOTE'],
           )
           visit("/collections/#{chi_box.id}")
         end
@@ -219,6 +226,7 @@ feature "Collections", :type => :feature do
           expect(page).to have_text('NEAR')
           expect(page).to have_text('ORIG')
           expect(page).to have_text('OPUB')
+          expect(page).to have_text('NOTE')
         end
       end
 

@@ -134,6 +134,15 @@ RSpec.describe GenericFile do
       end
     end
 
+    describe "private_note" do
+      it "has it" do
+        expect(subject.private_note).to be_empty
+        subject.private_note = ['abc bcd']
+        subject.save(validate: false)
+        expect(subject.reload.private_note).to eq(['abc bcd'])
+      end
+    end
+
     describe "page_number_actual" do
       it "has it" do
         expect(subject.page_number_actual).to be_nil

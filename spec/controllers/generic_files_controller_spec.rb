@@ -38,7 +38,8 @@ describe GenericFilesController do
         digital_origin: ['digo'], mesh: ['mesh'], lcsh: ['lcsh'],
         subject_geographic: ['geo'], subject_name: ['subjn'],
         page_number: 11, acknowledgments: ['ack'],
-        grants_and_funding: ['gaf'], original_publisher: ['orig']
+        grants_and_funding: ['gaf'], original_publisher: ['orig'],
+        private_note: ['note']
       )
       @file.apply_depositor_metadata(@user.user_key)
       @file.save!
@@ -58,6 +59,7 @@ describe GenericFilesController do
       expect(assigns(:generic_file).acknowledgments).to eq(['ack'])
       expect(assigns(:generic_file).grants_and_funding).to eq(['gaf'])
       expect(assigns(:generic_file).original_publisher).to eq(['orig'])
+      expect(assigns(:generic_file).private_note).to eq(['note'])
     end
 
     context 'generic file is of type Page' do
@@ -161,7 +163,8 @@ describe GenericFilesController do
         subject_geographic: ['geo'], subject_name: ['subjn'],
         page_number: 11, creator: ['ABC'], tag: ['tag'],
         resource_type: ['restype'], rights: ['rights'], title: ['title'],
-        doi: ['doi1', 'doi2', 'doi3'], original_publisher: ['orig']
+        doi: ['doi1', 'doi2', 'doi3'], original_publisher: ['orig'],
+        private_note: ['note']
       )
       @file.apply_depositor_metadata(@user.user_key)
       @file.save!
@@ -255,6 +258,13 @@ describe GenericFilesController do
       expect(response).to redirect_to(
         @routes.url_helpers.generic_file_path(@file))
       expect(assigns(:generic_file).original_publisher).to eq(['dudu'])
+    end
+
+    it "should update private_note" do
+      patch :update, id: @file, generic_file: { private_note: ['not note'] }
+      expect(response).to redirect_to(
+        @routes.url_helpers.generic_file_path(@file))
+      expect(assigns(:generic_file).private_note).to eq(['not note'])
     end
 
     it "should update bibliographic_citation" do

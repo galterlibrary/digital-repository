@@ -83,6 +83,13 @@ class Collection < Sufia::Collection
     index.as :stored_searchable
   end
 
+  property :private_note,
+           :predicate => ::RDF::Vocab::MODS.note,
+           :multiple => true do |index|
+    index.type :text
+    index.as :stored_searchable
+  end
+
   def pageable?
     multi_page && pageable_members.present?
   end

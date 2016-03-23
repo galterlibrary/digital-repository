@@ -175,6 +175,15 @@ RSpec.describe Collection do
         expect(subject.reload.original_publisher).to eq(['op'])
       end
     end
+
+    describe "private_note" do
+      it "has it" do
+        expect(subject.private_note).to be_empty
+        subject.private_note = ['abc bcd']
+        subject.save(validate: false)
+        expect(subject.reload.private_note).to eq(['abc bcd'])
+      end
+    end
   end
 
   context 'children-parent relation' do

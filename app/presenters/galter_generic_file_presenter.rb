@@ -26,5 +26,6 @@ class GalterGenericFilePresenter < Sufia::GenericFilePresenter
     :grants_and_funding,
     :doi,
     :ark,
+    :private_note
   ]
 end
