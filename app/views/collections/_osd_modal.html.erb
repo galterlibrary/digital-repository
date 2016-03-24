@@ -6,8 +6,18 @@
         <h4 class="modal-title"><%= @collection.title %></h4>
       </div>
       <div class="modal-body">
-        <div id="osdViewer" class="openseadragon" style='width:100%;height:600px;'>
-          <%= openseadragon_picture_tag(@collection.osd_tile_sources) %>
+        <div id="toolbarDiv" class="toolbar">
+        </div>
+        <div id="osdViewer" class="openseadragon">
+          <%= openseadragon_picture_tag(
+            @collection.osd_tile_sources,
+            data: {
+              openseadragon: {
+                showReferenceStrip: true,
+                referenceStripScroll: 'vertical',
+                sequenceMode: true,
+                toolbar: "toolbarDiv" } }
+          ) %>
         </div>
       </div>
       <div class="modal-footer">

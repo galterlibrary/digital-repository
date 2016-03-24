@@ -17,6 +17,9 @@
 //= require blacklight/blacklight
 //= require_tree .
 //= require sufia
+//= require openseadragon/openseadragon
+//= require openseadragon/rails
+//= require openseadragon/jquery
 
 $(function () {
     $('body').on('click', function (e) {
