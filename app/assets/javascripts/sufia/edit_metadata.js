@@ -1,7 +1,11 @@
 Blacklight.onLoad(function() {
   function get_autocomplete_opts(field) {
+    var min_len_val = 2;
+    if (field == 'creator' || field == 'contributor') {
+      min_len_val = 3;
+    }
     var autocomplete_opts = {
-      minLength: 2,
+      minLength: min_len_val,
       source: function( request, response ) {
         $.getJSON( "/authorities/generic_files/" + field, {
           q: request.term
@@ -11,9 +15,6 @@ Blacklight.onLoad(function() {
         // prevent value inserted on focus
         return false;
       },
-      complete: function(event) {
-        $('.ui-autocomplete-loading').removeClass("ui-autocomplete-loading");
-      }
     };
     return autocomplete_opts;
   }
