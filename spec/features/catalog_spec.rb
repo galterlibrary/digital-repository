@@ -53,7 +53,7 @@ feature 'Catalog', :type => :feature do
       visit '/catalog'
       within('#facets') do
         expect(page).to have_link('Rights Statement')
-        expect(page).to have_link('Object Type')
+        expect(page).not_to have_link('Object Type')
         expect(page).to have_link('Collection')
       end
     end
