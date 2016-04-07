@@ -170,6 +170,31 @@ describe GenericFilesController do
       @file.save!
     end
 
+    context 'changing file version' do
+      let(:new_file) {
+        Rack::Test::UploadedFile.new('spec/fixtures/system.png', 'image/png')
+      }
+
+      before do
+        allow(Sufia.queue).to receive(:push)
+        @file.label = 'test1.png'
+        @file.date_uploaded = DateTime.now
+        @file.add_file(
+          File.open(Rails.root.join('spec/fixtures/test1.png')),
+          original_name: 'test1.png',
+          path: 'content',
+          mime_type: 'image/png'
+        )
+        @file.save!
+        @old_mod_date = @file.reload.modified_date
+      end
+
+      it 'updates modified_date' do
+        patch :update, id: @file, filedata: new_file
+        expect(@file.reload.modified_date).to be > (@old_mod_date)
+      end
+    end
+
     describe 'doi job scheduling' do
       before do
         job =  double('two')
@@ -295,7 +320,6 @@ describe GenericFilesController do
         @routes.url_helpers.generic_file_path(@file))
       expect(assigns(:generic_file).subject_name).to eq(['dudu'])
     end
-
 
     it "should update subject_geographic" do
       patch :update, id: @file, generic_file: { subject_geographic: ['dudu'] }

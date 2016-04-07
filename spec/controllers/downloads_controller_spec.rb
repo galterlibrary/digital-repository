@@ -8,23 +8,44 @@ describe DownloadsController do
   end
 
   describe '#show' do
-    let(:gf1) { make_generic_file(
-      user, title: ['abc'], id: 'gf1', visibility: 'open') }
+    let(:gf1) {
+      GenericFile.create do |f|
+        f.apply_depositor_metadata(user.user_key)
+        f.label = 'system.png'
+        f.add_file(
+          File.open('spec/fixtures/system.png'),
+          path: 'content',
+          original_name: 'system.png',
+          mime_type: 'image/png'
+        )
+      end
+    }
 
     before do
-      expect(controller).to receive(:authorize_download!).and_return(
-        true)
-      gf1.add_file(png_image, path: 'content')
-      gf1.save!
+      sign_in user
+      allow(controller).to receive(:render)
     end
 
-    it 'does not allow caching' do
+    it 'uses modified_date to deterime the Last-Modified header' do
       get :show, id: gf1.id
-      expect(response.headers['Cache-Control']).to eq(
-        'no-cache, no-store, max-age=0, must-revalidate')
-      expect(response.headers['Pragma']).to eq('no-cache')
-      expect(response.headers['Expires']).to eq(
-        'Fri, 01 Jan 1990 00:00:00 GMT')
+      expect(response.code).to eq('200')
+      last_mod_header = response.headers["Last-Modified"]
+      expect_any_instance_of(GenericFile).to receive(:modified_date).and_return(
+        gf1.modified_date + 1.hour)
+      get :show, id: gf1.id
+      expect(response.code).to eq('200')
+      expect(response.headers["Last-Modified"]).not_to eq(last_mod_header)
+    end
+
+    it 'returns appropriate file name' do
+      get :show, id: gf1.id
+      expect(response.code).to eq('200')
+      expect(response.header['Content-Disposition']).to include('system.png')
+      expect_any_instance_of(FileContentDatastream).to receive(
+        :original_name).and_return('new_file.png')
+      get :show, id: gf1.id
+      expect(response.code).to eq('200')
+      expect(response.header['Content-Disposition']).to include('new_file.png')
     end
   end
 end

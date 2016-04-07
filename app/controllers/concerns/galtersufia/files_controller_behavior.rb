@@ -12,6 +12,7 @@ module Galtersufia
     included do
       self.presenter_class = GalterGenericFilePresenter
       self.edit_form_class = Sufia::Forms::GalterGenericFileEditForm
+      before_action :mark_as_dirty, only: [:update]
       around_action :update_doi_jobs, only: [:update]
       before_action :destroy_doi_deactivation_jobs, only: [:destroy]
       after_action :add_institutional_permissions, only: [:create]
@@ -26,6 +27,13 @@ module Galtersufia
       end
     end
     private :add_institutional_permissions
+
+    def mark_as_dirty
+      # modified_date doesn't get updated when adding more then one
+      # version of content and that messes with cache
+      @generic_file.mark_as_changed(:label)
+    end
+    protected :mark_as_dirty
 
     def destroy_doi_deactivation_jobs
       schedule_doi_deactivation_jobs(@generic_file)

@@ -6,14 +6,16 @@ module Galtersufia
   module DownloadsControllerBehavior
     extend ActiveSupport::Concern
 
-    included do
-      before_filter :set_cache_buster, :only => :show
+    def show
+      super
     end
 
-    def set_cache_buster
-      response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
-      response.headers["Pragma"] = "no-cache"
-      response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
+    def file_name
+      if !params[:file] || params[:file] == self.class.default_file_path
+        params[:filename] || file.original_name || asset.label
+      else
+        params[:file]
+      end
     end
   end
 end
