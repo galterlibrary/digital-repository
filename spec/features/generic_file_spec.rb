@@ -17,7 +17,7 @@ describe 'generic file', :type => :feature do
   subject { page }
 
   describe 'show' do
-    it 'hides descriptions with blank values' do
+    specify do
       visit "/files/#{@file.id}"
       expect(page).not_to have_text('Resource type')
       expect(page).not_to have_text('Creator')
@@ -48,6 +48,7 @@ describe 'generic file', :type => :feature do
       expect(page).to have_text('Original Publisher')
       expect(page).not_to have_text('Private Note')
       expect(page).not_to have_text('pri note')
+      expect(page).to have_link('Download the file')
     end
 
     it 'shows private_note to the owner' do
