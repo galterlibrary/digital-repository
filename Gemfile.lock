@@ -545,7 +545,7 @@ GEM
       mime-types (>= 1.16, < 3.0)
       netrc (~> 0.7)
     retriable (1.4.1)
-    riiif (0.1.0)
+    riiif (0.2.0)
       rails (> 3.2.0)
     rsolr (1.0.13)
       builder (>= 2.1.2)
@@ -770,7 +770,7 @@ DEPENDENCIES
   qa
   rails (= 4.2.4)
   rdf-vocab
-  riiif (= 0.1.0)
+  riiif (= 0.2.0)
   rsolr
   rspec-activemodel-mocks
   rspec-rails

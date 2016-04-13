@@ -65,7 +65,7 @@ gem 'http_logger'
 gem 'escape'
 gem 'rdf-vocab'
 
-gem 'riiif', '0.1.0'
+gem 'riiif', '0.2.0'
 gem 'osullivan'
 gem 'rsolr'
 
