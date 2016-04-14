@@ -472,4 +472,12 @@ describe GenericFilesController do
       end
     end
   end
+
+  describe '#new' do
+    it 'generates a UUID for batch_id' do
+      get :new
+      # crappy check but whatever
+      expect(assigns(:batch_id).length).to eq(36)
+    end
+  end
 end

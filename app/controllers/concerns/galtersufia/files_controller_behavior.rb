@@ -96,6 +96,11 @@ module Galtersufia
       end
     end
 
+    def new
+      set_variables_for_new_form
+      @batch_id = SecureRandom.uuid
+    end
+
     def show
       super
       if @generic_file.class == Page

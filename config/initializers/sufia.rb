@@ -433,7 +433,7 @@ Sufia.config do |config|
 
   # Sufia uses NOIDs for files and collections instead of Fedora UUIDs
   # where NOID = 10-character string and UUID = 32-character string w/ hyphens
-  # config.enable_noids = true
+  config.enable_noids = false
 
   # Specify a different template for your repository's NOID IDs
   # config.noid_template = ".reeddeeddk"
