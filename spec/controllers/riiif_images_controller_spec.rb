@@ -29,7 +29,7 @@ describe Riiif::ImagesController do
         sign_in(user)
         get :show, {
           id: 'ufile', region: 'full', size: 'full',
-          rotation: '0', quality: 'native', format: 'png'
+          rotation: '0', quality: 'default', format: 'png'
         }
         expect(response.status).to eq(200)
         expect(response.header['Content-Type']).to eq('image/png')

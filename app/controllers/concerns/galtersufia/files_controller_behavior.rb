@@ -13,6 +13,7 @@ module Galtersufia
       self.presenter_class = GalterGenericFilePresenter
       self.edit_form_class = Sufia::Forms::GalterGenericFileEditForm
       before_action :mark_as_dirty, only: [:update]
+      after_action :purge_riiif_cache_and_update_index, only: [:update]
       around_action :update_doi_jobs, only: [:update]
       before_action :destroy_doi_deactivation_jobs, only: [:destroy]
       after_action :add_institutional_permissions, only: [:create]
@@ -34,6 +35,18 @@ module Galtersufia
       @generic_file.mark_as_changed(:label)
     end
     protected :mark_as_dirty
+
+    def purge_riiif_cache_and_update_index
+      return unless params['revision'].present? || params['filedata'].present?
+      return unless @generic_file.content.present?
+      cache_file_name = Digest::MD5.hexdigest(@generic_file.content.uri)
+      cache_file = ::File.join('tmp/network_files', cache_file_name)
+      if ::File.exist?(cache_file)
+        ::File.delete(cache_file)
+      end
+      @generic_file.update_index
+    end
+    protected :purge_riiif_cache_and_update_index
 
     def destroy_doi_deactivation_jobs
       schedule_doi_deactivation_jobs(@generic_file)

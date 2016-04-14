@@ -11,5 +11,6 @@ class CreateDerivativesJob < ActiveFedoraIdBasedJob
     # force modified_date update
     generic_file.mark_as_changed(:label)
     generic_file.save
+    generic_file.update_index
   end
 end

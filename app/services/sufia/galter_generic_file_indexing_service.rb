@@ -2,6 +2,10 @@ module Sufia
   class GalterGenericFileIndexingService < GenericFileIndexingService
     def generate_solr_document
       super.tap do |solr_doc|
+        if object.content.present?
+          solr_doc[Solrizer.solr_name('content')] = object.content.uri.to_s
+        end
+
         solr_doc[Solrizer.solr_name('tags', :facetable)] = object.all_tags
 
         solr_doc[

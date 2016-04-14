@@ -375,6 +375,7 @@ RSpec.describe Collection do
         allow(file).to receive(:content).and_return(bitstream)
         allow(page).to receive(:content).and_return(bitstream)
         allow(bitstream).to receive(:has_content?).and_return(false)
+        allow(bitstream).to receive(:uri).and_return('http://hello.com')
         file.update_index
         page.update_index
       end

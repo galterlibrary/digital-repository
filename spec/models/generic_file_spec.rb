@@ -551,5 +551,12 @@ RSpec.describe GenericFile do
       expect(subject.to_solr['label_si']).to eq('asdf')
     end
 
+    it 'generates content_tesim' do
+      expect(subject.content).to receive(:present?).and_return(true)
+      expect(subject.content).to receive(:uri).and_return(
+        RDF::URI.new('http://localhost'))
+      expect(subject.to_solr['content_tesim']).to eq('http://localhost')
+    end
+
   end
 end

@@ -2,13 +2,13 @@
 Riiif::Image.file_resolver = Riiif::HTTPFileResolver.new
 
 Riiif::Image.file_resolver.id_to_uri = lambda do |id|
-  GenericFile.find(id).content.uri
+  Riiif::Image.solr_doc_by_id(id)['content_tesim'].first
 end
 
 Riiif::Image.info_service = lambda do |id, gf|
   {
-    height: gf.height.try(:to_i),
-    width: gf.width.try(:to_i),
+    height: gf['height_isim'].try(:first).try(:to_i),
+    width: gf['width_isim'].try(:first).try(:to_i),
     scale_factors: [1, 2, 4, 8, 16, 32],
     qualities: ["native", "bitonal", "grey", "color"]
   }
@@ -33,11 +33,11 @@ Rails.configuration.to_prepare do
     include Hydra::Controller::SearchBuilder
 
     before_filter do
-      self.search_params_logic += [:add_access_controls_to_solr_params]
-      (_, docs) = search_results(
-        {q: "id:#{params['id']}"}, self.search_params_logic)
-      @gf = docs.try(:first)
-      redirect_to('/users/sign_in') if @gf.blank? && current_user.blank?
+      if current_user.blank? || current_user.cannot?(:read, params['id'])
+        redirect_to('/users/sign_in')
+      else
+        @gf = Riiif::Image.solr_doc_by_id(params['id'])
+      end
     end
 
     alias_method :super_show, :show
@@ -46,8 +46,27 @@ Rails.configuration.to_prepare do
     end
 
     def info
-      image = model.new(@gf.id, @gf)
+      image = model.new(@gf['id'], @gf)
       render json: image.info.merge(server_info)
     end
   end
+
+  Riiif::Image.class_eval do
+    class << self
+      def solr_doc_by_id(id)
+        ActiveFedora::SolrService.query("id:#{id}", rows: 1).first
+      end
+
+      def cache_key(id, options)
+        # Add version control
+        str = options
+          .merge(id: id)
+          .merge(date: solr_doc_by_id(id)['timestamp'])
+          .delete_if {|_, v| v.nil? }.to_s
+        # Use a MD5 digest to ensure the keys aren't too long.
+        Digest::MD5.hexdigest(str)
+      end
+    end
+  end
+
 end

@@ -193,6 +193,15 @@ describe GenericFilesController do
         patch :update, id: @file, filedata: new_file
         expect(@file.reload.modified_date).to be > (@old_mod_date)
       end
+
+      it 'deletes the existing riiif cache and update solr index' do
+        expect_any_instance_of(GenericFile).to receive(:update_index).twice
+        filename = "tmp/network_files/#{Digest::MD5.hexdigest(@file.content.uri)}"
+        FileUtils.touch(filename)
+        expect(::File.exist?(filename)).to be_truthy
+        patch :update, id: @file, filedata: new_file
+        expect(::File.exist?(filename)).to be_falsy
+      end
     end
 
     describe 'doi job scheduling' do
