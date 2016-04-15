@@ -55,8 +55,8 @@ describe 'Shibboleth Authentication', :type => :feature do
       end
 
       it 'does not display LDAP authentication alert' do
-        visit '/dashboard'
-        expect(current_path).to eq('/dashboard')
+        visit '/files/new'
+        expect(current_path).to eq('/files/new')
         expect(page).not_to have_text('You need to sign in or sign up')
       end
     end

@@ -34,6 +34,12 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def after_sign_in_path_for(resource)
+    request.env['user_return_to'] ||
+      stored_location_for(resource) ||
+      sufia.dashboard_index_path
+  end
+
   def configure_permitted_parameters
     devise_parameter_sanitizer.for(:sign_up) {|u|
       u.permit(:username, :email, :password, :password_confirmation,

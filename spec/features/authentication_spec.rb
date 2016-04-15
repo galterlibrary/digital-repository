@@ -8,6 +8,8 @@ feature "Authentication", :type => :feature do
     end
   end
 
+  subject { page }
+
   describe 'user is not in LDAP' do
     let!(:bad_user) {
       create(:user, username: 'noonoo', display_name: 'Noonoo The First')
@@ -21,11 +23,12 @@ feature "Authentication", :type => :feature do
       fill_in 'Password', with: 'bogus'
       click_button 'Log in'
     end
-    subject { page }
 
-    it { is_expected.to have_text('Invalid login or password.') }
-    it { is_expected.to have_link('Login') }
-    it { is_expected.not_to have_text('Noonoo The First') }
+    specify do
+      expect(page).to have_text('Invalid login or password.')
+      expect(page).to have_link('Login')
+      expect(page).not_to have_text('Noonoo The First')
+    end
   end
 
   describe 'bad password' do
@@ -41,11 +44,12 @@ feature "Authentication", :type => :feature do
       fill_in 'Password', with: 'bogus'
       click_button 'Log in'
     end
-    subject { page }
 
-    it { is_expected.to have_text('Invalid login or password.') }
-    it { is_expected.to have_link('Login') }
-    it { is_expected.not_to have_text('Noonoo The First') }
+    specify do
+      expect(page).to have_text('Invalid login or password.')
+      expect(page).to have_link('Login')
+      expect(page).not_to have_text('Noonoo The First')
+    end
   end
 
   describe 'user is in LDAP' do
@@ -71,12 +75,10 @@ feature "Authentication", :type => :feature do
           }])
         click_button 'Log in'
       end
-      subject { page }
 
-      it { is_expected.not_to have_link('Login') }
-      it { is_expected.to have_text('Noonoo The First') }
-
-      it 'redirect to the dashboard' do
+      specify do
+        expect(page).not_to have_link('Login')
+        expect(page).to have_text('Noonoo The First')
         expect(current_path).to eq('/dashboard')
       end
     end
@@ -87,17 +89,25 @@ feature "Authentication", :type => :feature do
         fill_in 'Password', with: 'realdeal'
         click_button 'Log in'
       end
-      subject { page }
 
-      it { is_expected.not_to have_link('Login') }
-      it { is_expected.to have_text('First Last') }
-
-      it 'redirect to the dashboard' do
+      specify do
+        expect(page).not_to have_link('Login')
+        expect(page).to have_text('First Last')
         expect(current_path).to eq('/dashboard')
+        expect(User.find_by_username('noonoo')).not_to be_nil
+      end
+    end
+
+    context 'user accessing a secure location' do
+      before do
+        visit '/files/new'
+        fill_in 'NetID', with: 'noonoo'
+        fill_in 'Password', with: 'realdeal'
+        click_button 'Log in'
       end
 
-      it 'creates the user in local db' do
-        expect(User.find_by_username('noonoo')).not_to be_nil
+      specify do
+        expect(current_path).to eq('/files/new')
       end
     end
   end
