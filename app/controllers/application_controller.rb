@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_out_path_for(resource_or_scope)
-    if Rails.env.staging? || Rails.env.production?
+    if ENV['SHIBBOLETH_AUTH'] == 'true'
       flash.alert = 'You MUST close your browser to complete Sign-out.'
       '/Shibboleth.sso/Logout?return=/'
     else

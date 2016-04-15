@@ -26,7 +26,7 @@ describe 'Shibboleth Authentication', :type => :feature do
 
   context 'production rails environment' do
     before do
-      allow(Rails.env).to receive(:production?).and_return(true)
+      ENV['SHIBBOLETH_AUTH'] = 'true'
       OmniAuth.config.test_mode = true
     end
 
