@@ -98,6 +98,21 @@ feature "Authentication", :type => :feature do
       end
     end
 
+    describe 'user attributes LDAP-based populate' do
+      before do
+        visit '/files/new'
+        fill_in 'NetID', with: 'noonoo'
+        fill_in 'Password', with: 'realdeal'
+      end
+
+      it 'only populates user attributes after authentication' do
+        expect_any_instance_of(User).to receive(
+          :populate_attributes).once
+        click_button 'Log in'
+        visit '/dashboard'
+      end
+    end
+
     context 'user accessing a secure location' do
       before do
         visit '/files/new'

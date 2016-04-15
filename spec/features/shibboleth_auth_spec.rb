@@ -74,6 +74,20 @@ describe 'Shibboleth Authentication', :type => :feature do
         end
       end
 
+      describe 'user attributes LDAP-based populate' do
+        before do
+          OmniAuth.config.add_mock(
+            :shibboleth, { uid: "#{user.username}@northwestern.edu" })
+        end
+
+        it 'only populates user attributes after authentication' do
+          expect_any_instance_of(User).to receive(
+            :populate_attributes).once
+          visit '/dashboard'
+          visit '/files/new'
+        end
+      end
+
       describe 'existing northwestern user' do
         before do
           OmniAuth.config.add_mock(
