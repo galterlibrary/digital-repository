@@ -387,6 +387,17 @@ RSpec.describe Collection do
   end
 
   describe '#to_solr' do
+    it 'generates tags_sim' do
+      subject.mesh = ['a']
+      subject.lcsh = ['b', 'c']
+      subject.tag = ['d']
+      subject.subject = ['e']
+      subject.subject_name = ['f']
+      subject.subject_geographic = ['g']
+      expect(subject.to_solr['tags_sim'].sort).to eq(
+        ['a', 'b', 'c', 'd', 'e', 'f', 'g'])
+    end
+
     it 'generates label' do
       subject.title = 'asdf'
       expect(subject.to_solr['label_si']).to eq('asdf')

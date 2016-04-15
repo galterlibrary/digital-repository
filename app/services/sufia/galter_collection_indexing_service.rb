@@ -8,6 +8,8 @@ module Sufia
           )
         end
 
+        solr_doc[Solrizer.solr_name('tags', :facetable)] = object.all_tags
+
         if object.title.present?
           solr_doc[
             Solrizer.solr_name('label', :sortable)

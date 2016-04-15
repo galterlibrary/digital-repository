@@ -151,6 +151,10 @@ class Collection < Sufia::Collection
     end
   end
 
+  def all_tags
+    mesh + lcsh + subject_name + subject_geographic + subject + tag
+  end
+
   class << self
     def indexer
       Sufia::GalterCollectionIndexingService

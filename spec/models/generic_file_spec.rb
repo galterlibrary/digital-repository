@@ -543,7 +543,12 @@ RSpec.describe GenericFile do
     it 'generates tags_sim' do
       subject.mesh = ['a']
       subject.lcsh = ['b', 'c']
-      expect(subject.to_solr['tags_sim'].sort).to eq(['a', 'b', 'c'])
+      subject.tag = ['d']
+      subject.subject = ['e']
+      subject.subject_name = ['f']
+      subject.subject_geographic = ['g']
+      expect(subject.to_solr['tags_sim'].sort).to eq(
+        ['a', 'b', 'c', 'd', 'e', 'f', 'g'])
     end
 
     it 'generates sortable label' do
