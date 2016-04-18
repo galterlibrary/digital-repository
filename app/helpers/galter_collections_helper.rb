@@ -15,6 +15,18 @@ module GalterCollectionsHelper
     end
   end
 
+  def collection_size
+    return number_to_human_size(0) if @collection.members.count == 0
+    all_members = @collection.members_from_solr
+    selected_members = all_members.select {|member|
+      can?(:read, member['id'])
+    }
+    size = selected_members.reduce(0) {|sum, f|
+      sum + f['file_size_is'].to_i
+    }
+    number_to_human_size(size)
+  end
+
   def users_collection_docs
     @document_list.reject {|o|
       o.depositor =~ /institutional-/

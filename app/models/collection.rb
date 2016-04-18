@@ -119,20 +119,22 @@ class Collection < Sufia::Collection
     pageable_members.map {|gf| "/image-service/#{gf['id']}/info.json" }
   end
 
-  def bytes
-    rows = members.count
-    return 0 if rows == 0
-
+  def members_from_solr
     raise "Collection must be saved to query for bytes" if new_record?
 
     query = '_query_:"{!raw f=has_model_ssim}Page" OR _query_:"{!raw f=has_model_ssim}GenericFile"'
     args = {
       fq: "{!join from=hasCollectionMember_ssim to=id}id:#{id}",
       fl: "id, #{file_size_field}",
-      rows: rows
+      rows: members.count
     }
 
-    files = ActiveFedora::SolrService.query(query, args)
+    ActiveFedora::SolrService.query(query, args)
+  end
+
+  def bytes
+    return 0 if members.count == 0
+    files = members_from_solr
     files.reduce(0) { |sum, f| sum + f[file_size_field].to_i }
   end
 

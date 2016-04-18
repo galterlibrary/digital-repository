@@ -158,11 +158,67 @@ feature "Collections", :type => :feature do
         end
         expect(chi_box.member_ids).to eq([black_box.id])
       end
+
+      describe 'collection containing private members' do
+        before do
+          content_obj = double(
+            FileContentDatastream.new,
+            size: 26813,
+            changed?: false,
+            has_content?: false,
+            uri: nil
+          )
+          allow_any_instance_of(GenericFile).to receive(
+            :content).and_return(content_obj)
+          ring.visibility = 'restricted'
+          ring.save!
+          chi_box.members << ring
+          chi_box.save!
+        end
+
+        it 'does not include the private member in size calculations' do
+          visit "/collections/#{chi_box.id}"
+          expect(page).to have_text('Size 26.2 KB')
+        end
+
+        it 'shows the appropriate number of pages' do
+          visit "/collections/#{chi_box.id}"
+          expect(page).to have_text('Total Items 2')
+        end
+      end
     end
 
     context 'as an authenticated user with edit permissions' do
       before do
         login_as(user, :scope => :user)
+      end
+
+      describe 'collection containing private members' do
+        before do
+          content_obj = double(
+            FileContentDatastream.new,
+            size: 26813,
+            changed?: false,
+            has_content?: false,
+            uri: nil
+          )
+          allow_any_instance_of(GenericFile).to receive(
+            :content).and_return(content_obj)
+          ring.visibility = 'restricted'
+          ring.save!
+          chi_box.members << ring
+          chi_box.save!
+        end
+
+        it 'does not include the private member in size calculations' do
+          visit "/collections/#{chi_box.id}"
+          expect(page).to have_text('Size 26.2 KB')
+        end
+
+        it 'shows the appropriate number of pages' do
+          visit "/collections/#{chi_box.id}"
+          expect(page).to have_text('Total Items 2')
+        end
       end
 
       describe 'shows all filled out fields' do
@@ -302,6 +358,34 @@ feature "Collections", :type => :feature do
           expect(page).not_to have_link('Open Access (recommended)')
         end
       end
+
+      describe 'collection containing private members' do
+        before do
+          content_obj = double(
+            FileContentDatastream.new,
+            size: 26813,
+            changed?: false,
+            has_content?: false,
+            uri: nil
+          )
+          allow_any_instance_of(GenericFile).to receive(
+            :content).and_return(content_obj)
+          ring.visibility = 'restricted'
+          ring.save!
+          chi_box.members << ring
+          chi_box.save!
+        end
+
+        it 'does not include the private member in size calculations' do
+          visit "/collections/#{chi_box.id}"
+          expect(page).to have_text('Size 0')
+        end
+
+        it 'shows the appropriate number of pages' do
+          visit "/collections/#{chi_box.id}"
+          expect(page).to have_text('Total Items 1')
+        end
+      end
     end
 
     context 'as an unauthenticated user' do
@@ -323,10 +407,24 @@ feature "Collections", :type => :feature do
 
       describe 'collection containing private members' do
         before do
+          content_obj = double(
+            FileContentDatastream.new,
+            size: 26813,
+            changed?: false,
+            has_content?: false,
+            uri: nil
+          )
+          allow_any_instance_of(GenericFile).to receive(
+            :content).and_return(content_obj)
           ring.visibility = 'restricted'
           ring.save!
           chi_box.members << ring
           chi_box.save!
+        end
+
+        it 'does not include the private member in size calculations' do
+          visit "/collections/#{chi_box.id}"
+          expect(page).to have_text('Size 0')
         end
 
         it 'shows the appropriate number of pages' do
