@@ -7,3 +7,11 @@
   overflow: auto;
   padding-bottom: 0;
 }
+
+#documents {
+  overflow: visible;
+}
+
+#documents .table-responsive {
+  overflow: visible;
+}
