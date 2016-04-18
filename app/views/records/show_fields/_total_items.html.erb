@@ -1,0 +1,6 @@
+<% Array(record[key]).reject(&:blank?).each do |v| %>
+  <span itemprop="<%= key %>" itemscope itemtype="http://schema.org/Thing">
+    <%= @response['response']['numFound'] %>
+  </span>
+  <br />
+<% end %>
