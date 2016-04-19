@@ -4,9 +4,13 @@
     <dt>Depositor</dt>
     <dd itemprop="accountablePerson" itemscope itemtype="http://schema.org/Person"><span itemprop="name"><%= link_to_profile @generic_file.depositor %></span></dd>
     <dt>Date Uploaded</dt>
-    <dd itemprop="datePublished"><%= @generic_file.date_uploaded %></dd>
+    <dd itemprop="datePublished">
+      <%= @generic_file.date_uploaded.in_time_zone.to_formatted_s(:long_ordinal) %>
+    </dd>
     <dt>Date Modified</dt>
-    <dd itemprop="dateModified"><%= @generic_file.date_modified %></dd>
+    <dd itemprop="dateModified">
+      <%= @generic_file.modified_date.in_time_zone.to_formatted_s(:long_ordinal) %>
+    </dd>
     <dt>Audit Status</dt>
     <dd><%= @audit_status %></dd>
     <% unless @generic_file.related_files.empty? %>
@@ -16,7 +20,7 @@
         <% end %>
     <% end %>
   <% end %>
-  <dt>Characterization</dt>
+  <dt>File Properties</dt>
   <dd>
     <%= "not yet characterized" if @generic_file.characterization_terms.values.flatten.map(&:empty?).reduce(true) { |sum, value| sum && value } %>
     <% select_viewable_details(@generic_file.characterization_terms).each_pair do |term, values| %>

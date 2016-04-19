@@ -96,6 +96,8 @@ describe 'generic file', :type => :feature do
           :file_format).and_return('png')
         @user.add_role(Role.create(name: 'editor').name)
         login_as(@user, :scope => :user)
+        allow_any_instance_of(GenericFile).to receive(
+          :date_uploaded).and_return(Time.now)
         visit "/files/#{@file.id}"
         expect(page).to have_text('Audit Status')
         expect(page).to have_text('Mime type')
@@ -126,6 +128,8 @@ describe 'generic file', :type => :feature do
         user = create(:user)
         allow_any_instance_of(GenericFile).to receive(
           :file_format).and_return('png')
+        allow_any_instance_of(GenericFile).to receive(
+          :date_uploaded).and_return(Time.now)
         user.add_role(Role.create(name: 'editor').name)
         login_as(user, :scope => :user)
         visit "/files/#{@file.id}"
