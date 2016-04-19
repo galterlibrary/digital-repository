@@ -20,3 +20,9 @@ Hydra.configure do |config|
   # specify the user model
   # config.user_model = '#{model_name.classify}'
 end
+
+Rails.configuration.to_prepare do
+  Hydra::Derivatives::Document.timeout = 120
+  Hydra::Derivatives::Image.timeout = 90
+  Hydra::Derivatives::Jpeg2kImage.timeout = 90
+end
