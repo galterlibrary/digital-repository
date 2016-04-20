@@ -67,11 +67,13 @@ NameVirtualHost *:80
 NameVirtualHost *:443
 
 <VirtualHost *:80>
+  UseCanonicalName On
   ServerName #{www_host_name}
   Redirect permanent / https://#{www_host_name}/
 </VirtualHost>
 
 <VirtualHost *:443>
+  UseCanonicalName On
   ServerName #{www_host_name}
   DocumentRoot #{fetch(:deploy_to)}/current/public
 
