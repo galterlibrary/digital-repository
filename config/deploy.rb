@@ -44,25 +44,19 @@ namespace :config do
   desc 'Create apache config file and add selinux context'
   task :vhost do
     on roles(:web) do
-      if fetch(:rails_env) == 'staging'
-        www_host_name = 'vtfsmghslrepo01.fsm.northwestern.edu'
-      else
-        www_host_name = 'digitalhub.northwestern.edu'
-      end
-
-      cert_host_name = www_host_name.gsub('.', '_')
+      cert_host_name = fetch(:www_host).gsub('.', '_')
       cert_path = '/home/deploy/https_certs'
 
       vhost_config = StringIO.new(%{
 <VirtualHost *:80>
   UseCanonicalName On
-  ServerName #{www_host_name}
-  Redirect permanent / https://#{www_host_name}/
+  ServerName #{fetch(:www_host)}
+  Redirect permanent / https://#{fetch(:www_host)}/
 </VirtualHost>
 
 <VirtualHost *:443>
   UseCanonicalName On
-  ServerName #{www_host_name}
+  ServerName #{fetch(:www_host)}
   DocumentRoot #{fetch(:deploy_to)}/current/public
 
   SSLEngine On
@@ -96,7 +90,7 @@ ExpiresByType application/javascript "access plus 1 year"
 AddType image/vnd.microsoft.icon .ico
 ExpiresByType image/vnd.microsoft.icon "access plus 1 month"
 
-PassengerPreStart https://#{www_host_name}/
+PassengerPreStart https://#{fetch(:www_host)}/
       })
       tmp_file = "/tmp/#{fetch(:application)}.conf"
       httpd_file = "/etc/httpd/conf.d/aaa_#{fetch(:application)}.conf"
@@ -115,6 +109,62 @@ PassengerPreStart https://#{www_host_name}/
       upload! local_file, tmp_file
       execute :sudo, :mv, tmp_file, remote_file
       execute :sudo, :chmod, "644", remote_file
+    end
+  end
+
+  desc 'Create and upload shibboleth2.xml file'
+  task :shib_config do
+    on roles(:web) do
+      shib_config = StringIO.new(%{
+<SPConfig xmlns="urn:mace:shibboleth:2.0:native:sp:config"
+    xmlns:conf="urn:mace:shibboleth:2.0:native:sp:config"
+    xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
+    xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"
+    xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
+    clockSkew="180">
+
+    <ApplicationDefaults entityID="https://#{fetch(:www_host)}/users/auth/shibboleth/callback"
+                         REMOTE_USER="eppn persistent-id targeted-id">
+
+        <Sessions lifetime="28800" timeout="3600" relayState="ss:mem"
+                  checkAddress="false" handlerSSL="true" cookieProps="https">
+
+            <SSO entityID="#{fetch(:shib_idp)}">
+              SAML2 SAML1
+            </SSO>
+
+            <Logout>SAML2 Local</Logout>
+            <Handler type="MetadataGenerator" Location="/Metadata" signing="false"/>
+            <Handler type="Status" Location="/Status" acl="127.0.0.1 165.124.124.27 ::1"/>
+            <Handler type="Session" Location="/Session" showAttributeValues="false"/>
+            <Handler type="DiscoveryFeed" Location="/DiscoFeed"/>
+        </Sessions>
+
+        <Errors supportContact="deploy@localhost"
+            helpLocation="/about.html"
+            styleSheet="/shibboleth-sp/main.css"/>
+
+        <MetadataProvider type="XML"
+                          uri="/etc/shibboleth/nu-idp-metadata.xml"
+                          backingFilePath="/etc/shibboleth/nu-idp-metadata.xml"
+                          reloadInterval="7200"/>
+        <AttributeExtractor type="XML" validate="true" reloadChanges="false" path="attribute-map.xml"/>
+        <AttributeResolver type="Query" subjectMatch="true"/>
+        <AttributeFilter type="XML" validate="true" path="attribute-policy.xml"/>
+        <CredentialResolver type="File" key="sp-key.pem" certificate="sp-cert.pem"/>
+    </ApplicationDefaults>
+
+    <SecurityPolicyProvider type="XML" validate="true" path="security-policy.xml"/>
+    <ProtocolProvider type="XML" validate="true" reloadChanges="false" path="protocols.xml"/>
+</SPConfig>
+      })
+      tmp_file = "/tmp/#{fetch(:application)}_shib_xml.conf"
+      upload! shib_config, tmp_file
+      execute :sudo, :mv, tmp_file, '/etc/shibboleth/shibboleth2.xml'
+      execute :sudo, :chmod, '644', '/etc/shibboleth/shibboleth2.xml'
+      execute :sudo, :cp, '/var/www/apps/shib/nu-idp-metadata.xml',
+                          '/etc/shibboleth/nu-idp-metadata.xml'
+      execute :sudo, :chmod, '644', '/etc/shibboleth/nu-idp-metadata.xml'
     end
   end
 
@@ -142,8 +192,9 @@ before :deploy, 'config:mail_forwarding'
 before :deploy, 'config:install_fits'
 after 'deploy:compile_assets', 'deploy:cleanup_assets'
 after 'deploy:publishing', 'resque:restart'
+after 'deploy:publishing', 'config:shib_config'
+after 'deploy:publishing', 'systemctl:shibd:restart'
 after 'deploy:publishing', 'config:vhost'
 after 'deploy:publishing', 'config:shib_httpd'
-after 'deploy:publishing', 'systemctl:shibd:restart'
 after 'deploy:publishing', 'systemctl:httpd:restart'
 after 'deploy:publishing', 'deploy:cleanup'
