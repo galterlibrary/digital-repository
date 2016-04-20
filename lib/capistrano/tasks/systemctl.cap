@@ -1,0 +1,33 @@
+namespace :systemctl do
+  namespace :httpd do
+    desc "Restart Apache server"
+    task :restart do
+      on roles(:all) do
+        execute :sudo, :systemctl, :restart, :httpd
+      end
+    end
+
+    desc "Apache server status"
+    task :status do
+      on roles(:all) do
+        execute :sudo, :systemctl, :status, :httpd
+      end
+    end
+  end
+
+  namespace :shibd do
+    desc "Restart Shibboleth service"
+    task :restart do
+      on roles(:all) do
+        execute :sudo, :systemctl, :restart, :shibd
+      end
+    end
+
+    desc "Shibboleth service status"
+    task :status do
+      on roles(:all) do
+        execute :sudo, :systemctl, :status, :shibd
+      end
+    end
+  end
+end

@@ -35,15 +35,6 @@ set :bundle_flags, "--deployment --path=#{fetch(:deploy_to)}/shared/gems"
 set :migration_role, 'migrator'
 set :assets_roles, [:web, :app]
 
-set :passenger_environment_variables, {
-  path: '/usr/share/gems/gems/passenger-4.0.56/bin:$PATH',
-  passenger_tmpdir: '/var/www/apps/tmp'
-}
-set :passenger_restart_with_sudo, true
-# REMOVEME see: https://github.com/capistrano/passenger/issues/33
-set :passenger_restart_command,
-  'PASSENGER_TMPDIR=/var/www/apps/tmp passenger-config restart-app'
-
 set :fits_zip, '/tmp/fits-0.8.6_1.zip'
 set :fits_sh, '/var/www/apps/fits-0.8.6/fits.sh'
 set :fits_url,
@@ -63,9 +54,6 @@ namespace :config do
       cert_path = '/home/deploy/https_certs'
 
       vhost_config = StringIO.new(%{
-NameVirtualHost *:80
-NameVirtualHost *:443
-
 <VirtualHost *:80>
   UseCanonicalName On
   ServerName #{www_host_name}
@@ -118,6 +106,18 @@ PassengerPreStart https://#{www_host_name}/
     end
   end
 
+  desc 'Upload Shibboleth related config file'
+  task :shib_httpd do
+    on roles(:web) do
+      local_file = 'config/deploy/shib/shib.conf'
+      remote_file = '/etc/httpd/conf.d/shib.conf'
+      tmp_file = "/tmp/#{fetch(:application)}_shib.conf"
+      upload! local_file, tmp_file
+      execute :sudo, :mv, tmp_file, remote_file
+      execute :sudo, :chmod, "644", remote_file
+    end
+  end
+
   desc 'Set mail forwarding for the deployment user'
   task :mail_forwarding do
     on roles(:app) do
@@ -143,4 +143,7 @@ before :deploy, 'config:install_fits'
 after 'deploy:compile_assets', 'deploy:cleanup_assets'
 after 'deploy:publishing', 'resque:restart'
 after 'deploy:publishing', 'config:vhost'
+after 'deploy:publishing', 'config:shib_httpd'
+after 'deploy:publishing', 'systemctl:shibd:restart'
+after 'deploy:publishing', 'systemctl:httpd:restart'
 after 'deploy:publishing', 'deploy:cleanup'

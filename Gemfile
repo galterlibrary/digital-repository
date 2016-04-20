@@ -81,7 +81,6 @@ gem 'capistrano'
 gem 'capistrano-bundler'
 gem 'capistrano-rails'
 gem 'capistrano-rvm'
-gem 'capistrano-passenger'
 
 gem 'newrelic_rpm'
 
