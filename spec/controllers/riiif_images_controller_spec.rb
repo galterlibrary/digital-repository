@@ -13,7 +13,18 @@ describe Riiif::ImagesController do
     end
 
     context 'user unauthorized to read the file in Fedora' do
-      it 'allows access to the file' do
+      it 'denies access to the file for an anonymous user' do
+        expect(
+          get :show, {
+            id: 'ufile', region: 'full', size: 'full',
+            rotation: '0', quality: 'native', format: 'png'
+          }
+        ).to redirect_to('/users/sign_in')
+        expect(response.status).to eq(302)
+      end
+
+      it 'denies access to the file for an unauthorized user' do
+        sign_in(create(:user))
         expect(
           get :show, {
             id: 'ufile', region: 'full', size: 'full',
@@ -25,7 +36,7 @@ describe Riiif::ImagesController do
     end
 
     context 'user authorized to read the file in Fedora' do
-      it 'denies access to the file' do
+      it 'allows access to the file' do
         sign_in(user)
         get :show, {
           id: 'ufile', region: 'full', size: 'full',
@@ -49,7 +60,15 @@ describe Riiif::ImagesController do
     end
 
     context 'user unauthorized to read the file in Fedora' do
-      it 'denies access to the file' do
+      it 'denies access to the file for an unauthorized user' do
+        sign_in(create(:user))
+        expect(
+          get :info, { id: 'ufile', format: 'json' }
+        ).to redirect_to('/users/sign_in')
+        expect(response.status).to eq(302)
+      end
+
+      it 'denies access to the file for and anonymous user' do
         expect(
           get :info, { id: 'ufile', format: 'json' }
         ).to redirect_to('/users/sign_in')
