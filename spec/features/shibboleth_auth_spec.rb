@@ -6,10 +6,11 @@ describe 'Shibboleth Authentication', :type => :feature do
   context 'non-production rails environment' do
     describe 'user is logging in' do
       it 'renders ldap authentication form' do
+        ENV['SHOW_SHIB_LINK'] = ''
         visit '/users/sign_in'
         expect(current_path).to eq('/users/sign_in')
         expect(page).to have_text('NetID')
-        expect(page).to have_link('Log in with SSO (Shibboleth)')
+        expect(page).not_to have_link('Log in with SSO (Shibboleth)')
       end
     end
 
