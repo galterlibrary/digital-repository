@@ -69,7 +69,7 @@ en:
       collection:
         resource_type: 'Pre-defined categories to describe the type of content being uploaded, such as "article" or "clinical trial." More than one type may be selected.'
         multi_page: 'Check if this is a multi-page collection such as book; allows for displaying pages using the IIIF viewer.'
-        title: 'A name chosen by the depositor to aid in identifying the submitted content. If not filled in, it will automatically default to the file name. This is a required field.'
+        title: 'Title of the work you are submitting as it appears in the file. If not filled in, it will automatically default to the file name. This is a required field.'
         creator_html: 'The person or group responsible for the content being submitted. Usually this is the author of the content. Personal names should be entered with the last name first, e.g. &quot;Smith, John.&quot;.'
         contributor_html: 'A person or group you want to recognize for playing a role in the creation of the content, but not the primary role. If there is a specific role you would like noted, include it in parentheses, e.g. &quot;Jones, Mary (advisor).&quot;'
         description: 'Free-text notes about the content or the file.'
@@ -80,7 +80,7 @@ en:
         date_created: 'The date on which the content was created, produced or published. Dates are accepted in the form YYYY-MM-DD, e.g. 1976-07-04.'
         mesh: 'Controlled vocabulary terms developed by the U.S. National Library of Medicine. Suggestions are displayed as you type.'
         lcsh: 'Controlled subject vocabulary terms developed by the Library of Congress. Suggestions are displayed as you type.'
-        subject_geographic: 'FAST (Faceted Application of Subject Terminology) controlled geographic terms made available by the OCLC Online Computer Library Center, Inc. Suggestions are displayed as you type. Select a name of a geographic location (city, state, country, region, body of water, mountain range, etc.) which is one of the subject areas of the work, or which limits the scope of the work to a particular geographic area.'
+        subject_geographic: 'Controlled subject vocabulary terms developed by the Library of Congress. Suggestions are displayed as you type.'
         subject_name: 'The Library of Congress Name Authority File (NAF) file provides authoritative data for names of persons, organizations, events, places, and titles. Suggestions are displayed as you type. Select a name of person, organizations, events, places, and titles.'
         language: 'The primary language in which the work was written. ISO639-2 standard is used. Suggestions are displayed as you type.'
         identifier: 'A unique string of characters such as DOI for a journal article, PubMed ID, PubMed Central ID, or an ISBN for a book. The type of identifier used should be entered in parentheses before the identifier itself, e.g. “(PMID) 26269873.'
@@ -90,7 +90,7 @@ en:
 
       generic_file:
         resource_type: 'Pre-defined categories to describe the type of content being uploaded, such as "article" or "clinical trial." More than one type may be selected.'
-        title: 'A name chosen by the depositor to aid in identifying the submitted content. If not filled in, it will automatically default to the file name. This is a required field.'
+        title: 'Title of the work you are submitting as it appears in the file. If not filled in, it will automatically default to the file name. This is a required field.'
         creator_html: 'The person or group responsible for the content being submitted. Usually this is the author of the content. Personal names should be entered with the last name first, e.g. &quot;Smith, John.&quot; &lt;em&gt;This is a required field&lt;/em&gt;.'
         contributor_html: 'A person or group you want to recognize for playing a role in the creation of the content, but not the primary role. If there is a specific role you would like noted, include it in parentheses, e.g. &quot;Jones, Mary (advisor).&quot;'
         description: 'Free-text notes about the content or the file.'
@@ -101,7 +101,7 @@ en:
         date_created: 'The date on which the content was created, produced or published. Dates are accepted in the form YYYY-MM-DD, e.g. 1976-07-04.'
         mesh: 'Controlled vocabulary terms developed by the U.S. National Library of Medicine. Suggestions are displayed as you type.'
         lcsh: 'Controlled subject vocabulary terms developed by the Library of Congress. Suggestions are displayed as you type.'
-        subject_geographic: 'FAST (Faceted Application of Subject Terminology) controlled geographic terms made available by the OCLC Online Computer Library Center, Inc. Suggestions are displayed as you type. Select a name of a geographic location (city, state, country, region, body of water, mountain range, etc.) which is one of the subject areas of the work, or which limits the scope of the work to a particular geographic area.'
+        subject_geographic: 'Controlled subject vocabulary terms developed by the Library of Congress. Suggestions are displayed as you type.'
         subject_name: 'The Library of Congress Name Authority File (NAF) file provides authoritative data for names of persons, organizations, events, places, and titles. Suggestions are displayed as you type. Select a name of person, organizations, events, places, and titles.'
         language: 'The primary language in which the work was written. ISO639-2 standard is used. Suggestions are displayed as you type.'
         identifier: 'A unique string of characters such as DOI for a journal article, PubMed ID, PubMed Central ID, or an ISBN for a book. The type of identifier used should be entered in parentheses before the identifier itself, e.g. “(PMID) 26269873.'
