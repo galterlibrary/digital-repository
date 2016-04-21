@@ -26,14 +26,9 @@ Riiif::Engine.config.cache_duration_in_days = 30
 
 Rails.configuration.to_prepare do
   Riiif::ImagesController.class_eval do
-    include Hydra::Controller::ControllerBehavior
-    include Blacklight::Catalog::SearchContext
-    include Sufia::Controller
-    include Blacklight::SearchHelper
-    include Hydra::Controller::SearchBuilder
-
     before_filter do
-      if current_user.blank? || current_user.cannot?(:read, params['id'])
+      @current_user ||= User.new
+      if @current_user.cannot?(:read, params['id'])
         redirect_to('/users/sign_in')
       else
         @gf = Riiif::Image.solr_doc_by_id(params['id'])

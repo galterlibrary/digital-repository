@@ -689,7 +689,7 @@ feature "Collections", :type => :feature do
       describe 'title field' do
         it 'displays help icon' do
           expect(subject).to have_link('collection_title_help')
-          expect(subject.html).to include('name chosen by the depositor')
+          expect(subject.html).to include('Title of the work you are')
         end
       end
 
