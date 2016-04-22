@@ -145,8 +145,7 @@ PassengerPreStart https://#{fetch(:www_host)}/
             styleSheet="/shibboleth-sp/main.css"/>
 
         <MetadataProvider type="XML"
-                          uri="/etc/shibboleth/nu-idp-metadata.xml"
-                          backingFilePath="/etc/shibboleth/nu-idp-metadata.xml"
+                          path="/etc/shibboleth/nu-idp-metadata.xml"
                           reloadInterval="7200"/>
         <AttributeExtractor type="XML" validate="true" reloadChanges="false" path="attribute-map.xml"/>
         <AttributeResolver type="Query" subjectMatch="true"/>
