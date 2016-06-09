@@ -4,8 +4,10 @@
 #       in your `config/local_env.rb' file.
 
 # Authentication and authorization
+#ENV['LDAP_SERVER']   = 'localhost'
 ENV['LDAP_SERVER']   = 'registry.northwestern.edu'
 ENV['LDAP_PORT']     = '636'
+#ENV['LDAP_PORT']     = '6666'
 ENV['OPENAM_BASE_URL'] = 'https://websso.it.northwestern.edu/'
 ENV['OPENAM_COOKIE_NAME'] = 'openAMssoToken'
 

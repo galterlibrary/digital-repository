@@ -114,31 +114,21 @@ a#digitalHubTopLink:hover, a#feinbergTopLink:hover, a#NMLogo:hover {
   display: none;
 }
 
+/* Featured works container */
 #home_content > div {
-  padding-left: 7px;
-  padding-right: 0px;
-  border-left: 6px solid #d4d5d6;
-  border-top: 6px solid #d4d5d6;
-}
-
-#home_content > div:first-child {
-  padding-left: 0px;
-  border-top: none;
+  padding: 0px;
 }
 
 @media (max-width: 767px) {
   #home_content > div {
-    border-left: none;
+    border-right: none;
   }
 }
 
 @media (min-width: 768px) {
   #home_content > div:first-child {
+    border-right: 6px solid #d4d5d6;
     border-left: none;
-  }
-
-  #home_content > div:nth-child(2) {
-    border-top: none;
   }
 }
 
@@ -156,13 +146,32 @@ a#digitalHubTopLink:hover, a#feinbergTopLink:hover, a#NMLogo:hover {
   font-family: Calibri,"Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
+/* Tag cloud container */
+@media (min-width: 768px) {
+  #home_content > div:nth-child(2) {
+    border-left: 6px solid #d4d5d6;
+    margin-left: -6px;
+  }
+
+  #home_content > div:nth-child(2) > div:first-child {
+    margin-right: -6px;
+  }
+}
+
+#home_content > div:nth-child(2) {
+  padding: 0px;
+}
+
 #home_content > div:nth-child(2) > div:nth-child(1) h2 {
-  margin-left: -7px;
+  font-family: Calibri,"Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 16px;
+  font-weight: 700;
   border-bottom: 1px solid #514689;
   background-color: #E6E6E6;
   color: #54585A;
+  width: 100%;
 }
-        
+
 #home_content table {
   background-color: white;
 }
@@ -177,7 +186,6 @@ a#digitalHubTopLink:hover, a#feinbergTopLink:hover, a#NMLogo:hover {
   margin-left: -7px;
   margin-right: 0px;
   border-bottom: 1px solid #514689;
-  border-top: 6px solid #d4d5d6;
   background-color: #E6E6E6;
   font-family: Calibri,"Helvetica Neue",Helvetica,Arial,sans-serif;
   color: #54585A;
@@ -191,11 +199,10 @@ a#digitalHubTopLink:hover, a#feinbergTopLink:hover, a#NMLogo:hover {
 
 a.tag-toggle-list {
   font-family: Calibri,"Helvetica Neue",Helvetica,Arial,sans-serif;
-  font-size: 16px;
-  margin-top: 9px;
+  margin-top: -8px;
+  margin-bottom: 8px;
   margin-right: 7px;
   float: right;
-  margin-bottom: 0px;
 }
 
 ul.tagcloud {

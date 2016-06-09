@@ -14,15 +14,12 @@
 </div><!-- /.col-xs-6 -->
 <div class="col-xs-12 col-sm-6">
   <div>
-    <%= render partial: 'featured_researcher' %>
-  </div>
-  <div>
     <%- if blacklight_config.respond_to?(:tag_cloud_field_name) && blacklight_config.tag_cloud_field_name %>
-        <div class="row">
-          <h2 class="heading1 pull-left"><%= t('sufia.homepage.explore') %></h2>
-          <span class="sr-only"><%= t('sufia.homepage.sr_explore') %></span>
-          <%= render partial: 'tagcloud', locals: { tag_cloud_field_name: blacklight_config.tag_cloud_field_name } %>
-        </div>
+      <h2 class="heading1 pull-left"><%= t('sufia.homepage.explore') %>
+        <a role="button" aria-hidden="true" class="btn btn-default tag-toggle-list">List</a>
+      </h2>
+      <span class="sr-only"><%= t('sufia.homepage.sr_explore') %></span>
+      <%= render partial: 'tagcloud', locals: { tag_cloud_field_name: blacklight_config.tag_cloud_field_name } %>
     <%- end %>
   </div>
 </div>

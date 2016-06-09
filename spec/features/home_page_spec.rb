@@ -64,12 +64,12 @@ feature "HomePage", :type => :feature do
       visit '/'
     end
 
-    it { is_expected.to have_text('Tesla') }
-    it { is_expected.not_to have_text('Edison') }
+    it { pending 'Featured Reasercher removed'; is_expected.to have_text('Tesla') }
+    it { skip 'Featured Reasercher removed'; is_expected.not_to have_text('Edison') }
 
     context 'admin functions' do
       describe 'anonymous user' do
-        before { click_link 'View other featured researchers' }
+        before { pending 'Featured Reasercher removed'; click_link 'View other featured researchers' }
 
         it { is_expected.not_to have_link('Delete') }
         it { is_expected.not_to have_link('Re-feature') }
@@ -78,6 +78,7 @@ feature "HomePage", :type => :feature do
       describe 'logged in user' do
         before do
           login_as(user)
+          pending 'Featured Reasercher removed'
           click_link 'View other featured researchers'
         end
 
@@ -89,6 +90,7 @@ feature "HomePage", :type => :feature do
       describe 'logged in admin user' do
         before do
           login_as(admin_user)
+          pending 'Featured Reasercher removed'
           click_link 'View other featured researchers'
         end
 
