@@ -31,6 +31,9 @@ en:
       collections_list:
         empty: 'Not a member of any collections'
         heading: 'Member of:'
+    upload:
+      collection:
+        select_label: "Upload to (optional):"
     search:
       form:
         q:
