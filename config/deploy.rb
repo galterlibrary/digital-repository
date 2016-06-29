@@ -175,6 +175,19 @@ PassengerPreStart https://#{fetch(:www_host)}/
     end
   end
 
+  task :custom_image_magic_gs do
+    on roles(:app) do
+      upload! File.join('config', 'deploy', 'image_magic_gs'), '/tmp/gs_deploy'
+      execute :mv, '/tmp/gs_deploy', '/home/deploy/bin/gs'
+      execute(:chmod, '+x', '/home/deploy/bin/gs')
+      upload! File.join('config', 'deploy', 'image_magic_delegates.xml'),
+        '/tmp/delegates.xml_deploy'
+      execute :sudo, :mv, '/tmp/delegates.xml_deploy',
+        '/etc/ImageMagick/delegates.xml'
+      execute(:sudo, :chmod, '644', '/etc/ImageMagick/delegates.xml')
+    end
+  end
+
   task :install_fits do
     on roles(:app) do
       if !test("[ -f #{fetch(:fits_sh)} ]")
@@ -189,6 +202,7 @@ end
 
 before :deploy, 'config:mail_forwarding'
 before :deploy, 'config:install_fits'
+before :deploy, 'config:custom_image_magic_gs'
 after 'deploy:compile_assets', 'deploy:cleanup_assets'
 after 'deploy:publishing', 'resque:restart'
 after 'deploy:publishing', 'config:shib_config'
