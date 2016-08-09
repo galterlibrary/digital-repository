@@ -77,6 +77,7 @@ gem 'hydra-role-management'
 gem 'poltergeist'
 gem 'database_cleaner'
 
+gem 'sshkit', github: 'capistrano/sshkit'
 gem 'capistrano'
 gem 'capistrano-bundler'
 gem 'capistrano-rails'

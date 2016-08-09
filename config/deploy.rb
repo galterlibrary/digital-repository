@@ -123,7 +123,7 @@ PassengerPreStart https://#{fetch(:www_host)}/
     xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
     clockSkew="180">
 
-    <ApplicationDefaults entityID="https://#{fetch(:www_host)}/users/auth/shibboleth/callback"
+    <ApplicationDefaults entityID="#{fetch(:shib_sp)}"
                          REMOTE_USER="eppn persistent-id targeted-id">
 
         <Sessions lifetime="28800" timeout="3600" relayState="ss:mem"
@@ -178,6 +178,7 @@ PassengerPreStart https://#{fetch(:www_host)}/
   task :custom_image_magic_gs do
     on roles(:app) do
       upload! File.join('config', 'deploy', 'image_magic_gs'), '/tmp/gs_deploy'
+      execute :mkdir, '-p', '/home/deploy/bin'
       execute :mv, '/tmp/gs_deploy', '/home/deploy/bin/gs'
       execute(:chmod, '+x', '/home/deploy/bin/gs')
       upload! File.join('config', 'deploy', 'image_magic_delegates.xml'),
