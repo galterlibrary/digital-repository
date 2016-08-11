@@ -583,4 +583,40 @@ RSpec.describe GenericFile do
       ).to be_nil
     end
   end
+
+  context 'full text indexing' do
+    let(:user) { FactoryGirl.create(:user) }
+    subject { make_generic_file(user) }
+
+    before do
+      subject.label = File.basename('text_file.txt')
+      subject.date_uploaded = DateTime.now
+      subject.add_file(
+        File.open('spec/fixtures/text_file.txt'),
+        original_name: subject.label,
+        path: 'content',
+        mime_type: 'text/plain'
+      )
+      subject.save!
+      expect(subject.content).to receive(:extract_metadata)
+    end
+
+    describe 'file smaller then 10MB' do
+      before { subject.characterize }
+      it 'extracts the text' do
+        expect(subject.full_text.content).to include('roar')
+      end
+    end
+
+    describe 'file larger then 10MB' do
+      before do
+        allow(subject.content).to receive(:size).and_return(11.megabytes)
+        subject.characterize
+      end
+
+      it 'does not extracts the text' do
+        expect(subject.full_text.content).to be_nil
+      end
+    end
+  end
 end
