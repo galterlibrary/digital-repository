@@ -119,6 +119,10 @@ class Collection < Sufia::Collection
     pageable_members.map {|gf| "/image-service/#{gf['id']}/info.json" }
   end
 
+  def file_size_field
+    Solrizer.solr_name('file_size', :stored_long)
+  end
+
   def members_from_solr
     raise "Collection must be saved to query for bytes" if new_record?
 

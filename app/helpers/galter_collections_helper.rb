@@ -22,7 +22,7 @@ module GalterCollectionsHelper
       can?(:read, member['id'])
     }
     size = selected_members.reduce(0) {|sum, f|
-      sum + f['file_size_is'].to_i
+      sum + f[Solrizer.solr_name('file_size', :stored_long)].to_i
     }
     number_to_human_size(size)
   end

@@ -332,16 +332,16 @@ RSpec.describe Collection do
       let(:file) { mock_model GenericFile, content: bitstream }
       let(:page) { mock_model Page, content: bitstream }
       let(:documents) do
-        [{ 'id' => 'file-1', 'file_size_is' => 33 },
-         { 'id' => 'file-2', 'file_size_is' => 33 },
-         { 'id' => 'file-3', 'file_size_is' => 33 }]
+        [{ 'id' => 'file-1', 'file_size_lts' => 33 },
+         { 'id' => 'file-2', 'file_size_lts' => 33 },
+         { 'id' => 'file-3', 'file_size_lts' => 33 }]
       end
       let(:query) {
         '_query_:"{!raw f=has_model_ssim}Page" OR _query_:"{!raw f=has_model_ssim}GenericFile"'
       }
       let(:args) do
         { fq: '{!join from=hasCollectionMember_ssim to=id}id:col1',
-          fl: 'id, file_size_is',
+          fl: 'id, file_size_lts',
           rows: 3 }
       end
 
@@ -1001,5 +1001,10 @@ RSpec.describe Collection do
         [root.id, c_lv_1_1.id, c_lv_1_2.id, c_lv_2.id, gf_lv_3.id]
       )
     end
+  end
+
+  describe '#file_size_field' do
+    subject { Collection.new.file_size_field }
+    it { is_expected.to eq('file_size_lts') }
   end
 end

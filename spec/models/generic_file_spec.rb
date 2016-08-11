@@ -563,5 +563,24 @@ RSpec.describe GenericFile do
       expect(subject.to_solr['content_tesim']).to eq('http://localhost')
     end
 
+    it 'stores file_size as `long` and not `integer`' do
+      expect(subject.to_solr['file_size_is']).to be_nil
+      expect(subject.to_solr['file_size_lts']).to eq('0')
+    end
+
+    let(:fifty_bit_int) { ('1' * 50).to_i(2) }
+    it 'can store integers longer then 31 bits in file_size' do
+      subject.apply_depositor_metadata('abc')
+      subject.title = ['asdf']
+      allow(subject.content).to receive(:size).and_return(fifty_bit_int)
+      expect(subject.save).to be_truthy
+      from_solr = ActiveFedora::SolrService.query("id:#{subject.id}").first
+      expect(
+        from_solr['file_size_lts']
+      ).to eq(fifty_bit_int)
+      expect(
+        from_solr['file_size_is']
+      ).to be_nil
+    end
   end
 end
