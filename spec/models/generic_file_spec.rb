@@ -618,5 +618,27 @@ RSpec.describe GenericFile do
         expect(subject.full_text.content).to be_nil
       end
     end
+
+    describe 'file of resource type other then Dataset' do
+      before do
+        subject.update_attributes(resource_type: ['Article'])
+        subject.characterize
+      end
+
+      it 'extracts the text' do
+        expect(subject.full_text.content).to include('roar')
+      end
+    end
+
+    describe 'file of resource type Dataset' do
+      before do
+        subject.update_attributes(resource_type: ['Dataset'])
+        subject.characterize
+      end
+
+      it 'does not extracts the text' do
+        expect(subject.full_text.content).to be_nil
+      end
+    end
   end
 end
