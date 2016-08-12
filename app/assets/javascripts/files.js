@@ -7,5 +7,13 @@ $(function () {
       'option',
       'acceptFileTypes',
       /(\.|\/)(ods|odf|xlsx?|pdf|pptx?|tex|dvi|odt|rtf|docx?|txt|tiff?|gif|jpe?g|png|zip|gz|tar|7z|bz2?)$/i
-  );
+  ).bind('fileuploadadded', function (e, data) {
+    if (data.files[0].error == 'acceptFileTypes'){
+      $("#errmsg").html(
+          "Sorry, we cannot currently accept files of type: " +
+          data.files[0].name.split('.').pop()
+      );
+      $("#errmsg").fadeIn('slow');
+    }
+  });
 });
