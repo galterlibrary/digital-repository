@@ -119,8 +119,9 @@ class GenericFile < ActiveFedora::Base
 
   def add_doi_to_citation(citation)
     if doi.first.present?
+      the_doi = doi.first.to_s.gsub('doi:', '')
       citation.gsub!(/ +$/, '')
-      citation << " #{doi.first}"
+      citation << " <a href='http://dx.doi.org/#{the_doi}'>doi:#{the_doi}</a>"
     end
     citation.html_safe
   end
