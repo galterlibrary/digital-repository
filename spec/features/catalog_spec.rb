@@ -114,6 +114,20 @@ feature 'Catalog', :type => :feature do
         expect(page).not_to have_link('Delete')
       end
 
+      context 'pagination' do
+        before do
+          visit '/catalog?per_page=2'
+        end
+
+        it 'does not display link to current page' do
+          within('.pagination') do
+            expect(page).not_to have_link('1')
+            within('span') { expect(page).to have_text('1') }
+            expect(page).to have_link('2', href: '/catalog?page=2&per_page=2')
+          end
+        end
+      end
+
       context 'with admin role' do
         before do
           Role.create!(name: 'admin')
