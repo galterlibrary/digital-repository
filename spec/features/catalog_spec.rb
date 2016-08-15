@@ -90,7 +90,9 @@ feature 'Catalog', :type => :feature do
         expect(page).not_to have_text('ZZZ')
         expect(page).not_to have_button('Add to Collection')
         expect(page).not_to have_selector('#catalogCollections')
-        expect(page).not_to have_link('Delete')
+        expect(page).not_to have_link('Private')
+        expect(page).not_to have_link('Open Access (recommended)')
+        expect(page).not_to have_link('Add to Collection')
       end
     end
 
@@ -107,6 +109,8 @@ feature 'Catalog', :type => :feature do
         expect(page).not_to have_text('ZZZ')
         expect(page).not_to have_button('Add to Collection')
         expect(page).not_to have_selector('#catalogCollections')
+        expect(page).not_to have_link('Private')
+        expect(page).not_to have_link('Open Access (recommended)')
         expect(page).not_to have_link('Delete')
       end
 
@@ -126,6 +130,30 @@ feature 'Catalog', :type => :feature do
           expect(page).to have_selector('#catalogCollections')
           expect(page).to have_selector('input#id_col_user')
           expect(page).to have_selector('input#id_col_stranger')
+          expect(page).to have_link(
+            'Private',
+            href: sufia.edit_generic_file_path(
+              gf_private, anchor: "permissions_display"
+            )
+          )
+          expect(page).to have_link(
+            'Open Access (recommended)',
+            href: sufia.edit_generic_file_path(
+              gf_public, anchor: "permissions_display"
+            )
+          )
+          expect(page).to have_link(
+            'Northwestern University',
+            href: sufia.edit_generic_file_path(
+              gf_authenticated, anchor: "permissions_display"
+            )
+          )
+          expect(page).to have_link(
+            'Private',
+            href: collections.edit_collection_path(
+              col_user, anchor: "permissions_display"
+            )
+          )
           expect(page).to have_link('Delete')
         end
 
@@ -153,6 +181,30 @@ feature 'Catalog', :type => :feature do
           expect(page).to have_selector('#catalogCollections')
           expect(page).to have_selector('input#id_col_user')
           expect(page).to have_selector('input#id_col_stranger')
+          expect(page).to have_link(
+            'Private',
+            href: sufia.edit_generic_file_path(
+              gf_private, anchor: "permissions_display"
+            )
+          )
+          expect(page).to have_link(
+            'Open Access (recommended)',
+            href: sufia.edit_generic_file_path(
+              gf_public, anchor: "permissions_display"
+            )
+          )
+          expect(page).to have_link(
+            'Northwestern University',
+            href: sufia.edit_generic_file_path(
+              gf_authenticated, anchor: "permissions_display"
+            )
+          )
+          expect(page).to have_link(
+            'Private',
+            href: collections.edit_collection_path(
+              col_user, anchor: "permissions_display"
+            )
+          )
           expect(page).not_to have_link('Delete')
         end
       end
