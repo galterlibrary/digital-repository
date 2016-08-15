@@ -3,6 +3,7 @@ $(function () {
   max_file_size_str = "2GB";
   max_total_file_size = 4294967296;
   max_total_file_size_str = "4GB";
+  $('#total_upload_size').val(0);
 
   $('#fileupload').fileupload(
       'option',
