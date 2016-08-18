@@ -1,5 +1,5 @@
 Rails.configuration.middleware.use Browser::Middleware do
-  if browser.mobile? &&
+  if browser.device.mobile? &&
       request.get? &&
       request.path =~ /^\/collections\/[1-9a-zA-Z]+/ &&
       request.fullpath !~ /view=gallery/ &&

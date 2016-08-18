@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.4'
+gem 'rails', '4.2.7'
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
 gem 'pg'
@@ -53,13 +53,13 @@ group :development, :test do
   gem "jettywrapper"
   gem 'factory_girl_rails'
   gem "capybara"
+  gem 'byebug'
+  gem 'pry-byebug'
+  gem 'pry-rails'
+  gem 'pry'
 end
 
 gem "better_errors",  group: :development
-gem 'byebug'
-gem 'pry-byebug'
-gem 'pry-rails'
-gem 'pry'
 gem 'qa'
 gem 'http_logger'
 gem 'escape'
@@ -67,7 +67,6 @@ gem 'rdf-vocab'
 
 gem 'riiif', '0.2.0'
 gem 'osullivan'
-gem 'rsolr'
 
 gem 'ruby-ldap'
 gem "devise_ldap_authenticatable"
