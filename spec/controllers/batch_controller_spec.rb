@@ -7,36 +7,6 @@ describe BatchController do
     @routes = Sufia::Engine.routes
   end
 
-  describe '#update' do
-    let(:gf1) { make_generic_file(user, title: ['abc'], id: 'gf1') }
-    let(:gf2) { make_generic_file(user, title: ['bcd'], id: 'gf2') }
-    let(:batch) { Batch.create(generic_file_ids: ['gf1', 'gf2']) }
-
-    describe 'doi minting job scheduling' do
-      before do
-        sign_in user
-        batch_job = double('batch')
-        allow(BatchUpdateJob).to receive(:new).and_return(batch_job)
-        allow(Sufia.queue).to receive(:push).with(batch_job)
-      end
-
-      it 'schedules the job for both generic files' do
-        job1 =  double('one')
-        job2 =  double('two')
-        expect(MintDoiJob).to receive(:new).with(
-          gf1.id, user.username).and_return(job1)
-        expect(MintDoiJob).to receive(:new).with(
-          gf2.id, user.username).and_return(job2)
-        expect(Sufia.queue).to receive(:push).with(job1)
-        expect(Sufia.queue).to receive(:push).with(job2)
-        patch :update, id: batch, visibility: 'open',
-              :title => { 'gf1' => ['aaa'], 'gf2' => ['bbb'] },
-              :generic_file => {}
-      end
-    end
-  end
-
-
   describe '#edit' do
     let(:batch) { Batch.create }
 
