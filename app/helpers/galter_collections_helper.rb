@@ -10,8 +10,8 @@ module GalterCollectionsHelper
   def institutional_children(ids)
     @document_list.select {|doc|
       ids.include?(doc.id)
-    }.each_with_index do |col, idx|
-      yield col, idx
+    }.map.with_index do |col, idx|
+      [col, idx]
     end
   end
 

@@ -35,8 +35,10 @@ describe 'collections/index.html.erb' do
 
     it 'renders the collections groups' do
       expect(rendered).to have_content "Researchers' Collections"
-      expect(rendered).to have_content 'ABC'
-      expect(rendered).to have_content 'Institute for Public Health and Medicine'
+      expect(rendered).to have_link(
+        'Institute for Public Health and Medicine',
+        href: '/collections/ipham_col1')
+      expect(rendered).to have_link('ABC', href: '/collections/galter_col1')
       expect(rendered).to have_link('blah blah', href: '/collections/galter_col2')
       expect(rendered).to have_link('moo moo', href: '/collections/galter_col3')
       expect(rendered).to have_link('ipham_col2', href: '/collections/ipham_col2')
