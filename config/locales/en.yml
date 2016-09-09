@@ -57,6 +57,8 @@ en:
         publisher: 'Digital Publisher'
         original_publisher: 'Original Publisher'
         private_note: 'Private Note'
+        bibliographic_citation: 'Original Bibliographic Citation'
+        identifier: 'Original Identifier'
       collection:
         resource_type: 'Resource type(s)'
         multi_page: 'Multi-page?'
@@ -68,6 +70,8 @@ en:
         publisher: 'Digital Publisher'
         original_publisher: 'Original Publisher'
         private_note: 'Private Note'
+        bibliographic_citation: 'Original Bibliographic Citation'
+        identifier: 'Original Identifier'
     metadata_help:
       collection:
         resource_type: 'Pre-defined categories to describe the type of content being uploaded, such as "article" or "clinical trial." More than one type may be selected.'

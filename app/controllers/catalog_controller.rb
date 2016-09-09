@@ -108,7 +108,7 @@ class CatalogController < ApplicationController
     #   The ordering of the field names is the order of the display
     config.add_index_field solr_name("title", :stored_searchable), label: "Title", itemprop: 'name'
     config.add_index_field solr_name("description", :stored_searchable), label: "Description", itemprop: 'description'
-    config.add_index_field solr_name("bibliographic_citation", :stored_searchable), label: "Bibliographic Citation", itemprop: 'bibliographic_citation'
+    config.add_index_field solr_name("bibliographic_citation", :stored_searchable), label: "Original Bibliographic Citation", itemprop: 'bibliographic_citation'
     config.add_index_field solr_name("abstract", :stored_searchable), label: "Abstract", itemprop: 'abstract'
     config.add_index_field solr_name("tag", :stored_searchable), label: "Keyword", itemprop: 'keywords'
     config.add_index_field solr_name("subject", :stored_searchable), label: "Subject", itemprop: 'about'
@@ -130,13 +130,13 @@ class CatalogController < ApplicationController
     config.add_index_field solr_name("rights", :stored_searchable), label: "Rights"
     config.add_index_field solr_name("resource_type", :stored_searchable), label: "Resource Type"
     config.add_index_field solr_name("format", :stored_searchable), label: "File Format"
-    config.add_index_field solr_name("identifier", :stored_searchable), label: "Identifier"
+    config.add_index_field solr_name("identifier", :stored_searchable), label: "Original Identifier"
 
     # solr fields to be displayed in the show (single result) view
     #   The ordering of the field names is the order of the display
     config.add_show_field solr_name("title", :stored_searchable), label: "Title"
     config.add_show_field solr_name("description", :stored_searchable), label: "Description"
-    config.add_show_field solr_name("bibliographic_citation", :stored_searchable), label: "Bibliographic Citation"
+    config.add_show_field solr_name("bibliographic_citation", :stored_searchable), label: "Original Bibliographic Citation"
     config.add_show_field solr_name("abstract", :stored_searchable), label: "Abstract"
     config.add_show_field solr_name("grants_and_funding", :stored_searchable), label: "Grants and Funding"
     config.add_show_field solr_name("acknowledgments", :stored_searchable), label: "Acknowledgments"
@@ -164,7 +164,7 @@ class CatalogController < ApplicationController
     config.add_show_field solr_name("rights", :stored_searchable), label: "Rights"
     config.add_show_field solr_name("resource_type", :stored_searchable), label: "Resource Type"
     config.add_show_field solr_name("format", :stored_searchable), label: "File Format"
-    config.add_show_field solr_name("identifier", :stored_searchable), label: "Identifier"
+    config.add_show_field solr_name("identifier", :stored_searchable), label: "Original Identifier"
 
     # "fielded" search configuration. Used by pulldown among other places.
     # For supported keys in hash, see rdoc for Blacklight::SearchFields
@@ -245,7 +245,7 @@ class CatalogController < ApplicationController
     end
 
     config.add_search_field('bibliographic_citation') do |field|
-      field.label = "Bibliographic Citation"
+      field.label = "Original Bibliographic Citation"
       field.solr_parameters = {
         :"spellcheck.dictionary" => "bibliographic_citation"
       }
