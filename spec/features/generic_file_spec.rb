@@ -203,6 +203,13 @@ describe 'generic file', :type => :feature do
 
           expect(page).not_to have_text('Digital origin')
 
+          # Pre-populated
+          expect(page).to have_field(
+            'Publisher',
+            with: 'Galter Health Sciences Library, Feinberg School of Medicine, Northwestern University')
+          expect(page).to have_field(
+            'Location', with: 'Chicago, Illinois, United States')
+
           click_button('Save')
 
           expect(current_path).to eq('/dashboard/files')
@@ -221,6 +228,10 @@ describe 'generic file', :type => :feature do
           expect(@new_file.ark).to eq(['ark'])
           expect(@new_file.original_publisher).to eq(['orig'])
           expect(@new_file.private_note).to eq(['note'])
+          expect(@new_file.based_near).to eq(
+            ['Chicago, Illinois, United States'])
+          expect(@new_file.publisher).to eq(
+            ['Galter Health Sciences Library, Feinberg School of Medicine, Northwestern University'])
         end
       end
 
