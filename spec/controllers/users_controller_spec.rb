@@ -4,6 +4,15 @@ describe UsersController do
   routes { Sufia::Engine.routes }
 
   describe "#index" do
+    it 'can sort by username' do
+      u1 = create(:user, username: 'good', display_name: 'Good Mo')
+      u2 = create(:user, username: 'bad', display_name: 'Bad Mo')
+      get :index, sort: 'login', uq: ''
+      expect(assigns(:users).count).to eq(2)
+      expect(assigns(:users).first).to eq(u2)
+      expect(assigns(:users).second).to eq(u1)
+    end
+
     describe 'json' do
       it 'returns a hash of users' do
         create(:user, username: 'bad', display_name: 'Bad Mo')
