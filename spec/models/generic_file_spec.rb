@@ -331,7 +331,7 @@ RSpec.describe GenericFile do
         end
 
         it 'does nothing' do
-          expect(Ezid::Identifier).not_to receive(:create)
+          expect(Ezid::Identifier).not_to receive(:mint)
           expect(Ezid::Identifier).not_to receive(:find)
           expect(subject.check_doi_presence).to eq('page')
           expect(subject.reload.doi).to eq([])
@@ -341,7 +341,7 @@ RSpec.describe GenericFile do
         describe 'with no page_number metadata' do
           before do
             subject.update_attributes(page_number: nil)
-            expect(Ezid::Identifier).to receive(:create)
+            expect(Ezid::Identifier).to receive(:mint)
               .with(
                 Ezid::Metadata.new({
                   'datacite.creator' => 'bcd',
@@ -371,7 +371,7 @@ RSpec.describe GenericFile do
         before { subject.update_attributes(date_uploaded: nil) }
 
         it 'sets doi and ark' do
-          expect(Ezid::Identifier).to receive(:create).with(
+          expect(Ezid::Identifier).to receive(:mint).with(
             Ezid::Metadata.new({
               'datacite.creator' => 'bcd',
               'datacite.title' => 'title',
@@ -497,7 +497,7 @@ RSpec.describe GenericFile do
       end
 
       it 'sets doi and ark' do
-        expect(Ezid::Identifier).to receive(:create).with(
+        expect(Ezid::Identifier).to receive(:mint).with(
           Ezid::Metadata.new({
             'datacite.creator' => 'bcd',
             'datacite.title' => 'title',
@@ -521,7 +521,7 @@ RSpec.describe GenericFile do
         before { subject.visibility = 'open'; subject.save! }
 
         it 'sets doi and ark' do
-          expect(Ezid::Identifier).to receive(:create).with(
+          expect(Ezid::Identifier).to receive(:mint).with(
             Ezid::Metadata.new({
               'datacite.creator' => 'bcd',
               'datacite.title' => 'title',

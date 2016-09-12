@@ -58,7 +58,7 @@ module EzidGenerator
   private :can_get_doi?
 
   def create_doi
-    identifier = Ezid::Identifier.create(ezid_metadata(
+    identifier = Ezid::Identifier.mint(ezid_metadata(
       self.visibility == 'open' ? 'public' : 'reserved'))
     self.update_attributes(
       doi: [identifier.id], ark: [identifier.shadowedby])
