@@ -3,34 +3,53 @@
   <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 
     <% collection_groups.each do |root| %>
+      <% ichildren = institutional_children(root.member_ids) %>
       <div class="panel panel-default">
         <div class="panel-heading" role="tab" id="heading-<%=root.depositor%>">
           <h4 class="panel-title">
-            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion"
-               href="#collapse-<%=root.depositor%>" aria-expanded="true"
-               aria-controls="collapse-<%=root.depositor%>">
-              <%= root.title %>
-            </a>
+            <% if ichildren.count > 0 %>
+              <a class="collapsed expand-toggle"
+                 role="button"
+                 data-toggle="collapse"
+                 data-parent="#accordion"
+                 href="#collapse-<%=root.depositor%>"
+                 aria-expanded="true"
+                 aria-controls="collapse-<%=root.depositor%>">
+                 <span class="glyphicon glyphicon-expand" aria-hidden="true"></span>
+              </a>
+            <% else %>
+              &nbsp;&nbsp;
+            <% end %>
+            <%= link_to root.title, collections.collection_path(root.id) %>
           </h4>
         </div>
+        <% if ichildren.count > 0 %>
         <div id="collapse-<%=root.depositor%>" class="panel-collapse collapse"
              role="tabpanel" aria-labelledby="heading-<%=root.depositor%>">
           <div class="panel-body">
-            <% institutional_children(root.member_ids) do |col, idx| %>
+            <% ichildren.each do |col, idx| %>
               <%= link_to col.title, collections.collection_path(col.id),
                           class: 'list-group-item small' %>
             <% end %>
           </div>
         </div>
+        <% end %>
       </div>
     <% end %>
 
     <div class="panel panel-default">
       <div class="panel-heading" role="tab" id="userColHeading">
         <h4 class="panel-title">
-          <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#userColCollapse" aria-expanded="false" aria-controls="userColCollapse">
-            Researchers' Collections
+          <a class="collapsed expand-toggle"
+             role="button"
+             data-toggle="collapse"
+             data-parent="#accordion"
+             href="#userColCollapse"
+             aria-expanded="false"
+             aria-controls="userColCollapse">
+            <span class="glyphicon glyphicon-expand" aria-hidden="true"></span>
           </a>
+          Researchers' Collections
         </h4>
       </div>
 
