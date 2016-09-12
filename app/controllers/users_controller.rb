@@ -18,4 +18,11 @@ class UsersController < ApplicationController
       format.json { render json: @users.to_json }
     end
   end
+
+  private
+
+  def sort_value
+    val = super
+    val == 'login' ? 'username' : val
+  end
 end
