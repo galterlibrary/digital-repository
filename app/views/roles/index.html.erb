@@ -1,0 +1,21 @@
+<% if can? :manage, 'anything' %>
+
+  <h3>
+    <%= link_to "Manage Resque Jobs", sufia.admin_resque_server_path %>
+    <br />
+    <%= link_to "Statistics", sufia.admin_stats_path %>
+    <br />
+    <%= link_to "Create a new user", new_user_path %>
+    <br />
+    <%= link_to "Create a new role", role_management.new_role_path %>
+  </h3>
+
+<% end %>
+
+<br />
+<h2>Manage Roles</h2>
+<ul>
+  <% @roles.each do |role| %>
+    <li><%=link_to role.name, role_management.role_path(role) %></li>
+  <% end %>
+</ul>

@@ -16,7 +16,7 @@ feature "Dashboard/Collections", :type => :feature do
         visit '/users/bigboss'
         expect(page).to have_link(
           'Vivo Profile',
-          'http://vfsmvivo.fsm.northwestern.edu/vivo/individual?uri=http%3A%2F%2Fvivo.northwestern.edu%2Findividual%2Fvivoboss'
+          href: 'http://vfsmvivo.fsm.northwestern.edu/vivo/individual?uri=http%3A%2F%2Fvivo.northwestern.edu%2Findividual%2Fvivoboss'
         )
       end
     end
