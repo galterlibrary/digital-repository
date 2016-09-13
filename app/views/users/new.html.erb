@@ -1,0 +1,7 @@
+<%= render partial: '/flash_msg' %>
+
+<h2>Create a user</h2>
+<%= bootstrap_form_for @user, url: { action: 'create' } do |f| %>
+  <%= f.text_field :username, label: 'NetID (Username):' %>
+  <%= f.submit "Create" %>
+<% end %>

@@ -17,6 +17,8 @@ Rails.application.routes.draw do
   get '/authorities/generic_files/contributor' => 'custom_authorities#query_users'
   get '/authorities/generic_files/verify_user' => 'custom_authorities#verify_user'
   get '/authorities/generic_files/subject_name' => 'custom_authorities#lcsh_names'
+  get '/users/new' => 'users#new', as: 'new_user'
+  post '/users' => 'users#create', as: 'create_user'
   mount Qa::Engine => '/qa'
   mount Riiif::Engine => '/image-service'
 
