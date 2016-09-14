@@ -1,6 +1,8 @@
 pnb_path = ENV['PNB_PATH']
 depositor = 'institutional-pnb'
 admin_group = 'PNB-Admin'
+log_file = File.open("#{ENV['PNB_PATH']}/errors.log", 'a')
+log_file.puts("Starting: #{DateTime.now.to_s}")
 
 def parse_xml(path)
   @xml = Nokogiri::XML(open(path))
@@ -209,9 +211,14 @@ def root_collection
 end
 
 def article_pnb_id
-  xml.xpath(
+  parts = xml.xpath(
     '//article-meta/article-id[@pub-id-type="publisher-id"]'
   ).text.strip.split('-')
+  if parts.count == 4
+    parts[-2..-1].join('-')
+  else
+    parts.last
+  end
 end
 
 def volume_collection
@@ -240,7 +247,14 @@ def find_article_issue
   year = xml.xpath('//article-meta/pub-date/year').first.text.strip.to_i
   month = xml.xpath('//article-meta/pub-date/month').first.text.strip.to_i
   day = xml.xpath('//article-meta/pub-date/day').first.text.strip.to_i
-  collection_metadata[:date_created] = [Date.new(year, month, day)]
+  begin
+    collection_metadata[:date_created] = [Date.new(year, month, day)]
+  rescue ArgumentError
+    # Account for dates like 2016-11-31 and 2016-02-31
+    day = day - 1
+    binding.pry if day < 27
+    retry
+  end
 
   find_or_create_collection(id, collection_metadata, vol_col)
 end
@@ -255,7 +269,12 @@ def add_content(gf, path)
       path: 'content',
       mime_type: 'application/pdf'
     )
-    gf.characterize
+    begin
+      gf.characterize
+    rescue RuntimeError
+      puts 'FITS problem, retrying'
+      retry
+    end
     gf.create_derivatives
     gf.save!
   end
@@ -264,10 +283,15 @@ end
 def add_article(path)
   collection_parent = find_article_issue
   parse_article_metadata
-  pnb, volume, article_number = article_pnb_id
+  article_number = article_pnb_id
   id = "#{collection_parent.id}-#{article_number}"
   gf = find_or_create_gf(id, article_metadata, collection_parent)
   add_content(gf, path)
+end
+
+def parse_and_add(path)
+  parse_xml(path)
+  add_article(path)
 end
 
 User.find_or_create_by(
@@ -275,11 +299,25 @@ User.find_or_create_by(
   email: 'institutional-tmp@northwestern.edu'
 )
 
-Find.find(pnb_path) do |path|
-  if path.include?('.xml')
-    parse_xml(path)
-    add_article(path)
+if ARGV[0] == 'ALL' || ARGV[0].blank?
+  Find.find(pnb_path) do |path|
+    if path.include?('.xml')
+      next if path.include?('OJS')
+      begin
+        File.open(path.gsub('.xml', '.pdf'))
+      rescue Errno::ENOENT
+        log_file.puts("PDF missing for: #{path}")
+        next
+      end
+      puts path
+      parse_and_add(path)
+    end
   end
+else
+  parse_and_add(ARGV[0])
 end
 
-root_collection.reload.convert_to_institutional(depositor, nil, admin_group)
+if ARGV[1] == 'true' || ARGV[1].blank?
+  root_collection.reload.convert_to_institutional(depositor, nil, admin_group)
+end
+log_file.close
