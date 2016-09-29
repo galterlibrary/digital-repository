@@ -7,9 +7,7 @@
 #ENV['LDAP_SERVER']   = 'localhost'
 ENV['LDAP_SERVER']   = 'registry.northwestern.edu'
 ENV['LDAP_PORT']     = '636'
-#ENV['LDAP_PORT']     = '6666'
-ENV['OPENAM_BASE_URL'] = 'https://websso.it.northwestern.edu/'
-ENV['OPENAM_COOKIE_NAME'] = 'openAMssoToken'
+ENV['SSO_SIGN_OUT_URL'] = '/Shibboleth.sso/Logout?return=https%3A%2F%2Fwebsso.it.northwestern.edu%2Famserver%2FUI%2FLogout%3Fgoto%3Dhttps%253A%252F%252Ffed.it.northwestern.edu%252Fidp%252Fprofile%252FLogout'
 
 # Email
 ENV['SMTP_SERVER'] = 'ns.northwestern.edu'

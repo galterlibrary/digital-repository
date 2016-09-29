@@ -33,19 +33,19 @@ describe 'Shibboleth Authentication', :type => :feature do
 
     describe 'user is logging out' do
       before do
-        Rails.application.routes.send(:eval_block,
-          Proc.new {
-            get '/Shibboleth.sso/Logout', to: redirect('/')
-          }
-        )
+        page.driver.options[:follow_redirects] = false
+      end
+
+      after do
+        page.driver.options[:follow_redirects] = true
       end
 
       it 'redirects to root' do
         login_as(user)
         visit '/users/sign_out'
-        expect(current_path).to eq('/')
-        expect(page).to have_text('Signed out successfully.')
-        expect(page).to have_text('You MUST close your browser')
+        expect(page.driver.browser.last_response['Location']).to include(
+          ENV["SSO_SIGN_OUT_URL"]
+        )
       end
     end
 
