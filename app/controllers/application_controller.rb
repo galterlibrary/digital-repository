@@ -27,8 +27,7 @@ class ApplicationController < ActionController::Base
 
   def after_sign_out_path_for(resource_or_scope)
     if ENV['SHIBBOLETH_AUTH'] == 'true'
-      flash.alert = 'You MUST close your browser to complete Sign-out.'
-      '/Shibboleth.sso/Logout?return=/'
+      ENV['SSO_SIGN_OUT_URL']
     else
       super
     end
