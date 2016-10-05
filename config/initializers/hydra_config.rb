@@ -25,4 +25,16 @@ Rails.configuration.to_prepare do
   Hydra::Derivatives::Document.timeout = 120
   Hydra::Derivatives::Image.timeout = 90
   Hydra::Derivatives::Jpeg2kImage.timeout = 90
+
+  Hydra::Derivatives::Image.class_eval do
+    def create_image(output_file, format, quality=nil)
+      xfrm = load_image_transformer
+      xfrm.format(format) do |convert|
+        convert.merge!(['-alpha', 'remove'])
+      end
+      yield(xfrm) if block_given?
+      xfrm.quality(quality.to_s) if quality
+      write_image(output_file, xfrm)
+    end
+  end
 end
