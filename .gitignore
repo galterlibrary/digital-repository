@@ -25,3 +25,4 @@ spec/mock_upload_directory
 public/assets
 config/browse_everything_providers.yml
 fits.log
+vendor/bundle/
