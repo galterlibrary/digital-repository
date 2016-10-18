@@ -31,8 +31,4 @@ module SufiaHelper
   def track_page_path(*args)
     track_solr_document_path(*args)
   end
-
-  def t(*args)
-    super.html_safe
-  end
 end

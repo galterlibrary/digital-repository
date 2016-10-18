@@ -4,6 +4,13 @@ feature 'Catalog', :type => :feature do
   subject { page }
   let(:user) { FactoryGirl.create(:user) }
 
+  describe 'dangerous things passed in the params' do
+    it 'escapes them' do
+      visit("/catalog?f%5Btag_sim%5D%5B%5D=Methylphenidate&q=%22'%3E%3Cqss%20a%3DX166950132Y2Z%3E")
+      expect(page.html).not_to include('<qss a=X166950132Y2Z>')
+    end
+  end
+
   describe '#index' do
     let!(:gf_public) {
       make_generic_file(user, {
