@@ -35,10 +35,10 @@ set :bundle_flags, "--deployment --path=#{fetch(:deploy_to)}/shared/gems"
 set :migration_role, 'migrator'
 set :assets_roles, [:web, :app]
 
-set :fits_zip, '/tmp/fits-1.0.1.zip'
-set :fits_sh, '/var/www/apps/fits-1.0.1/fits.sh'
+set :fits_zip, '/tmp/fits-1.0.3.zip'
+set :fits_sh, '/var/www/apps/fits-1.0.3/fits.sh'
 set :fits_url,
-  'http://projects.iq.harvard.edu/files/fits/files/fits-1.0.1.zip'
+  'http://projects.iq.harvard.edu/files/fits/files/fits-1.0.3.zip'
 
 namespace :config do
   desc 'Create apache config file and add selinux context'
