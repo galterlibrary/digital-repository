@@ -35,10 +35,13 @@ set :bundle_flags, "--deployment --path=#{fetch(:deploy_to)}/shared/gems"
 set :migration_role, 'migrator'
 set :assets_roles, [:web, :app]
 
-set :fits_zip, '/tmp/fits-1.0.3.zip'
-set :fits_sh, '/var/www/apps/fits-1.0.3/fits.sh'
+set :fits_version, '1.0.3'
+set :fits_zip, "/tmp/fits-#{fetch(:fits_version)}.zip"
+set :fits_libmedia, "/var/www/apps/fits-#{fetch(:fits_version)}/tools/mediainfo/linux"
+set :fits_sh, "/var/www/apps/fits-#{fetch(:fits_version)}/fits.sh"
+set :fits_env, "/var/www/apps/fits-#{fetch(:fits_version)}/fits-env.sh"
 set :fits_url,
-  'http://projects.iq.harvard.edu/files/fits/files/fits-1.0.3.zip'
+  "http://projects.iq.harvard.edu/files/fits/files/fits-#{fetch(:fits_version)}.zip"
 
 namespace :config do
   desc 'Create apache config file and add selinux context'
@@ -195,6 +198,8 @@ PassengerPreStart https://#{fetch(:www_host)}/
         execute(:curl, fetch(:fits_url), '>', fetch(:fits_zip))
         execute(:unzip, fetch(:fits_zip), '-d' '/var/www/apps')
         execute(:rm, fetch(:fits_zip))
+        execute(:echo, "LD_LIBRARY_PATH=#{fetch(:fits_libmedia)}", ">>", fetch(:fits_env))
+        execute(:echo, "export LD_LIBRARY_PATH", ">>", fetch(:fits_env))
       end
       execute(:chmod, '+x', fetch(:fits_sh))
     end
