@@ -44,7 +44,7 @@ class IiifApisController < ApplicationController
   end
 
   def add_canvases_to_sequence(collection, iif_sequence)
-    collection.pageable_members.each do |gf|
+    collection.members.each do |gf|
       iif_sequence.canvases << generate_canvas(gf)
     end
     iif_sequence

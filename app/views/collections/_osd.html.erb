@@ -3,4 +3,9 @@
       data-target="#osdModal" class="btn btn-info">
     <i class="glyphicon glyphicon-book"></i> Launch Viewer
   </a>
+  <%= link_to(
+              image_tag('iiif-logo.png', size: '34x34',
+                        alt: 'Link to IIIF Presentation API manifest',
+                        title: 'IIIF Presentation API manifest'),
+              iiif_apis_manifest_url(@collection.id), target: '_blank') %>
 <% end %>

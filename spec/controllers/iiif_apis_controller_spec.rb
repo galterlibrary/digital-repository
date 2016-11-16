@@ -177,6 +177,8 @@ RSpec.describe IiifApisController, :type => :controller do
           collection.members << generic_file
         end
         allow_any_instance_of(Collection).to receive(
+          :members).and_return(collection.members)
+        allow_any_instance_of(Collection).to receive(
           :pageable_members).and_return(collection.members)
       end
 

@@ -26,7 +26,11 @@ feature "MutiPageCollections", :type => :feature do
 
     subject { page }
 
-    it { is_expected.to have_link('Launch Viewer') }
+    specify {
+      expect(page).to have_link('Launch Viewer')
+      expect(page).to have_css('img[src*="iiif-logo"]')
+      expect(page).to have_css("a[href*='#{iiif_apis_manifest_url(collection.id)}']")
+    }
   end
 
   describe 'viewing collection' do
@@ -42,6 +46,8 @@ feature "MutiPageCollections", :type => :feature do
 
     specify {
       expect(page).to have_link('Launch Viewer')
+      expect(page).to have_css('img[src*="iiif-logo"]')
+      expect(page).to have_css("a[href*='#{iiif_apis_manifest_url(collection.id)}']")
       expect(page).to have_text('Number of pages')
       expect(page).not_to have_text('Total Items')
       expect(page).to have_text('Pages in this Collection')
