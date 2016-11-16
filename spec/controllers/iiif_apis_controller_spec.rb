@@ -7,10 +7,6 @@ RSpec.describe IiifApisController, :type => :controller do
   describe 'authorization' do
     let(:col) { make_collection(user, visibility: 'restricted', id: 'col1') }
     let(:gf) { make_generic_file(user, visibility: 'restricted', id: 'gf1') }
-    before do
-      allow_any_instance_of(Collection).to receive(
-        :pageable_members).and_return([])
-    end
 
     context 'unauthorized user' do
       it 'is unable to to view manifest' do
@@ -63,6 +59,56 @@ RSpec.describe IiifApisController, :type => :controller do
         expect(response).to have_http_status(:success)
       end
     end
+
+    context 'of sequence of collection members' do
+      let(:col) { make_collection(
+        user, visibility: 'open', member_ids: [gf.id, gf_stranger.id, gf_public.id]
+      ) }
+      let(:gf) { make_generic_file(
+        user, visibility: 'restricted', id: 'gf1', page_number: 1
+      ) }
+      let(:gf_stranger) { make_generic_file(
+        FactoryGirl.create(:user), visibility: 'restricted', id: 'gf2',
+        page_number: 2
+      ) }
+      let(:gf_public) { make_generic_file(
+        FactoryGirl.create(:user), visibility: 'open', id: 'gf3',
+        page_number: 3
+      ) }
+
+      subject { get :sequence, { id: col.id, name: 'blah' } }
+
+      before do
+        allow_any_instance_of(GenericFile).to receive(:height) { ['300'] }
+        allow_any_instance_of(GenericFile).to receive(:width) { ['600'] }
+      end
+
+      describe 'requested by anonymous user' do
+        it 'only shows the publicly visible member' do
+          expect(subject.body).to include(gf_public.id)
+          expect(subject.body).not_to include(gf.id)
+          expect(subject.body).not_to include(gf_stranger.id)
+        end
+      end
+
+      describe 'requested by file owner user' do
+        it 'only shows the publicly visible and owned members' do
+          sign_in(user)
+          expect(subject.body).to include(gf_public.id)
+          expect(subject.body).to include(gf.id)
+          expect(subject.body).not_to include(gf_stranger.id)
+        end
+      end
+
+      describe 'requested by admin' do
+        it 'shows all members' do
+          sign_in(FactoryGirl.create(:admin_user))
+          expect(subject.body).to include(gf_public.id)
+          expect(subject.body).to include(gf.id)
+          expect(subject.body).to include(gf_stranger.id)
+        end
+      end
+    end
   end
 
   describe "GET manifest" do
@@ -76,6 +122,8 @@ RSpec.describe IiifApisController, :type => :controller do
 
     describe '#manifest' do
       before do
+        allow_any_instance_of(GenericFile).to receive(:height) { ['0'] }
+        allow_any_instance_of(GenericFile).to receive(:width) { ['0'] }
         collection.apply_depositor_metadata(user.user_key)
         collection.save!
         (1..3).each do |nr|
@@ -85,51 +133,42 @@ RSpec.describe IiifApisController, :type => :controller do
         end
         collection.parent = col_parent
         collection.save!
-        allow_any_instance_of(Collection).to receive(
-          :pageable_members).and_return(collection.members)
+        sign_in(user)
       end
 
       subject { get :manifest, { id: 'col1' } }
 
-      it { is_expected.to have_http_status(:success) }
-
       it "returns IIIF manifest json" do
+        expect(subject).to have_http_status(:success)
         expect(subject.body).to eq('{"@context":"http://iiif.io/api/presentation/2/context.json","@id":"http://test.host/iiif-api/collection/col1/manifest","@type":"sc:Manifest","label":"something","description":"blahbalh","license":"http://creativecommons.org/publicdomain/mark/1.0/","within":"http://test.host/collections/col_parent","metadata":[{"label":"Keyword","value":["tag"]},{"label":"Abstract","value":["abs"]},{"label":"Subject: MESH","value":["bcd","efg"]}],"sequences":[{"@id":"http://test.host/iiif-api/collection/col1/sequence/basic","@type":"sc:Sequence","label":"basic","canvases":[{"@id":"http://test.host/iiif-api/generic_file/testa1/canvas/p1","@type":"sc:Canvas","label":"p1","height":0,"width":0,"images":[{"@id":"http://test.host/iiif-api/generic_file/testa1/annotation/p1","@type":"oa:Annotation","on":"http://test.host/iiif-api/generic_file/testa1/canvas/p1","motivation":"sc:painting","resource":{"@id":"http://test.host/image-service/testa1/full/full/0/default.jpg","@type":"dcterms:Image","format":"image/jpeg","height":0,"width":0,"service":{"@id":"http://test.host/image-service/testa1","@context":"http://iiif.io/api/image/2/context.json","profile":"http://iiif.io/api/image/2/profiles/level2.json"}}}]},{"@id":"http://test.host/iiif-api/generic_file/testa2/canvas/p2","@type":"sc:Canvas","label":"p2","height":0,"width":0,"images":[{"@id":"http://test.host/iiif-api/generic_file/testa2/annotation/p2","@type":"oa:Annotation","on":"http://test.host/iiif-api/generic_file/testa2/canvas/p2","motivation":"sc:painting","resource":{"@id":"http://test.host/image-service/testa2/full/full/0/default.jpg","@type":"dcterms:Image","format":"image/jpeg","height":0,"width":0,"service":{"@id":"http://test.host/image-service/testa2","@context":"http://iiif.io/api/image/2/context.json","profile":"http://iiif.io/api/image/2/profiles/level2.json"}}}]},{"@id":"http://test.host/iiif-api/generic_file/testa3/canvas/p3","@type":"sc:Canvas","label":"p3","height":0,"width":0,"images":[{"@id":"http://test.host/iiif-api/generic_file/testa3/annotation/p3","@type":"oa:Annotation","on":"http://test.host/iiif-api/generic_file/testa3/canvas/p3","motivation":"sc:painting","resource":{"@id":"http://test.host/image-service/testa3/full/full/0/default.jpg","@type":"dcterms:Image","format":"image/jpeg","height":0,"width":0,"service":{"@id":"http://test.host/image-service/testa3","@context":"http://iiif.io/api/image/2/context.json","profile":"http://iiif.io/api/image/2/profiles/level2.json"}}}]}]}]}')
       end
     end
 
     describe '#generate_manifest' do
+      let(:gf3) { make_generic_file(user, id: 'gf3', page_number: 11) }
+      let(:gf1) { make_generic_file(user, id: 'gf1', page_number: 9) }
+      let(:gf2) { make_generic_file(user, id: 'gf2', page_number: 10) }
+
       before do
-        allow(collection).to receive(:members).and_return([
-          GenericFile.new(id: 'gf3', page_number: '11'),
-          GenericFile.new(id: 'gf1', page_number: '9'),
-          GenericFile.new(id: 'gf2', page_number: '10')
-        ])
+        allow_any_instance_of(GenericFile).to receive(:height) { ['0'] }
+        allow_any_instance_of(GenericFile).to receive(:width) { ['0'] }
         allow(collection).to receive(:parent).and_return(
           Collection.new(id: 'col_parent')
         )
-        allow(collection).to receive(:pageable_members).and_return(
-          collection.members)
+        collection.apply_depositor_metadata(user.user_key)
+        collection.member_ids = [gf3.id, gf1.id, gf2.id]
+        collection.save
+        sign_in(user)
       end
 
       subject { controller.send(:generate_manifest, collection) }
 
-      it { is_expected.to be_an_instance_of(IIIF::Presentation::Manifest) }
-
-      it 'generates correct type' do
+      specify do
+        expect(subject).to be_an_instance_of(IIIF::Presentation::Manifest)
         expect(subject['@type']).to eq('sc:Manifest')
-      end
-
-      it 'generates correct id' do
         expect(subject['@id']).to eq(
           'http://test.host/iiif-api/collection/col1/manifest')
-      end
-
-      it 'generates correct label' do
         expect(subject['label']).to eq('something')
-      end
-
-      it 'generates correct within' do
         expect(subject['within']).to eq('http://test.host/collections/col_parent')
       end
 
@@ -169,6 +208,8 @@ RSpec.describe IiifApisController, :type => :controller do
 
     describe '#canvas' do
       before do
+        allow_any_instance_of(GenericFile).to receive(:height) { ['0'] }
+        allow_any_instance_of(GenericFile).to receive(:width) { ['0'] }
         collection.apply_depositor_metadata(user.user_key)
         collection.save!
         (1..3).each do |nr|
@@ -176,47 +217,46 @@ RSpec.describe IiifApisController, :type => :controller do
             user, id: "testa#{nr}", page_number: nr)
           collection.members << generic_file
         end
-        allow_any_instance_of(Collection).to receive(
-          :members).and_return(collection.members)
-        allow_any_instance_of(Collection).to receive(
-          :pageable_members).and_return(collection.members)
+        collection.save
+        collection.update_index
+        sign_in(FactoryGirl.create(:admin_user))
       end
 
       subject { get :sequence, { id: 'col1', name: 'blah' } }
 
-      it { is_expected.to have_http_status(:success) }
-
       it "returns IIIF sequence json" do
+        expect(subject).to have_http_status(:success)
         expect(subject.body).to eq('{"@context":"http://iiif.io/api/presentation/2/context.json","@id":"http://test.host/iiif-api/collection/col1/sequence/blah","@type":"sc:Sequence","label":"blah","canvases":[{"@id":"http://test.host/iiif-api/generic_file/testa1/canvas/p1","@type":"sc:Canvas","label":"p1","height":0,"width":0,"images":[{"@id":"http://test.host/iiif-api/generic_file/testa1/annotation/p1","@type":"oa:Annotation","on":"http://test.host/iiif-api/generic_file/testa1/canvas/p1","motivation":"sc:painting","resource":{"@id":"http://test.host/image-service/testa1/full/full/0/default.jpg","@type":"dcterms:Image","format":"image/jpeg","height":0,"width":0,"service":{"@id":"http://test.host/image-service/testa1","@context":"http://iiif.io/api/image/2/context.json","profile":"http://iiif.io/api/image/2/profiles/level2.json"}}}]},{"@id":"http://test.host/iiif-api/generic_file/testa2/canvas/p2","@type":"sc:Canvas","label":"p2","height":0,"width":0,"images":[{"@id":"http://test.host/iiif-api/generic_file/testa2/annotation/p2","@type":"oa:Annotation","on":"http://test.host/iiif-api/generic_file/testa2/canvas/p2","motivation":"sc:painting","resource":{"@id":"http://test.host/image-service/testa2/full/full/0/default.jpg","@type":"dcterms:Image","format":"image/jpeg","height":0,"width":0,"service":{"@id":"http://test.host/image-service/testa2","@context":"http://iiif.io/api/image/2/context.json","profile":"http://iiif.io/api/image/2/profiles/level2.json"}}}]},{"@id":"http://test.host/iiif-api/generic_file/testa3/canvas/p3","@type":"sc:Canvas","label":"p3","height":0,"width":0,"images":[{"@id":"http://test.host/iiif-api/generic_file/testa3/annotation/p3","@type":"oa:Annotation","on":"http://test.host/iiif-api/generic_file/testa3/canvas/p3","motivation":"sc:painting","resource":{"@id":"http://test.host/image-service/testa3/full/full/0/default.jpg","@type":"dcterms:Image","format":"image/jpeg","height":0,"width":0,"service":{"@id":"http://test.host/image-service/testa3","@context":"http://iiif.io/api/image/2/context.json","profile":"http://iiif.io/api/image/2/profiles/level2.json"}}}]}]}')
       end
     end
 
     describe '#generate_sequence' do
+      let(:gf1) { make_generic_file(user, id: 'gf1', page_number: 9) }
+      let(:gf2) { make_generic_file(user, id: 'gf2', page_number: 10) }
+      let(:gf3) { make_generic_file(user, id: 'gf3', page_number: 11) }
+      let(:collection) { make_collection(
+        user, id: 'col1', member_ids: [gf1.id, gf2.id, gf3.id]
+      ) }
+
       before do
-        allow(collection).to receive(:members).and_return([
-          GenericFile.new(id: 'gf1', page_number: '9'),
-          GenericFile.new(id: 'gf2', page_number: '10'),
-          GenericFile.new(id: 'gf3', page_number: '11')
-        ])
-        allow(collection).to receive(:pageable_members).and_return(
-          collection.members)
+        allow_any_instance_of(GenericFile).to receive(:height) { ['0'] }
+        allow_any_instance_of(GenericFile).to receive(:width) { ['0'] }
+        sign_in(user)
       end
 
-      subject { controller.send(:generate_sequence, collection, 'awesome') }
-
-      it { is_expected.to be_an_instance_of(IIIF::Presentation::Sequence) }
+      subject { controller.send(
+        :generate_sequence, collection, 'awesome'
+      ) }
 
       it 'generates correct type' do
+        expect(subject).to be_an_instance_of(IIIF::Presentation::Sequence)
         expect(subject['@type']).to eq('sc:Sequence')
       end
 
       context 'passed name' do
-        it 'generates correct sequence @id' do
+        it 'generates correct sequence @id and label' do
           expect(subject['@id']).to eq(
             'http://test.host/iiif-api/collection/col1/sequence/awesome')
-        end
-
-        it 'generates correct label' do
           expect(subject['label']).to eq('awesome')
         end
       end
@@ -224,12 +264,9 @@ RSpec.describe IiifApisController, :type => :controller do
       context 'default name' do
         subject { controller.send(:generate_sequence, collection) }
 
-        it 'generates correct sequence @id' do
+        it 'generates correct sequence @id and label' do
           expect(subject['@id']).to eq(
             'http://test.host/iiif-api/collection/col1/sequence/basic')
-        end
-
-        it 'generates correct label' do
           expect(subject['label']).to eq('basic')
         end
       end
@@ -239,17 +276,11 @@ RSpec.describe IiifApisController, :type => :controller do
           controller.send(:generate_sequence, collection, 'awesome').canvases
         }
 
-        it 'makes 3 canvases' do
+        it 'makes 3 canvases and proper order' do
           expect(subject.count).to eq(3)
-        end
-
-        it 'makes the proper canvas objects' do
           subject.each do |canvas|
             expect(canvas).to be_an_instance_of(IIIF::Presentation::Canvas)
           end
-        end
-
-        it 'puts the canvases in proper order' do
           expect(subject.map {|o| o['@id'] }).to eq([
             "http://test.host/iiif-api/generic_file/gf1/canvas/p9",
             "http://test.host/iiif-api/generic_file/gf2/canvas/p10",
@@ -263,30 +294,34 @@ RSpec.describe IiifApisController, :type => :controller do
   describe "GET canvas" do
     describe '#canvas' do
       before do
+        allow_any_instance_of(GenericFile).to receive(:height) { ['0'] }
+        allow_any_instance_of(GenericFile).to receive(:width) { ['0'] }
         @generic_file = make_generic_file(user, id: 'testa')
         sign_in user
       end
 
       subject { get :canvas, { id: 'testa', name: 'blah' } }
 
-      it { is_expected.to have_http_status(:success) }
-
       it "returns IIIF canvas json" do
+        expect(subject).to have_http_status(:success)
         expect(subject.body).to eq('{"@context":"http://iiif.io/api/presentation/2/context.json","@id":"http://test.host/iiif-api/generic_file/testa/canvas/blah","@type":"sc:Canvas","label":"blah","height":0,"width":0,"images":[{"@id":"http://test.host/iiif-api/generic_file/testa/annotation/blah","@type":"oa:Annotation","on":"http://test.host/iiif-api/generic_file/testa/canvas/blah","motivation":"sc:painting","resource":{"@id":"http://test.host/image-service/testa/full/full/0/default.jpg","@type":"dcterms:Image","format":"image/jpeg","height":0,"width":0,"service":{"@id":"http://test.host/image-service/testa","@context":"http://iiif.io/api/image/2/context.json","profile":"http://iiif.io/api/image/2/profiles/level2.json"}}}]}')
       end
     end
 
     describe '#generate_canvas' do
       let(:generic_file) { GenericFile.new(id: 'testa') }
-      subject { controller.send(:generate_canvas, generic_file, 'p33') }
+      subject { controller.send(
+        :generate_canvas, generic_file.to_solr.with_indifferent_access, 'p33'
+      ) }
 
-      it { is_expected.to be_an_instance_of(IIIF::Presentation::Canvas) }
-
-      it 'generates correct type' do
-        expect(subject['@type']).to eq('sc:Canvas')
+      before do
+        allow(generic_file).to receive(:height) { ['300'] }
+        allow(generic_file).to receive(:width) { ['600'] }
       end
 
-      it 'generates correct images' do
+      specify do
+        expect(subject).to be_an_instance_of(IIIF::Presentation::Canvas)
+        expect(subject['@type']).to eq('sc:Canvas')
         expect(subject['images'].first).to be_an_instance_of(
           IIIF::Presentation::Annotation)
         expect(subject['images'].first['@id']).to eq(
@@ -294,41 +329,32 @@ RSpec.describe IiifApisController, :type => :controller do
       end
 
       context 'passed name' do
-        it 'generates correct canvas path' do
+        it 'generates correct canvas path and label' do
           expect(subject['@id']).to eq(
             'http://test.host/iiif-api/generic_file/testa/canvas/p33')
-        end
-
-        it 'generates correct label' do
           expect(subject['label']).to eq('p33')
         end
       end
 
       context 'derived name' do
         before do
-          generic_file.page_number = 33
+          generic_file.page_number_actual = 33
         end
 
-        subject { controller.send(:generate_canvas, generic_file) }
+        subject { controller.send(
+          :generate_canvas, generic_file.to_solr.with_indifferent_access
+        ) }
 
-        it 'generates correct canvas path' do
+        it 'generates correct canvas path and label' do
           expect(subject['@id']).to eq(
             'http://test.host/iiif-api/generic_file/testa/canvas/p33')
-        end
-
-        it 'generates correct label' do
           expect(subject['label']).to eq('p33')
         end
       end
 
-      it 'generates correct height' do
-        allow(generic_file).to receive(:height).and_return(['20'])
-        expect(subject['height']).to eq(20)
-      end
-
-      it 'generates correct width' do
-        allow(generic_file).to receive(:width).and_return(['50'])
-        expect(subject['width']).to eq(50)
+      it 'generates correct height and width' do
+        expect(subject['height']).to eq(300)
+        expect(subject['width']).to eq(600)
       end
     end
   end
@@ -336,37 +362,34 @@ RSpec.describe IiifApisController, :type => :controller do
   describe "GET annotation" do
     describe '#annotation' do
       before do
+        allow_any_instance_of(GenericFile).to receive(:height) { ['300'] }
+        allow_any_instance_of(GenericFile).to receive(:width) { ['600'] }
         @generic_file = make_generic_file(user, id: 'testa')
         sign_in user
       end
 
       subject { get :annotation, { id: 'testa', name: 'blah' } }
 
-      it { is_expected.to have_http_status(:success) }
-
       it "returns IIIF annotation json" do
-        expect(subject.body).to eq('{"@context":"http://iiif.io/api/presentation/2/context.json","@id":"http://test.host/iiif-api/generic_file/testa/annotation/blah","@type":"oa:Annotation","on":"http://test.host/iiif-api/generic_file/testa/canvas/blah","motivation":"sc:painting","resource":{"@id":"http://test.host/image-service/testa/full/full/0/default.jpg","@type":"dcterms:Image","format":"image/jpeg","height":0,"width":0,"service":{"@id":"http://test.host/image-service/testa","@context":"http://iiif.io/api/image/2/context.json","profile":"http://iiif.io/api/image/2/profiles/level2.json"}}}')
+        expect(subject).to have_http_status(:success)
+        expect(subject.body).to eq('{"@context":"http://iiif.io/api/presentation/2/context.json","@id":"http://test.host/iiif-api/generic_file/testa/annotation/blah","@type":"oa:Annotation","on":"http://test.host/iiif-api/generic_file/testa/canvas/blah","motivation":"sc:painting","resource":{"@id":"http://test.host/image-service/testa/full/full/0/default.jpg","@type":"dcterms:Image","format":"image/jpeg","height":300,"width":600,"service":{"@id":"http://test.host/image-service/testa","@context":"http://iiif.io/api/image/2/context.json","profile":"http://iiif.io/api/image/2/profiles/level2.json"}}}')
       end
     end
 
     describe '#generate_annotation' do
       before do
         @generic_file = GenericFile.new(id: 'testa')
+        allow(@generic_file).to receive(:height) { ['300'] }
+        allow(@generic_file).to receive(:width) { ['600'] }
       end
 
-      subject { controller.send(:generate_annotation, @generic_file, 'p33') }
+      subject { controller.send(
+        :generate_annotation, @generic_file.to_solr.with_indifferent_access, 'p33'
+      ) }
 
-      it { is_expected.to be_an_instance_of(IIIF::Presentation::Annotation) }
-
-      it 'generates correct type' do
+      specify do
+        expect(subject).to be_an_instance_of(IIIF::Presentation::Annotation)
         expect(subject['@type']).to eq('oa:Annotation')
-      end
-
-      it 'generates correct motivation' do
-        expect(subject['motivation']).to eq('sc:painting')
-      end
-
-      it 'generates correct resource' do
         expect(subject['resource']).to be_an_instance_of(
           IIIF::Presentation::ImageResource)
       end
@@ -385,7 +408,7 @@ RSpec.describe IiifApisController, :type => :controller do
 
       context 'derived name' do
         before do
-          @generic_file.page_number = 33
+          @generic_file.page_number_actual = 33
         end
 
         subject { controller.send(:generate_annotation, @generic_file) }
@@ -404,46 +427,34 @@ RSpec.describe IiifApisController, :type => :controller do
 
   describe '#image_resource' do
     let(:generic_file) { GenericFile.new(id: 'testa') }
-    subject { controller.send(:image_resource, generic_file) }
+    subject { controller.send(
+      :image_resource, generic_file.to_solr.with_indifferent_access
+    ) }
 
-    it { is_expected.to be_an_instance_of(IIIF::Presentation::ImageResource) }
+    before do
+      allow(generic_file).to receive(:height) { ['300'] }
+      allow(generic_file).to receive(:width) { ['600'] }
+    end
 
-    it 'generates correct image path' do
+    specify do
+      expect(subject).to be_an_instance_of(IIIF::Presentation::ImageResource)
       expect(subject['@id']).to eq(
         'http://test.host/image-service/testa/full/full/0/default.jpg')
-    end
-
-    it 'generates correct type' do
       expect(subject['@type']).to eq('dcterms:Image')
-    end
-
-    it 'generates correct format' do
       expect(subject['format']).to eq('image/jpeg')
-    end
-
-    it 'generates correct height' do
-      expect(generic_file).to receive(:height).and_return(['20'])
-      expect(subject['height']).to eq(20)
-    end
-
-    it 'generates correct width' do
-      expect(generic_file).to receive(:width).and_return(['50'])
-      expect(subject['width']).to eq(50)
+      expect(subject['height']).to eq(300)
+      expect(subject['width']).to eq(600)
     end
 
     context 'iif image service' do
-      subject { controller.send(:image_resource, generic_file)['service'] }
+      subject { controller.send(
+        :image_resource, generic_file.to_solr.with_indifferent_access)['service']
+      }
 
-      it 'generates correct @id' do
+      it 'generates correct @id, @context and profile' do
         expect(subject['@id']).to eq('http://test.host/image-service/testa')
-      end
-
-      it 'generates correct @context' do
         expect(subject['@context']).to eq(
           'http://iiif.io/api/image/2/context.json')
-      end
-
-      it 'generates correct profile' do
         expect(subject['profile']).to eq(
           'http://iiif.io/api/image/2/profiles/level2.json')
       end

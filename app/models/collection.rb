@@ -108,7 +108,11 @@ class Collection < Sufia::Collection
       sort: 'page_number_actual_isi asc'
     }
 
-    ActiveFedora::SolrService.query(query, args)
+    ActiveFedora::SolrService.query(query, args).map do |gf_id|
+      ActiveFedora::SolrService.query(
+        "id:#{gf_id['id']}", { rows: rows }
+      ).first
+    end
   end
 
   def processing?

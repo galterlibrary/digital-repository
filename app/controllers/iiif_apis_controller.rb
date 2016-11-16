@@ -5,7 +5,7 @@ class IiifApisController < ApplicationController
 
   def authorize_action
     @fedoraObject = ActiveFedora::Base.find(params['id'])
-    authorize!(:read, @fedoraObject)
+    authorize!(:read, params['id'])
   end
   private :authorize_action
 
@@ -43,8 +43,15 @@ class IiifApisController < ApplicationController
     render json: generate_manifest(@fedoraObject)
   end
 
+  def authorized_pageable_members(collection)
+    collection.pageable_members.select {|gf|
+      can?(:read, gf['id'])
+    }
+  end
+  private :authorized_pageable_members
+
   def add_canvases_to_sequence(collection, iif_sequence)
-    collection.members.each do |gf|
+    authorized_pageable_members(collection).each do |gf|
       iif_sequence.canvases << generate_canvas(gf)
     end
     iif_sequence
@@ -64,15 +71,28 @@ class IiifApisController < ApplicationController
     render json: generate_sequence(@fedoraObject, params['name'])
   end
 
+  def page_number(gf_solr)
+    "p#{gf_solr['page_number_actual_isi']}"
+  end
+  private :page_number
+
+  def solarized_gf_solr(gf_solr)
+    if gf_solr.is_a?(GenericFile)
+      gf_solr = gf_solr.to_solr
+    end
+    gf_solr.with_indifferent_access
+  end
+
   def generate_canvas(generic_file, name=nil)
-    name ||= "p#{generic_file.page_number}"
+    gf_solr = solarized_gf_solr(generic_file)
+    name ||= page_number(gf_solr)
     canvas = IIIF::Presentation::Canvas.new(
-      '@id' => iiif_apis_canvas_url(id: generic_file.id, name: name),
+      '@id' => iiif_apis_canvas_url(id: gf_solr['id'], name: name),
       'label' => name,
-      'height' => generic_file.height.first.to_i,
-      'width' => generic_file.width.first.to_i
+      'height' => gf_solr['height_isim'].first.to_i,
+      'width' => gf_solr['width_isim'].first.to_i
     )
-    canvas.images << generate_annotation(generic_file, name)
+    canvas.images << generate_annotation(gf_solr, name)
     canvas
   end
   private :generate_canvas
@@ -82,25 +102,26 @@ class IiifApisController < ApplicationController
   end
 
   def generate_annotation(generic_file, name=nil)
-    name ||= "p#{generic_file.page_number}"
+    gf_solr = solarized_gf_solr(generic_file)
+    name ||= page_number(gf_solr)
     annotation = IIIF::Presentation::Annotation.new(
-      '@id' => iiif_apis_annotation_url(id: generic_file.id, name: name),
-      'on' => iiif_apis_canvas_url(id: generic_file.id, name: name)
+      '@id' => iiif_apis_annotation_url(id: gf_solr['id'], name: name),
+      'on' => iiif_apis_canvas_url(id: gf_solr['id'], name: name)
     )
-    annotation.resource = image_resource(generic_file)
+    annotation.resource = image_resource(gf_solr)
     annotation
   end
   private :generate_annotation
 
-  def image_resource(generic_file)
+  def image_resource(gf_solr)
     image_resource = IIIF::Presentation::ImageResource.new(
       '@id' => Riiif::Engine.routes.url_helpers.image_url(
-        generic_file.id, size: 'full', host: root_url.gsub(/\/$/, '')),
+        gf_solr['id'], size: 'full', host: root_url.gsub(/\/$/, '')),
       'format' => 'image/jpeg',
-      'height' => generic_file.height.first.to_i,
-      'width' => generic_file.width.first.to_i,
+      'height' => gf_solr['height_isim'].first.to_i,
+      'width' => gf_solr['width_isim'].first.to_i,
       'service' => {
-        '@id' => "#{root_url}image-service/#{generic_file.id}",
+        '@id' => "#{root_url}image-service/#{gf_solr['id']}",
         '@context' => 'http://iiif.io/api/image/2/context.json',
         'profile' => 'http://iiif.io/api/image/2/profiles/level2.json'
       }
