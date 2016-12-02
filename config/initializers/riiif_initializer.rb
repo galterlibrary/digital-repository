@@ -27,6 +27,7 @@ Riiif::Engine.config.cache_duration_in_days = 30
 Rails.configuration.to_prepare do
   Riiif::ImagesController.class_eval do
     before_filter do
+      response.headers['Access-Control-Allow-Origin'] = '*'
       @current_user ||= User.new
       if @current_user.cannot?(:read, params['id'])
         redirect_to('/users/sign_in')

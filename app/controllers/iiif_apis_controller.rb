@@ -4,6 +4,7 @@ class IiifApisController < ApplicationController
   before_filter :authorize_action, :except => :list
 
   def authorize_action
+    response.headers['Access-Control-Allow-Origin'] = '*'
     @fedoraObject = ActiveFedora::Base.find(params['id'])
     authorize!(:read, params['id'])
   end
