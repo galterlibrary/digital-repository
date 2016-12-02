@@ -4,6 +4,7 @@ class GenericFile < ActiveFedora::Base
   include CleanAttributeValues
   include EzidGenerator
   include Galtersufia::GenericFile::FullTextIndexing
+  include Galtersufia::GenericFile::MimeTypes
 
   belongs_to :parent,
     predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf,

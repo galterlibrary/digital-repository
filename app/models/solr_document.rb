@@ -3,6 +3,7 @@ class SolrDocument
   include Blacklight::Solr::Document
   include Sufia::SolrDocumentBehavior
   include Blacklight::Gallery::OpenseadragonSolrDocument
+  include Galtersufia::GenericFile::MimeTypes
 
   # self.unique_key = 'id'
   # Email uses the semantic field mappings below to generate the body of an email.

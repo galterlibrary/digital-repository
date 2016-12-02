@@ -37,4 +37,18 @@ Rails.configuration.to_prepare do
       write_image(output_file, xfrm)
     end
   end
+
+  module Hydra::Derivatives::ShellBasedProcessor
+    module ClassMethods
+      def execute_without_timeout(command, context)
+        stdin, stdout, stderr, wait_thr = popen3(command)
+        context[:pid] = wait_thr[:pid]
+        stdin.close
+        stdout.close
+        err = stderr.read
+        stderr.close
+        raise "Unable to execute command \"#{command}\"\n#{err}" unless wait_thr.value.success?
+      end
+    end
+  end
 end
