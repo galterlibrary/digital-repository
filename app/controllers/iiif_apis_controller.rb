@@ -15,6 +15,7 @@ class IiifApisController < ApplicationController
       'label' => collection.title,
       'description' => collection.description,
       'license' => collection.rights.first,
+      'logo' => view_context.asset_url('iiif_nm_logo.jpg'),
       'within' => collection_within(collection),
       'metadata' => collection_metadata(collection)
     )
