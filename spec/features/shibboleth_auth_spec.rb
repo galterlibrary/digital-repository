@@ -62,6 +62,22 @@ describe 'Shibboleth Authentication', :type => :feature do
       end
     end
 
+    describe 'user hitting login button from a path' do
+      before do
+        OmniAuth.config.add_mock(
+          :shibboleth, { uid: "#{user.username}@northwestern.edu" })
+        visit '/catalog'
+      end
+
+      it 'does not display LDAP authentication alert' do
+        within('#user_utility_lg') do
+          click_link 'Login'
+        end
+        expect(current_path).to eq('/catalog')
+        expect(page).to have_text(user.display_name)
+      end
+    end
+
     describe 'user is logging in' do
       describe 'logged in user' do
         before do

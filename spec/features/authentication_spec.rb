@@ -125,5 +125,22 @@ feature "Authentication", :type => :feature do
         expect(current_path).to eq('/files/new')
       end
     end
+
+    context 'hitting login button takes you back to where you were' do
+      before do
+        visit '/catalog'
+        within '#user_utility_lg' do
+          click_link 'Login'
+        end
+        fill_in 'NetID', with: 'noonoo'
+        fill_in 'Password', with: 'realdeal'
+        click_button 'Log in'
+      end
+
+      specify do
+        expect(current_path).to eq('/catalog')
+      end
+    end
+
   end
 end

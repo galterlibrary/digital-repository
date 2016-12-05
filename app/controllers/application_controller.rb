@@ -33,10 +33,18 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def after_sign_in_path_for(resource)
-    request.env['user_return_to'] ||
-      stored_location_for(resource) ||
+  def stored_or_location(resource)
+    stored = stored_location_for(resource)
+    if stored.blank?
       sufia.dashboard_index_path
+    else
+      stored == root_path ? sufia.dashboard_index_path : stored
+    end
+  end
+  private :stored_or_location
+
+  def after_sign_in_path_for(resource)
+    request.env['user_return_to'] || stored_or_location(resource)
   end
 
   def configure_permitted_parameters
