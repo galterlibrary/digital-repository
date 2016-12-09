@@ -46,7 +46,7 @@ Sufia.config do |config|
     "Architectural Drawings"=>"Architectural Drawings",
     "Article"=>"Article",
     "Atlases"=>"Atlases",
-    "Audio Visual Document" => "http://purl.org/ontology/bibo/AudioVisualDocument",
+    "Audio Visual Document" => "Audio Visual Document",
     "Autobiography"=>"Autobiography",
     "Bibliography"=>"Bibliography",
     "Biobibliography"=>"Biobibliography",
