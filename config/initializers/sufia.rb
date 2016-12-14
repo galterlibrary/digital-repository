@@ -428,7 +428,7 @@ Sufia.config do |config|
   #   :public - show for everyone (e.g. logged in and non-logged in users)
   config.collection_facet = :public
 # Where to store tempfiles, leave blank for the system temp directory (e.g. /tmp)
-  # config.temp_file_base = '/home/developer1'
+  config.temp_file_base = ENV['TMP_DIR_PATH']
 
   # Specify the form of hostpath to be used in Endnote exports
   config.persistent_hostpath = "https://#{ENV['FULL_HOSTNAME']}/files/"
