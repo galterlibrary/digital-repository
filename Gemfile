@@ -89,3 +89,5 @@ gem 'openseadragon'
 
 gem 'ezid-client'
 gem 'browser'
+
+gem 'savon', '~> 2.11.0'
