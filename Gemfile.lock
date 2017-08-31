@@ -430,6 +430,7 @@ GEM
     parslet (1.7.1)
       blankslate (>= 2.0, <= 4.0)
     pg (0.18.4)
+    phantomjs (2.1.1.0)
     pkg-config (1.1.7)
     poltergeist (1.10.0)
       capybara (~> 2.1)
@@ -779,6 +780,7 @@ DEPENDENCIES
   openseadragon
   osullivan
   pg
+  phantomjs
   poltergeist
   pry
   pry-byebug
@@ -807,4 +809,4 @@ DEPENDENCIES
   web-console
 
 BUNDLED WITH
-   1.10.6
+   1.15.4

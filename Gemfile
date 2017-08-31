@@ -58,6 +58,7 @@ group :development, :test do
   gem 'pry-rails'
   gem 'pry'
   gem 'binding_of_caller'
+  gem 'phantomjs', :require => 'phantomjs/poltergeist'
 end
 
 gem "better_errors",  group: :development
