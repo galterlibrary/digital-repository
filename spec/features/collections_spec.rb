@@ -520,7 +520,28 @@ feature "Collections", :type => :feature do
 
       describe 'descriptions' do
         it 'can access the descriptions tab' do
-          expect(page).to have_text('Resource type')
+          within('form #descriptions_display') {
+            expect(page).to have_text('Multi-page?')
+            expect(page).to have_text('Keyword')
+            expect(page).to have_text('Rights')
+            expect(page).to have_text('Creator')
+            expect(page).to have_text('Contributor')
+            expect(page).to have_text('Description')
+            expect(page).to have_text('Original Bibliographic Citation')
+            expect(page).to have_text('Related URL')
+            expect(page).to have_text('Digital Publisher')
+            expect(page).to have_text('Original Publisher')
+            expect(page).to have_text('Date Created')
+            expect(page).to have_text('Original Identifier')
+            expect(page).to have_text('Language')
+            expect(page).to have_text('Subject: MESH')
+            expect(page).to have_text('Subject: LCSH')
+            expect(page).to have_text('Subject: Geographic Name')
+            expect(page).to have_text('Subject: Name')
+            expect(page).to have_text('Location')
+            expect(page).to have_text('Private Note')
+            expect(page).to_not have_text('Resource type')
+          }
         end
       end
 
