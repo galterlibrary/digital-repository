@@ -5,8 +5,11 @@ feature 'Admin', :type => :feature do
 
   context 'admin user' do
     let(:user) { FactoryGirl.create(:admin_user) }
+    let(:non_admin) { FactoryGirl.create(:user) }
 
     before do
+      Role.create!(name: 'admin')
+      user.add_role('admin')
       login_as(user)
     end
 
@@ -18,6 +21,7 @@ feature 'Admin', :type => :feature do
       expect(page).to have_link('Statistics')
       expect(page).to have_link('Create a new user')
       expect(page).to have_link('Create a new role')
+      expect(page).to have_link('admin')
     end
 
     describe 'creating a user' do
@@ -99,6 +103,26 @@ feature 'Admin', :type => :feature do
           expect(current_path).to eq('/users/new')
           expect(page).to have_text('User someid already exists')
         end
+      end
+    end
+    
+    describe 'user role management' do
+      it 'adds/removes user from admin roles' do
+        visit '/roles'
+        click_link 'admin'
+        
+        expect(page).to_not have_text(non_admin.username)
+        
+        fill_in 'User', with: non_admin.username
+        click_button 'Add'
+        
+        expect(page).to have_text(non_admin.username)
+        
+        within("##{non_admin.username}") {
+          click_button "Remove User"
+        }
+        
+        expect(page).to_not have_text(non_admin.username)
       end
     end
   end
