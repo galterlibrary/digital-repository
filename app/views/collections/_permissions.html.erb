@@ -2,7 +2,7 @@
   <%= form_for @collection, url: collections.collection_path(@collection),
       html: { multipart: true, class: 'form-horizontal', id: 'permission' } do |f| %>
     <%= hidden_field_tag('redirect_tab', 'permissions') %>
-    <%= render "generic_files/permission_form", f: f %>
+    <%= render "collections/permission_form", f: f %>
     <div id="permissions_submit">
       <%= button_tag type: 'submit', class: 'btn btn-primary btn-lg',
           onclick: "confirmation_needed = false;", id: "upload_submit",
@@ -12,4 +12,3 @@
     </div>
   <% end %>
 </div><!-- /#permissions_display -->
-
