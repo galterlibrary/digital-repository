@@ -4,23 +4,42 @@ require 'capybara/rspec'
 
 describe 'collections/index.html.erb' do
   let(:solr_docs) { [
-    double('user_col1', depositor: 'someone', title: 'user_col1',
-           id: 'user_col1'),
-    double('user_col2', depositor: 'stranger', title: 'user_col2',
-           id: 'user_col2'),
-    double('galter_col1', depositor: 'institutional-galter-root', title: 'ABC',
-           id: 'galter_col1', member_ids: ['galter_col2', 'galter_col3']),
-    double('galter_col2', depositor: 'institutional-glater', title: 'blah blah',
-           id: 'galter_col2'),
-    double('galter_col3', depositor: 'institutional-glater', title: 'moo moo',
-           id: 'galter_col3', member_ids: ['galter_col4']),
-    double('galter_col4', depositor: 'institutional-glater', title: 'not there',
-           id: 'galter_col4'),
-    double('ipham_col1', depositor: 'institutional-ipham-root',
-                         title: 'Institute for Public Health and Medicine',
-                         id: 'ipham_col1', member_ids: ['ipham_col2']),
-    double('ipham_col2', depositor: 'institutional-ipham', title: 'ipham_col2',
-           id: 'ipham_col2')
+    {
+      'depositor_ssim' => ['someone'],
+      'title_tesim' => ['user_col1'],
+      'id' => 'user_col1'
+    }, {
+      'depositor_ssim' => ['stranger'],
+      'title_tesim' => ['user_col2'],
+      'id' => 'user_col2'
+    }, {
+      'depositor_ssim' => ['institutional-galter-root'],
+      'title_tesim' => ['ABC'],
+      'id' => 'galter_col1',
+      'hasCollectionMember_ssim' => ['galter_col2', 'galter_col3']
+    }, {
+      'depositor_ssim' => ['institutional-glater'],
+      'title_tesim' => ['blah blah'],
+      'id' => 'galter_col2'
+    }, {
+      'depositor_ssim' => ['institutional-glater'],
+      'title_tesim' => ['moo moo'],
+      'id' => 'galter_col3',
+      'hasCollectionMember_ssim' => ['galter_col4']
+    }, {
+      'depositor_ssim' => ['institutional-glater'],
+      'title_tesim' => ['not there'],
+      'id' => 'galter_col4'
+    }, {
+      'depositor_ssim' => ['institutional-ipham-root'],
+      'title_tesim' => ['Institute for Public Health and Medicine'],
+      'id' => 'ipham_col1',
+      'hasCollectionMember_ssim' => ['ipham_col2']
+    }, {
+      'depositor_ssim' => ['institutional-ipham'],
+      'title_tesim' => ['ipham_col2'],
+      'id' => 'ipham_col2'
+    }
   ] }
 
   context 'when not logged in' do

@@ -122,7 +122,9 @@ module Galtersufia
     def index
       params[:sort] = "label_si asc"
       index_collections_search_builder
-      super
+      query = collections_search_builder.with(params).query
+      @response = repository.search(query)
+      @document_list = @response['response']['docs']
       flash['notice'] = nil
     end
 

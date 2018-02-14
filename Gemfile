@@ -59,6 +59,10 @@ group :development, :test do
   gem 'pry'
   gem 'binding_of_caller'
   gem 'phantomjs', :require => 'phantomjs/poltergeist'
+  gem 'rack-mini-profiler', require: false
+  gem 'stackprof'
+  gem 'flamegraph'
+  gem 'memory_profiler'
 end
 
 gem "better_errors",  group: :development
