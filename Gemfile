@@ -96,3 +96,5 @@ gem 'ezid-client'
 gem 'browser'
 
 gem 'savon', '~> 2.11.0'
+
+gem 'nokogiri', '~> 1.8.1'
