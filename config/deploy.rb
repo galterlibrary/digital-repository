@@ -34,6 +34,7 @@ set :bundle_without, %w{development test ci}.join(' ')
 set :bundle_flags, "--deployment --path=#{fetch(:deploy_to)}/shared/gems"
 set :migration_role, 'migrator'
 set :assets_roles, [:web, :app]
+set :whenever_roles, :all
 
 set :fits_version, '1.0.3'
 set :fits_zip, "/tmp/fits-#{fetch(:fits_version)}.zip"
