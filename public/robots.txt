@@ -1,3 +1,12 @@
+User-agent: Twitterbot
+Allow: /downloads
+Allow: /catalog
+Allow: /catalog?page*
+Disallow: /catalog?*
+Disallow: /catalog/*
+Disallow: /contact
+Disallow: /users
+
 User-agent: *
 Allow: /catalog
 Allow: /catalog?page*
