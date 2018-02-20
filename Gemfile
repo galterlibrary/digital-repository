@@ -63,6 +63,7 @@ group :development, :test do
   gem 'stackprof'
   gem 'flamegraph'
   gem 'memory_profiler'
+  gem 'timecop'
 end
 
 gem "better_errors",  group: :development
