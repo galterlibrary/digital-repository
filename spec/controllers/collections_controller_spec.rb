@@ -21,7 +21,7 @@ describe CollectionsController do
     it "should assign proper collection" do
       get :index
       expect(response).to be_successful
-      expect(assigns(:document_list).map(&:title)).to eq([
+      expect(assigns(:document_list).map {|o| o['title_tesim'].first }).to eq([
         'a_galter',
         'A_ipham',
         'a_User',
@@ -37,7 +37,7 @@ describe CollectionsController do
       it "should assign proper collection" do
         get :index
         expect(response).to be_successful
-        expect(assigns(:document_list).map(&:title)).to eq([
+        expect(assigns(:document_list).map {|o| o['title_tesim'].first }).to eq([
           'a_galter',
           'A_ipham',
           'a_User',

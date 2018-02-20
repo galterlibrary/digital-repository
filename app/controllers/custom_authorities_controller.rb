@@ -3,8 +3,6 @@ class CustomAuthoritiesController < ApplicationController
     terms = []
     if params[:q].present?
       authority = Qa::Authorities::Mesh.new
-      #REMOVEME Temp fix for a qa gem bug.
-      #authority.instance_variable_set(:@q, params[:q].to_s.downcase)
       terms = authority.search(params[:q].to_s.downcase)
     end
     render :layout => false, :text => terms.to_json

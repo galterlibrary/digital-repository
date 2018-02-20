@@ -59,6 +59,10 @@ group :development, :test do
   gem 'pry'
   gem 'binding_of_caller'
   gem 'phantomjs', :require => 'phantomjs/poltergeist'
+  gem 'rack-mini-profiler', require: false
+  gem 'stackprof'
+  gem 'flamegraph'
+  gem 'memory_profiler'
 end
 
 gem "better_errors",  group: :development
@@ -83,6 +87,7 @@ gem 'capistrano'
 gem 'capistrano-bundler'
 gem 'capistrano-rails'
 gem 'capistrano-rvm'
+gem 'whenever', require: false
 
 gem 'newrelic_rpm'
 
@@ -92,3 +97,5 @@ gem 'ezid-client'
 gem 'browser'
 
 gem 'savon', '~> 2.11.0'
+
+gem 'nokogiri', '~> 1.8.1'
