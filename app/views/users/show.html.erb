@@ -11,3 +11,13 @@
   </div>
   <%= render 'profile_tabs' %>
 </span>
+
+<script>
+	$(document).ready(function() {
+		if(window.location.href.indexOf('#following') != -1) {
+			$('#following').modal('show');
+    } else if (window.location.href.indexOf('#followers') != -1) {
+			$('#followers').modal('show');
+		}
+	});
+</script>

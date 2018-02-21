@@ -451,6 +451,7 @@ GEM
       pry (~> 0.10)
     pry-rails (0.3.4)
       pry (>= 0.9.10)
+    puma (3.11.2)
     qa (1.2.0)
       activerecord-import
       deprecation
@@ -799,6 +800,7 @@ DEPENDENCIES
   pry
   pry-byebug
   pry-rails
+  puma
   qa
   rack-mini-profiler
   rails (= 4.2.7)

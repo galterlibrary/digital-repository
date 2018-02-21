@@ -1,10 +1,30 @@
 require 'rails_helper'
 
-feature "Dashboard/Collections", :type => :feature do
+feature "Users", :type => :feature do
   let(:user) { create(:user, username: 'bigboss') }
   describe 'user profile' do
     before do
       login_as(user, :scope => :user)
+    end
+
+    context 'modal pop out on anchor passed', js: true do
+      it 'does not pop out modal with no anchor' do
+        visit '/users/bigboss'
+        expect(page).to have_selector('#following', visible: false)
+        expect(page).to have_selector('#followers', visible: false)
+      end
+
+      it 'pops out the following modal' do
+        visit '/users/bigboss#following'
+        expect(page).to have_selector('#following', visible: true)
+        expect(page).to have_selector('#followers', visible: false)
+      end
+
+      it 'pops out the followers modal' do
+        visit '/users/bigboss#followers'
+        expect(page).to have_selector('#following', visible: false)
+        expect(page).to have_selector('#followers', visible: true)
+      end
     end
 
     context 'vivo profile exists' do
