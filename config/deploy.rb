@@ -175,7 +175,7 @@ PassengerPreStart https://#{fetch(:www_host)}/
   task :mail_forwarding do
     on roles(:app) do
       load(File.join('config', 'local_env_public.rb'))
-      execute "echo #{ENV['SERVER_ADMIN_EMAIL']} > ~/.forward"
+      execute "echo #{ENV['TECH_ADMIN_EMAIL']} > ~/.forward"
     end
   end
 
