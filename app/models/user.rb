@@ -111,7 +111,7 @@ class User < ActiveRecord::Base
     # Override the upstream implementation with secure url
     # and more normalization handling
     return if errors[:orcid].first.present? || orcid.blank?
-    bare_orcid = Sufia::OrcidValidator.match(orcid)[0]
+    bare_orcid = Sufia::OrcidValidator.match(orcid).try(:[], 0)
     self.orcid = "https://orcid.org/#{bare_orcid}"
   end
   private :normalize_orcid
