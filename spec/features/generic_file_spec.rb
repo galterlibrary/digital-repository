@@ -43,7 +43,7 @@ describe 'generic file', :type => :feature do
       expect(page).to have_text('ack1')
       expect(page).to have_text('Grants and funding')
       expect(page).to have_text('gaf1')
-      expect(page).to have_link('abcdoi', href: 'http://dx.doi.org/abcdoi')
+      expect(page).to have_link('abcdoi', href: 'https://doi.org/abcdoi')
       expect(page).to have_link('ark:/ark1', href: 'http://n2t.net/ark:/ark1')
       expect(page).to have_text('Original Publisher')
       expect(page).not_to have_text('Private Note')

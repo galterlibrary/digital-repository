@@ -13,7 +13,7 @@ RSpec.describe GenericFile do
     it 'adds a doi to apa-formated citations' do
       expect(gf_doi.export_as_apa_citation).to include('doi:11111/bbbb')
       expect(gf_doi.export_as_apa_citation).to include(
-        "href='http://dx.doi.org/11111/bbbb'")
+        "href='https://doi.org/11111/bbbb'")
       expect(gf_doi.export_as_apa_citation).to include('Duck')
       expect(gf_doi.export_as_apa_citation).to include('abc')
     end
@@ -21,7 +21,7 @@ RSpec.describe GenericFile do
     it 'adds a doi to mla-formated citations' do
       expect(gf_doi.export_as_mla_citation).to include('doi:11111/bbbb')
       expect(gf_doi.export_as_apa_citation).to include(
-        "href='http://dx.doi.org/11111/bbbb'")
+        "href='https://doi.org/11111/bbbb'")
       expect(gf_doi.export_as_mla_citation).to include('Duck')
       expect(gf_doi.export_as_mla_citation).to include('Abc')
     end
@@ -29,7 +29,7 @@ RSpec.describe GenericFile do
     it 'adds a doi to chicago-formated citations' do
       expect(gf_doi.export_as_chicago_citation).to include('doi:11111/bbbb')
       expect(gf_doi.export_as_apa_citation).to include(
-        "href='http://dx.doi.org/11111/bbbb'")
+        "href='https://doi.org/11111/bbbb'")
       expect(gf_doi.export_as_chicago_citation).to include('Duck')
       expect(gf_doi.export_as_chicago_citation).to include('Abc')
     end
