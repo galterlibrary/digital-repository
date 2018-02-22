@@ -202,7 +202,7 @@ $open_articles.each do |o|
   end
   csv << row
 
-  doi_url = "http://dx.doi.org/#{o[:wos]['other']['Identifier.Doi']}"
+  doi_url = "https://doi.org/#{o[:wos]['other']['Identifier.Doi']}"
   csv_staff << [
     o[:wos]['title']['Title'], o[:nu_author], o[:netid],
     o[:license], o[:wos]['source']['SourceTitle'], doi_url
