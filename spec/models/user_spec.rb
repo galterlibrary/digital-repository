@@ -304,4 +304,66 @@ RSpec.describe User do
       end
     end
   end
+
+  describe 'populate_attributes' do
+    let(:new_user) { User.new(username: 'hello') }
+    subject { new_user.populate_attributes }
+
+    context 'orcid id' do
+      it 'populates the orcid id' do
+        expect(subject).to eq(true)
+        expect(new_user.orcid).to eq('https://orcid.org/0000-9999-9999-9999')
+      end
+    end
+  end
+
+  describe 'normalize_orcid' do
+    let(:user) { create(:user, username: 'hello') }
+    subject { user.update_attributes({ orcid: orcid }) }
+
+    context 'orcid id already normalized' do
+      let(:orcid) { 'https://orcid.org/0000-9999-9999-9999' }
+
+      specify do
+        expect(subject).to eq(true)
+        expect(user.orcid).to eq('https://orcid.org/0000-9999-9999-9999')
+      end
+    end
+
+    context 'orcid id already normalized with non ssl uri' do
+      let(:orcid) { 'http://orcid.org/0000-9999-9999-9999' }
+
+      specify do
+        expect(subject).to eq(true)
+        expect(user.orcid).to eq('https://orcid.org/0000-9999-9999-9999')
+      end
+    end
+
+    context 'orcid id is bare' do
+      let(:orcid) { '0000-9999-9999-9999' }
+
+      specify do
+        expect(subject).to eq(true)
+        expect(user.orcid).to eq('https://orcid.org/0000-9999-9999-9999')
+      end
+    end
+
+    context 'orcid id is bad' do
+      let(:orcid) { '9999-9999-9999' }
+
+      specify do
+        expect(subject).to eq(false)
+        expect(user.reload.orcid).to be_nil
+      end
+    end
+
+    context 'full orcid id is bad' do
+      let(:orcid) { 'https://orcid.org/9999-9999-9999' }
+
+      specify do
+        expect(subject).to eq(false)
+        expect(user.reload.orcid).to be_nil
+      end
+    end
+  end
 end

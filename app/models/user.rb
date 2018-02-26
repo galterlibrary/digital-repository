@@ -73,6 +73,7 @@ class User < ActiveRecord::Base
     attrs[:address] = results['postalAddress'].first.gsub('$', "\n") rescue nil
     attrs[:title] = results['title'].first rescue nil
     attrs[:chat_id] = results['pschatname'].first rescue nil
+    attrs[:orcid] = results['eduPersonOrcid'].first rescue nil
     update_attributes!(attrs)
   end
 
@@ -105,6 +106,15 @@ class User < ActiveRecord::Base
              .gsub(/-+$/, '')
   end
   private :normalize_name
+
+  def normalize_orcid
+    # Override the upstream implementation with secure url
+    # and more normalization handling
+    return if errors[:orcid].first.present? || orcid.blank?
+    bare_orcid = Sufia::OrcidValidator.match(orcid).try(:[], 0)
+    self.orcid = "https://orcid.org/#{bare_orcid}"
+  end
+  private :normalize_orcid
 
   def add_to_nuldap_groups
     nuldap_groups.each do |ldap_role_name|

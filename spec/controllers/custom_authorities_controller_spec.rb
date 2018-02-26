@@ -130,6 +130,30 @@ RSpec.describe CustomAuthoritiesController, :type => :controller do
       end
     end
 
+    context 'generates valid LDAP query' do
+      describe 'with partial ORCID' do
+        subject { get :query_users, q: '0000-0003-4105' }
+
+        specify do
+          expect_any_instance_of(Nuldap).to receive(:multi_search).with(
+            "(|(&(cn=0000-0003-4105*))(uid=0000-0003-4105*))"
+          ).and_return([])
+          expect(subject).to have_http_status(:success)
+        end
+      end
+
+      describe 'with full ORCID' do
+        subject { get :query_users, q: '0000-0003-4105-1234' }
+
+        specify do
+          expect_any_instance_of(Nuldap).to receive(:multi_search).with(
+            "(|(&(cn=0000-0003-4105-1234*))(uid=0000-0003-4105-1234*)(eduPersonOrcid=https://orcid.org/0000-0003-4105-1234))"
+          ).and_return([])
+          expect(subject).to have_http_status(:success)
+        end
+      end
+    end
+
     context 'valid query' do
       describe 'multiple users found in LDAP' do
         before do

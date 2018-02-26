@@ -23,6 +23,12 @@ class CustomAuthoritiesController < ApplicationController
   end
   private :ldap_cn_query
 
+  def ldap_orcid_query
+    return unless bare_orcid = Sufia::OrcidValidator.match(params[:q]).try(:[], 0)
+    "(eduPersonOrcid=https://orcid.org/#{bare_orcid})"
+  end
+  private :ldap_orcid_query
+
   def verify_user_in_ldap(results)
     ldap_results = Nuldap.new.multi_search(
       "cn=#{params['q'].strip.gsub(/, +/, ',')}")
@@ -69,7 +75,8 @@ class CustomAuthoritiesController < ApplicationController
     end
 
     ldap_results = Nuldap.new.multi_search(
-      "(|(&#{ldap_cn_query})(uid=#{params[:q].strip}*))")
+      "(|(&#{ldap_cn_query})(uid=#{params[:q].strip}*)#{ldap_orcid_query})"
+    )
     formatted_results = ldap_results.map do |entry|
       { id: entry['uid'].try(:first),
         label: Nuldap.standardized_name(entry) }
