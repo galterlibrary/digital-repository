@@ -30,6 +30,10 @@ set :linked_files, [
 
 # Rails stuff
 set :rvm_ruby_version, 'ruby-2.2.2'
+set :rvm_ruby_path, "/home/deploy/.rvm/gems/#{fetch(:rvm_ruby_version)}/wrappers/ruby"
+set :passenger_version, '5.2.0'
+set :rvm_ruby_gems_version, '2.2.0'
+set :passenger_dir, "#{fetch(:deploy_to)}/shared/gems/ruby/#{fetch(:rvm_ruby_gems_version)}/gems/passenger-#{fetch(:passenger_version)}"
 set :bundle_without, %w{development test ci}.join(' ')
 set :bundle_flags, "--deployment --path=#{fetch(:deploy_to)}/shared/gems"
 set :migration_role, 'migrator'
@@ -70,7 +74,8 @@ namespace :config do
 
   #{"RailsEnv staging" if fetch(:rails_env) == 'staging'}
   RailsBaseURI /
-  PassengerRuby /usr/local/rvm/wrappers/#{fetch(:rvm_ruby_version)}/ruby
+  PassengerRoot #{fetch(:passenger_dir)}
+  PassengerRuby #{fetch(:rvm_ruby_path)}
   PassengerFriendlyErrorPages off
   PassengerDebugLogFile /var/log/httpd/#{fetch(:application)}-passenger.log
   PassengerMinInstances 3
