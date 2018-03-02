@@ -1,0 +1,31 @@
+<div class="modal-div">
+
+  <!-- Text to trigger modal -->
+  <h4>
+    <i class="glyphicon glyphicon-globe"> </i>
+    <a data-toggle="modal" href="#followedCollections">
+      Followed collections:
+    </a>  <%= @user.all_followed_collections.count %>
+  </h4>
+
+  <!-- Modal -->
+  <div class="modal fade" id="followedCollections" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <% if @user.all_followed_collections.count > 0 %>
+            <h3>Collections you follow</h3>
+            <ul>
+              <% @user.all_followed_collections.map {|id| Collection.find(id) }.each do |c| %>
+                <li><%= link_to c.title, collections.collection_path(c), title: "View the collection" %></li>
+              <% end %>
+            </ul>
+          <% end %>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

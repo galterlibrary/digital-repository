@@ -11,30 +11,30 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160120170517) do
+ActiveRecord::Schema.define(version: 20180301175352) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "bookmarks", force: :cascade do |t|
-    t.integer  "user_id",                   null: false
-    t.string   "user_type",     limit: 255
-    t.string   "document_id",   limit: 255
-    t.string   "title",         limit: 255
+    t.integer  "user_id",       null: false
+    t.string   "user_type"
+    t.string   "document_id"
+    t.string   "title"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "document_type", limit: 255
+    t.string   "document_type"
   end
 
   add_index "bookmarks", ["user_id"], name: "index_bookmarks_on_user_id", using: :btree
 
   create_table "checksum_audit_logs", force: :cascade do |t|
-    t.string   "generic_file_id", limit: 255
-    t.string   "dsid",            limit: 255
-    t.string   "version",         limit: 255
+    t.string   "generic_file_id"
+    t.string   "dsid"
+    t.string   "version"
     t.integer  "pass"
-    t.string   "expected_result", limit: 255
-    t.string   "actual_result",   limit: 255
+    t.string   "expected_result"
+    t.string   "actual_result"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -42,16 +42,16 @@ ActiveRecord::Schema.define(version: 20160120170517) do
   add_index "checksum_audit_logs", ["generic_file_id", "dsid"], name: "by_pid_and_dsid", using: :btree
 
   create_table "content_blocks", force: :cascade do |t|
-    t.string   "name",         limit: 255
+    t.string   "name"
     t.text     "value"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "external_key", limit: 255
+    t.string   "external_key"
   end
 
   create_table "domain_terms", force: :cascade do |t|
-    t.string "model", limit: 255
-    t.string "term",  limit: 255
+    t.string "model"
+    t.string "term"
   end
 
   add_index "domain_terms", ["model", "term"], name: "terms_by_model_and_term", using: :btree
@@ -65,8 +65,8 @@ ActiveRecord::Schema.define(version: 20160120170517) do
   add_index "domain_terms_local_authorities", ["local_authority_id", "domain_term_id"], name: "dtla_by_ids1", using: :btree
 
   create_table "featured_works", force: :cascade do |t|
-    t.integer  "order",                       default: 5
-    t.string   "generic_file_id", limit: 255
+    t.integer  "order",           default: 5
+    t.string   "generic_file_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -77,7 +77,7 @@ ActiveRecord::Schema.define(version: 20160120170517) do
   create_table "file_download_stats", force: :cascade do |t|
     t.datetime "date"
     t.integer  "downloads"
-    t.string   "file_id",    limit: 255
+    t.string   "file_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
@@ -89,7 +89,7 @@ ActiveRecord::Schema.define(version: 20160120170517) do
   create_table "file_view_stats", force: :cascade do |t|
     t.datetime "date"
     t.integer  "views"
-    t.string   "file_id",    limit: 255
+    t.string   "file_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
@@ -99,26 +99,28 @@ ActiveRecord::Schema.define(version: 20160120170517) do
   add_index "file_view_stats", ["user_id"], name: "index_file_view_stats_on_user_id", using: :btree
 
   create_table "follows", force: :cascade do |t|
-    t.integer  "followable_id",                               null: false
-    t.string   "followable_type", limit: 255,                 null: false
-    t.integer  "follower_id",                                 null: false
-    t.string   "follower_type",   limit: 255,                 null: false
-    t.boolean  "blocked",                     default: false, null: false
+    t.integer  "followable_id"
+    t.string   "followable_type",                      null: false
+    t.integer  "follower_id",                          null: false
+    t.string   "follower_type",                        null: false
+    t.boolean  "blocked",              default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "followable_fedora_id"
   end
 
+  add_index "follows", ["followable_id", "followable_fedora_id"], name: "index_follows_on_followable_id_and_followable_fedora_id", unique: true, using: :btree
   add_index "follows", ["followable_id", "followable_type"], name: "fk_followables", using: :btree
   add_index "follows", ["follower_id", "follower_type"], name: "fk_follows", using: :btree
 
   create_table "local_authorities", force: :cascade do |t|
-    t.string "name", limit: 255
+    t.string "name"
   end
 
   create_table "local_authority_entries", force: :cascade do |t|
     t.integer "local_authority_id"
-    t.string  "label",              limit: 255
-    t.string  "uri",                limit: 255
+    t.string  "label"
+    t.string  "uri"
   end
 
   add_index "local_authority_entries", ["local_authority_id", "label"], name: "entries_by_term_and_label", using: :btree
@@ -126,7 +128,7 @@ ActiveRecord::Schema.define(version: 20160120170517) do
 
   create_table "mailboxer_conversation_opt_outs", force: :cascade do |t|
     t.integer "unsubscriber_id"
-    t.string  "unsubscriber_type", limit: 255
+    t.string  "unsubscriber_type"
     t.integer "conversation_id"
   end
 
@@ -134,26 +136,26 @@ ActiveRecord::Schema.define(version: 20160120170517) do
   add_index "mailboxer_conversation_opt_outs", ["unsubscriber_id", "unsubscriber_type"], name: "index_mailboxer_conversation_opt_outs_on_unsubscriber_id_type", using: :btree
 
   create_table "mailboxer_conversations", force: :cascade do |t|
-    t.string   "subject",    limit: 255, default: ""
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.string   "subject",    default: ""
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
   end
 
   create_table "mailboxer_notifications", force: :cascade do |t|
-    t.string   "type",                 limit: 255
+    t.string   "type"
     t.text     "body"
-    t.string   "subject",              limit: 255, default: ""
+    t.string   "subject",              default: ""
     t.integer  "sender_id"
-    t.string   "sender_type",          limit: 255
+    t.string   "sender_type"
     t.integer  "conversation_id"
-    t.boolean  "draft",                            default: false
-    t.string   "notification_code",    limit: 255
+    t.boolean  "draft",                default: false
+    t.string   "notification_code"
     t.integer  "notified_object_id"
-    t.string   "notified_object_type", limit: 255
-    t.string   "attachment",           limit: 255
-    t.datetime "updated_at",                                       null: false
-    t.datetime "created_at",                                       null: false
-    t.boolean  "global",                           default: false
+    t.string   "notified_object_type"
+    t.string   "attachment"
+    t.datetime "updated_at",                           null: false
+    t.datetime "created_at",                           null: false
+    t.boolean  "global",               default: false
     t.datetime "expires"
   end
 
@@ -164,33 +166,35 @@ ActiveRecord::Schema.define(version: 20160120170517) do
 
   create_table "mailboxer_receipts", force: :cascade do |t|
     t.integer  "receiver_id"
-    t.string   "receiver_type",   limit: 255
-    t.integer  "notification_id",                             null: false
-    t.boolean  "is_read",                     default: false
-    t.boolean  "trashed",                     default: false
-    t.boolean  "deleted",                     default: false
+    t.string   "receiver_type"
+    t.integer  "notification_id",                            null: false
+    t.boolean  "is_read",                    default: false
+    t.boolean  "trashed",                    default: false
+    t.boolean  "deleted",                    default: false
     t.string   "mailbox_type",    limit: 25
-    t.datetime "created_at",                                  null: false
-    t.datetime "updated_at",                                  null: false
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
   end
 
   add_index "mailboxer_receipts", ["notification_id"], name: "index_mailboxer_receipts_on_notification_id", using: :btree
   add_index "mailboxer_receipts", ["receiver_id", "receiver_type"], name: "index_mailboxer_receipts_on_receiver_id_and_receiver_type", using: :btree
 
   create_table "net_id_to_vivo_ids", force: :cascade do |t|
-    t.string   "netid",      limit: 255
-    t.string   "vivoid",     limit: 255
-    t.string   "full_name",  limit: 255
+    t.string   "netid"
+    t.string   "vivoid"
+    t.string   "full_name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
+  add_index "net_id_to_vivo_ids", ["netid"], name: "index_net_id_to_vivo_ids_on_netid", using: :btree
+
   create_table "proxy_deposit_requests", force: :cascade do |t|
-    t.string   "generic_file_id",   limit: 255,                     null: false
-    t.integer  "sending_user_id",                                   null: false
-    t.integer  "receiving_user_id",                                 null: false
+    t.string   "generic_file_id",                       null: false
+    t.integer  "sending_user_id",                       null: false
+    t.integer  "receiving_user_id",                     null: false
     t.datetime "fulfillment_date"
-    t.string   "status",            limit: 255, default: "pending", null: false
+    t.string   "status",            default: "pending", null: false
     t.text     "sender_comment"
     t.text     "receiver_comment"
     t.datetime "created_at"
@@ -211,25 +215,25 @@ ActiveRecord::Schema.define(version: 20160120170517) do
   add_index "proxy_deposit_rights", ["grantor_id"], name: "index_proxy_deposit_rights_on_grantor_id", using: :btree
 
   create_table "qa_mesh_trees", force: :cascade do |t|
-    t.string "term_id",     limit: 255
-    t.string "tree_number", limit: 255
+    t.string "term_id"
+    t.string "tree_number"
   end
 
   add_index "qa_mesh_trees", ["term_id"], name: "index_qa_mesh_trees_on_term_id", using: :btree
   add_index "qa_mesh_trees", ["tree_number"], name: "index_qa_mesh_trees_on_tree_number", using: :btree
 
   create_table "qa_subject_mesh_terms", force: :cascade do |t|
-    t.string "term_id",    limit: 255
-    t.string "term",       limit: 255
+    t.string "term_id"
+    t.string "term"
     t.text   "synonyms"
-    t.string "term_lower", limit: 255
+    t.string "term_lower"
   end
 
   add_index "qa_subject_mesh_terms", ["term_id"], name: "index_qa_subject_mesh_terms_on_term_id", using: :btree
   add_index "qa_subject_mesh_terms", ["term_lower"], name: "index_qa_subject_mesh_terms_on_term_lower", using: :btree
 
   create_table "roles", force: :cascade do |t|
-    t.string "name",        limit: 255
+    t.string "name"
     t.text   "description"
   end
 
@@ -244,7 +248,7 @@ ActiveRecord::Schema.define(version: 20160120170517) do
   create_table "searches", force: :cascade do |t|
     t.text     "query_params"
     t.integer  "user_id"
-    t.string   "user_type",    limit: 255
+    t.string   "user_type"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -252,9 +256,9 @@ ActiveRecord::Schema.define(version: 20160120170517) do
   add_index "searches", ["user_id"], name: "index_searches_on_user_id", using: :btree
 
   create_table "single_use_links", force: :cascade do |t|
-    t.string   "downloadKey", limit: 255
-    t.string   "path",        limit: 255
-    t.string   "itemId",      limit: 255
+    t.string   "downloadKey"
+    t.string   "path"
+    t.string   "itemId"
     t.datetime "expires"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -262,21 +266,21 @@ ActiveRecord::Schema.define(version: 20160120170517) do
 
   create_table "subject_local_authority_entries", force: :cascade do |t|
     t.text   "label"
-    t.string "lowerLabel", limit: 255
+    t.string "lowerLabel"
     t.text   "url"
   end
 
   add_index "subject_local_authority_entries", ["lowerLabel"], name: "entries_by_lower_label", using: :btree
 
   create_table "tinymce_assets", force: :cascade do |t|
-    t.string   "file",       limit: 255
+    t.string   "file"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "trophies", force: :cascade do |t|
     t.integer  "user_id"
-    t.string   "generic_file_id", limit: 255
+    t.string   "generic_file_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -293,43 +297,43 @@ ActiveRecord::Schema.define(version: 20160120170517) do
   add_index "user_stats", ["user_id"], name: "index_user_stats_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
-    t.string   "email",                  limit: 255, default: "",    null: false
-    t.string   "encrypted_password",     limit: 255, default: "",    null: false
-    t.string   "reset_password_token",   limit: 255
+    t.string   "email",                  default: "",    null: false
+    t.string   "encrypted_password",     default: "",    null: false
+    t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                      default: 0,     null: false
+    t.integer  "sign_in_count",          default: 0,     null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
-    t.string   "current_sign_in_ip",     limit: 255
-    t.string   "last_sign_in_ip",        limit: 255
+    t.string   "current_sign_in_ip"
+    t.string   "last_sign_in_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "guest",                              default: false
-    t.string   "facebook_handle",        limit: 255
-    t.string   "twitter_handle",         limit: 255
-    t.string   "googleplus_handle",      limit: 255
-    t.string   "display_name",           limit: 255
-    t.string   "address",                limit: 255
-    t.string   "admin_area",             limit: 255
-    t.string   "department",             limit: 255
-    t.string   "title",                  limit: 255
-    t.string   "office",                 limit: 255
-    t.string   "chat_id",                limit: 255
-    t.string   "website",                limit: 255
-    t.string   "affiliation",            limit: 255
-    t.string   "telephone",              limit: 255
-    t.string   "avatar_file_name",       limit: 255
-    t.string   "avatar_content_type",    limit: 255
+    t.boolean  "guest",                  default: false
+    t.string   "facebook_handle"
+    t.string   "twitter_handle"
+    t.string   "googleplus_handle"
+    t.string   "display_name"
+    t.string   "address"
+    t.string   "admin_area"
+    t.string   "department"
+    t.string   "title"
+    t.string   "office"
+    t.string   "chat_id"
+    t.string   "website"
+    t.string   "affiliation"
+    t.string   "telephone"
+    t.string   "avatar_file_name"
+    t.string   "avatar_content_type"
     t.integer  "avatar_file_size"
     t.datetime "avatar_updated_at"
     t.text     "group_list"
     t.datetime "groups_last_update"
-    t.string   "linkedin_handle",        limit: 255
-    t.string   "orcid",                  limit: 255
-    t.string   "username",               limit: 255
-    t.string   "remember_token",         limit: 255
-    t.string   "vivo_id",                limit: 255
+    t.string   "linkedin_handle"
+    t.string   "orcid"
+    t.string   "username"
+    t.string   "remember_token"
+    t.string   "vivo_id"
     t.string   "arkivo_token"
     t.string   "arkivo_subscription"
     t.binary   "zotero_token"
@@ -343,12 +347,15 @@ ActiveRecord::Schema.define(version: 20160120170517) do
   add_index "users", ["username"], name: "index_users_on_username", unique: true, using: :btree
 
   create_table "version_committers", force: :cascade do |t|
-    t.string   "obj_id",          limit: 255
-    t.string   "datastream_id",   limit: 255
-    t.string   "version_id",      limit: 255
-    t.string   "committer_login", limit: 255
+    t.string   "obj_id"
+    t.string   "datastream_id"
+    t.string   "version_id"
+    t.string   "committer_login"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
+  add_foreign_key "mailboxer_conversation_opt_outs", "mailboxer_conversations", column: "conversation_id", name: "mb_opt_outs_on_conversations_id"
+  add_foreign_key "mailboxer_notifications", "mailboxer_conversations", column: "conversation_id", name: "notifications_on_conversation_id"
+  add_foreign_key "mailboxer_receipts", "mailboxer_notifications", column: "notification_id", name: "receipts_on_notification_id"
 end

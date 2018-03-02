@@ -134,6 +134,18 @@ class User < ActiveRecord::Base
     super
   end
 
+  def all_following
+    super.compact
+  end
+
+  def all_followed_collections
+    Follow.where(
+      followable_type: 'Collection',
+      follower_id: self.id,
+      follower_type: 'User'
+    ).pluck(:followable_fedora_id)
+  end
+
   class << self
     def find_or_create_via_username(username)
       unless user = User.find_by(username: username)

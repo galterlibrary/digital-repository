@@ -39,6 +39,9 @@ Rails.application.routes.draw do
   get '/iiif-api/generic_file/:id/annotation/:name', to: 'iiif_apis#annotation', as: 'iiif_apis_annotation'
   get '/iiif-api/generic_file/:id/list/:name', to: 'iiif_apis#list', as: 'iiif_apis_list'
 
+  post '/collections/:id/follow', to: 'collections#follow', as: 'follow_collection'
+  delete '/collections/:id/unfollow', to: 'collections#unfollow', as: 'unfollow_collection'
+
   Sufia::Engine.routes.draw do
     resources :pages, :path => :generic_files
   end

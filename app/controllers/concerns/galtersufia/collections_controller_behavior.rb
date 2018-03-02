@@ -165,5 +165,26 @@ module Galtersufia
         format.json { render json: @collection.errors, status: :unprocessable_entity }
       end
     end
+
+    def follow
+      col_follow = Follow.new(
+        followable_fedora_id: @collection.id,
+        followable_type: 'Collection',
+        follower_id: current_user.try(:id),
+        follower_type: 'User'
+      )
+      col_follow.save
+      redirect_to collections.collection_path(@collection)
+    end
+
+    def unfollow
+      col_follow = Follow.where(
+        followable_fedora_id: @collection.id,
+        followable_type: 'Collection',
+        follower_id: current_user.try(:id)
+      ).first
+      col_follow.destroy
+      redirect_to collections.collection_path(@collection)
+    end
   end
 end

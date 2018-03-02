@@ -165,6 +165,24 @@ class Collection < Sufia::Collection
     mesh + lcsh + subject_name + subject_geographic + subject + tag
   end
 
+  # Hacks for collection followers
+  def self.type_for_attribute(attr)
+    ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Integer.new
+  end
+
+  def self.primary_key
+    'id'
+  end
+
+  def followers
+    Follow.where(followable_fedora_id: self.id,
+                 followable_type: 'Collection').map {|f|
+      next unless f.follower_type == 'User'
+      User.find(f.follower_id).try(:id)
+    }.compact
+  end
+  # Hacks for collection followers ends
+
   class << self
     def indexer
       Sufia::GalterCollectionIndexingService
