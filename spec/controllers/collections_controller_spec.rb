@@ -576,4 +576,53 @@ describe CollectionsController do
       expect(assigns(:collection).private_note).to eq(['no note'])
     end
   end
+
+  describe '#follow' do
+    let(:collection) { make_collection(create(:user)) }
+    subject { post :follow, id: collection.id }
+
+    context 'follow is successful' do
+      specify do
+        expect(subject).to redirect_to("/collections/#{collection.id}")
+        expect(collection.followers).to include(@user.id)
+        expect(flash.notice).to include("follow #{collection.title}")
+      end
+    end
+
+    context 'follow is not successful' do
+      before do
+        expect_any_instance_of(Collection).to receive(:follow).and_return(false)
+      end
+
+      specify do
+        expect(subject).to redirect_to("/collections/#{collection.id}")
+        expect(collection.followers).not_to include(@user.id)
+        expect(flash.alert).to include("There was a problem")
+      end
+    end
+  end
+
+  describe '#unfollow' do
+    let(:collection) { make_collection(create(:user)) }
+    subject { post :unfollow, id: collection.id }
+
+    context 'unfollow is successful' do
+      before do
+        collection.follow(@user)
+      end
+
+      specify do
+        expect(subject).to redirect_to("/collections/#{collection.id}")
+        expect(collection.followers).not_to include(@user.id)
+        expect(flash.notice).to include("stopped following #{collection.title}")
+      end
+    end
+
+    context 'follow is not successful' do
+      specify do
+        expect(subject).to redirect_to("/collections/#{collection.id}")
+        expect(flash.alert).to include("There was a problem")
+      end
+    end
+  end
 end

@@ -21,11 +21,13 @@
   <div class="col-sm-2 col-xs-12">
     <%= render partial: 'collections/media_display', locals: { generic_file: @collection } %>
     <% if @collection.followers.include?(current_user.try(:id)) %>
-      <%= link_to unfollow_collection_path(@collection.id), method: 'delete', class: 'btn btn-default' do %>
+      <%= link_to collections.unfollow_collection_path(@collection.id),
+          method: 'delete', class: 'btn btn-default' do %>
         <i class="glyphicon glyphicon-eye-close"></i> Unfollow
       <% end %>
     <% else %>
-      <%= link_to follow_collection_path(@collection.id), method: 'post', class: 'btn btn-default' do %>
+      <%= link_to collections.follow_collection_path(@collection.id),
+          method: 'post', class: 'btn btn-default' do %>
         <i class="glyphicon glyphicon-eye-open"></i> Follow
       <% end %>
     <% end %>

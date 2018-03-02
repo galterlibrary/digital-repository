@@ -44,6 +44,14 @@ class Ability
       test_edit(collection_id)
     end
 
+    can [:follow, :unfollow], Collection do |collection|
+      test_read(collection.id)
+    end
+
+    can [:follow, :unfollow], String do |collection_id|
+      test_read(collection_id)
+    end
+
     # Editors can do everything but delete things
     if current_user.has_role?('editor')
       can :manage, :all

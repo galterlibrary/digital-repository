@@ -366,4 +366,35 @@ RSpec.describe User do
       end
     end
   end
+
+  describe '#all_followed_collections' do
+    let(:owner) { create(:user) }
+    let(:user) { create(:user) }
+    let(:ccol) { make_collection(owner, title: 'ccol') }
+    let(:acol) { make_collection(owner, title: 'acol') }
+    let(:dcol) { make_collection(owner, title: 'dcol') }
+    let(:bcol) { make_collection(owner, title: 'bcol') }
+
+    context "when user doesn't follow any collections" do
+      specify do
+        expect(user.all_followed_collections).to eq([])
+      end
+    end
+
+    context 'when user follows collections' do
+      before do
+        ccol.follow(user)
+        acol.follow(user)
+        dcol.follow(user)
+      end
+
+      it 'returns the followed collection sorted by title' do
+        expect(user.all_followed_collections).to match_array([
+          { title: 'acol', id: acol.id },
+          { title: 'ccol', id: ccol.id },
+          { title: 'dcol', id: dcol.id }
+        ])
+      end
+    end
+  end
 end

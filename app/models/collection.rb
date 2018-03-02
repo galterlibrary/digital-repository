@@ -173,15 +173,34 @@ class Collection < Sufia::Collection
   def self.primary_key
     'id'
   end
+  # Hacks for collection followers ends
 
   def followers
     Follow.where(followable_fedora_id: self.id,
                  followable_type: 'Collection').map {|f|
       next unless f.follower_type == 'User'
-      User.find(f.follower_id).try(:id)
-    }.compact
+      User.find(f.follower_id)
+    }.compact.uniq
   end
-  # Hacks for collection followers ends
+
+  def follow(user)
+    return false unless user.present?
+		Follow.find_or_create_by(
+			followable_fedora_id: self.id,
+			followable_type: 'Collection',
+			follower_id: user.id,
+			follower_type: 'User'
+		)
+  end
+
+  def unfollow(user)
+    return false unless user.present?
+    Follow.where(
+      followable_fedora_id: self.id,
+      followable_type: 'Collection',
+      follower_id: user.id,
+    ).first.try(:destroy)
+  end
 
   class << self
     def indexer

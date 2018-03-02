@@ -16,8 +16,11 @@
           <% if @user.all_followed_collections.count > 0 %>
             <h3>Collections you follow</h3>
             <ul>
-              <% @user.all_followed_collections.map {|id| Collection.find(id) }.each do |c| %>
-                <li><%= link_to c.title, collections.collection_path(c), title: "View the collection" %></li>
+              <% @user.all_followed_collections.each do |c| %>
+                <li>
+                  <%= link_to c[:title], collections.collection_path(c[:id]),
+                    title: "View the collection" %>
+                </li>
               <% end %>
             </ul>
           <% end %>

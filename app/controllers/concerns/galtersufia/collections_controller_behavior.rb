@@ -167,23 +167,20 @@ module Galtersufia
     end
 
     def follow
-      col_follow = Follow.new(
-        followable_fedora_id: @collection.id,
-        followable_type: 'Collection',
-        follower_id: current_user.try(:id),
-        follower_type: 'User'
-      )
-      col_follow.save
-      redirect_to collections.collection_path(@collection)
+      if @collection.follow(current_user)
+        flash[:notice] = "You now follow #{collection.title}"
+      else
+        flash[:alert] = "There was a problem trying to follow the collection"
+      end
+        redirect_to collections.collection_path(@collection)
     end
 
     def unfollow
-      col_follow = Follow.where(
-        followable_fedora_id: @collection.id,
-        followable_type: 'Collection',
-        follower_id: current_user.try(:id)
-      ).first
-      col_follow.destroy
+      if @collection.unfollow(current_user)
+        flash[:notice] = "You stopped following #{collection.title}"
+      else
+        flash[:alert] = "There was a problem trying to stop following the collection"
+      end
       redirect_to collections.collection_path(@collection)
     end
   end
