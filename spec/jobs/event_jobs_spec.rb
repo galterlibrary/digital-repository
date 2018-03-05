@@ -80,8 +80,10 @@ describe 'collection following event jobs' do
       before do
         col1.follow(follower1)
         col1.follow(follower2)
+        col3.follow(follower2)
         col3.follow(follower3)
         col4.follow(follower4)
+        col2.follow(follower4)
         @gf.collections << [col1, col2, col3]
       end
 
@@ -125,6 +127,65 @@ describe 'collection following event jobs' do
         }
         expect(follower3.events.first).to eq(col3_event)
         expect(follower4.events.length).to eq(0)
+      end
+
+      it 'cares about permissions' do
+        @gf.visibility = 'restricted'
+        @gf.collections << [col4]
+        @gf.permissions.create(
+          name: follower2.username, type: 'person', access: 'read'
+        )
+        @gf.permissions.create(
+          name: follower3.username, type: 'person', access: 'read'
+        )
+        @gf.permissions.create(
+          name: follower4.username, type: 'person', access: 'edit'
+        )
+        @gf.save!
+        col3.visibility = 'restricted'
+        col3.permissions.create(
+          name: follower2.username, type: 'person', access: 'read'
+        )
+        col3.save!
+        expect(Time).to receive(:now).at_least(:once).and_return(1)
+        ContentDepositEventJob.new('test-123', @user.user_key).run
+
+        event = {
+          action: 'User <a href="/users/jill">jill</a> has deposited <a href="/files/test-123">Hamlet</a>',
+          timestamp: '1'
+        }
+
+        # Follower1 has permissions to read col1 but not the gf
+        expect(follower1.events.length).to eq(0)
+
+        col1_event = {
+          action: "#{event[:action]} for Collection: <a href='/collections/#{col1.id}'>#{col1.title}</a>",
+          timestamp: '1'
+        }
+        # Follower2 has permissions to read col1, col3 and the gf
+        expect(follower2.events.length).to eq(2)
+        expect(follower2.events).to include(col1_event)
+        col3_event = {
+          action: "#{event[:action]} for Collection: <a href='/collections/#{col3.id}'>#{col3.title}</a>",
+          timestamp: '1'
+        }
+        expect(follower2.events).to include(col3_event)
+
+        # Follower3 has permissions to the gf but not col3
+        expect(follower3.events.length).to eq(0)
+
+        # Follower4 has permissions to read col2, col4 and the gf
+        expect(follower4.events.length).to eq(2)
+        col2_event = {
+          action: "#{event[:action]} for Collection: <a href='/collections/#{col2.id}'>#{col2.title}</a>",
+          timestamp: '1'
+        }
+        expect(follower4.events).to include(col2_event)
+        col4_event = {
+          action: "#{event[:action]} for Collection: <a href='/collections/#{col4.id}'>#{col4.title}</a>",
+          timestamp: '1'
+        }
+        expect(follower4.events).to include(col4_event)
       end
     end
   end

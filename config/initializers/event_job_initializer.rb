@@ -21,8 +21,10 @@ Rails.configuration.to_prepare do
 			return unless self.respond_to?(:generic_file)
 			return unless generic_file.present?
 			generic_file.collections.each do |col|
-        col.followers.each do |u|
-          u.log_event(collection_event(col))
+        col.followers.each do |user|
+          next unless user.can?(:read, generic_file)
+          next unless user.can?(:read, col)
+          user.log_event(collection_event(col))
         end
 			end
 		end
