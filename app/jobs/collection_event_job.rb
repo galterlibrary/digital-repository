@@ -36,6 +36,7 @@ class CollectionEventJob < EventJob
 
   # log the event to the users profile stream
   def log_user_event
+
     depositor.log_profile_event(event)
   end
 

@@ -20,7 +20,7 @@
   </div>
   <div class="col-sm-2 col-xs-12">
     <%= render partial: 'collections/media_display', locals: { generic_file: @collection } %>
-    <% if @collection.followers.include?(current_user.try(:id)) %>
+    <% if @collection.followers.include?(current_user) %>
       <%= link_to collections.unfollow_collection_path(@collection.id),
           method: 'delete', class: 'btn btn-default' do %>
         <i class="glyphicon glyphicon-eye-close"></i> Unfollow

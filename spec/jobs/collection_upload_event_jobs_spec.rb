@@ -18,6 +18,8 @@ describe 'collection upload event jobs' do
     follower1.follow(user)
     follower2.follow(user)
     follower3.follow(user)
+    # follower1 also follows the collection
+    collection.follow(follower1)
     collection.permissions.create(
       name: follower1.username, type: 'person', access: 'read'
     )
@@ -71,8 +73,8 @@ describe 'collection upload event jobs' do
       expect(user.profile_events.first).to eq(event)
 
       # Follower1 has permissions for both parent and child
-      expect(follower1.events.length).to eq(1)
-      expect(follower1.events.first).to eq(event)
+      expect(follower1.events.length).to eq(2)
+      expect(follower1.events).to include(event)
 
       # Follower2 has permissions for the parent only
       expect(follower2.events.length).to eq(0)
@@ -112,8 +114,8 @@ describe 'collection upload event jobs' do
       expect(user.profile_events.first).to eq(event)
 
       # Follower1 has permissions for both parent and child
-      expect(follower1.events.length).to eq(1)
-      expect(follower1.events.first).to eq(event)
+      expect(follower1.events.length).to eq(2)
+      expect(follower1.events).to include(event)
 
       # Follower2 has permissions for the parent only
       expect(follower2.events.length).to eq(0)

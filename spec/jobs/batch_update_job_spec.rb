@@ -3,11 +3,13 @@ require 'rails_helper'
 describe BatchUpdateJob do
   let(:batch) { Batch.create }
   let(:gf1) { make_generic_file(create(:user), id: 'gf1') }
+  let(:col) { make_collection(create(:user),id: 'col1') }
 
   context '#queue_additional_jobs' do
     subject { described_class.new('somedude', batch.id, nil, {}, 'open') }
 
     before do
+      gf1.collections << col
       cue_job = double('cue')
       allow(ContentUpdateEventJob).to receive(:new)
                                   .with(gf1.id, 'somedude')
@@ -26,6 +28,10 @@ describe BatchUpdateJob do
                        .with(gf1.id, 'somedude')
                        .and_return(md_job)
       expect(Sufia.queue).to receive(:push).with(md_job)
+      cue_job = double('cue')
+      allow(CollectionUploadEventJob).to receive(:new).with(
+        col.id, gf1.id, 'somedude').and_return(cue_job)
+      expect(Sufia.queue).to receive(:push).with(cue_job)
       subject.queue_additional_jobs(gf1)
     end
   end

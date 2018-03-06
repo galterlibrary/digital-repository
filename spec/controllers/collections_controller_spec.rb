@@ -194,10 +194,10 @@ describe CollectionsController do
             expect(response).to redirect_to('/collections/ic1')
           end
 
-          describe 'permission update' do
+          describe 'job scheduling' do
             let(:col1) { make_collection(inst_user) }
 
-            it 'schedules add permission update jobs' do
+            it 'schedules institutional permission update and notification jobs' do
               col_job = double('col_id')
               expect(ResolrizeGenericFileJob).to receive(
                 :new).with(gf.id).and_return(col_job)
@@ -206,6 +206,18 @@ describe CollectionsController do
                 :new).with(col1.id).and_return(col_job1)
               expect(Sufia.queue).to receive(:push).with(col_job)
               expect(Sufia.queue).to receive(:push).with(col_job1)
+
+              notif_job1 = double('notif1')
+              notif_job2 = double('notif2')
+              expect(CollectionUploadEventJob).to receive(:new).with(
+                inst_col.id, col1.id, inst_user.user_key
+              ).and_return(notif_job1)
+              expect(CollectionUploadEventJob).to receive(:new).with(
+                inst_col.id, gf.id, inst_user.user_key
+              ).and_return(notif_job2)
+              expect(Sufia.queue).to receive(:push).with(notif_job1)
+              expect(Sufia.queue).to receive(:push).with(notif_job2)
+
               job1 =  double('one')
               job1 =  double('one')
               expect(AddInstitutionalAdminPermissionsJob).to receive(:new).with(
@@ -332,6 +344,18 @@ describe CollectionsController do
                 :new).with(col1.id).and_return(col_job1)
               expect(Sufia.queue).to receive(:push).with(col_job)
               expect(Sufia.queue).to receive(:push).with(col_job1)
+
+              notif_job1 = double('notif1')
+              notif_job2 = double('notif2')
+              expect(CollectionUploadEventJob).to receive(:new).with(
+                inst_col.id, col1.id, inst_admin.user_key
+              ).and_return(notif_job1)
+              expect(CollectionUploadEventJob).to receive(:new).with(
+                inst_col.id, gf.id, inst_admin.user_key
+              ).and_return(notif_job2)
+              expect(Sufia.queue).to receive(:push).with(notif_job1)
+              expect(Sufia.queue).to receive(:push).with(notif_job2)
+
               job1 =  double('one')
               job1 =  double('one')
               expect(AddInstitutionalAdminPermissionsJob).to receive(:new).with(

@@ -15,21 +15,25 @@ Rails.configuration.to_prepare do
       end
     end
 
-		def collection_event(col)
-			collection_link = "<a href='/collections/#{col.id}'>#{col.title}</a>"
-			collection_action = "#{action} for Collection: #{collection_link}"
-			depositor.create_event(collection_action, Time.now.to_i)
-		end
+    def collection_event(col)
+      collection_link = "<a href='/collections/#{col.id}'>#{col.title}</a>"
+      collection_action = "#{action} for Collection: #{collection_link}"
+      depositor.create_event(collection_action, Time.now.to_i)
+    end
 
-		def log_for_collection_follower(obj)
+    def log_to_all_followers(col, obj)
+      col.followers.each do |user|
+        next unless user.can?(:read, obj)
+        next unless user.can?(:read, col)
+        user.log_event(collection_event(col))
+      end
+    end
+
+    def log_for_collection_follower(obj)
       return unless obj.present?
-			obj.collections.each do |col|
-        col.followers.each do |user|
-          next unless user.can?(:read, obj)
-          next unless user.can?(:read, col)
-          user.log_event(collection_event(col))
-        end
-			end
-		end
+      obj.collections.each do |col|
+        log_to_all_followers(col, obj)
+      end
+    end
   end
 end
