@@ -1026,12 +1026,12 @@ RSpec.describe Collection do
           Follow.count
         }.by(1)
         expect(subject).to be_truthy
-        expect(collection.followers).to include(follower.id)
+        expect(collection.followers).to include(follower)
       end
     end
   end
 
-  describe '#follow' do
+  describe '#unfollow' do
     let(:collection) { make_collection(user) }
     subject { collection.unfollow(follower) }
 
@@ -1051,7 +1051,7 @@ RSpec.describe Collection do
           Follow.count
         }.by(-1)
         expect(subject).to be_truthy
-        expect(collection.followers).not_to include(follower.id)
+        expect(collection.followers).not_to include(follower)
       end
     end
 
@@ -1064,8 +1064,8 @@ RSpec.describe Collection do
       specify do
         expect { subject }.not_to change { Follow.count }
         expect(subject).to be_nil
-        expect(collection.followers).not_to include(follower.id)
-        expect(collection.followers).to include(other_follower.id)
+        expect(collection.followers).not_to include(follower)
+        expect(collection.followers).to include(other_follower)
       end
     end
   end

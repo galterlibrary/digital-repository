@@ -584,7 +584,7 @@ describe CollectionsController do
     context 'follow is successful' do
       specify do
         expect(subject).to redirect_to("/collections/#{collection.id}")
-        expect(collection.followers).to include(@user.id)
+        expect(collection.followers).to include(@user)
         expect(flash.notice).to include("follow #{collection.title}")
       end
     end
@@ -596,7 +596,7 @@ describe CollectionsController do
 
       specify do
         expect(subject).to redirect_to("/collections/#{collection.id}")
-        expect(collection.followers).not_to include(@user.id)
+        expect(collection.followers).not_to include(@user)
         expect(flash.alert).to include("There was a problem")
       end
     end
@@ -613,7 +613,7 @@ describe CollectionsController do
 
       specify do
         expect(subject).to redirect_to("/collections/#{collection.id}")
-        expect(collection.followers).not_to include(@user.id)
+        expect(collection.followers).not_to include(@user)
         expect(flash.notice).to include("stopped following #{collection.title}")
       end
     end

@@ -8,7 +8,11 @@ Rails.configuration.to_prepare do
       log_to_followers
 
       # Notify collection subscribers
-      log_for_collection_follower
+      if self.respond_to?(:generic_file)
+        log_for_collection_follower(generic_file)
+      elsif self.respond_to?(:collection)
+        log_for_collection_follower(collection)
+      end
     end
 
 		def collection_event(col)
@@ -17,12 +21,11 @@ Rails.configuration.to_prepare do
 			depositor.create_event(collection_action, Time.now.to_i)
 		end
 
-		def log_for_collection_follower
-			return unless self.respond_to?(:generic_file)
-			return unless generic_file.present?
-			generic_file.collections.each do |col|
+		def log_for_collection_follower(obj)
+      return unless obj.present?
+			obj.collections.each do |col|
         col.followers.each do |user|
-          next unless user.can?(:read, generic_file)
+          next unless user.can?(:read, obj)
           next unless user.can?(:read, col)
           user.log_event(collection_event(col))
         end

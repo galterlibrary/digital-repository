@@ -17,7 +17,7 @@ describe 'collection following event jobs' do
     $redis.keys('GenericFile:*').each { |key| $redis.del key }
   end
 
-  context 'without generic file' do
+  context 'without generic file or collection' do
     it "logs user edit profile events" do
       # UserEditProfile should log the event to the editor's dashboard and his/her followers' dashboards
       @another_user.follow(@user)
@@ -29,7 +29,7 @@ describe 'collection following event jobs' do
         timestamp: '1'
       }
       job = UserEditProfileEventJob.new(@user.user_key)
-      expect(job).to receive(:log_for_collection_follower).and_call_original
+      expect(job).not_to receive(:log_for_collection_follower)
       job.run
       expect(@user.events.length).to eq(count_user + 1)
       expect(@user.events.first).to eq(event)
@@ -72,19 +72,19 @@ describe 'collection following event jobs' do
       let(:follower2) { create(:user) }
       let(:follower3) { create(:user) }
       let(:follower4) { create(:user) }
-      let(:col1) { make_collection(create(:user)) }
-      let(:col2) { make_collection(create(:user)) }
-      let(:col3) { make_collection(create(:user)) }
-      let(:col4) { make_collection(create(:user)) }
+      let(:parent1) { make_collection(create(:user)) }
+      let(:parent2) { make_collection(create(:user)) }
+      let(:parent3) { make_collection(create(:user)) }
+      let(:parent4) { make_collection(create(:user)) }
 
       before do
-        col1.follow(follower1)
-        col1.follow(follower2)
-        col3.follow(follower2)
-        col3.follow(follower3)
-        col4.follow(follower4)
-        col2.follow(follower4)
-        @gf.collections << [col1, col2, col3]
+        parent1.follow(follower1)
+        parent1.follow(follower2)
+        parent3.follow(follower2)
+        parent3.follow(follower3)
+        parent4.follow(follower4)
+        parent2.follow(follower4)
+        @gf.collections << [parent1, parent2, parent3]
       end
 
       it "logs content deposit events for user and collection followers" do
@@ -113,25 +113,34 @@ describe 'collection following event jobs' do
         expect(@gf.events.first).to eq(event)
         # Collection following related
         expect(follower1.events.length).to eq(1)
-        col1_event = {
-          action: "#{event[:action]} for Collection: <a href='/collections/#{col1.id}'>#{col1.title}</a>",
+        parent1_event = {
+          action: "#{event[:action]} for Collection: <a href='/collections/#{parent1.id}'>#{parent1.title}</a>",
           timestamp: '1'
         }
-        expect(follower1.events.first).to eq(col1_event)
-        expect(follower2.events.length).to eq(1)
-        expect(follower2.events.first).to eq(col1_event)
+        expect(follower1.events.first).to eq(parent1_event)
+
+        expect(follower2.events.length).to eq(2)
+        expect(follower2.events).to include(parent1_event)
+        parent3_event = {
+          action: "#{event[:action]} for Collection: <a href='/collections/#{parent3.id}'>#{parent3.title}</a>",
+          timestamp: '1'
+        }
+        expect(follower2.events).to include(parent3_event)
+
         expect(follower3.events.length).to eq(1)
-        col3_event = {
-          action: "#{event[:action]} for Collection: <a href='/collections/#{col3.id}'>#{col3.title}</a>",
+        expect(follower3.events.first).to eq(parent3_event)
+
+        parent2_event = {
+          action: "#{event[:action]} for Collection: <a href='/collections/#{parent2.id}'>#{parent2.title}</a>",
           timestamp: '1'
         }
-        expect(follower3.events.first).to eq(col3_event)
-        expect(follower4.events.length).to eq(0)
+        expect(follower4.events.length).to eq(1)
+        expect(follower4.events.first).to eq(parent2_event)
       end
 
       it 'cares about permissions' do
         @gf.visibility = 'restricted'
-        @gf.collections << [col4]
+        @gf.collections << [parent4]
         @gf.permissions.create(
           name: follower2.username, type: 'person', access: 'read'
         )
@@ -142,11 +151,11 @@ describe 'collection following event jobs' do
           name: follower4.username, type: 'person', access: 'edit'
         )
         @gf.save!
-        col3.visibility = 'restricted'
-        col3.permissions.create(
+        parent3.visibility = 'restricted'
+        parent3.permissions.create(
           name: follower2.username, type: 'person', access: 'read'
         )
-        col3.save!
+        parent3.save!
         expect(Time).to receive(:now).at_least(:once).and_return(1)
         ContentDepositEventJob.new('test-123', @user.user_key).run
 
@@ -155,38 +164,119 @@ describe 'collection following event jobs' do
           timestamp: '1'
         }
 
-        # Follower1 has permissions to read col1 but not the gf
+        # Follower1 has permissions to read parent1 but not the gf
         expect(follower1.events.length).to eq(0)
 
-        col1_event = {
-          action: "#{event[:action]} for Collection: <a href='/collections/#{col1.id}'>#{col1.title}</a>",
+        parent1_event = {
+          action: "#{event[:action]} for Collection: <a href='/collections/#{parent1.id}'>#{parent1.title}</a>",
           timestamp: '1'
         }
-        # Follower2 has permissions to read col1, col3 and the gf
+        # Follower2 has permissions to read parent1, parent3 and the gf
         expect(follower2.events.length).to eq(2)
-        expect(follower2.events).to include(col1_event)
-        col3_event = {
-          action: "#{event[:action]} for Collection: <a href='/collections/#{col3.id}'>#{col3.title}</a>",
+        expect(follower2.events).to include(parent1_event)
+        parent3_event = {
+          action: "#{event[:action]} for Collection: <a href='/collections/#{parent3.id}'>#{parent3.title}</a>",
           timestamp: '1'
         }
-        expect(follower2.events).to include(col3_event)
+        expect(follower2.events).to include(parent3_event)
 
-        # Follower3 has permissions to the gf but not col3
+        # Follower3 has permissions to the gf but not parent3
         expect(follower3.events.length).to eq(0)
 
-        # Follower4 has permissions to read col2, col4 and the gf
+        # Follower4 has permissions to read parent2, parent4 and the gf
         expect(follower4.events.length).to eq(2)
-        col2_event = {
-          action: "#{event[:action]} for Collection: <a href='/collections/#{col2.id}'>#{col2.title}</a>",
+        parent2_event = {
+          action: "#{event[:action]} for Collection: <a href='/collections/#{parent2.id}'>#{parent2.title}</a>",
           timestamp: '1'
         }
-        expect(follower4.events).to include(col2_event)
-        col4_event = {
-          action: "#{event[:action]} for Collection: <a href='/collections/#{col4.id}'>#{col4.title}</a>",
+        expect(follower4.events).to include(parent2_event)
+        parent4_event = {
+          action: "#{event[:action]} for Collection: <a href='/collections/#{parent4.id}'>#{parent4.title}</a>",
           timestamp: '1'
         }
-        expect(follower4.events).to include(col4_event)
+        expect(follower4.events).to include(parent4_event)
       end
+    end
+  end
+
+  context 'with a collection' do
+    let!(:collection) { make_collection(@user) }
+    let!(:follower1) { create(:user) }
+    let!(:follower2) { create(:user) }
+    let!(:follower3) { create(:user) }
+    let!(:follower4) { create(:user) }
+    let!(:parent1) { make_collection(create(:user)) }
+    let!(:parent2) { make_collection(create(:user)) }
+    let!(:parent3) { make_collection(create(:user)) }
+    let!(:parent4) { make_collection(create(:user)) }
+    let(:action) { 'User <a href="/users/jill">jill</a> has done something' }
+    let(:event) {{ action: action, timestamp: '1' }}
+
+    before do
+      parent1.follow(follower1)
+      parent1.follow(follower2)
+      parent3.follow(follower2)
+      parent3.follow(follower3)
+      parent4.follow(follower4)
+      parent2.follow(follower4)
+      collection.collections << [parent1, parent2, parent3, parent4]
+    end
+
+    it 'processes collections and cares about permissions' do
+      collection.visibility = 'restricted'
+      collection.permissions.create(
+        name: follower2.username, type: 'person', access: 'read'
+      )
+      collection.permissions.create(
+        name: follower3.username, type: 'person', access: 'read'
+      )
+      collection.permissions.create(
+        name: follower4.username, type: 'person', access: 'edit'
+      )
+      collection.save!
+      parent3.visibility = 'restricted'
+      parent3.permissions.create(
+        name: follower2.username, type: 'person', access: 'read'
+      )
+      parent3.save!
+
+      expect(Time).to receive(:now).at_least(:once).and_return(1)
+      job = EventJob.new(@user.user_key)
+      allow(job).to receive(:collection).and_return(collection)
+      allow(job).to receive(:action).and_return(action)
+      job.run
+
+      # Follower1 has permissions to read parent1 but not the gf
+      expect(follower1.events.length).to eq(0)
+
+      parent1_event = {
+        action: "#{event[:action]} for Collection: <a href='/collections/#{parent1.id}'>#{parent1.title}</a>",
+        timestamp: '1'
+      }
+      # Follower2 has permissions to read parent1, parent3 and the gf
+      expect(follower2.events.length).to eq(2)
+      expect(follower2.events).to include(parent1_event)
+      parent3_event = {
+        action: "#{event[:action]} for Collection: <a href='/collections/#{parent3.id}'>#{parent3.title}</a>",
+        timestamp: '1'
+      }
+      expect(follower2.events).to include(parent3_event)
+
+      # Follower3 has permissions to the gf but not parent3
+      expect(follower3.events.length).to eq(0)
+
+      # Follower4 has permissions to read parent2, parent4 and the gf
+      expect(follower4.events.length).to eq(2)
+      parent2_event = {
+        action: "#{event[:action]} for Collection: <a href='/collections/#{parent2.id}'>#{parent2.title}</a>",
+        timestamp: '1'
+      }
+      expect(follower4.events).to include(parent2_event)
+      parent4_event = {
+        action: "#{event[:action]} for Collection: <a href='/collections/#{parent4.id}'>#{parent4.title}</a>",
+        timestamp: '1'
+      }
+      expect(follower4.events).to include(parent4_event)
     end
   end
 end
