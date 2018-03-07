@@ -66,6 +66,12 @@ describe CollectionsController do
       @user.add_role(Role.create(name: 'admin').name)
       sign_in @user
 
+      notif_job1 = double('notif1')
+      expect(CollectionDeleteEventJob).to receive(:new).with(
+        'nukeme', @user.user_key
+      ).and_return(notif_job1)
+      expect(Sufia.queue).to receive(:push).with(notif_job1)
+
       expect {
         delete :destroy, id: 'nukeme'
       }.to change(Collection, :count).by(-1)
@@ -305,6 +311,18 @@ describe CollectionsController do
                 :new).with(col1.id).and_return(col_job1)
               expect(Sufia.queue).to receive(:push).with(col_job)
               expect(Sufia.queue).to receive(:push).with(col_job1)
+
+              notif_job1 = double('notif1')
+              notif_job2 = double('notif2')
+              expect(CollectionMemberRemoveEventJob).to receive(:new).with(
+                inst_col.id, col1.id, inst_admin.user_key
+              ).and_return(notif_job1)
+              expect(CollectionMemberRemoveEventJob).to receive(:new).with(
+                inst_col.id, gf.id, inst_admin.user_key
+              ).and_return(notif_job2)
+              expect(Sufia.queue).to receive(:push).with(notif_job1)
+              expect(Sufia.queue).to receive(:push).with(notif_job2)
+
               job1 =  double('one')
               expect(RemoveInstitutionalAdminPermissionsJob).to receive(
                 :new).with(gf.id, inst_col.id).and_return(job1)
@@ -598,6 +616,18 @@ describe CollectionsController do
       expect(response).to redirect_to(
         @routes.url_helpers.collection_path(collection))
       expect(assigns(:collection).private_note).to eq(['no note'])
+    end
+
+    it "should notify on update" do
+      notif_job1 = double('notif1')
+      expect(CollectionUpdateEventJob).to receive(:new).with(
+        collection.id, @user.user_key
+      ).and_return(notif_job1)
+      expect(Sufia.queue).to receive(:push).with(notif_job1)
+
+      patch :update, id: collection, collection: { private_note: ['no note'] }
+      expect(response).to redirect_to(
+        @routes.url_helpers.collection_path(collection))
     end
   end
 

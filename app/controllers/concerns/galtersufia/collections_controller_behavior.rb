@@ -13,6 +13,31 @@ module Galtersufia
       load_resource :only => :update
       before_filter :update_authorization, :only => :update
       after_filter :on_member_change, :only => :update
+      after_filter :notify_on_update, :only => :update
+      after_filter :notify_on_create, :only => :create
+      after_filter :notify_on_destroy, :only => :destroy
+    end
+
+    def notify_on_destroy
+      return if params['batch_document_ids'].present?
+      Sufia.queue.push(
+        CollectionDeleteEventJob.new(params[:id], current_user.user_key)
+      )
+    end
+
+    def notify_on_create
+      return if params['batch_document_ids'].present?
+      # Can't get this to work even when job is delayed, object is not found
+      #Sufia.queue.push(
+      #  CollectionCreateEventJob.new(params[:id], current_user.user_key)
+      #)
+    end
+
+    def notify_on_update
+      return if params['batch_document_ids'].present?
+      Sufia.queue.push(
+        CollectionUpdateEventJob.new(params[:id], current_user.user_key)
+      )
     end
 
     def on_member_change
@@ -31,7 +56,11 @@ module Galtersufia
       elsif params['collection']['members'] == 'remove'
         params['batch_document_ids'].each do |member_id|
           jobs << RemoveInstitutionalAdminPermissionsJob.new(
-                    member_id, params[:id])
+            member_id, params[:id]
+          )
+          jobs << CollectionMemberRemoveEventJob.new(
+            params[:id], member_id, current_user.user_key
+          )
         end
       end
       jobs.each {|job| Sufia.queue.push(job) }

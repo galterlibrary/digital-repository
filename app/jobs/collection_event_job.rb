@@ -47,4 +47,8 @@ class CollectionEventJob < EventJob
       Hydra::Collections::Engine.routes.url_helpers.collection_path(col)
     )
   end
+
+  def collection_event(col)
+    col == collection ? depositor.create_event(action, Time.now.to_i) : super
+  end
 end

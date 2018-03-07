@@ -21,9 +21,11 @@ Rails.configuration.to_prepare do
       depositor.create_event(collection_action, Time.now.to_i)
     end
 
-    def log_to_all_followers(col, obj)
+    def log_to_all_followers(col, obj, object_removal=false)
       col.followers.each do |user|
-        next unless user.can?(:read, obj)
+        if !object_removal
+          next unless user.can?(:read, obj)
+        end
         next unless user.can?(:read, col)
         user.log_event(collection_event(col))
       end

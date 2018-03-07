@@ -1,4 +1,4 @@
-# A specific job to log collection creation to a user's activity streams
+# A specific job to log collection upload to a user's activity streams
 class CollectionUploadEventJob < CollectionEventJob
   def initialize(collection_id, child_id, depositor_id)
     super(collection_id, depositor_id)

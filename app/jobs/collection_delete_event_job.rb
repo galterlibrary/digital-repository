@@ -1,12 +1,12 @@
-# A specific job to log collection creation to a user's activity streams
+# A specific job to log collection deletion to a user's activity streams
 class CollectionDeleteEventJob < EventJob
-  def initialize(deleted_file_id, depositor_id)
+  def initialize(deleted_collection_id, depositor_id)
     super(depositor_id)
-    @deleted_file_id = deleted_file_id
+    @deleted_collection_id = deleted_collection_id
   end
 
   def action
-    @action ||= "User #{link_to_profile depositor_id} has deleted Collection #{@deleted_file_id}"
+    @action ||= "User #{link_to_profile depositor_id} has deleted Collection #{@deleted_collection_id}"
   end
 
   def log_user_event
