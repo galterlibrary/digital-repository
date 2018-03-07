@@ -200,7 +200,7 @@ module Galtersufia
     end
 
     def follow
-      if @collection.follow(current_user)
+      if @collection.set_follower(current_user)
         flash[:notice] = "You now follow #{collection.title}"
       else
         flash[:alert] = "There was a problem trying to follow the collection"
@@ -209,7 +209,7 @@ module Galtersufia
     end
 
     def unfollow
-      if @collection.unfollow(current_user)
+      if @collection.remove_follower(current_user)
         flash[:notice] = "You stopped following #{collection.title}"
       else
         flash[:alert] = "There was a problem trying to stop following the collection"

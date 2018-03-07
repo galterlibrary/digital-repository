@@ -19,7 +19,7 @@ describe 'collection upload event jobs' do
     follower2.follow(user)
     follower3.follow(user)
     # follower1 also follows the collection
-    collection.follow(follower1)
+    collection.set_follower(follower1)
     collection.permissions.create(
       name: follower1.username, type: 'person', access: 'read'
     )

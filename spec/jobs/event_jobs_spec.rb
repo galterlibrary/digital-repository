@@ -78,12 +78,12 @@ describe 'collection following event jobs' do
       let(:parent4) { make_collection(create(:user)) }
 
       before do
-        parent1.follow(follower1)
-        parent1.follow(follower2)
-        parent3.follow(follower2)
-        parent3.follow(follower3)
-        parent4.follow(follower4)
-        parent2.follow(follower4)
+        parent1.set_follower(follower1)
+        parent1.set_follower(follower2)
+        parent3.set_follower(follower2)
+        parent3.set_follower(follower3)
+        parent4.set_follower(follower4)
+        parent2.set_follower(follower4)
         @gf.collections << [parent1, parent2, parent3]
       end
 
@@ -213,12 +213,12 @@ describe 'collection following event jobs' do
     let(:event) {{ action: action, timestamp: '1' }}
 
     before do
-      parent1.follow(follower1)
-      parent1.follow(follower2)
-      parent3.follow(follower2)
-      parent3.follow(follower3)
-      parent4.follow(follower4)
-      parent2.follow(follower4)
+      parent1.set_follower(follower1)
+      parent1.set_follower(follower2)
+      parent3.set_follower(follower2)
+      parent3.set_follower(follower3)
+      parent4.set_follower(follower4)
+      parent2.set_follower(follower4)
       collection.collections << [parent1, parent2, parent3, parent4]
     end
 

@@ -19,9 +19,9 @@ describe 'collection member removal event jobs' do
 
   before do
     follower1.follow(user)
-    collection.follow(follower1)
+    collection.set_follower(follower1)
     follower2.follow(user)
-    collection.follow(follower2)
+    collection.set_follower(follower2)
     collection.permissions.create(
       name: follower1.username, type: 'person', access: 'read'
     )

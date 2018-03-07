@@ -680,9 +680,9 @@ RSpec.describe GenericFile do
 
       context 'with followers' do
         before do
-          col2.follow(user3)
-          col2.follow(user4)
-          col4.follow(user)
+          col2.set_follower(user3)
+          col2.set_follower(user4)
+          col4.set_follower(user)
         end
 
         it 'yields the collections and followers sorted by collection title' do

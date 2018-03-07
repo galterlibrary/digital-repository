@@ -183,7 +183,7 @@ class Collection < Sufia::Collection
     }.compact.uniq
   end
 
-  def follow(user)
+  def set_follower(user)
     return false unless user.present?
 		Follow.find_or_create_by(
 			followable_fedora_id: self.id,
@@ -193,7 +193,7 @@ class Collection < Sufia::Collection
 		)
   end
 
-  def unfollow(user)
+  def remove_follower(user)
     return false unless user.present?
     Follow.where(
       followable_fedora_id: self.id,

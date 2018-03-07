@@ -383,9 +383,9 @@ RSpec.describe User do
 
     context 'when user follows collections' do
       before do
-        ccol.follow(user)
-        acol.follow(user)
-        dcol.follow(user)
+        ccol.set_follower(user)
+        acol.set_follower(user)
+        dcol.set_follower(user)
       end
 
       it 'returns the followed collection sorted by title' do

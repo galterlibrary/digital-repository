@@ -645,7 +645,7 @@ describe CollectionsController do
 
     context 'follow is not successful' do
       before do
-        expect_any_instance_of(Collection).to receive(:follow).and_return(false)
+        expect_any_instance_of(Collection).to receive(:set_follower).and_return(false)
       end
 
       specify do
@@ -662,7 +662,7 @@ describe CollectionsController do
 
     context 'unfollow is successful' do
       before do
-        collection.follow(@user)
+        collection.set_follower(@user)
       end
 
       specify do

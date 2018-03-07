@@ -1008,9 +1008,9 @@ RSpec.describe Collection do
     it { is_expected.to eq('file_size_lts') }
   end
 
-  describe '#follow' do
+  describe '#set_follower' do
     let(:collection) { make_collection(user) }
-    subject { collection.follow(follower) }
+    subject { collection.set_follower(follower) }
 
     context 'with a nil passed as a user' do
       let(:follower) { nil }
@@ -1031,9 +1031,9 @@ RSpec.describe Collection do
     end
   end
 
-  describe '#unfollow' do
+  describe '#remove_follower' do
     let(:collection) { make_collection(user) }
-    subject { collection.unfollow(follower) }
+    subject { collection.remove_follower(follower) }
 
     context 'with a nil passed as a user' do
       let(:follower) { nil }
@@ -1044,7 +1044,7 @@ RSpec.describe Collection do
     context 'with as a valid user' do
       let(:follower) { create(:user) }
 
-      before { collection.follow(follower) }
+      before { collection.set_follower(follower) }
 
       specify do
         expect { subject }.to change {
@@ -1059,7 +1059,7 @@ RSpec.describe Collection do
       let(:other_follower) { create(:user) }
       let(:follower) { create(:user) }
 
-      before { collection.follow(other_follower) }
+      before { collection.set_follower(other_follower) }
 
       specify do
         expect { subject }.not_to change { Follow.count }
@@ -1084,9 +1084,9 @@ RSpec.describe Collection do
       let(:follower3) { create(:user) }
 
       before do
-        collection.follow(follower1)
-        collection.follow(follower2)
-        collection.follow(follower3)
+        collection.set_follower(follower1)
+        collection.set_follower(follower2)
+        collection.set_follower(follower3)
       end
 
       it {

@@ -42,9 +42,9 @@ feature "Users", :type => :feature do
       let(:col3) { make_collection(create(:user), title: 'b') }
 
       before do
-        col1.follow(user)
-        col2.follow(user)
-        col3.follow(user)
+        col1.set_follower(user)
+        col2.set_follower(user)
+        col3.set_follower(user)
         visit '/users/bigboss#followedCollections'
       end
 
