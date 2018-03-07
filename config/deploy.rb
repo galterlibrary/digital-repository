@@ -29,8 +29,9 @@ set :linked_files, [
 ]
 
 # Rails stuff
+set :rvm_type, :system # may not need this line for staging/production since global should only be present 
 set :rvm_ruby_version, 'ruby-2.2.2'
-set :rvm_ruby_path, "/home/deploy/.rvm/gems/#{fetch(:rvm_ruby_version)}/wrappers/ruby"
+set :rvm_ruby_path, "/usr/local/rvm/wrappers/#{fetch(:rvm_ruby_version)}/ruby"
 set :passenger_version, '5.2.0'
 set :rvm_ruby_gems_version, '2.2.0'
 set :passenger_dir, "#{fetch(:deploy_to)}/shared/gems/ruby/#{fetch(:rvm_ruby_gems_version)}/gems/passenger-#{fetch(:passenger_version)}"
@@ -74,10 +75,8 @@ namespace :config do
 
   #{"RailsEnv staging" if fetch(:rails_env) == 'staging'}
   RailsBaseURI /
-  PassengerRoot #{fetch(:passenger_dir)}
   PassengerRuby #{fetch(:rvm_ruby_path)}
   PassengerFriendlyErrorPages off
-  PassengerDebugLogFile /var/log/httpd/#{fetch(:application)}-passenger.log
   PassengerMinInstances 3
 
   <Directory #{fetch(:deploy_to)}/current/public >
@@ -106,6 +105,25 @@ PassengerPreStart https://#{fetch(:www_host)}/
       upload! vhost_config, tmp_file
       execute :sudo, :mv, tmp_file, httpd_file
       execute :sudo, :chmod, "644", httpd_file
+    end
+  end
+  
+  desc 'Install passenger apache'
+  task :install_passenger_apache do
+    on roles(:web) do
+      within release_path do
+        with rails_env: fetch(:rails_env) do
+          if ENV['INSTALL_PASS_APACHE'] == 'true'
+            puts "INSTALLING Passenger Apache"
+            options = ['--auto']
+            
+            execute('bundle', 'exec', 'passenger-install-apache2-module', *options)
+          else
+            puts "SKIPPING Passenger Apache Installation(config:install_passenger_apache)"
+            puts "Run with INSTALL_PASS_APACHE=true in the environment to enable"
+          end
+        end
+      end
     end
   end
 
@@ -215,6 +233,7 @@ end
 before :deploy, 'config:mail_forwarding'
 before :deploy, 'config:install_fits'
 before :deploy, 'config:custom_image_magic_gs'
+before 'config:vhost', 'config:install_passenger_apache'
 after 'deploy:compile_assets', 'deploy:cleanup_assets'
 after 'deploy:publishing', 'resque:restart'
 after 'deploy:publishing', 'config:shib_config'
