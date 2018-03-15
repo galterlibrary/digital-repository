@@ -4,7 +4,7 @@
   <h4>
     <i class="glyphicon glyphicon-globe"> </i>
     <a data-toggle="modal" href="#followedCollections">
-      Followed collections:
+      Followed Collections:
     </a>  <%= @user.all_followed_collections.count %>
   </h4>
 
@@ -14,7 +14,11 @@
       <div class="modal-content">
         <div class="modal-body">
           <% if @user.all_followed_collections.count > 0 %>
-            <h3>Collections you follow</h3>
+            <% if current_user == @user %>
+              <h3>Collections you follow</h3>
+            <% else %>
+              <h3>Collections <%= @user.display_name %> follows</h3>
+            <% end %>
             <ul>
               <% @user.all_followed_collections.each do |c| %>
                 <li>
@@ -23,6 +27,12 @@
                 </li>
               <% end %>
             </ul>
+          <% else %>
+            <% if current_user == @user %>
+              <h3>You do not follow any collections</h3>
+            <% else %>
+              <h3><%= @user.display_name %> does not follow any collections</h3>
+            <% end %>
           <% end %>
         </div>
         <div class="modal-footer">

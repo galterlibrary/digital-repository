@@ -12,6 +12,7 @@ feature "Users", :type => :feature do
         visit '/users/bigboss'
         expect(page).to have_selector('#following', visible: false)
         expect(page).to have_selector('#followers', visible: false)
+        expect(page).to have_selector('#followedCollections', visible: false)
       end
 
       it 'pops out the following modal' do
@@ -33,6 +34,7 @@ feature "Users", :type => :feature do
         expect(page).to have_selector('#following', visible: false)
         expect(page).to have_selector('#followers', visible: false)
         expect(page).to have_selector('#followedCollections', visible: true)
+        expect(page).to have_text("You do not follow any collections")
       end
     end
 
@@ -49,6 +51,7 @@ feature "Users", :type => :feature do
       end
 
       specify do
+        expect(page).to have_text("Collections you follow")
         expect(page).to have_link('a', href: "/collections/#{col1.id}")
         expect(page).to have_link('b', href: "/collections/#{col3.id}")
         expect(page).to have_link('c', href: "/collections/#{col2.id}")

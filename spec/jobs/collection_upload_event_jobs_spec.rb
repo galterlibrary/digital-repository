@@ -5,12 +5,18 @@ describe 'collection upload event jobs' do
   let!(:follower1) { create(:user) }
   let!(:follower2) { create(:user) }
   let!(:follower3) { create(:user) }
+  let!(:follower4) { create(:user) }
   let!(:collection) {
     make_collection(user, title: 'Hamlet', id: 'test-123', visibility: 'restricted')
   }
   let(:job) {
     CollectionUploadEventJob.new(
       collection.id, child.id, user.user_key
+    )
+  }
+  let(:child_job) {
+    CollectionUploadEventJob.new(
+      child.id, gf.id, user.user_key
     )
   }
 
@@ -81,6 +87,88 @@ describe 'collection upload event jobs' do
 
       # Follower3 has permissions for the parent only
       expect(follower3.events.length).to eq(0)
+    end
+  end
+  
+  context 'with follower of child and parent collection' do
+    let(:child) { make_collection(
+      user,
+      title: "Lil' Hamlet",
+      id: 'test-321',
+      visibility: 'open'
+    ) }
+    
+    let(:gf) { make_generic_file(
+        user,
+        title: ["Lil' Hamlet II"],
+        id: 'test-333',
+        visibility: 'open'
+    ) }
+      
+    before do
+      collection.visibility = 'open'
+      child.set_follower(follower4)
+      collection.set_follower(follower4)
+      child.members << gf
+      child.collections << collection
+      child.save!
+      collection.save!
+    end
+    
+    it 'does not process duplicate events for child and parent followers' do
+      expect(Time).to receive(:now).at_least(:once).and_return(1)
+
+      expect(child_job).to receive(:log_for_collection_follower).with(
+        child_job.collection
+      ).and_call_original
+      expect(child_job).to receive(:log_to_followers).and_call_original
+      child_job.run
+      
+      expect(follower4.events.length).to eq(1)
+    end
+  end
+  
+  context 'child with multiple parents' do
+    let(:child) { make_collection(
+      user,
+      title: "Lil' Hamlet",
+      id: 'test-321',
+      visibility: 'open'
+    ) }
+    
+    let(:gf) { make_generic_file(
+        user,
+        title: ["Lil' Hamlet II"],
+        id: 'test-333',
+        visibility: 'open'
+    ) }
+    
+    let(:collection2) { make_collection(
+      user, 
+      title: 'Hamlet2', 
+      id: 'test-234', 
+      visibility: 'open'
+    ) }
+    
+    before do
+      collection.visibility = 'open'
+      child.set_follower(follower4)
+      child.members << gf
+      child.collections << [collection, collection2]
+      child.save!
+      collection.save!
+    end
+    
+    it 'does not spam user that only follows child, and not any of its parents' do
+      expect(Time).to receive(:now).at_least(:once).and_return(1)
+
+      expect(child_job).to receive(:log_for_collection_follower).with(
+        child_job.collection
+      ).and_call_original
+      expect(child_job).to receive(:log_to_followers).and_call_original
+      child_job.run
+      
+      expect(follower4.events.length).to eq(1)
     end
   end
 

@@ -26,8 +26,10 @@ Rails.configuration.to_prepare do
         if !object_removal
           next unless user.can?(:read, obj)
         end
+        
         next unless user.can?(:read, col)
-        user.log_event(collection_event(col))
+        
+        user.log_event(collection_event(col)) if !col.collections.map { |o| o.followers }.flatten.include?(user)
       end
     end
 
