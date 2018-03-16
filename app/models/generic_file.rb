@@ -143,18 +143,6 @@ class GenericFile < ActiveFedora::Base
     add_doi_to_citation(citation)
   end
 
-  def parent_collections_followers(&block)
-    pairs = collection_ids.map {|col_id|
-      Follow.where(followable_fedora_id: col_id,
-                   followable_type: 'Collection').map do |o|
-        raise "Non-User follower for #{col.id}" unless o.follower_type == 'User'
-        [Collection.find(col_id), User.find(o.follower_id)]
-      end
-    }.flatten(1)
-     .sort_by {|pair| pair.first.title }
-     .each {|col, follower| block.call(col, follower) }
-  end
-
   class << self
     def indexer
       Sufia::GalterGenericFileIndexingService
