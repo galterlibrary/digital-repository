@@ -126,6 +126,29 @@ PassengerPreStart https://#{fetch(:www_host)}/
       end
     end
   end
+  
+  desc 'Set up passenger.conf'
+  task :set_up_passenger_conf do
+    on roles(:web) do
+      if ENV['INSTALL_PASS_APACHE'] == 'true'
+        puts "SETTING UP passenger.conf"
+        passenger_config = StringIO.new(%{
+LoadModule passenger_module #{fetch(:passenger_dir)}/buildout/apache2/mod_passenger.so
+<IfModule mod_passenger.c>
+  PassengerRoot #{fetch(:passenger_dir)}
+  PassengerDefaultRuby #{fetch(:rvm_ruby_path)}
+  PassengerLogFile /var/log/#{fetch(:application)}-passenger.log
+  PassengerInstanceRegistryDir /var/run/passenger-instreg
+</IfModule>
+          })
+        tmp_file = '/tmp/passenger.conf'
+        passenger_conf_file = '/etc/httpd/conf.d/passenger.conf'
+        upload! passenger_config, tmp_file
+        execute :sudo, :mv, tmp_file, passenger_conf_file
+        execute :sudo, :chmod, '644', passenger_conf_file
+      end
+    end
+  end
 
   desc 'Upload Shibboleth related config file'
   task :shib_httpd do
@@ -234,6 +257,7 @@ before :deploy, 'config:mail_forwarding'
 before :deploy, 'config:install_fits'
 before :deploy, 'config:custom_image_magic_gs'
 before 'config:vhost', 'config:install_passenger_apache'
+before 'config:vhost', 'config:set_up_passenger_conf'
 after 'deploy:compile_assets', 'deploy:cleanup_assets'
 after 'deploy:publishing', 'resque:restart'
 after 'deploy:publishing', 'config:shib_config'

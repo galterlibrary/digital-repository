@@ -89,6 +89,7 @@ gem 'capistrano-bundler'
 gem 'capistrano-rails'
 gem 'capistrano-rvm'
 gem 'whenever', require: false
+gem 'passenger', '~> 5.2.0'
 
 gem 'newrelic_rpm'
 
@@ -102,5 +103,3 @@ gem 'savon', '~> 2.11.0'
 gem 'nokogiri', '~> 1.8.1'
 
 gem 'puma'
-
-gem 'passenger'
