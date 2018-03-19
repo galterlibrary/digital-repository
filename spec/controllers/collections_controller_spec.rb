@@ -66,6 +66,12 @@ describe CollectionsController do
       @user.add_role(Role.create(name: 'admin').name)
       sign_in @user
 
+      notif_job1 = double('notif1')
+      expect(CollectionDeleteEventJob).to receive(:new).with(
+        'nukeme', @user.user_key
+      ).and_return(notif_job1)
+      expect(Sufia.queue).to receive(:push).with(notif_job1)
+
       expect {
         delete :destroy, id: 'nukeme'
       }.to change(Collection, :count).by(-1)
@@ -194,10 +200,10 @@ describe CollectionsController do
             expect(response).to redirect_to('/collections/ic1')
           end
 
-          describe 'permission update' do
+          describe 'job scheduling' do
             let(:col1) { make_collection(inst_user) }
 
-            it 'schedules add permission update jobs' do
+            it 'schedules institutional permission update and notification jobs' do
               col_job = double('col_id')
               expect(ResolrizeGenericFileJob).to receive(
                 :new).with(gf.id).and_return(col_job)
@@ -206,6 +212,18 @@ describe CollectionsController do
                 :new).with(col1.id).and_return(col_job1)
               expect(Sufia.queue).to receive(:push).with(col_job)
               expect(Sufia.queue).to receive(:push).with(col_job1)
+
+              notif_job1 = double('notif1')
+              notif_job2 = double('notif2')
+              expect(CollectionUploadEventJob).to receive(:new).with(
+                inst_col.id, col1.id, inst_user.user_key
+              ).and_return(notif_job1)
+              expect(CollectionUploadEventJob).to receive(:new).with(
+                inst_col.id, gf.id, inst_user.user_key
+              ).and_return(notif_job2)
+              expect(Sufia.queue).to receive(:push).with(notif_job1)
+              expect(Sufia.queue).to receive(:push).with(notif_job2)
+
               job1 =  double('one')
               job1 =  double('one')
               expect(AddInstitutionalAdminPermissionsJob).to receive(:new).with(
@@ -293,6 +311,18 @@ describe CollectionsController do
                 :new).with(col1.id).and_return(col_job1)
               expect(Sufia.queue).to receive(:push).with(col_job)
               expect(Sufia.queue).to receive(:push).with(col_job1)
+
+              notif_job1 = double('notif1')
+              notif_job2 = double('notif2')
+              expect(CollectionMemberRemoveEventJob).to receive(:new).with(
+                inst_col.id, col1.id, inst_admin.user_key
+              ).and_return(notif_job1)
+              expect(CollectionMemberRemoveEventJob).to receive(:new).with(
+                inst_col.id, gf.id, inst_admin.user_key
+              ).and_return(notif_job2)
+              expect(Sufia.queue).to receive(:push).with(notif_job1)
+              expect(Sufia.queue).to receive(:push).with(notif_job2)
+
               job1 =  double('one')
               expect(RemoveInstitutionalAdminPermissionsJob).to receive(
                 :new).with(gf.id, inst_col.id).and_return(job1)
@@ -332,6 +362,18 @@ describe CollectionsController do
                 :new).with(col1.id).and_return(col_job1)
               expect(Sufia.queue).to receive(:push).with(col_job)
               expect(Sufia.queue).to receive(:push).with(col_job1)
+
+              notif_job1 = double('notif1')
+              notif_job2 = double('notif2')
+              expect(CollectionUploadEventJob).to receive(:new).with(
+                inst_col.id, col1.id, inst_admin.user_key
+              ).and_return(notif_job1)
+              expect(CollectionUploadEventJob).to receive(:new).with(
+                inst_col.id, gf.id, inst_admin.user_key
+              ).and_return(notif_job2)
+              expect(Sufia.queue).to receive(:push).with(notif_job1)
+              expect(Sufia.queue).to receive(:push).with(notif_job2)
+
               job1 =  double('one')
               job1 =  double('one')
               expect(AddInstitutionalAdminPermissionsJob).to receive(:new).with(
@@ -574,6 +616,67 @@ describe CollectionsController do
       expect(response).to redirect_to(
         @routes.url_helpers.collection_path(collection))
       expect(assigns(:collection).private_note).to eq(['no note'])
+    end
+
+    it "should notify on update" do
+      notif_job1 = double('notif1')
+      expect(CollectionUpdateEventJob).to receive(:new).with(
+        collection.id, @user.user_key
+      ).and_return(notif_job1)
+      expect(Sufia.queue).to receive(:push).with(notif_job1)
+
+      patch :update, id: collection, collection: { private_note: ['no note'] }
+      expect(response).to redirect_to(
+        @routes.url_helpers.collection_path(collection))
+    end
+  end
+
+  describe '#follow' do
+    let(:collection) { make_collection(create(:user)) }
+    subject { post :follow, id: collection.id }
+
+    context 'follow is successful' do
+      specify do
+        expect(subject).to redirect_to("/collections/#{collection.id}")
+        expect(collection.followers).to include(@user)
+        expect(flash.notice).to include("follow #{collection.title}")
+      end
+    end
+
+    context 'follow is not successful' do
+      before do
+        expect_any_instance_of(Collection).to receive(:set_follower).and_return(false)
+      end
+
+      specify do
+        expect(subject).to redirect_to("/collections/#{collection.id}")
+        expect(collection.followers).not_to include(@user)
+        expect(flash.alert).to include("There was a problem")
+      end
+    end
+  end
+
+  describe '#unfollow' do
+    let(:collection) { make_collection(create(:user)) }
+    subject { post :unfollow, id: collection.id }
+
+    context 'unfollow is successful' do
+      before do
+        collection.set_follower(@user)
+      end
+
+      specify do
+        expect(subject).to redirect_to("/collections/#{collection.id}")
+        expect(collection.followers).not_to include(@user)
+        expect(flash.notice).to include("stopped following #{collection.title}")
+      end
+    end
+
+    context 'follow is not successful' do
+      specify do
+        expect(subject).to redirect_to("/collections/#{collection.id}")
+        expect(flash.alert).to include("There was a problem")
+      end
     end
   end
 end

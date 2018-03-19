@@ -14,6 +14,9 @@ feature "Dashboard", :type => :feature do
       expect_any_instance_of(User).to receive(:followers) {
         double('followers', count: 22)
       }
+      expect_any_instance_of(User).to receive(:all_followed_collections) {
+        double('all_followed_collections', count: 5)
+      }
       login_as(user, :scope => :user)
       visit "/dashboard"
     end
@@ -24,6 +27,7 @@ feature "Dashboard", :type => :feature do
         expect(page).to have_link('1', href: '/dashboard/collections')
         expect(page).to have_link('11', href: "/users/#{user.username}#following")
         expect(page).to have_link('22', href: "/users/#{user.username}#followers")
+        expect(page).to have_link('5', href: "/users/#{user.username}#followedCollections")
       end
     end
   end

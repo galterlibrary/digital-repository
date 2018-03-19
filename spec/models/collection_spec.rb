@@ -1007,4 +1007,91 @@ RSpec.describe Collection do
     subject { Collection.new.file_size_field }
     it { is_expected.to eq('file_size_lts') }
   end
+
+  describe '#set_follower' do
+    let(:collection) { make_collection(user) }
+    subject { collection.set_follower(follower) }
+
+    context 'with a nil passed as a user' do
+      let(:follower) { nil }
+
+      it { is_expected.to be_falsy }
+    end
+
+    context 'with as a user' do
+      let(:follower) { create(:user) }
+
+      specify do
+        expect { subject }.to change {
+          Follow.count
+        }.by(1)
+        expect(subject).to be_truthy
+        expect(collection.followers).to include(follower)
+      end
+    end
+  end
+
+  describe '#remove_follower' do
+    let(:collection) { make_collection(user) }
+    subject { collection.remove_follower(follower) }
+
+    context 'with a nil passed as a user' do
+      let(:follower) { nil }
+
+      it { is_expected.to be_falsy }
+    end
+
+    context 'with as a valid user' do
+      let(:follower) { create(:user) }
+
+      before { collection.set_follower(follower) }
+
+      specify do
+        expect { subject }.to change {
+          Follow.count
+        }.by(-1)
+        expect(subject).to be_truthy
+        expect(collection.followers).not_to include(follower)
+      end
+    end
+
+    context 'with as an invalid user' do
+      let(:other_follower) { create(:user) }
+      let(:follower) { create(:user) }
+
+      before { collection.set_follower(other_follower) }
+
+      specify do
+        expect { subject }.not_to change { Follow.count }
+        expect(subject).to be_nil
+        expect(collection.followers).not_to include(follower)
+        expect(collection.followers).to include(other_follower)
+      end
+    end
+  end
+
+  describe '#followers' do
+    let(:collection) { make_collection(user) }
+    subject { collection.followers }
+
+    context 'with no followers' do
+      it { is_expected.to eq([]) }
+    end
+
+    context 'with as a user' do
+      let(:follower1) { create(:user) }
+      let(:follower2) { create(:user) }
+      let(:follower3) { create(:user) }
+
+      before do
+        collection.set_follower(follower1)
+        collection.set_follower(follower2)
+        collection.set_follower(follower3)
+      end
+
+      it {
+        is_expected.to match_array([follower1, follower2, follower3])
+      }
+    end
+  end
 end

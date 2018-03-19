@@ -12,27 +12,60 @@ module Galtersufia
       skip_authorize_resource :only => :update
       load_resource :only => :update
       before_filter :update_authorization, :only => :update
-      after_filter :adjust_institutional_permissions, :only => :update
+      after_filter :on_member_change, :only => :update
+      after_filter :notify_on_update, :only => :update
+      after_filter :notify_on_create, :only => :create
+      after_filter :notify_on_destroy, :only => :destroy
     end
 
-    def adjust_institutional_permissions
+    def notify_on_destroy
+      return if params['batch_document_ids'].present?
+      Sufia.queue.push(
+        CollectionDeleteEventJob.new(params[:id], current_user.user_key)
+      )
+    end
+
+    def notify_on_create
+      return if params['batch_document_ids'].present?
+      # Can't get this to work even when job is delayed, object is not found
+      #Sufia.queue.push(
+      #  CollectionCreateEventJob.new(params[:id], current_user.user_key)
+      #)
+    end
+
+    def notify_on_update
+      return if params['batch_document_ids'].present?
+      Sufia.queue.push(
+        CollectionUpdateEventJob.new(params[:id], current_user.user_key)
+      )
+    end
+
+    def on_member_change
       return if params['collection'].blank?
       return if params['batch_document_ids'].blank?
       jobs = []
       if params['collection']['members'] == 'add'
         params['batch_document_ids'].each do |member_id|
           jobs << AddInstitutionalAdminPermissionsJob.new(
-                    member_id, params[:id])
+            member_id, params[:id]
+          )
+          jobs << CollectionUploadEventJob.new(
+            params[:id], member_id, current_user.user_key
+          )
         end
       elsif params['collection']['members'] == 'remove'
         params['batch_document_ids'].each do |member_id|
           jobs << RemoveInstitutionalAdminPermissionsJob.new(
-                    member_id, params[:id])
+            member_id, params[:id]
+          )
+          jobs << CollectionMemberRemoveEventJob.new(
+            params[:id], member_id, current_user.user_key
+          )
         end
       end
       jobs.each {|job| Sufia.queue.push(job) }
     end
-    private :adjust_institutional_permissions
+    private :on_member_change
 
     def update_authorization
       if cannot?(:update, @collection)
@@ -164,6 +197,24 @@ module Galtersufia
         format.html { redirect_to collections.edit_collection_path(@collection) }
         format.json { render json: @collection.errors, status: :unprocessable_entity }
       end
+    end
+
+    def follow
+      if @collection.set_follower(current_user)
+        flash[:notice] = "You now follow #{collection.title}"
+      else
+        flash[:alert] = "There was a problem trying to follow the collection"
+      end
+        redirect_to collections.collection_path(@collection)
+    end
+
+    def unfollow
+      if @collection.remove_follower(current_user)
+        flash[:notice] = "You stopped following #{collection.title}"
+      else
+        flash[:alert] = "There was a problem trying to stop following the collection"
+      end
+      redirect_to collections.collection_path(@collection)
     end
   end
 end

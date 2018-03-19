@@ -43,6 +43,11 @@ Rails.application.routes.draw do
     resources :pages, :path => :generic_files
   end
 
+  Hydra::Collections::Engine.routes.draw do
+    post '/collections/:id/follow', to: 'collections#follow', as: 'follow_collection'
+    delete '/collections/:id/unfollow', to: 'collections#unfollow', as: 'unfollow_collection'
+  end
+
   # This must be the very last route in the file because it has a catch-all route for 404 errors.
   # This behavior seems to show up only in production mode.
   mount Sufia::Engine => '/'

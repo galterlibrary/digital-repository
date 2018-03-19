@@ -486,6 +486,8 @@ feature "Collections", :type => :feature do
         before do
           red_box; ring
           chi_box.update_attributes(multi_page: true)
+          chi_box.save!
+          chi_box.update_index
           visit '/dashboard/files'
         end
 

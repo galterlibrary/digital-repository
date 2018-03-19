@@ -134,6 +134,25 @@ class User < ActiveRecord::Base
     super
   end
 
+  # Hacks for collection followers
+  def all_following
+    super.compact
+  end
+  # Hacks for collection followers ends
+
+  def all_followed_collections
+    Follow.where(
+      followable_type: 'Collection',
+      follower_id: self.id,
+      follower_type: 'User'
+    ).pluck(:followable_fedora_id).map {|cid|
+      col_solr = ActiveFedora::SolrService.query("id:#{cid}").first
+      next unless col_solr.present?
+      { title: col_solr['title_tesim'].first,
+        id: cid }
+    }.compact.sort_by {|o| o['title'] }
+  end
+
   class << self
     def find_or_create_via_username(username)
       unless user = User.find_by(username: username)

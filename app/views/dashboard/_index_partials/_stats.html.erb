@@ -44,5 +44,14 @@
       </td>
       <td><%= t("sufia.dashboard.stats.followers") %></td>
     </tr>
+    <tr>
+      <td>
+        <span class="badge">
+          <%= link_to @user.all_followed_collections.count,
+            sufia.profile_path(@user, anchor: 'followedCollections') %>
+        </span>
+      </td>
+      <td>Collections you follow</td>
+    </tr>
   </table>
 </div>
