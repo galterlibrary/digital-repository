@@ -1,5 +1,5 @@
 <div id="show_actions">
-<h2 class="non lower">Actions</h2>
+  <h2 class="non lower">Actions</h2>
     <p id='main_gf_actions'>
       <%= render_download_link %>
       <% if Sufia.config.analytics %>
@@ -62,4 +62,10 @@
 
     <!-- COinS hook for Zotero -->
     <span class="Z3988" title="<%= @generic_file.export_as_openurl_ctx_kev %>"></span>
+    
+    <!-- altemtric donut -->
+    <p id="altmetric">
+      <span class='altmetric-embed' data-badge-type='donut' data-hide-no-mentions="true"
+      data-doi="<%= @generic_file.doi.first.gsub("doi:", "") %>"></span>
+    </p>
 </div>

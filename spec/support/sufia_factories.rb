@@ -11,6 +11,7 @@ end
 
 def make_page(user, args = {})
   args[:title] = ['testing'] unless args[:title].present?
+  args[:doi] = ['doing'] unless args[:doi].present?
   gf = Page.new(args)
   gf.apply_depositor_metadata(user.user_key)
   if args[:visibility].present?
