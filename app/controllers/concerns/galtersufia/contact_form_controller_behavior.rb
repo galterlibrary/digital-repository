@@ -7,6 +7,25 @@ module Galtersufia
     extend ActiveSupport::Concern
     include Sufia::ContactFormControllerBehavior
 
+    included do
+      before_action :spam?, only: [:create]
+    end
+
+    def spam?
+      spam_msg = "potential spam detected for IP #{request.env['REMOTE_ADDR']}."
+      time_to_comment = Time.now - Time.parse(session['antispam_timestamp'])
+      if params[:contact_form][:customerDetail].present?
+        logger.warn("#{spam_msg}, hidden customerDetail field populated.")
+        redirect_to root_path
+      elsif (time_to_comment < config.antispam_threshold)
+        logger.warn(
+          "#{spam_msg}. Antispam threshold not reached (took #{time_to_comment.to_i}s)."
+        )
+        redirect_to root_path
+      end
+    end
+    private :spam?
+
     def create
       @contact_form = ContactForm.new(params[:contact_form])
       @contact_form.request = request
