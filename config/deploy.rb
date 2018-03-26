@@ -29,7 +29,12 @@ set :linked_files, [
 ]
 
 # Rails stuff
+set :rvm_type, :system # may not need this line for staging/production since global should only be present 
 set :rvm_ruby_version, 'ruby-2.2.2'
+set :rvm_ruby_path, "/usr/local/rvm/wrappers/#{fetch(:rvm_ruby_version)}/ruby"
+set :passenger_version, '5.2.0'
+set :rvm_ruby_gems_version, '2.2.0'
+set :passenger_dir, "#{fetch(:deploy_to)}/shared/gems/ruby/#{fetch(:rvm_ruby_gems_version)}/gems/passenger-#{fetch(:passenger_version)}"
 set :bundle_without, %w{development test ci}.join(' ')
 set :bundle_flags, "--deployment --path=#{fetch(:deploy_to)}/shared/gems"
 set :migration_role, 'migrator'
@@ -70,9 +75,8 @@ namespace :config do
 
   #{"RailsEnv staging" if fetch(:rails_env) == 'staging'}
   RailsBaseURI /
-  PassengerRuby /usr/local/rvm/wrappers/#{fetch(:rvm_ruby_version)}/ruby
+  PassengerRuby #{fetch(:rvm_ruby_path)}
   PassengerFriendlyErrorPages off
-  PassengerDebugLogFile /var/log/httpd/#{fetch(:application)}-passenger.log
   PassengerMinInstances 3
 
   <Directory #{fetch(:deploy_to)}/current/public >
@@ -101,6 +105,48 @@ PassengerPreStart https://#{fetch(:www_host)}/
       upload! vhost_config, tmp_file
       execute :sudo, :mv, tmp_file, httpd_file
       execute :sudo, :chmod, "644", httpd_file
+    end
+  end
+  
+  desc 'Install passenger apache'
+  task :install_passenger_apache do
+    on roles(:web) do
+      within release_path do
+        with rails_env: fetch(:rails_env) do
+          if ENV['INSTALL_PASS_APACHE'] == 'true'
+            puts "INSTALLING Passenger Apache"
+            options = ['--auto']
+            
+            execute('bundle', 'exec', 'passenger-install-apache2-module', *options)
+          else
+            puts "SKIPPING Passenger Apache Installation(config:install_passenger_apache)"
+            puts "Run with INSTALL_PASS_APACHE=true in the environment to enable"
+          end
+        end
+      end
+    end
+  end
+  
+  desc 'Set up passenger.conf'
+  task :set_up_passenger_conf do
+    on roles(:web) do
+      if ENV['INSTALL_PASS_APACHE'] == 'true'
+        puts "SETTING UP passenger.conf"
+        passenger_config = StringIO.new(%{
+LoadModule passenger_module #{fetch(:passenger_dir)}/buildout/apache2/mod_passenger.so
+<IfModule mod_passenger.c>
+  PassengerRoot #{fetch(:passenger_dir)}
+  PassengerDefaultRuby #{fetch(:rvm_ruby_path)}
+  PassengerLogFile /var/log/#{fetch(:application)}-passenger.log
+  PassengerInstanceRegistryDir /var/run/passenger-instreg
+</IfModule>
+          })
+        tmp_file = '/tmp/passenger.conf'
+        passenger_conf_file = '/etc/httpd/conf.d/passenger.conf'
+        upload! passenger_config, tmp_file
+        execute :sudo, :mv, tmp_file, passenger_conf_file
+        execute :sudo, :chmod, '644', passenger_conf_file
+      end
     end
   end
 
@@ -210,6 +256,8 @@ end
 before :deploy, 'config:mail_forwarding'
 before :deploy, 'config:install_fits'
 before :deploy, 'config:custom_image_magic_gs'
+before 'config:vhost', 'config:install_passenger_apache'
+before 'config:vhost', 'config:set_up_passenger_conf'
 after 'deploy:compile_assets', 'deploy:cleanup_assets'
 after 'deploy:publishing', 'resque:restart'
 after 'deploy:publishing', 'config:shib_config'

@@ -435,6 +435,9 @@ GEM
       json
     parslet (1.7.1)
       blankslate (>= 2.0, <= 4.0)
+    passenger (5.2.0)
+      rack
+      rake (>= 0.8.1)
     pg (0.18.4)
     phantomjs (2.1.1.0)
     poltergeist (1.10.0)
@@ -795,6 +798,7 @@ DEPENDENCIES
   omniauth-shibboleth
   openseadragon
   osullivan
+  passenger (~> 5.2.0)
   pg
   phantomjs
   poltergeist
