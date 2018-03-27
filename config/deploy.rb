@@ -138,7 +138,7 @@ LoadModule passenger_module #{fetch(:passenger_dir)}/buildout/apache2/mod_passen
   PassengerRoot #{fetch(:passenger_dir)}
   PassengerDefaultRuby #{fetch(:rvm_ruby_path)}
   PassengerLogFile /var/log/#{fetch(:application)}-passenger.log
-  PassengerInstanceRegistryDir /var/run/passenger-instreg
+  PassengerInstanceRegistryDir /tmp
 </IfModule>
           })
         tmp_file = '/tmp/passenger.conf'
