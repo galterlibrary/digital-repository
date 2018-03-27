@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
+  before_action :antispam_timestamp
   after_action :no_bot_crawl_on_staging
   rescue_from DeviseLdapAuthenticatable::LdapException do |exception|
     render :text => exception, :status => 500
@@ -18,6 +19,11 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   private
+
+  config.antispam_threshold = 5
+  def antispam_timestamp
+    session['antispam_timestamp'] ||= Time.now
+  end
 
   def no_bot_crawl_on_staging
     if Rails.env.staging?
@@ -41,7 +47,6 @@ class ApplicationController < ActionController::Base
       stored == root_path ? sufia.dashboard_index_path : stored
     end
   end
-  private :stored_or_location
 
   def after_sign_in_path_for(resource)
     request.env['user_return_to'] || stored_or_location(resource)
