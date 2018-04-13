@@ -3,6 +3,18 @@ require 'rails_helper'
 feature "HomePage", :type => :feature do
   subject { page }
   let(:user) { FactoryGirl.create(:user) }
+  
+  describe 'branding' do
+    before { visit '/'}
+    
+    it 'has nm brand' do
+      expect(page).to have_selector(:css, "div a.institutionLogo")
+    end
+    
+    it 'has home link' do
+      expect(page).to have_link('DigitalHub', href: '/')
+    end
+  end
 
   describe 'tag cloud' do
     let!(:cancer) {

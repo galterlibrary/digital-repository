@@ -5,12 +5,6 @@
         <a class='institutionLogo' href='http://northwesternmedicine.org/?utm_source=website&amp;utm_medium=banner-link&amp;utm_campaign=GalterLibrary' target="_blank">
           <span class='alt'>Northwestern Medicine</span>
         </a>
-        <a class='divisionLogo' href='https://nucats.northwestern.edu' target="blank">
-          <span class='alt'>NUCATS Clinical and Translational Sciences Institute</span>
-        </a>
-
-        <%#= link_to image_tag('NM_logo.png', height: '50'),
-          'http://www.nm.org', id: 'NMLogo', target: '_blank' %>
       </div>
       <div class='pull-right text-right' id='nmRightLinks'>
         <a href='http://www.northwestern.edu' target='_blank'>
@@ -26,7 +20,9 @@
 
   <div id='nmBottom' class='row'>
     <div class='col-xs-12 col-sm-7'>
-      <%= render partial: '/logo' %>
+      <div id='topTitle'>
+        <a id='digitalHubTopLink' href='/'>DigitalHub</a>
+      </div>
     </div><!-- /.col-xs-5 -->
     <div class='col-xs-12 visible-xs-block' id='user_utility_xs'>
         <%= render partial: '/user_util_links' %>
