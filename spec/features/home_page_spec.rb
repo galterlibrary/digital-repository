@@ -60,6 +60,43 @@ feature "HomePage", :type => :feature do
     end
   end
 
+  describe 'Featured Works and recent' do
+      let(:gf) { make_generic_file(user, {
+        tag: ['cancer'], visibility: 'open', title: ['ABC']
+      }) }
+
+      before do
+        gf.label = File.basename('test1.png')
+        gf.date_uploaded = DateTime.now
+        gf.add_file(
+          File.open(Rails.root.join('spec/fixtures/test1.png')),
+          original_name: 'test1.png',
+          path: 'content',
+          mime_type: 'image/png'
+        )
+        gf.save!
+        gf.update_index
+        FeaturedWork.create(generic_file_id: gf.id)
+      end
+
+      specify do
+        visit '/'
+        within('#featured_container') do
+          expect(page).to have_text('ABC')
+          expect(page).to have_text('cancer')
+          expect(page).to have_text(user.user_key)
+          expect(page).to have_text('no resource specified')
+          expect(page).not_to have_text(gf.label)
+        end
+
+        within('#recently_uploaded') do
+          expect(page).to have_text('ABC')
+          expect(page).to have_text('cancer')
+          expect(page).not_to have_text(gf.label)
+        end
+      end
+  end
+
   describe 'Featured Researcher' do
     let(:admin_user) { FactoryGirl.create(:admin_user) }
     let!(:researcher1) {
