@@ -18,6 +18,12 @@ set :ssh_user, "deploy"
 set :repo_url, "git@github.com:galterlibrary/digital-repository.git"
 set :deploy_via, :remote_cache
 
+load 'config/local_env.rb'
+set :slackistrano, {
+  channel: '#general',
+  webhook: ENV['SLACK_HOOK']
+}
+
 # Paths
 set :keep_releases, 5
 set :deploy_to, "/var/www/apps/#{fetch(:application)}"
