@@ -1,0 +1,103 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://id.nlm.nih.gov/mesh/sparql?format=JSON&inference=true&limit=10&query=PREFIX%20rdfs:%20%3Chttp://www.w3.org/2000/01/rdf-schema%23%3E%0D%0APREFIX%20meshv:%20%3Chttp://id.nlm.nih.gov/mesh/vocab%23%3E%0D%0APREFIX%20mesh2018:%20%3Chttp://id.nlm.nih.gov/mesh%3E%0D%0A%0D%0ASELECT%20?d%20?dName%0D%0AFROM%20%3Chttp://id.nlm.nih.gov/mesh%3E%0D%0AWHERE%20%7B%0D%0A%20%20?d%20a%20meshv:Descriptor%20.%0D%0A%20%20?d%20rdfs:label%20?dName%0D%0A%20%20FILTER(REGEX(?dName,%27books%27,%20%27i%27))%20%0D%0A%7D%20%0D%0AORDER%20BY%20?d%20%0D%0A
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Fri, 04 May 2018 19:12:32 GMT
+      X-Frame-Options:
+      - SAMEORIGIN
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST
+      Access-Control-Allow-Headers:
+      - Content-Type
+      Access-Control-Max-Age:
+      - '1'
+      Content-Type:
+      - application/sparql-results+json;charset=utf-8
+      Cache-Control:
+      - no-cache,no-store
+      X-Xss-Protection:
+      - 1; mode=lock
+      Transfer-Encoding:
+      - chunked
+      X-Vip-Info:
+      - 165.112.140.63:443
+      X-Pool-Info:
+      - "/Common/id_pool 10.1.5.125 80"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains; preload
+      X-Count:
+      - '1'
+    body:
+      encoding: UTF-8
+      string: |
+        {
+          "head": {
+            "vars": [ "d" , "dName" ]
+          } ,
+          "results": {
+            "bindings": [
+              {
+                "d": { "type": "uri" , "value": "http://id.nlm.nih.gov/mesh/D001877" } ,
+                "dName": { "type": "literal" , "xml:lang": "en" , "value": "Books" }
+              } ,
+              {
+                "d": { "type": "uri" , "value": "http://id.nlm.nih.gov/mesh/D001878" } ,
+                "dName": { "type": "literal" , "xml:lang": "en" , "value": "Books, Illustrated" }
+              } ,
+              {
+                "d": { "type": "uri" , "value": "http://id.nlm.nih.gov/mesh/D001879" } ,
+                "dName": { "type": "literal" , "xml:lang": "en" , "value": "Bookselling" }
+              } ,
+              {
+                "d": { "type": "uri" , "value": "http://id.nlm.nih.gov/mesh/D002378" } ,
+                "dName": { "type": "literal" , "xml:lang": "en" , "value": "Catalogs, Booksellers'" }
+              } ,
+              {
+                "d": { "type": "uri" , "value": "http://id.nlm.nih.gov/mesh/D011904" } ,
+                "dName": { "type": "literal" , "xml:lang": "en" , "value": "Rare Books" }
+              } ,
+              {
+                "d": { "type": "uri" , "value": "http://id.nlm.nih.gov/mesh/D012013" } ,
+                "dName": { "type": "literal" , "xml:lang": "en" , "value": "Reference Books" }
+              } ,
+              {
+                "d": { "type": "uri" , "value": "http://id.nlm.nih.gov/mesh/D012014" } ,
+                "dName": { "type": "literal" , "xml:lang": "en" , "value": "Reference Books, Medical" }
+              } ,
+              {
+                "d": { "type": "uri" , "value": "http://id.nlm.nih.gov/mesh/D013782" } ,
+                "dName": { "type": "literal" , "xml:lang": "en" , "value": "Textbooks as Topic" }
+              } ,
+              {
+                "d": { "type": "uri" , "value": "http://id.nlm.nih.gov/mesh/D019479" } ,
+                "dName": { "type": "literal" , "xml:lang": "en" , "value": "Account Books" }
+              } ,
+              {
+                "d": { "type": "uri" , "value": "http://id.nlm.nih.gov/mesh/D019508" } ,
+                "dName": { "type": "literal" , "xml:lang": "en" , "value": "Guidebooks" }
+              }
+            ]
+          }
+        }
+    http_version: 
+  recorded_at: Fri, 04 May 2018 19:12:32 GMT
+recorded_with: VCR 4.0.0

@@ -32,7 +32,7 @@
 <% end %>
 
 <% content_for(:altmetric_meta) do %>
-  <meta name="citation_doi" content="<%= @presenter.doi.first.gsub("doi:", "") %>"/>
+  <meta name="citation_doi" content="<%= @presenter.doi.first.try(:gsub, "doi:", "") %>"/>
 <% end %>
 
 <%= javascript_include_tag 'https://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4ff1d986721ebb24' %>

@@ -50,10 +50,9 @@ describe 'collection upload event jobs' do
   end
 
   context 'with a Collection-type child' do
-    let(:event) {{
-      action: "User <a href=\"/users/jill\">jill</a> has added <a href=\"/collections/test-321\">Lil&#39; Hamlet</a> to Collection <a href=\"/collections/test-123\">Hamlet</a>",
-      timestamp: '1'
-    }}
+    let(:event) {
+      "User <a href=\"/users/jill\">jill</a> has added <a href=\"/collections/test-321\">Lil&#39; Hamlet</a> to Collection <a href=\"/collections/test-123\">Hamlet</a>"
+    }
     let(:child) { make_collection(
         user,
         title: "Lil' Hamlet",
@@ -62,7 +61,6 @@ describe 'collection upload event jobs' do
     ) }
 
     it 'processes collections and cares about permissions' do
-      expect(Time).to receive(:now).at_least(:once).and_return(1)
 
       expect(job).to receive(:log_for_collection_follower).with(
         job.collection
@@ -72,15 +70,15 @@ describe 'collection upload event jobs' do
 
       # Collection event stream
       expect(collection.events.length).to eq(1)
-      expect(collection.events.first).to eq(event)
+      expect(collection.events.first[:action]).to eq(event)
       
       # User event stream
       expect(user.profile_events.length).to eq(1)
-      expect(user.profile_events.first).to eq(event)
+      expect(user.profile_events.first[:action]).to eq(event)
 
       # Follower1 has permissions for both parent and child
       expect(follower1.events.length).to eq(2)
-      expect(follower1.events).to include(event)
+      expect(follower1.events.first[:action]).to include(event)
 
       # Follower2 has permissions for the parent only
       expect(follower2.events.length).to eq(0)
@@ -116,7 +114,6 @@ describe 'collection upload event jobs' do
     end
     
     it 'does not process duplicate events for child and parent followers' do
-      expect(Time).to receive(:now).at_least(:once).and_return(1)
 
       expect(child_job).to receive(:log_for_collection_follower).with(
         child_job.collection
@@ -160,7 +157,6 @@ describe 'collection upload event jobs' do
     end
     
     it 'does not spam user that only follows child, and not any of its parents' do
-      expect(Time).to receive(:now).at_least(:once).and_return(1)
 
       expect(child_job).to receive(:log_for_collection_follower).with(
         child_job.collection
@@ -173,10 +169,9 @@ describe 'collection upload event jobs' do
   end
 
   context 'with a GenericFile-type child' do
-    let(:event) {{
-      action: "User <a href=\"/users/jill\">jill</a> has added <a href=\"/files/test-333\">Lil&#39; Hamlet II</a> to Collection <a href=\"/collections/test-123\">Hamlet</a>",
-      timestamp: '1'
-    }}
+    let(:event) {
+      "User <a href=\"/users/jill\">jill</a> has added <a href=\"/files/test-333\">Lil&#39; Hamlet II</a> to Collection <a href=\"/collections/test-123\">Hamlet</a>"
+    }
     let(:child) { make_generic_file(
         user,
         title: ["Lil' Hamlet II"],
@@ -185,7 +180,6 @@ describe 'collection upload event jobs' do
     ) }
 
     it 'processes the upload and cares about permissions' do
-      expect(Time).to receive(:now).at_least(:once).and_return(1)
 
       expect(job).to receive(:log_for_collection_follower).with(
         job.collection
@@ -195,15 +189,15 @@ describe 'collection upload event jobs' do
 
       # Collection event stream
       expect(collection.events.length).to eq(1)
-      expect(collection.events.first).to eq(event)
+      expect(collection.events.first[:action]).to eq(event)
       
       # User event stream
       expect(user.profile_events.length).to eq(1)
-      expect(user.profile_events.first).to eq(event)
+      expect(user.profile_events.first[:action]).to eq(event)
 
       # Follower1 has permissions for both parent and child
       expect(follower1.events.length).to eq(2)
-      expect(follower1.events).to include(event)
+      expect(follower1.events.first[:action]).to include(event)
 
       # Follower2 has permissions for the parent only
       expect(follower2.events.length).to eq(0)

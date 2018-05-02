@@ -53,6 +53,8 @@ group :development, :test do
   gem "jettywrapper"
   gem 'factory_girl_rails'
   gem "capybara"
+  gem 'vcr'
+  gem 'webmock'
   gem 'byebug'
   gem 'pry-byebug'
   gem 'pry-rails'
