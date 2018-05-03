@@ -338,7 +338,7 @@ GEM
       slop
     legato (0.7.0)
       multi_json
-    libv8 (3.16.14.15)
+    libv8 (3.16.14.19)
     link_header (0.0.8)
     linkeddata (1.99.0)
       equivalent-xml (~> 0.6)
@@ -717,8 +717,8 @@ GEM
       resque (~> 1.23)
       resque-pool (~> 0.3)
     sxp (0.1.5)
-    therubyracer (0.12.2)
-      libv8 (~> 3.16.14.0)
+    therubyracer (0.12.3)
+      libv8 (~> 3.16.14.15)
       ref
     thin (1.7.0)
       daemons (~> 1.0, >= 1.0.9)
@@ -738,7 +738,7 @@ GEM
     turbolinks-source (5.0.0)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
-    uglifier (3.0.1)
+    uglifier (4.1.10)
       execjs (>= 0.3.0, < 3)
     unicorn (5.1.0)
       kgio (~> 2.6)

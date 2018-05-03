@@ -15,6 +15,7 @@ end
 set :scm, :git
 set :ssh_options, { :forward_agent => true }
 set :ssh_user, "deploy"
+set :ssh_user_home, "/home/#{fetch(:ssh_user)}"
 set :repo_url, "git@github.com:galterlibrary/digital-repository.git"
 set :deploy_via, :remote_cache
 
@@ -35,11 +36,11 @@ set :linked_files, [
 ]
 
 # Rails stuff
-set :rvm_type, :system # may not need this line for staging/production since global should only be present 
-set :rvm_ruby_version, 'ruby-2.2.2'
-set :rvm_ruby_path, "/usr/local/rvm/wrappers/#{fetch(:rvm_ruby_version)}/ruby"
+set :rvm_type, :user
+set :rvm_ruby_version, 'ruby-2.3.7'
+set :rvm_ruby_path, "#{fetch(:ssh_user_home)}/.rvm/wrappers/#{fetch(:rvm_ruby_version)}/ruby"
 set :passenger_version, '5.2.0'
-set :rvm_ruby_gems_version, '2.2.0'
+set :rvm_ruby_gems_version, '2.3.7'
 set :passenger_dir, "#{fetch(:deploy_to)}/shared/gems/ruby/#{fetch(:rvm_ruby_gems_version)}/gems/passenger-#{fetch(:passenger_version)}"
 set :bundle_without, %w{development test ci}.join(' ')
 set :bundle_flags, "--deployment --path=#{fetch(:deploy_to)}/shared/gems"
@@ -81,7 +82,6 @@ namespace :config do
 
   #{"RailsEnv staging" if fetch(:rails_env) == 'staging'}
   RailsBaseURI /
-  PassengerRuby #{fetch(:rvm_ruby_path)}
   PassengerFriendlyErrorPages off
   PassengerMinInstances 3
 
@@ -136,7 +136,7 @@ PassengerPreStart https://#{fetch(:www_host)}/
   desc 'Set up passenger.conf'
   task :set_up_passenger_conf do
     on roles(:web) do
-      if ENV['INSTALL_PASS_APACHE'] == 'true'
+      if ENV['INSTALL_PASS_APACHE'] == 'true' || ENV['CONF_PASS_APACHE'] == 'true'
         puts "SETTING UP passenger.conf"
         passenger_config = StringIO.new(%{
 LoadModule passenger_module #{fetch(:passenger_dir)}/buildout/apache2/mod_passenger.so
