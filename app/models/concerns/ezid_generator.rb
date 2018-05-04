@@ -5,17 +5,82 @@ module EzidGenerator
 
   def ezid_metadata(status)
     Ezid::Metadata.new(
-      'datacite.creator' => self.creator.first,
-      'datacite.title' => self.title.first,
-      'datacite.publisher' => 'Galter Health Science Library',
-      'datacite.publicationyear' =>
-        (self.date_uploaded.try(:year) || Time.zone.today.year).to_s,
       #'datacite.resourcetype' => self.resource_type.first,
+      "datacite" => datacite_xml,
       '_status' => status,
       '_target' => "#{ENV['PRODUCTION_URL']}/files/#{self.id}"
     )
   end
   private :ezid_metadata
+
+  def resource_type_map(rtype)
+    {
+      'Audio Visual Document' => 'Audiovisual',
+      'Collections' => 'Collection',
+      'Research Paper' => 'DataPaper',
+      'Dataset' => 'Dataset',
+      'Image' => 'Image',
+      'Software or Program Code' => 'Software'
+    }[rtype] || 'Other'
+  end
+  private :resource_type_map
+
+  def datacite_xml(identifier=nil)
+    Nokogiri::XML::Builder.new(encoding: 'UTF-8') { |xml|
+      xml.resource(
+        "xmlns:xsi" => "http://www.w3.org/2001/XMLSchema-instance",
+        "xmlns" => "http://datacite.org/schema/kernel-4",
+        "xsi:schemaLocation" => "http://schema.datacite.org/meta/kernel-4/ http://datacite.org/schema/kernel-4/metadata.xsd"
+      ) {
+
+        xml.identifier(identifierType: "DOI") {
+          xml.text(self.doi.first)
+        }
+
+        xml.creators {
+          self.creator.each do |creator|
+            xml.creator {
+              xml.creatorName {
+                xml.text(creator)
+              }
+            }
+          end
+        }
+
+        xml.titles {
+          self.title.each do |title|
+            xml.title {
+              #xml.text(title)
+              xml.text('Is working?')
+            }
+          end
+        }
+
+        xml.publisher {
+          xml.text('Galter Health Science Library & Learning Center')
+        }
+
+        xml.publicationYear {
+          xml.text(
+            (self.date_uploaded.try(:year) || Time.zone.today.year).to_s
+          )
+        }
+
+        xml.resourceType(
+          resourceTypeGeneral: resource_type_map(self.resource_type.first)
+        ) { xml.text(self.resource_type.first) }
+
+        xml.descriptions {
+          self.description.each do |description|
+            xml.description(descriptionType: "Abstract") {
+              xml.text(description)
+            }
+          end
+        }
+      }
+    }.to_xml
+  end
+  private :datacite_xml
 
   def update_doi_metadata_message(identifier, new_status)
     if new_status == 'unavailable' && identifier.status != new_status
