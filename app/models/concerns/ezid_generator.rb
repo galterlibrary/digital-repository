@@ -3,15 +3,28 @@ module EzidGenerator
 
   attr_accessor :doi_message
 
-  def ezid_metadata(status)
+  def ezid_metadata(status, doi=nil)
     Ezid::Metadata.new(
-      #'datacite.resourcetype' => self.resource_type.first,
-      "datacite" => datacite_xml,
+      "datacite" => validate_datacite_metadata(datacite_xml(doi)),
       '_status' => status,
       '_target' => "#{ENV['PRODUCTION_URL']}/files/#{self.id}"
     )
   end
   private :ezid_metadata
+
+  def datacite_schema
+    @datacite_schema ||= Nokogiri::XML.Schema(
+      open('db/datacite_xsd/metadata.xsd')
+    )
+  end
+
+  class DataciteSchemaError < StandardError; end
+  def validate_datacite_metadata(xml)
+    results = datacite_schema.validate(Nokogiri::XML(xml))
+    return xml if results.blank?
+    raise DataciteSchemaError.new(results)
+  end
+  private :validate_datacite_metadata
 
   def resource_type_map(rtype)
     {
@@ -25,7 +38,7 @@ module EzidGenerator
   end
   private :resource_type_map
 
-  def datacite_xml(identifier=nil)
+  def datacite_xml(doi)
     Nokogiri::XML::Builder.new(encoding: 'UTF-8') { |xml|
       xml.resource(
         "xmlns:xsi" => "http://www.w3.org/2001/XMLSchema-instance",
@@ -34,7 +47,9 @@ module EzidGenerator
       ) {
 
         xml.identifier(identifierType: "DOI") {
-          xml.text(self.doi.first)
+          xml.text(
+            doi || ENV['EZID_DEFAULT_SHOULDER'].gsub('doi:', '')
+          )
         }
 
         xml.creators {
@@ -50,8 +65,7 @@ module EzidGenerator
         xml.titles {
           self.title.each do |title|
             xml.title {
-              #xml.text(title)
-              xml.text('Is working?')
+              xml.text(title)
             }
           end
         }
@@ -98,7 +112,7 @@ module EzidGenerator
         identifier = Ezid::Identifier.find(doi_str.to_s.strip)
         new_status = self.visibility == 'open' ? 'public' : 'unavailable'
         update_doi_metadata_message(identifier, new_status)
-        identifier.update_metadata(ezid_metadata(new_status))
+        identifier.update_metadata(ezid_metadata(new_status, doi_str.to_s.strip))
         identifier.save
       rescue Ezid::Error
         next
@@ -125,8 +139,7 @@ module EzidGenerator
   def create_doi
     identifier = Ezid::Identifier.mint(ezid_metadata(
       self.visibility == 'open' ? 'public' : 'reserved'))
-    self.update_attributes(
-      doi: [identifier.id], ark: [identifier.shadowedby])
+    self.update_attributes(doi: [identifier.id])
     self.doi_message = 'generated'
     self.doi_message = 'generated_reserved' if identifier.status == 'reserved'
   end
