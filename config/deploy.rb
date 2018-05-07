@@ -15,6 +15,7 @@ end
 set :scm, :git
 set :ssh_options, { :forward_agent => true }
 set :ssh_user, "deploy"
+set :ssh_user_home, "/home/#{fetch(:ssh_user)}"
 set :repo_url, "git@github.com:galterlibrary/digital-repository.git"
 set :deploy_via, :remote_cache
 
@@ -35,11 +36,11 @@ set :linked_files, [
 ]
 
 # Rails stuff
-set :rvm_type, :system # may not need this line for staging/production since global should only be present 
-set :rvm_ruby_version, 'ruby-2.2.2'
-set :rvm_ruby_path, "/usr/local/rvm/wrappers/#{fetch(:rvm_ruby_version)}/ruby"
-set :passenger_version, '5.2.0'
-set :rvm_ruby_gems_version, '2.2.0'
+set :rvm_type, :user
+set :rvm_ruby_version, 'ruby-2.3.7'
+set :rvm_ruby_path, "#{fetch(:ssh_user_home)}/.rvm/wrappers/#{fetch(:rvm_ruby_version)}/ruby"
+set :passenger_version, '5.2.3'
+set :rvm_ruby_gems_version, '2.3.0'
 set :passenger_dir, "#{fetch(:deploy_to)}/shared/gems/ruby/#{fetch(:rvm_ruby_gems_version)}/gems/passenger-#{fetch(:passenger_version)}"
 set :bundle_without, %w{development test ci}.join(' ')
 set :bundle_flags, "--deployment --path=#{fetch(:deploy_to)}/shared/gems"
@@ -81,9 +82,9 @@ namespace :config do
 
   #{"RailsEnv staging" if fetch(:rails_env) == 'staging'}
   RailsBaseURI /
-  PassengerRuby #{fetch(:rvm_ruby_path)}
   PassengerFriendlyErrorPages off
   PassengerMinInstances 3
+  PassengerRuby #{fetch(:rvm_ruby_path)}
 
   <Directory #{fetch(:deploy_to)}/current/public >
     Options -MultiViews
@@ -136,7 +137,7 @@ PassengerPreStart https://#{fetch(:www_host)}/
   desc 'Set up passenger.conf'
   task :set_up_passenger_conf do
     on roles(:web) do
-      if ENV['INSTALL_PASS_APACHE'] == 'true'
+      if ENV['INSTALL_PASS_APACHE'] == 'true' || ENV['CONF_PASS_APACHE'] == 'true'
         puts "SETTING UP passenger.conf"
         passenger_config = StringIO.new(%{
 LoadModule passenger_module #{fetch(:passenger_dir)}/buildout/apache2/mod_passenger.so
@@ -153,6 +154,47 @@ LoadModule passenger_module #{fetch(:passenger_dir)}/buildout/apache2/mod_passen
         execute :sudo, :mv, tmp_file, passenger_conf_file
         execute :sudo, :chmod, '644', passenger_conf_file
       end
+    end
+  end
+
+  desc 'Create and upload systemd galter-resque.service file'
+  task :resque_service_config do
+    on roles(:web) do
+      resque_service_config = StringIO.new(%{
+[Unit]
+Description=Galter Resque Service
+After=syslog.target
+After=network.target
+
+[Service]
+Type=forking
+
+User=deploy
+Group=deploy
+
+WorkingDirectory=#{fetch(:deploy_to)}/current
+
+Environment="RUN_AT_EXIT_HOOKS=true"
+Environment="TERM_CHILD=1"
+
+# This is normally controlled by the global default set by systemd
+# StandardOutput=syslog
+
+PIDFile=#{fetch(:deploy_to)}/shared/tmp/pids/resque-pool.pid
+ExecStart=/usr/bin/env #{fetch(:ssh_user_home)}/.rvm/bin/rvm #{fetch(:rvm_ruby_version)} do bundle exec resque-pool --daemon --environment staging
+Restart=on-failure
+ExecStop=kill -INT `cat #{fetch(:deploy_to)}/shared/tmp/pids/resque-pool.pid`
+# Give a reasonable amount of time for the server to start up/shut down
+TimeoutSec=300
+
+[Install]
+WantedBy=multi-user.target
+      })
+      tmp_file = "/tmp/#{fetch(:application)}_galter-resque.service"
+      upload! resque_service_config, tmp_file
+      execute :sudo, :mv, tmp_file, '/etc/systemd/system/galter-resque.service'
+      execute :sudo, :chmod, '644', '/etc/systemd/system/galter-resque.service'
+      execute :sudo, :systemctl, 'daemon-reload'
     end
   end
 
@@ -233,15 +275,20 @@ LoadModule passenger_module #{fetch(:passenger_dir)}/buildout/apache2/mod_passen
 
   task :custom_image_magic_gs do
     on roles(:app) do
-      upload! File.join('config', 'deploy', 'image_magic_gs'), '/tmp/gs_deploy'
-      execute :mkdir, '-p', '/home/deploy/bin'
-      execute :mv, '/tmp/gs_deploy', '/home/deploy/bin/gs'
-      execute(:chmod, '+x', '/home/deploy/bin/gs')
-      upload! File.join('config', 'deploy', 'image_magic_delegates.xml'),
-        '/tmp/delegates.xml_deploy'
-      execute :sudo, :mv, '/tmp/delegates.xml_deploy',
-        '/etc/ImageMagick/delegates.xml'
-      execute(:sudo, :chmod, '644', '/etc/ImageMagick/delegates.xml')
+      if ENV['IMAGE_MAGIC'] == 'true'
+        upload! File.join('config', 'deploy', 'image_magic_gs'), '/tmp/gs_deploy'
+        execute :mkdir, '-p', '/home/deploy/bin'
+        execute :mv, '/tmp/gs_deploy', '/home/deploy/bin/gs'
+        execute(:chmod, '+x', '/home/deploy/bin/gs')
+        upload! File.join('config', 'deploy', 'image_magic_delegates.xml'),
+          '/tmp/delegates.xml_deploy'
+        execute :sudo, :mv, '/tmp/delegates.xml_deploy',
+          '/etc/ImageMagick/delegates.xml'
+        execute(:sudo, :chmod, '644', '/etc/ImageMagick/delegates.xml')
+      else
+        puts "!!!Skipping ImageMagic deployment!!!"
+        puts "Run with `IMAGE_MAGIC=true' to upload a new version"
+      end
     end
   end
 
@@ -265,6 +312,7 @@ before :deploy, 'config:custom_image_magic_gs'
 before 'config:vhost', 'config:install_passenger_apache'
 before 'config:vhost', 'config:set_up_passenger_conf'
 after 'deploy:compile_assets', 'deploy:cleanup_assets'
+after 'deploy:publishing', 'config:resque_service_config'
 after 'deploy:publishing', 'resque:restart'
 after 'deploy:publishing', 'config:shib_config'
 after 'deploy:publishing', 'systemctl:shibd:restart'
