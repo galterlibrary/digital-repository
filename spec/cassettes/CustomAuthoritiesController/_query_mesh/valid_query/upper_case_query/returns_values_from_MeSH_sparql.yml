@@ -1,0 +1,103 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://id.nlm.nih.gov/mesh/sparql?format=JSON&inference=true&limit=10&query=PREFIX%20rdfs:%20%3Chttp://www.w3.org/2000/01/rdf-schema%23%3E%0D%0APREFIX%20meshv:%20%3Chttp://id.nlm.nih.gov/mesh/vocab%23%3E%0D%0APREFIX%20mesh2018:%20%3Chttp://id.nlm.nih.gov/mesh%3E%0D%0A%0D%0ASELECT%20?d%20?dName%0D%0AFROM%20%3Chttp://id.nlm.nih.gov/mesh%3E%0D%0AWHERE%20%7B%0D%0A%20%20?d%20a%20meshv:Descriptor%20.%0D%0A%20%20?d%20rdfs:label%20?dName%0D%0A%20%20FILTER(REGEX(?dName,%27TEST%27,%20%27i%27))%20%0D%0A%7D%20%0D%0AORDER%20BY%20?d%20%0D%0A
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Fri, 04 May 2018 18:26:59 GMT
+      X-Frame-Options:
+      - SAMEORIGIN
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST
+      Access-Control-Allow-Headers:
+      - Content-Type
+      Access-Control-Max-Age:
+      - '1'
+      Content-Type:
+      - application/sparql-results+json;charset=utf-8
+      Cache-Control:
+      - no-cache,no-store
+      X-Xss-Protection:
+      - 1; mode=lock
+      Transfer-Encoding:
+      - chunked
+      X-Vip-Info:
+      - 165.112.140.63:443
+      X-Pool-Info:
+      - "/Common/id_pool 10.1.5.125 80"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains; preload
+      X-Count:
+      - '2'
+    body:
+      encoding: UTF-8
+      string: |
+        {
+          "head": {
+            "vars": [ "d" , "dName" ]
+          } ,
+          "results": {
+            "bindings": [
+              {
+                "d": { "type": "uri" , "value": "http://id.nlm.nih.gov/mesh/D000067108" } ,
+                "dName": { "type": "literal" , "xml:lang": "en" , "value": "Direct-To-Consumer Screening and Testing" }
+              } ,
+              {
+                "d": { "type": "uri" , "value": "http://id.nlm.nih.gov/mesh/D000067716" } ,
+                "dName": { "type": "literal" , "xml:lang": "en" , "value": "Point-of-Care Testing" }
+              } ,
+              {
+                "d": { "type": "uri" , "value": "http://id.nlm.nih.gov/mesh/D000069196" } ,
+                "dName": { "type": "literal" , "xml:lang": "en" , "value": "Gastrointestinal Microbiome" }
+              } ,
+              {
+                "d": { "type": "uri" , "value": "http://id.nlm.nih.gov/mesh/D000070587" } ,
+                "dName": { "type": "literal" , "xml:lang": "en" , "value": "Mental Navigation Tests" }
+              } ,
+              {
+                "d": { "type": "uri" , "value": "http://id.nlm.nih.gov/mesh/D000070857" } ,
+                "dName": { "type": "literal" , "xml:lang": "en" , "value": "Walk Test" }
+              } ,
+              {
+                "d": { "type": "uri" , "value": "http://id.nlm.nih.gov/mesh/D000071185" } ,
+                "dName": { "type": "literal" , "xml:lang": "en" , "value": "Pharmacogenomic Testing" }
+              } ,
+              {
+                "d": { "type": "uri" , "value": "http://id.nlm.nih.gov/mesh/D000072282" } ,
+                "dName": { "type": "literal" , "xml:lang": "en" , "value": "Extraintestinal Pathogenic Escherichia coli" }
+              } ,
+              {
+                "d": { "type": "uri" , "value": "http://id.nlm.nih.gov/mesh/D000073216" } ,
+                "dName": { "type": "literal" , "xml:lang": "en" , "value": "Mental Status and Dementia Tests" }
+              } ,
+              {
+                "d": { "type": "uri" , "value": "http://id.nlm.nih.gov/mesh/D000073218" } ,
+                "dName": { "type": "literal" , "xml:lang": "en" , "value": "Wisconsin Card Sorting Test" }
+              } ,
+              {
+                "d": { "type": "uri" , "value": "http://id.nlm.nih.gov/mesh/D000073219" } ,
+                "dName": { "type": "literal" , "xml:lang": "en" , "value": "Memory and Learning Tests" }
+              }
+            ]
+          }
+        }
+    http_version: 
+  recorded_at: Fri, 04 May 2018 18:26:59 GMT
+recorded_with: VCR 4.0.0

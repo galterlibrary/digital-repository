@@ -12,13 +12,26 @@ Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 include Warden::Test::Helpers
 Warden.test_mode!
 
+options = {
+  js_errors: false,
+  phantomjs: Phantomjs.path
+}
 # Sometimes poltergeist gets transient js errors with no
 # reflection in reality.
-Capybara.register_driver :poltergeist_no_errors do |app|
-  Capybara::Poltergeist::Driver.new(app, js_errors: false)
+Capybara.register_driver :poltergeist_no_js_errors do |app|
+  Capybara::Poltergeist::Driver.new(app, options)
 end
-Capybara.javascript_driver = :poltergeist
+
+# insert `page.driver.debug` into your test to 
+# launch the WebKit inspector in a browser.
+options = options.merge({ inspector: true })
+Capybara.register_driver :poltergeist_debug do |app|
+  Capybara::Poltergeist::Driver.new(app, options)
+end
+
 Capybara.default_max_wait_time = 2
+
+Capybara.javascript_driver = :poltergeist_debug
 
 ActiveRecord::Migration.maintain_test_schema!
 RSpec.configure do |config|

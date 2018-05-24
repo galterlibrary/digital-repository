@@ -1,20 +1,30 @@
 class CustomAuthoritiesController < ApplicationController
   def query_mesh
-    terms = []
+    base_sparql_mesh_uri ="https://id.nlm.nih.gov/mesh/sparql?format=JSON&limit=10&inference=true&query=PREFIX%20rdfs%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0D%0APREFIX%20meshv%3A%20%3Chttp%3A%2F%2Fid.nlm.nih.gov%2Fmesh%2Fvocab%23%3E%0D%0APREFIX%20mesh2018%3A%20%3Chttp%3A%2F%2Fid.nlm.nih.gov%2Fmesh%3E%0D%0A%0D%0ASELECT%20%3Fd%20%3FdName%0D%0AFROM%20%3Chttp%3A%2F%2Fid.nlm.nih.gov%2Fmesh%3E%0D%0AWHERE%20%7B%0D%0A%20%20%3Fd%20a%20meshv%3ADescriptor%20.%0D%0A%20%20%3Fd%20rdfs%3Alabel%20%3FdName%0D%0A%20%20FILTER(REGEX(%3FdName%2C%27"
+    end_sparql_mesh_uri = "%27%2C%20%27i%27))%20%0D%0A%7D%20%0D%0AORDER%20BY%20%3Fd%20%0D%0A"
     if params[:q].present?
-      authority = Qa::Authorities::Mesh.new
-      terms = authority.search(params[:q].to_s.downcase)
+      hits = JSON.parse(HTTParty.get(
+        base_sparql_mesh_uri + params[:q] + end_sparql_mesh_uri
+      ))
+      if hits = hits.try(:[], "results").try(:[], "bindings")
+        hits.map!{|x| x["dName"]["value"]}
+      else
+        hits = ["Error Searching"]
+      end
     end
-    render :layout => false, :text => terms.to_json
+    render json: hits
   end
 
   def lcsh_names
-    lowQuery = params['q'].to_s.downcase
-    hits = []
-    hits = SubjectLocalAuthorityEntry.where(
-      '"lowerLabel" like ?', "#{lowQuery}%").limit(25).pluck(
-        "label, url").map {|hit| { label: hit[0], uri: hit[1] } }
-    render :layout => false, :text => hits.to_json
+    lcnaf_base_uri = "http://id.loc.gov/authorities/names/suggest/?q="
+    if params[:q].present?
+      hits = JSON.parse(HTTParty.get(
+        lcnaf_base_uri + "*#{params[:q].gsub(/\s/,'*')}*"
+      ))
+      hits = hits.try(:[], 1) ? hits[1] : ["Error Searching"]
+    end
+    
+    render json: hits
   end
 
   def ldap_cn_query
