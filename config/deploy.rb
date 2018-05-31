@@ -181,7 +181,7 @@ Environment="TERM_CHILD=1"
 # StandardOutput=syslog
 
 PIDFile=#{fetch(:deploy_to)}/shared/tmp/pids/resque-pool.pid
-ExecStart=/usr/bin/env #{fetch(:ssh_user_home)}/.rvm/bin/rvm #{fetch(:rvm_ruby_version)} do bundle exec resque-pool --daemon --environment staging
+ExecStart=/usr/bin/env #{fetch(:ssh_user_home)}/.rvm/bin/rvm #{fetch(:rvm_ruby_version)} do bundle exec resque-pool --daemon --environment #{fetch(:rails_env)}
 Restart=on-failure
 ExecStop=kill -INT `cat #{fetch(:deploy_to)}/shared/tmp/pids/resque-pool.pid`
 # Give a reasonable amount of time for the server to start up/shut down

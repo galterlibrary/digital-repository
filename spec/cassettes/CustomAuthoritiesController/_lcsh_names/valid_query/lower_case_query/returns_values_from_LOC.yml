@@ -1,0 +1,76 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://id.loc.gov/authorities/names/suggest/?q=*name*
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/x-suggestions+json; charset=utf-8
+      Content-Length:
+      - '1224'
+      Date:
+      - Wed, 02 May 2018 22:15:19 GMT
+      Server:
+      - Apache
+      X-Varnish:
+      - 6537099 842221
+      Age:
+      - '159021'
+      Via:
+      - 1.1 varnish-v4
+      X-Cache:
+      - HIT
+      X-Cache-Hits:
+      - '15'
+      Accept-Ranges:
+      - bytes
+      Connection:
+      - keep-alive
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        WyIqbmFtZSoiLFsiXCJBa3R1ZWxsZSBQcm9ibGVtZSBkZXIgTmFtZW5mb3Jz
+        Y2h1bmcgaW4gZGVyIEREUlwiICgxOTc5IDogS2FybC1NYXJ4LVVuaXZlcnNp
+        dMOkdCBMZWlwemlnKSIsIlwiRGVuIE9wZmVybiBlaW5lbiBOYW1lbiBnZWJl
+        blwiIChDb25mZXJlbmNlKSAoMjAxNiA6IChCZXJsaW4sIEdlcm1hbnkpIiwi
+        XCJJY2ggaGFiZSBkaWNoIGJlaW0gTmFtZW4gZ2VydWZlbi5cIiBNZXRhcGhl
+        cm4gZGVyIFdlbHQtIHVuZCBTZWxic3RyZWZlcmVueiAoQ29uZmVyZW5jZSkg
+        KDIwMTAgOiBVbml2ZXJzaXTDpHQgTHV4ZW1idXJnKSIsIlwiU3VuZGF5IENo
+        cm9uaWNsZVwiIENoZXNzIFRvdXJuYW1lbnQgKDE5NDYgOiBMb25kb24sIEVu
+        Z2xhbmQpIiwiXCJWZWtoaVwiIGthayB6bmFtZW5pZSB2cmVtZW5pIiwiKFJl
+        KW9yZ2FuaXNhdGllLCBmdXNpZSBlbiBvdmVybmFtZSIsIi5aQSBEb21haW4g
+        TmFtZSBBdXRob3JpdHkgKFNvdXRoIEFmcmljYSkiLCIxMDAwIHZlbGlraWto
+        IGkgem5hbWVuaXR5a2ggaW1lbiIsIjE4IE5hbWVzIChNdXNpY2FsIGdyb3Vw
+        KSIsIjIxc3QgY2VudHVyeSBzeW5vbnltIGFuZCBhbnRvbnltIGZpbmRlci4g
+        VmlldG5hbWVzZSAmIEVuZ2xpc2giXSxbIjEgcmVzdWx0IiwiMSByZXN1bHQi
+        LCIxIHJlc3VsdCIsIjEgcmVzdWx0IiwiMSByZXN1bHQiLCIxIHJlc3VsdCIs
+        IjEgcmVzdWx0IiwiMSByZXN1bHQiLCIxIHJlc3VsdCIsIjEgcmVzdWx0Il0s
+        WyJodHRwOi8vaWQubG9jLmdvdi9hdXRob3JpdGllcy9uYW1lcy9uODcxMjA5
+        NjQiLCJodHRwOi8vaWQubG9jLmdvdi9hdXRob3JpdGllcy9uYW1lcy9uMjAx
+        NzA0ODE0NSIsImh0dHA6Ly9pZC5sb2MuZ292L2F1dGhvcml0aWVzL25hbWVz
+        L24yMDE1MDU0NTY5IiwiaHR0cDovL2lkLmxvYy5nb3YvYXV0aG9yaXRpZXMv
+        bmFtZXMvbm8yMDE2MDI2Njk4IiwiaHR0cDovL2lkLmxvYy5nb3YvYXV0aG9y
+        aXRpZXMvbmFtZXMvbm8yMDA4MDM5Nzc0IiwiaHR0cDovL2lkLmxvYy5nb3Yv
+        YXV0aG9yaXRpZXMvbmFtZXMvbm8yMDEzMDM1NzMyIiwiaHR0cDovL2lkLmxv
+        Yy5nb3YvYXV0aG9yaXRpZXMvbmFtZXMvbm8yMDE2MTAyMzAxIiwiaHR0cDov
+        L2lkLmxvYy5nb3YvYXV0aG9yaXRpZXMvbmFtZXMvbm8yMDAyMDM5ODYxIiwi
+        aHR0cDovL2lkLmxvYy5nb3YvYXV0aG9yaXRpZXMvbmFtZXMvbm8yMDA4MTI4
+        NDIwIiwiaHR0cDovL2lkLmxvYy5nb3YvYXV0aG9yaXRpZXMvbmFtZXMvbjk3
+        MDc3MjIwIl1d
+    http_version: 
+  recorded_at: Fri, 04 May 2018 18:25:40 GMT
+recorded_with: VCR 4.0.0

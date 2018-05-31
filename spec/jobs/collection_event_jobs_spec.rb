@@ -16,7 +16,6 @@ describe 'collection event jobs' do
     let!(:follower2) { create(:user) }
     let!(:follower3) { create(:user) }
     let(:action) { 'User <a href="/users/jill">jill</a> has done something' }
-    let(:event) {{ action: action, timestamp: '1' }}
 
     before do
       follower1.follow(user)
@@ -35,8 +34,6 @@ describe 'collection event jobs' do
       )
       collection.save!
 
-      expect(Time).to receive(:now).at_least(:once).and_return(1)
-
       job = CollectionEventJob.new(collection.id, user.user_key)
       expect(job).to receive(:log_for_collection_follower).with(
         job.collection
@@ -46,19 +43,19 @@ describe 'collection event jobs' do
 
       # Fan out to followers
       expect(follower1.events.length).to eq(1)
-      expect(follower1.events.first).to eq(event)
+      expect(follower1.events.first[:action]).to eq(action)
       expect(follower2.events.length).to eq(1)
-      expect(follower2.events.first).to eq(event)
+      expect(follower2.events.first[:action]).to eq(action)
       # follower3 has no permission for the collection
       expect(follower3.events.length).to eq(0)
       
       # Collection event stream
       expect(collection.events.length).to eq(1)
-      expect(collection.events.first).to eq(event)
+      expect(collection.events.first[:action]).to eq(action)
       
       # User event stream
       expect(user.profile_events.length).to eq(1)
-      expect(user.profile_events.first).to eq(event)
+      expect(user.profile_events.first[:action]).to eq(action)
     end
   end
 end

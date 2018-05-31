@@ -1,0 +1,52 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://id.loc.gov/authorities/subjects/suggest/?q=coffee*
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/x-suggestions+json; charset=utf-8
+      Content-Length:
+      - '867'
+      Date:
+      - Mon, 07 May 2018 22:12:59 GMT
+      Server:
+      - Apache
+      X-Varnish:
+      - 153645275 145514258
+      Age:
+      - '864298'
+      Via:
+      - 1.1 varnish-v4
+      X-Cache:
+      - HIT
+      X-Cache-Hits:
+      - '2'
+      Accept-Ranges:
+      - bytes
+      Connection:
+      - keep-alive
+    body:
+      encoding: UTF-8
+      string: '["coffee*",["Coffee","Coffee (Islamic law)","Coffee anthracnose","Coffee
+        bean weevil","Coffee berry borer","Coffee brewing","Coffee brewing equipment
+        industry","Coffee brewing--Equipment and supplies","Coffee cakes","Coffee
+        cans"],["1 result","1 result","1 result","1 result","1 result","1 result","1
+        result","1 result","1 result","1 result"],["http://id.loc.gov/authorities/subjects/sh85027699","http://id.loc.gov/authorities/subjects/sh2007009554","http://id.loc.gov/authorities/subjects/sh85027705","http://id.loc.gov/authorities/subjects/sh85027706","http://id.loc.gov/authorities/subjects/sh85027707","http://id.loc.gov/authorities/subjects/sh85027708","http://id.loc.gov/authorities/subjects/sh85027710","http://id.loc.gov/authorities/subjects/sh85027709","http://id.loc.gov/authorities/subjects/sh89006530","http://id.loc.gov/authorities/subjects/sh91004423"]]'
+    http_version: 
+  recorded_at: Thu, 17 May 2018 22:17:58 GMT
+recorded_with: VCR 4.0.0

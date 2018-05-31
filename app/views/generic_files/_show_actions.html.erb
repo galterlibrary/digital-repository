@@ -66,6 +66,6 @@
     <!-- altemtric donut -->
     <p id="altmetric">
       <span class='altmetric-embed' data-badge-type='donut' data-hide-no-mentions="true"
-      data-doi="<%= @generic_file.doi.first.gsub("doi:", "") %>"></span>
+      data-doi="<%= @generic_file.doi.first.try(:gsub, "doi:", "") %>"></span>
     </p>
 </div>

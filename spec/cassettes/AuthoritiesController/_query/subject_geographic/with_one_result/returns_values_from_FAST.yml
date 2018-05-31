@@ -1,0 +1,36 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://fast.oclc.org/searchfast/fastsuggest?fl=suggest51&query=empire%20of%20ethiopia&wt=json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 May 2018 14:31:02 GMT
+      Server:
+      - Apache/2.0.63 (Unix)
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/json
+    body:
+      encoding: UTF-8
+      string: "{\n \"responseHeader\":{\n  \"status\":0,\n  \"QTime\":1,\n  \"params\":{\n\t\"fl\":\"suggest51\",\n\t\"q\":\"suggest51:ethiopia
+        suggest51:of suggest51:empire\",\n\t\"wt\":\"json\"}},\n \"response\":{\"numFound\":1,\"start\":0,\"docs\":[\n\t{\n\t
+        \"suggest51\":\"Empire of Ethiopia\"}]\n }}"
+    http_version: 
+  recorded_at: Fri, 18 May 2018 14:31:02 GMT
+recorded_with: VCR 4.0.0

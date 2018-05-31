@@ -4,10 +4,9 @@ describe 'collection member removal event jobs' do
   let(:user) { create(:user, username: 'jill') }
   let(:follower1) { create(:user) }
   let(:follower2) { create(:user) }
-  let(:event) {{
-    action: "User <a href=\"/users/jill\">jill</a> has removed DOESNTEXIST from Collection <a href=\"/collections/test-123\">Hamlet</a>",
-    timestamp: '1'
-  }}
+  let(:event) {
+    "User <a href=\"/users/jill\">jill</a> has removed DOESNTEXIST from Collection <a href=\"/collections/test-123\">Hamlet</a>"
+  }
   let!(:collection) {
     make_collection(user, title: 'Hamlet', id: 'test-123', visibility: 'restricted')
   }
@@ -35,7 +34,6 @@ describe 'collection member removal event jobs' do
   end
 
   it 'processes the upload and cares about permissions' do
-    expect(Time).to receive(:now).at_least(:once).and_return(1)
 
     expect(job).to receive(:log_for_collection_follower).with(
       job.collection
@@ -45,15 +43,15 @@ describe 'collection member removal event jobs' do
 
     # Collection event stream
     expect(collection.events.length).to eq(1)
-    expect(collection.events.first).to eq(event)
+    expect(collection.events.first[:action]).to eq(event)
     
     # User event stream
     expect(user.profile_events.length).to eq(1)
-    expect(user.profile_events.first).to eq(event)
+    expect(user.profile_events.first[:action]).to eq(event)
 
     # Follower1 has permissions for both parent and child
     expect(follower1.events.length).to eq(2)
-    expect(follower1.events).to include(event)
+    expect(follower1.events.first[:action]).to include(event)
 
     # Follower2 has permissions for the parent only
     expect(follower2.events.length).to eq(0)

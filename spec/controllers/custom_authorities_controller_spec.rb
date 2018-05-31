@@ -195,82 +195,113 @@ RSpec.describe CustomAuthoritiesController, :type => :controller do
     end
   end # query_users
 
-  describe '#lcsh_names' do
+  describe '#lcsh_names', :vcr do
     context 'invalid query' do
       describe 'no params passed' do
-        subject { get :lcsh_names}
+        subject { get :lcsh_names }
 
         it { is_expected.to have_http_status(:success) }
 
         it 'returns empty array' do
-          expect(JSON.parse(subject.body)).to be_blank
+          expect(subject["response"]).to be_nil
+        end
+      end
+      
+      describe 'no results returned' do
+        subject { JSON.parse(get(:lcsh_names, q: 'fictional name').body) }
+        
+        it 'returns empty array' do
+          expect(subject.count).to eq(0)
         end
       end
     end
 
     context 'valid query' do
-      let!(:name1) { create(:subject_local_authority_entry, label: 'Test Name') }
-      let!(:name2) { create(:subject_local_authority_entry, label: 'Best Name') }
-
       context 'lower case query' do
         subject { JSON.parse(get(:lcsh_names, q: 'name').body) }
 
-        it 'returns both names' do
-          expect(subject.count).to eq(2)
-          expect(subject.map{|o| o['label'] }).to include('Test Name')
-          expect(subject.map{|o| o['label'] }).to include('Best Name')
+        it 'returns values from LOC' do
+          expect(subject.count).to eq(10)
+          subject.each{ |s|
+            expect(s.downcase).to include('name')
+          }
         end
       end
 
       context 'upper case query' do
         subject { JSON.parse(get(:lcsh_names, q: 'NAME').body) }
 
-        it 'returns both names' do
-          expect(subject.count).to eq(2)
-          expect(subject.map{|o| o['label'] }).to include('Test Name')
-          expect(subject.map{|o| o['label'] }).to include('Best Name')
+        it 'returns values from LOC' do
+          expect(subject.count).to eq(10)
+          subject.each{ |s|
+            expect(s.downcase).to include('name')
+          }
+        end
+      end
+      
+      context 'with one result' do
+        subject { JSON.parse(get(:lcsh_names, q: 'galter, dollie').body) }
+
+        it 'returns one value from LOC' do
+          expect(subject.count).to eq(1)
+          
+          expect(subject.first.downcase).to include('galter, dollie')
         end
       end
     end
   end # lcsh_names
 
-  describe '#query_mesh' do
-    before do
-      Qa::SubjectMeshTerm.create(term_id: 'A', term: 'Aaa', term_lower: 'abc')
-      Qa::SubjectMeshTerm.create(term_id: 'B', term: 'Bbb', term_lower: 'bbb')
-      Qa::SubjectMeshTerm.create(term_id: 'C', term: 'BBc', term_lower: 'bbc')
-    end
-
+  describe '#query_mesh', :vcr do
     context 'invalid query' do
       describe 'no params passed' do
-        subject { get :query_mesh}
+        subject { get :query_mesh }
 
         it { is_expected.to have_http_status(:success) }
 
         it 'returns empty array' do
-          expect(JSON.parse(subject.body)).to be_blank
+          expect(subject["response"]).to be_nil
+        end
+        
+        describe 'no results returned' do
+          subject { JSON.parse(get(:query_mesh, q: 'nothing').body) }
+          
+          it 'returns empty array' do
+            expect(subject.count).to eq(0)
+          end
         end
       end
     end
 
     context 'valid query' do
       context 'lower case query' do
-        subject { JSON.parse(get(:query_mesh, q: 'bb').body) }
+        subject { JSON.parse(get(:query_mesh, q: 'test').body) }
 
-        it 'returns both names' do
-          expect(subject.count).to eq(2)
-          expect(subject.map{|o| o['label'] }).to include('Bbb')
-          expect(subject.map{|o| o['label'] }).to include('BBc')
+        it 'returns values from MeSH sparql' do
+          expect(subject.count).to eq(10)
+          subject.each{ |s|
+            expect(s.downcase).to include('test')
+          }
         end
       end
 
       context 'upper case query' do
-        subject { JSON.parse(get(:query_mesh, q: 'BB').body) }
+        subject { JSON.parse(get(:query_mesh, q: 'TEST').body) }
 
-        it 'returns both names' do
-          expect(subject.count).to eq(2)
-          expect(subject.map{|o| o['label'] }).to include('Bbb')
-          expect(subject.map{|o| o['label'] }).to include('BBc')
+        it 'returns values from MeSH sparql' do
+          expect(subject.count).to eq(10)
+          subject.each{ |s|
+            expect(s.downcase).to include('test')
+          }
+        end
+      end
+      
+      context 'with one result' do
+        subject { JSON.parse(get(:query_mesh, q: 'translational sciences').body) }
+
+        it 'returns one value from MeSH sparql' do
+          expect(subject.count).to eq(1)
+          
+          expect(subject.first.downcase).to include('translational sciences')
         end
       end
     end

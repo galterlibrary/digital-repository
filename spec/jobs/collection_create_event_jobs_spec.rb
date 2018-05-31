@@ -3,10 +3,9 @@ require 'rails_helper'
 describe 'collection create event jobs' do
   let!(:user) { create(:user, username: 'jill') }
   let!(:collection) { make_collection(user, title: 'Hamlet', id: 'test-123') }
-  let(:event) {{
-    action: "User <a href=\"/users/jill\">jill</a> has created a new Collection <a href=\"/collections/test-123\">Hamlet</a>",
-    timestamp: '1'
-  }}
+  let(:event) {
+    "User <a href=\"/users/jill\">jill</a> has created a new Collection <a href=\"/collections/test-123\">Hamlet</a>"
+  }
   let(:job) { CollectionCreateEventJob.new(collection.id, user.user_key) }
 
   after do
@@ -16,7 +15,6 @@ describe 'collection create event jobs' do
   end
 
   specify do
-    expect(Time).to receive(:now).at_least(:once).and_return(1)
 
     expect(job).to receive(:log_for_collection_follower).with(
       job.collection
@@ -26,10 +24,10 @@ describe 'collection create event jobs' do
 
     # Collection event stream
     expect(collection.events.length).to eq(1)
-    expect(collection.events.first).to eq(event)
+    expect(collection.events.first[:action]).to eq(event)
     
     # User event stream
     expect(user.profile_events.length).to eq(1)
-    expect(user.profile_events.first).to eq(event)
+    expect(user.profile_events.first[:action]).to eq(event)
   end
 end
