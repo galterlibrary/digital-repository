@@ -1,11 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe "/_footer.html.erb", :type => :view do
+  before do
+    render
+  end
+  
   describe '#nuBrand' do
-    before do
-      render
-    end
-    
     describe 'copyright year' do
       let(:this_yr) { Time.now }
       let(:next_yr) { Time.now + 1.year }
@@ -21,6 +21,13 @@ RSpec.describe "/_footer.html.erb", :type => :view do
           expect(rendered).to have_text("© #{next_yr.year} Northwestern University")
         end
       end
+    end
+  end
+  
+  describe '#footerLinks' do
+    it 'has the coar logo' do
+      expect(rendered).to have_css("a[href*='www.coar-repositories.org']")
+      expect(rendered).to have_css("img[src*=coar-logo]")
     end
   end
 end
