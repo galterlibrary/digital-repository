@@ -465,7 +465,7 @@ GEM
       nokogiri (~> 1.6)
       rails (>= 4.2.0, < 6.0)
       rdf
-    rack (1.6.8)
+    rack (1.6.10)
     rack-mini-profiler (0.10.7)
       rack (>= 1.2.0)
     rack-protection (1.5.3)
@@ -667,7 +667,7 @@ GEM
       net-http-persistent (~> 2.9)
       rdf (~> 1.1)
     spring (1.7.2)
-    sprockets (3.7.1)
+    sprockets (3.7.2)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
     sprockets-rails (3.2.1)
