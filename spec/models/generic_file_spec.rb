@@ -342,7 +342,7 @@ RSpec.describe GenericFile do
             expect(Ezid::Identifier).to receive(:mint)
               .with(
                 Ezid::Metadata.new({
-                  'datacite' => "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<resource xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://datacite.org/schema/kernel-4\" xsi:schemaLocation=\"http://schema.datacite.org/meta/kernel-4/ http://datacite.org/schema/kernel-4/metadata.xsd\">\n  <identifier identifierType=\"DOI\">10.5072/FK2</identifier>\n  <creators>\n    <creator>\n      <creatorName>bcd</creatorName>\n    </creator>\n  </creators>\n  <titles>\n    <title>title</title>\n  </titles>\n  <publisher>Galter Health Science Library &amp; Learning Center</publisher>\n  <publicationYear>2013</publicationYear>\n  <resourceType resourceTypeGeneral=\"Other\">Book</resourceType>\n  <descriptions/>\n</resource>\n",
+                  'datacite' => "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<resource xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://datacite.org/schema/kernel-4\" xsi:schemaLocation=\"http://schema.datacite.org/meta/kernel-4/ http://datacite.org/schema/kernel-4/metadata.xsd\">\n  <identifier identifierType=\"DOI\"></identifier>\n  <creators>\n    <creator>\n      <creatorName>bcd</creatorName>\n    </creator>\n  </creators>\n  <titles>\n    <title>title</title>\n  </titles>\n  <publisher>Galter Health Science Library &amp; Learning Center</publisher>\n  <publicationYear>2013</publicationYear>\n  <resourceType resourceTypeGeneral=\"Other\">Book</resourceType>\n  <descriptions/>\n</resource>\n",
                   '_status' => 'reserved',
                   '_target' => 'https://digitalhub.northwestern.edu/files/mahid'
                 })
@@ -366,7 +366,7 @@ RSpec.describe GenericFile do
         it 'sets doi' do
           expect(Ezid::Identifier).to receive(:mint).with(
             Ezid::Metadata.new({
-              'datacite' => "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<resource xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://datacite.org/schema/kernel-4\" xsi:schemaLocation=\"http://schema.datacite.org/meta/kernel-4/ http://datacite.org/schema/kernel-4/metadata.xsd\">\n  <identifier identifierType=\"DOI\">10.5072/FK2</identifier>\n  <creators>\n    <creator>\n      <creatorName>bcd</creatorName>\n    </creator>\n  </creators>\n  <titles>\n    <title>title</title>\n  </titles>\n  <publisher>Galter Health Science Library &amp; Learning Center</publisher>\n  <publicationYear>#{Time.zone.today.year.to_s}</publicationYear>\n  <resourceType resourceTypeGeneral=\"Other\">Book</resourceType>\n  <descriptions/>\n</resource>\n",
+              'datacite' => "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<resource xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://datacite.org/schema/kernel-4\" xsi:schemaLocation=\"http://schema.datacite.org/meta/kernel-4/ http://datacite.org/schema/kernel-4/metadata.xsd\">\n  <identifier identifierType=\"DOI\"></identifier>\n  <creators>\n    <creator>\n      <creatorName>bcd</creatorName>\n    </creator>\n  </creators>\n  <titles>\n    <title>title</title>\n  </titles>\n  <publisher>Galter Health Science Library &amp; Learning Center</publisher>\n  <publicationYear>#{Time.zone.today.year.to_s}</publicationYear>\n  <resourceType resourceTypeGeneral=\"Other\">Book</resourceType>\n  <descriptions/>\n</resource>\n",
               '_status' => 'reserved',
               '_target' => 'https://digitalhub.northwestern.edu/files/mahid'
             })
@@ -496,7 +496,7 @@ RSpec.describe GenericFile do
       it 'sets doi' do
         expect(Ezid::Identifier).to receive(:mint).with(
           Ezid::Metadata.new({
-            'datacite' => "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<resource xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://datacite.org/schema/kernel-4\" xsi:schemaLocation=\"http://schema.datacite.org/meta/kernel-4/ http://datacite.org/schema/kernel-4/metadata.xsd\">\n  <identifier identifierType=\"DOI\">10.5072/FK2</identifier>\n  <creators>\n    <creator>\n      <creatorName>bcd</creatorName>\n    </creator>\n  </creators>\n  <titles>\n    <title>title</title>\n  </titles>\n  <publisher>Galter Health Science Library &amp; Learning Center</publisher>\n  <publicationYear>2013</publicationYear>\n  <resourceType resourceTypeGeneral=\"Other\">Book</resourceType>\n  <descriptions/>\n</resource>\n",
+            'datacite' => "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<resource xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://datacite.org/schema/kernel-4\" xsi:schemaLocation=\"http://schema.datacite.org/meta/kernel-4/ http://datacite.org/schema/kernel-4/metadata.xsd\">\n  <identifier identifierType=\"DOI\"></identifier>\n  <creators>\n    <creator>\n      <creatorName>bcd</creatorName>\n    </creator>\n  </creators>\n  <titles>\n    <title>title</title>\n  </titles>\n  <publisher>Galter Health Science Library &amp; Learning Center</publisher>\n  <publicationYear>2013</publicationYear>\n  <resourceType resourceTypeGeneral=\"Other\">Book</resourceType>\n  <descriptions/>\n</resource>\n",
             '_status' => 'reserved',
             '_target' => 'https://digitalhub.northwestern.edu/files/mahid'
           })
@@ -515,7 +515,7 @@ RSpec.describe GenericFile do
         it 'sets doi' do
           expect(Ezid::Identifier).to receive(:mint).with(
             Ezid::Metadata.new({
-              'datacite' => "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<resource xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://datacite.org/schema/kernel-4\" xsi:schemaLocation=\"http://schema.datacite.org/meta/kernel-4/ http://datacite.org/schema/kernel-4/metadata.xsd\">\n  <identifier identifierType=\"DOI\">10.5072/FK2</identifier>\n  <creators>\n    <creator>\n      <creatorName>bcd</creatorName>\n    </creator>\n  </creators>\n  <titles>\n    <title>title</title>\n  </titles>\n  <publisher>Galter Health Science Library &amp; Learning Center</publisher>\n  <publicationYear>2013</publicationYear>\n  <resourceType resourceTypeGeneral=\"Other\">Book</resourceType>\n  <descriptions/>\n</resource>\n",
+              'datacite' => "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<resource xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://datacite.org/schema/kernel-4\" xsi:schemaLocation=\"http://schema.datacite.org/meta/kernel-4/ http://datacite.org/schema/kernel-4/metadata.xsd\">\n  <identifier identifierType=\"DOI\"></identifier>\n  <creators>\n    <creator>\n      <creatorName>bcd</creatorName>\n    </creator>\n  </creators>\n  <titles>\n    <title>title</title>\n  </titles>\n  <publisher>Galter Health Science Library &amp; Learning Center</publisher>\n  <publicationYear>2013</publicationYear>\n  <resourceType resourceTypeGeneral=\"Other\">Book</resourceType>\n  <descriptions/>\n</resource>\n",
               '_status' => 'public',
               '_target' => 'https://digitalhub.northwestern.edu/files/mahid'
             })

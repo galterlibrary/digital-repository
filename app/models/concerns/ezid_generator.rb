@@ -47,9 +47,7 @@ module EzidGenerator
       ) {
 
         xml.identifier(identifierType: "DOI") {
-          xml.text(
-            doi || ENV['EZID_DEFAULT_SHOULDER'].gsub('doi:', '')
-          )
+          xml.text(doi.to_s.gsub('doi:', ''))
         }
 
         xml.creators {
@@ -112,7 +110,12 @@ module EzidGenerator
         identifier = Ezid::Identifier.find(doi_str.to_s.strip)
         new_status = self.visibility == 'open' ? 'public' : 'unavailable'
         update_doi_metadata_message(identifier, new_status)
-        identifier.update_metadata(ezid_metadata(new_status, doi_str.to_s.strip))
+        identifier.update_metadata(
+          ezid_metadata(
+            new_status,
+            doi_str.to_s.strip
+          )
+        )
         identifier.save
       rescue Ezid::Error
         next
