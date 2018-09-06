@@ -322,7 +322,7 @@ describe 'generic file', :type => :feature do
     end
   end
 
-  describe 'edit' do
+  describe 'edit' ,driver: :poltergeist_no_js_errors do
     subject { page }
     context 'logged in owner' do
       before do
