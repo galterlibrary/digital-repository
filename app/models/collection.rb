@@ -185,12 +185,12 @@ class Collection < Sufia::Collection
 
   def set_follower(user)
     return false unless user.present?
-		Follow.find_or_create_by(
-			followable_fedora_id: self.id,
-			followable_type: 'Collection',
-			follower_id: user.id,
-			follower_type: 'User'
-		)
+    Follow.find_or_create_by(
+      followable_fedora_id: self.id,
+      followable_type: 'Collection',
+      follower_id: user.id,
+      follower_type: 'User'
+    )
   end
 
   def remove_follower(user)
@@ -200,6 +200,70 @@ class Collection < Sufia::Collection
       followable_type: 'Collection',
       follower_id: user.id,
     ).first.try(:destroy)
+  end
+
+  def json_from_solr(doc)
+    terms = json_presentation_terms_gf
+    o_type = :generic_file
+    if doc['active_fedora_model_ssi'] == 'Collection'
+      o_type = :collection
+      terms = json_presentation_terms
+    end
+
+    fixed_doc = doc.inject({}) {|h, (k,v)|
+      t_part = k.rpartition('_')
+      term = t_part.first.present? ? t_part.first : k
+      h[term] = v
+      h
+    }
+
+    o_json = terms.inject({}) {|h, term|
+      name = I18n.t(:simple_form)[:labels][o_type][term] ||
+        term.to_s.titleize
+      h[name] = fixed_doc[term.to_s]
+      h
+    }
+
+    url_prefix = "https://#{ENV['FULL_HOSTNAME']}"
+    if o_type == :collection
+      o_json['uri'] = "#{url_prefix}/collections/#{o_json['Id']}"
+    else
+      o_json['uri'] = "#{url_prefix}/files/#{o_json['Id']}"
+      o_json['download'] = "#{url_prefix}/downloads/#{o_json['Id']}"
+    end
+
+    o_json
+  end
+
+  def json_presentation_terms
+    GalterCollectionPresenter.terms -
+      [:private_note, :total_items, :size] +
+      [:id]
+  end
+
+  def json_presentation_terms_gf
+    GalterGenericFilePresenter.terms -
+      [:private_note, :total_items, :size] +
+      [:id, :file_size, :file_format]
+  end
+
+  def as_json_presentation(member_docs = nil)
+    cjson = json_presentation_terms.inject({}) {|h, term|
+      name = I18n.t(:simple_form)[:labels][:collection][term] ||
+        term.to_s.titleize
+      h[name] = self.try(term)
+      h
+    }
+    url_prefix = "https://#{ENV['FULL_HOSTNAME']}"
+    cjson['uri'] = "#{url_prefix}/collections/#{self.try(:id)}"
+
+    if member_docs
+      cjson[:members] = member_docs.map {|m| json_from_solr(m) }
+    else
+      # FIXME not implemented
+      cjson[:members] = []
+    end
+    cjson
   end
 
   class << self

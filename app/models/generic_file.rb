@@ -143,6 +143,25 @@ class GenericFile < ActiveFedora::Base
     add_doi_to_citation(citation)
   end
 
+  def json_presentation_terms
+    GalterGenericFilePresenter.terms -
+      [:private_note, :total_items, :size] +
+      [:id, :file_size, :file_format]
+  end
+
+  def as_json_presentation
+    gfjson = json_presentation_terms.inject({}) {|h, term|
+      name = I18n.t(:simple_form)[:labels][:generic_file][term] ||
+        term.to_s.titleize
+      h[name] = self.try(term)
+      h
+    }
+    url_prefix = "https://#{ENV['FULL_HOSTNAME']}"
+    gfjson['uri'] = "#{url_prefix}/files/#{self.try(:id)}"
+    gfjson['download'] = "#{url_prefix}/downloads/#{self.try(:id)}"
+    gfjson
+  end
+
   class << self
     def indexer
       Sufia::GalterGenericFileIndexingService
