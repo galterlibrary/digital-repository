@@ -102,7 +102,14 @@ module Galtersufia
     end
 
     def show
-      super
+      respond_to do |format|
+        format.html { super }
+        format.endnote { super }
+        format.json {
+          render json: @generic_file.as_json_presentation
+        }
+      end
+
       if @generic_file.class == Page
         response.headers['X-Robots-Tag'] = 'noindex'
       end

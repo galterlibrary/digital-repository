@@ -61,6 +61,21 @@ feature "Collections", :type => :feature do
       expect(find_link('Ring of dexterity +9999')['href']).to eq(
         "/files/#{ring.id}")
     }
+
+    context 'as json' do
+      specify {
+        visit("/collections/#{chi_box.id}.json")
+        json = JSON.parse(page.text)
+        expect(json['Title']).to eq('Chinese box')
+        expect(json['Keyword']).to eq(['tag'])
+        expect(json['Id']).to eq(chi_box.id)
+        expect(json['uri']).to include("collections/#{chi_box.id}")
+        expect(json['members'].count).to eq(3)
+        expect(json['members'][0]['Title']).to eq(['Black box'])
+        expect(json['members'][1]['Title']).to eq(['Red box'])
+        expect(json['members'][2]['Title']).to eq(['Ring of dexterity +9999'])
+      }
+    end
   end
 
   describe 'editing collection containing collections' do
