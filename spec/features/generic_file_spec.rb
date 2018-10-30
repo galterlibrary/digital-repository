@@ -51,6 +51,21 @@ describe 'generic file', :type => :feature do
       expect(page).to have_link('Download the file')
     end
 
+    describe 'json' do
+      specify do
+        @file.title = ['Title']
+        @file.creator = ['Creator']
+        @file.save
+        visit "/files/#{@file.id}.json"
+        json = JSON.parse(page.text)
+        expect(json['Abstract']).to have_text('testa')
+        expect(json['Title']).to have_text(['Title'])
+        expect(json['Creator']).to have_text(['Creator'])
+        expect(json['uri']).to include("files/#{@file.id}")
+        expect(json['DOI']).to have_text(['doi:abcdoi'])
+      end
+    end
+
     it 'shows private_note to the owner' do
       login_as(@user, :scope => :user)
       visit "/files/#{@file.id}"
@@ -136,6 +151,7 @@ describe 'generic file', :type => :feature do
         expect(page).to have_text('User Activity')
       end
     end
+
     describe 'IIIF preview' do
       context 'Riff-supported type' do
         before do
@@ -322,7 +338,7 @@ describe 'generic file', :type => :feature do
     end
   end
 
-  describe 'edit' do
+  describe 'edit' ,driver: :poltergeist_no_js_errors do
     subject { page }
     context 'logged in owner' do
       before do

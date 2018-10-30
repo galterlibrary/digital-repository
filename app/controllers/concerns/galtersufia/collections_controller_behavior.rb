@@ -110,7 +110,16 @@ module Galtersufia
           params['sort'] = 'label_si asc'
         end
       end
-      super
+      respond_to do |format|
+        format.html {
+          super
+        }
+        format.json {
+          params['per_page'] = @collection.members.count.to_s
+          super
+          render json: @collection.as_json_presentation(@member_docs)
+        }
+      end
     end
 
     def collection_member_search_logic
