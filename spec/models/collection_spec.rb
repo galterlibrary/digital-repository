@@ -174,6 +174,34 @@ RSpec.describe Collection do
         subject.save(validate: false)
         expect(subject.reload.original_publisher).to eq(['op'])
       end
+
+      context "with same value" do
+        before do
+          subject.original_publisher = ['op']
+        end
+
+        it "will not save duplicates" do
+          expect(subject.original_publisher).to eq(['op'])
+          subject.original_publisher += ['op']
+          subject.save(validate: false)
+          expect(subject.reload.original_publisher).to eq(['op'])
+        end
+      end
+    end
+
+    describe "publisher" do
+      context "with same value" do
+        before do
+          subject.publisher = ['op']
+        end
+
+        it "will not save duplicates" do
+          expect(subject.publisher).to eq(['op'])
+          subject.publisher += ['op']
+          subject.save(validate: false)
+          expect(subject.reload.publisher).to eq(['op'])
+        end
+      end
     end
 
     describe "private_note" do
