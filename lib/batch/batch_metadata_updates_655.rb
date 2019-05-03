@@ -1,6 +1,6 @@
 # Transfer metadata values from Original Publisher to Digital Publisher field
 
-# below is too slow
+# below is too slow, overloads the memory
 #items_needing_transfer = GenericFile.all.reject { |gf| 
 #                           gf.original_publisher == []
 #                         }
@@ -22,6 +22,6 @@ solr_items_w_original_publisher_value.each do |solr_item|
     end
   end
 
-  item.original_publisher -= item.original_publisher
+  item.original_publisher = []
   item.save!
 end
