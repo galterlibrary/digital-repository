@@ -131,15 +131,6 @@ RSpec.describe GenericFile do
       end
     end
 
-    describe "original_publisher" do
-      it "has it" do
-        expect(subject.original_publisher).to be_empty
-        subject.original_publisher = ['abc bcd']
-        subject.save(validate: false)
-        expect(subject.reload.original_publisher).to eq(['abc bcd'])
-      end
-    end
-
     describe "private_note" do
       it "has it" do
         expect(subject.private_note).to be_empty

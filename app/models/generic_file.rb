@@ -89,13 +89,6 @@ class GenericFile < ActiveFedora::Base
     index.as :stored_searchable
   end
 
-  property :original_publisher,
-           :predicate => ::RDF::URI.new(
-             'http://vivoweb.org/ontology/core#publisher'),
-           :multiple => true do |index|
-    index.as :stored_searchable
-  end
-
   property :private_note,
            :predicate => ::RDF::Vocab::MODS.note,
            :multiple => true do |index|
