@@ -257,7 +257,6 @@ feature "Collections", :type => :feature do
             :subject_name => ['NAME'],
             :based_near => ['NEAR'],
             :digital_origin => ['ORIG'],
-            :original_publisher => ['OPUB'],
             :private_note => ['NOTE'],
           )
           visit("/collections/#{chi_box.id}")
@@ -282,7 +281,6 @@ feature "Collections", :type => :feature do
           expect(page).to have_text('NAME')
           expect(page).to have_text('NEAR')
           expect(page).to have_text('ORIG')
-          expect(page).to have_text('OPUB')
           expect(page).to have_text('NOTE')
         end
       end
@@ -546,8 +544,7 @@ feature "Collections", :type => :feature do
             expect(page).to have_text('Description')
             expect(page).to have_text('Original Bibliographic Citation')
             expect(page).to have_text('Related URL')
-            expect(page).to have_text('Digital Publisher')
-            expect(page).to have_text('Original Publisher')
+            expect(page).to have_text('Publisher')
             expect(page).to have_text('Date Created')
             expect(page).to have_text('Original Identifier')
             expect(page).to have_text('Language')

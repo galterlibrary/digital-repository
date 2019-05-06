@@ -167,28 +167,6 @@ RSpec.describe Collection do
       end
     end
 
-    describe "original_publisher" do
-      it "has it" do
-        expect(subject.original_publisher).to eq([])
-        subject.original_publisher = ['op']
-        subject.save(validate: false)
-        expect(subject.reload.original_publisher).to eq(['op'])
-      end
-
-      context "with same value" do
-        before do
-          subject.original_publisher = ['op']
-        end
-
-        it "will not save duplicates" do
-          expect(subject.original_publisher).to eq(['op'])
-          subject.original_publisher += ['op']
-          subject.save(validate: false)
-          expect(subject.reload.original_publisher).to eq(['op'])
-        end
-      end
-    end
-
     describe "publisher" do
       context "with same value" do
         before do
