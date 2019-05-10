@@ -3,6 +3,7 @@ class GenericFile < ActiveFedora::Base
   include InstitutionalCollectionPermissions
   include CleanAttributeValues
   include EzidGenerator
+  include SetPublisherValue
   include Galtersufia::GenericFile::FullTextIndexing
   include Galtersufia::GenericFile::MimeTypes
 

@@ -2,6 +2,7 @@ class Collection < Sufia::Collection
   include Hydra::Collections::Actions
   include InstitutionalCollectionPermissions
   include CleanAttributeValues
+  include SetPublisherValue
 
   validates :tag, presence: true
   before_create :open_visibility
