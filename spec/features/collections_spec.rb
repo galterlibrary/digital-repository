@@ -28,6 +28,7 @@ feature "Collections", :type => :feature do
       expect(page).not_to have_text('Number of pages')
       expect(page).to have_text('Total Items 2 ')
       expect(page).to have_text('Not a member of any collections')
+      expect(page).to have_text('DigitalHub. Galter Health Sciences Library & Learning Center')
 
       expect(find_link('Display all details of Red box')['href']).to eq(
         "/collections/#{red_box.id}")

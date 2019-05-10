@@ -26,7 +26,9 @@ describe 'generic file', :type => :feature do
       expect(page).to have_text('Original Bibliographic Citation')
       expect(page).not_to have_text('Keyword')
       expect(page).not_to have_text('Rights')
-      expect(page).not_to have_text('Publisher')
+      expect(page).to have_text('Publisher')
+      expect(page).to have_text(
+        'DigitalHub. Galter Health Sciences Library & Learning Center')
       expect(page).not_to have_text('Date Created')
       expect(page).to have_text('Subject: MESH')
       expect(page).to have_text('Subject: LCSH')
@@ -202,6 +204,12 @@ describe 'generic file', :type => :feature do
           fill_in 'generic_file_creator', with: 'someone'
           select 'Attribution 3.0 United States', from: 'generic_file_rights'
 
+          # Prepopulated
+          expect(page).to have_field(
+            'generic_file_publisher', 
+            with: 'DigitalHub. Galter Health Sciences Library & Learning Center'
+          )
+
           # Custom
           fill_in 'generic_file_abstract', with: 'abs'
           fill_in 'generic_file_bibliographic_citation', with: 'cit'
@@ -234,6 +242,7 @@ describe 'generic file', :type => :feature do
           expect(@new_file.doi).to eq(['doi'])
           expect(@new_file.ark).to eq(['ark'])
           expect(@new_file.private_note).to eq(['note'])
+          expect(@new_file.publisher).to eq(['DigitalHub. Galter Health Sciences Library & Learning Center'])
         end
       end
 
