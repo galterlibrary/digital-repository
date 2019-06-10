@@ -3,6 +3,7 @@ class GenericFile < ActiveFedora::Base
   include InstitutionalCollectionPermissions
   include CleanAttributeValues
   include EzidGenerator
+  include SetPublisherValue
   include Galtersufia::GenericFile::FullTextIndexing
   include Galtersufia::GenericFile::MimeTypes
 
@@ -85,13 +86,6 @@ class GenericFile < ActiveFedora::Base
   property :ark,
            :predicate => ::RDF::URI.new(
              'http://galter.northwestern.edu/rdf/ark'),
-           :multiple => true do |index|
-    index.as :stored_searchable
-  end
-
-  property :original_publisher,
-           :predicate => ::RDF::URI.new(
-             'http://vivoweb.org/ontology/core#publisher'),
            :multiple => true do |index|
     index.as :stored_searchable
   end

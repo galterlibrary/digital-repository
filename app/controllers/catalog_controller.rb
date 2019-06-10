@@ -152,8 +152,7 @@ class CatalogController < ApplicationController
     config.add_show_field solr_name("digital_origin", :stored_searchable), label: "Digital Origin"
     config.add_show_field solr_name("creator", :stored_searchable), label: "Creator"
     config.add_show_field solr_name("contributor", :stored_searchable), label: "Contributor"
-    config.add_show_field solr_name("publisher", :stored_searchable), label: "Digital Publisher"
-    config.add_show_field solr_name("original_publisher", :stored_searchable), label: "Original Publisher"
+    config.add_show_field solr_name("publisher", :stored_searchable), label: "Publisher"
     config.add_show_field solr_name("page_number", :stored_searchable), label: "Page Number"
     config.add_show_field solr_name("multi_page", :stored_searchable), label: "Multi-Page?"
     config.add_show_field solr_name("based_near", :stored_searchable), label: "Location"
@@ -273,17 +272,6 @@ class CatalogController < ApplicationController
         :"spellcheck.dictionary" => "publisher"
       }
       solr_name = solr_name("publisher", :stored_searchable)
-      field.solr_local_parameters = {
-        qf: solr_name,
-        pf: solr_name
-      }
-    end
-
-    config.add_search_field('original_publisher') do |field|
-      field.solr_parameters = {
-        :"spellcheck.dictionary" => "original_publisher_publisher"
-      }
-      solr_name = solr_name("original_publisher_publisherpublisher", :stored_searchable)
       field.solr_local_parameters = {
         qf: solr_name,
         pf: solr_name

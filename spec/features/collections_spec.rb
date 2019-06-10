@@ -28,6 +28,7 @@ feature "Collections", :type => :feature do
       expect(page).not_to have_text('Number of pages')
       expect(page).to have_text('Total Items 2 ')
       expect(page).to have_text('Not a member of any collections')
+      expect(page).to have_text('DigitalHub. Galter Health Sciences Library & Learning Center')
 
       expect(find_link('Display all details of Red box')['href']).to eq(
         "/collections/#{red_box.id}")
@@ -257,7 +258,6 @@ feature "Collections", :type => :feature do
             :subject_name => ['NAME'],
             :based_near => ['NEAR'],
             :digital_origin => ['ORIG'],
-            :original_publisher => ['OPUB'],
             :private_note => ['NOTE'],
           )
           visit("/collections/#{chi_box.id}")
@@ -282,7 +282,6 @@ feature "Collections", :type => :feature do
           expect(page).to have_text('NAME')
           expect(page).to have_text('NEAR')
           expect(page).to have_text('ORIG')
-          expect(page).to have_text('OPUB')
           expect(page).to have_text('NOTE')
         end
       end
@@ -546,8 +545,7 @@ feature "Collections", :type => :feature do
             expect(page).to have_text('Description')
             expect(page).to have_text('Original Bibliographic Citation')
             expect(page).to have_text('Related URL')
-            expect(page).to have_text('Digital Publisher')
-            expect(page).to have_text('Original Publisher')
+            expect(page).to have_text('Publisher')
             expect(page).to have_text('Date Created')
             expect(page).to have_text('Original Identifier')
             expect(page).to have_text('Language')

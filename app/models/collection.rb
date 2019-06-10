@@ -2,6 +2,7 @@ class Collection < Sufia::Collection
   include Hydra::Collections::Actions
   include InstitutionalCollectionPermissions
   include CleanAttributeValues
+  include SetPublisherValue
 
   validates :tag, presence: true
   before_create :open_visibility
@@ -74,13 +75,6 @@ class Collection < Sufia::Collection
            :multiple => false do |index|
     index.as :stored_searchable
     index.type :boolean
-  end
-
-  property :original_publisher,
-           :predicate => ::RDF::URI.new(
-             'http://vivoweb.org/ontology/core#publisher'),
-           :multiple => true do |index|
-    index.as :stored_searchable
   end
 
   property :private_note,
