@@ -467,6 +467,8 @@ GEM
       rails (>= 4.2.0, < 6.0)
       rdf
     rack (1.6.10)
+    rack-attack (6.0.0)
+      rack (>= 1.0, < 3)
     rack-mini-profiler (0.10.7)
       rack (>= 1.2.0)
     rack-protection (1.5.5)
@@ -820,6 +822,7 @@ DEPENDENCIES
   pry-rails
   puma
   qa
+  rack-attack
   rack-mini-profiler
   rails (= 4.2.7)
   rdf-vocab
@@ -850,4 +853,4 @@ DEPENDENCIES
   whenever
 
 BUNDLED WITH
-   1.16.1
+   1.16.2

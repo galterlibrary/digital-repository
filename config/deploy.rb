@@ -93,6 +93,12 @@ namespace :config do
     Allow from all
     # Block Northwestern Google bot, it was hitting us 500/minutes for days
     Deny from 129.105.16.40
+    # Block known subnets that were hitting us 1000s/hr
+    Deny from 119.39.94.0/24
+    Deny from 117.45.252.0/24
+    Deny from 183.27.51.0/24
+    Deny from 101.24.176.0/24
+    Deny from 125.127.0.0/16
   </Directory>
 </VirtualHost>
 
