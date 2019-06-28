@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'Rack::Attack.throttle', :type => :request do
   before do
-    @period = 6.minutes
+    @period = 1.hour
     Rack::Attack.cache.store = ActiveSupport::Cache::MemoryStore.new
   end
 
@@ -45,7 +45,7 @@ RSpec.describe 'Rack::Attack.throttle', :type => :request do
       end
     end
 
-    describe 'NU network 165.214.0.0/16' do
+    describe 'NU network 165.124.0.0/16' do
       before do
         get '/', {}, 'REMOTE_ADDR' => '165.124.124.32'
       end
@@ -92,22 +92,23 @@ RSpec.describe 'Rack::Attack.throttle', :type => :request do
         end
 
         it 'tracks the subnet' do
-          data = { :count => 1, :limit => 100, :period => @period.to_i, :epoch_time => @epoch_time }
+          data = { :count => 1, :limit => 1000,
+                   :period => @period.to_i, :epoch_time => @epoch_time }
           expect(request.env['rack.attack.throttle_data']['req/subnet']).to eq(data)
           expect(request.env['REMOTE_ADDR']).to eq('1.2.3.4')
         end
 
         it 'suppresses the subnet' do
           key = "rack::attack:#{(Time.now.to_i/@period).to_i}:req/subnet:1.2.3."
-          Rack::Attack.cache.store.increment(key, 99)
+          Rack::Attack.cache.store.increment(key, 999)
           @epoch_time = Time.now.to_i
+
           get '/about', {}, 'REMOTE_ADDR' => '1.2.3.5'
-
-          data = { :count => 101, :limit => 100, :period => @period.to_i, :epoch_time => @epoch_time }
-
+          data = { :count => 1001, :limit => 1000,
+                   :period => @period.to_i, :epoch_time => @epoch_time }
           expect(response.status).to eq(429)
           expect(response.headers['Retry-After']).to eq(@period.to_s)
-          expect(Rack::Attack.cache.store.read(key)).to eq(101)
+          expect(Rack::Attack.cache.store.read(key)).to eq(1001)
           expect(request.env['rack.attack.throttle_data']['req/subnet']).to eq(data)
         end
       end # all paths
@@ -131,23 +132,26 @@ RSpec.describe 'Rack::Attack.throttle', :type => :request do
         end
 
         it 'tracks the subnet' do
-          data = { :count => 1, :limit => 10, :period => @period.to_i, :epoch_time => @epoch_time }
+          data = { :count => 1, :limit => 100,
+                   :period => @period.to_i, :epoch_time => @epoch_time }
           expect(request.env['rack.attack.throttle_data']['catalog/subnet']).to eq(data)
           expect(request.env['REMOTE_ADDR']).to eq('1.2.3.4')
         end
 
         it 'suppresses the subnet' do
           key = "rack::attack:#{(Time.now.to_i/@period).to_i}:catalog/subnet:1.2.3."
-          Rack::Attack.cache.store.increment(key, 9)
+          Rack::Attack.cache.store.increment(key, 99)
           @epoch_time = Time.now.to_i
+
           get '/catalog/suppressed', {}, 'REMOTE_ADDR' => '1.2.3.5'
-
-          data = { :count => 11, :limit => 10, :period => @period.to_i, :epoch_time => @epoch_time }
-
+          data = { :count => 101, :limit => 100,
+                   :period => @period.to_i, :epoch_time => @epoch_time }
           expect(response.status).to eq(429)
           expect(response.headers['Retry-After']).to eq(@period.to_s)
-          expect(Rack::Attack.cache.store.read(key)).to eq(11)
-          expect(request.env['rack.attack.throttle_data']['catalog/subnet']).to eq(data)
+          expect(Rack::Attack.cache.store.read(key)).to eq(101)
+          expect(
+            request.env['rack.attack.throttle_data']['catalog/subnet']
+          ).to eq(data)
         end
       end # /catalog paths
     end # not signed in user
@@ -175,22 +179,23 @@ RSpec.describe 'Rack::Attack.throttle', :type => :request do
         end
 
         it 'tracks the subnet' do
-          data = { :count => 1, :limit => 1000, :period => @period.to_i, :epoch_time => @epoch_time }
+          data = { :count => 1, :limit => 10000,
+                   :period => @period.to_i, :epoch_time => @epoch_time }
           expect(request.env['rack.attack.throttle_data']['req/subnet']).to eq(data)
           expect(request.env['REMOTE_ADDR']).to eq('1.2.3.4')
         end
 
         it 'suppresses the subnet' do
           key = "rack::attack:#{(Time.now.to_i/@period).to_i}:req/subnet:1.2.3."
-          Rack::Attack.cache.store.increment(key, 999)
+          Rack::Attack.cache.store.increment(key, 9999)
           @epoch_time = Time.now.to_i
+
           get '/about', {}, 'REMOTE_ADDR' => '1.2.3.5'
-
-          data = { :count => 1001, :limit => 1000, :period => @period.to_i, :epoch_time => @epoch_time }
-
+          data = { :count => 10001, :limit => 10000,
+                   :period => @period.to_i, :epoch_time => @epoch_time }
           expect(response.status).to eq(429)
           expect(response.headers['Retry-After']).to eq(@period.to_s)
-          expect(Rack::Attack.cache.store.read(key)).to eq(1001)
+          expect(Rack::Attack.cache.store.read(key)).to eq(10001)
           expect(request.env['rack.attack.throttle_data']['req/subnet']).to eq(data)
         end
       end # all paths
@@ -214,22 +219,23 @@ RSpec.describe 'Rack::Attack.throttle', :type => :request do
         end
 
         it 'tracks the subnet' do
-          data = { :count => 1, :limit => 500, :period => @period.to_i, :epoch_time => @epoch_time }
+          data = { :count => 1, :limit => 5000,
+                   :period => @period.to_i, :epoch_time => @epoch_time }
           expect(request.env['rack.attack.throttle_data']['catalog/subnet']).to eq(data)
           expect(request.env['REMOTE_ADDR']).to eq('1.2.3.4')
         end
 
         it 'suppresses the subnet' do
           key = "rack::attack:#{(Time.now.to_i/@period).to_i}:catalog/subnet:1.2.3."
-          Rack::Attack.cache.store.increment(key, 499)
+          Rack::Attack.cache.store.increment(key, 4999)
           @epoch_time = Time.now.to_i
+
           get '/catalog/suppressed', {}, 'REMOTE_ADDR' => '1.2.3.5'
-
-          data = { :count => 501, :limit => 500, :period => @period.to_i, :epoch_time => @epoch_time }
-
+          data = { :count => 5001, :limit => 5000,
+                   :period => @period.to_i, :epoch_time => @epoch_time }
           expect(response.status).to eq(429)
           expect(response.headers['Retry-After']).to eq(@period.to_s)
-          expect(Rack::Attack.cache.store.read(key)).to eq(501)
+          expect(Rack::Attack.cache.store.read(key)).to eq(5001)
           expect(request.env['rack.attack.throttle_data']['catalog/subnet']).to eq(data)
         end
       end # /catalog paths
