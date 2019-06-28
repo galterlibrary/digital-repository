@@ -20,21 +20,25 @@ class Rack::Attack
                              '/downloads/')
   end
 
-  catalog_limit_proc = proc { |req| req.env['warden'].user.blank? ? 10 : 500 }
+  # Based on occurrences during the week of June 16, 2019, DigitalHub
+  # suffered a DDoS-like event. Inspection of logs during the event showed
+  # +10k requests per hour to digitalhub, from thousands of different ips.
+  # Throttling by ip would prove ineffective in this case. Though in the
+  # hundreds, the ips showed a subnet-like pattern. The following throttle
+  # rules, tracking by subnet, are based off this event.
+  catalog_limit_proc = proc { |req| req.env['warden'].user.blank? ? 100 : 5000 }
   # Throttle /catalog by subnet
-  # 500/6mins for authenticated, 10/6mins for unauthenticated
-  # Key: "rack::attack:#{Time.now.to_i/:period}:catalog/subnet:#{subnet of req.ip}"
-  throttle('catalog/subnet', limit: catalog_limit_proc, period: 6.minutes) do |req|
+  # 5000/hr for authenticated, 100/hr for unauthenticated
+  throttle('catalog/subnet', limit: catalog_limit_proc, period: 1.hour) do |req|
     if req.fullpath.start_with?('/catalog?', '/catalog/') && !req.fullpath.start_with?('/catalog?page')
       req.ip.slice(0..req.ip.rindex("."))
     end
   end
 
-  all_limit_proc = proc { |req| req.env['warden'].user.blank? ? 100 : 1000 }
+  all_limit_proc = proc { |req| req.env['warden'].user.blank? ? 1000 : 10000 }
   # Throttle all requests by subnet
-  # 1000/6mins for for authenticated, 100/6mins for unauthenticated
-  # Key: "rack::attack:#{Time.now.to_i/:period}:req/subnet:#{subnet of req.ip}"
-  throttle('req/subnet', limit: all_limit_proc, period: 6.minutes) do |req|
+  # 10000/hr for for authenticated, 1000/hr for unauthenticated
+  throttle('req/subnet', limit: all_limit_proc, period: 1.hour) do |req|
     req.ip.slice(0..req.ip.rindex("."))
   end
 end
