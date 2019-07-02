@@ -1,5 +1,5 @@
-# Add 'T Series' and 'Grants Resorces' to 'NUCATS Grants Repository'
-# then convert to institutional
+# Institutionalize 12th General Hospital and its sub collections under 
+# 'Galter Health Sciences Library Collections'
 
 parent_ghsl_collection = Collection.find("fj2362114")
 
