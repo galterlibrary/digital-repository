@@ -1,0 +1,3 @@
+# Add .gitignore to commit "empty" directory
+*
+!.gitignore 
