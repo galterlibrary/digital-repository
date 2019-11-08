@@ -20,25 +20,48 @@ class Rack::Attack
                              '/downloads/')
   end
 
+  # Allow authenticated user
+  Rack::Attack.safelist('authenticated user') do |req|
+    !req.env['warden'].user.blank?
+  end
+
   # Based on occurrences during the week of June 16, 2019, DigitalHub
   # suffered a DDoS-like event. Inspection of logs during the event showed
   # +10k requests per hour to digitalhub, from thousands of different ips.
   # Throttling by ip would prove ineffective in this case. Though in the
   # hundreds, the ips showed a subnet-like pattern. The following throttle
   # rules, tracking by subnet, are based off this event.
-  catalog_limit_proc = proc { |req| req.env['warden'].user.blank? ? 100 : 5000 }
+
   # Throttle /catalog by subnet
-  # 5000/hr for authenticated, 100/hr for unauthenticated
-  throttle('catalog/subnet', limit: catalog_limit_proc, period: 1.hour) do |req|
-    if req.fullpath.start_with?('/catalog?', '/catalog/') && !req.fullpath.start_with?('/catalog?page')
-      req.ip.slice(0..req.ip.rindex("."))
+  # Exponential Backoff for unauthenticated user
+  #   Level 6: 96 requests per 64 minutes
+  #   Level 7: 112 requests per 128 minutes
+  #   Level 8: 128 requests per 256 minutes
+  #   Level 9: 144 requests per 512 minutes
+  #   Level 10: 160 requests per 1024 minutes
+  (6..10).each do |level|
+    # We set a strict limit for the catalog path because facets/filters consume
+    # a lot of resources, hence slowing down digitalhub. Navigating around the
+    # '/catalog?page' path is fine.
+    throttle("catalog/subnet/#{level}", :limit => (16 * level), :period => (2 ** level).minutes) do |req|
+      if req.fullpath.start_with?('/catalog?', '/catalog/') && !req.fullpath.start_with?('/catalog?page')
+        req.ip.slice(0..req.ip.rindex("."))
+      end
     end
   end
 
-  all_limit_proc = proc { |req| req.env['warden'].user.blank? ? 1000 : 10000 }
-  # Throttle all requests by subnet
-  # 10000/hr for for authenticated, 1000/hr for unauthenticated
-  throttle('req/subnet', limit: all_limit_proc, period: 1.hour) do |req|
+  # Throttle all requests by subnet for unauthenticated user
+  throttle('req/subnet', limit: 1000, period: 1.hour) do |req|
     req.ip.slice(0..req.ip.rindex("."))
+  end
+
+  # Custom throttle response
+  self.throttled_response = lambda do |env|
+    [
+      503, # status
+      {}, # headers
+      ['Looks like you have reached your limit. ',
+       'Please log in to get the full experience.'] # body
+    ]
   end
 end
