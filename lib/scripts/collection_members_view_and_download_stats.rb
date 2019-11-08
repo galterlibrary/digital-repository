@@ -25,7 +25,7 @@ class CollectionMembersViewAndDownloadStats
   end
 
   def get_stats_and_add_to_csv(type:, collection: self.collection)
-    if !STAT_TYPES.include?(type.downcase!)
+    if !STAT_TYPES.include?(type)
       puts "Can only get stats for 'pageviews' or 'downloads'"
       return
     end
@@ -35,7 +35,7 @@ class CollectionMembersViewAndDownloadStats
 
     collection.members.each do |member|
       if member.class == Collection
-        member.get_stats_and_add_to_csv(type: type, collection: member)
+        self.get_stats_and_add_to_csv(type: type, collection: member)
         next
       end
 
@@ -60,7 +60,5 @@ class CollectionMembersViewAndDownloadStats
         csv_file << [collection.title, member.title.first, member_uri, k, v]
       end
     end
-
-    csv_file.close
   end
 end

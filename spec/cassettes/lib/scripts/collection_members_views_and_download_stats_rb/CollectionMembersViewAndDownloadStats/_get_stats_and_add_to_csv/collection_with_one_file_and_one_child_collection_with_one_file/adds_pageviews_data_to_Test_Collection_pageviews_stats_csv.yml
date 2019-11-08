@@ -1,0 +1,480 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://accounts.google.com/o/oauth2/token
+    body:
+      encoding: ASCII-8BIT
+      string: grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&assertion=eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJkZXZlbG9wbWVudC1kaWdpdGFsaHViQGF1dG9ub21vdXMtdGltZS0yNTgwMTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCJhdWQiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20vby9vYXV0aDIvdG9rZW4iLCJleHAiOjE1NzMyMzkxNTMsImlhdCI6MTU3MzIzOTAzMywic2NvcGUiOiJodHRwczovL3d3dy5nb29nbGVhcGlzLmNvbS9hdXRoL2FuYWx5dGljcy5yZWFkb25seSJ9.LvDa7CDO3FBc19EfWNSjuM10XbjbA-rjbBIjAbeVvFVebOH2KcinmDYfcmTEEGHkCuCKio3aWsvhWOdXubpU_IZn_PMWiZSforupXf1HxYRDAm0E6BtHiT_BGyAf7EP414vAo25rG6mH5MgtduVlMuinRIiS3NDbtRwgTAp420VhuAzXdVG4xTTjIlE88Wn8qEMpUyQ0goKDRzEcxRhLtKZFSOgaYH7ebIiHpgKQkB3a9db--gwRYJFzAZAHn905geGlkMO87IS8j0L9Bp8kciT78NN6ytCiQCqkG4bhoyNmUcv3comiIzvQmg_kwE93GXcLutdsSZ4QFnSvcnSiqg
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=utf-8
+      Vary:
+      - Origin
+      - Referer
+      - X-Origin
+      Date:
+      - Fri, 08 Nov 2019 18:51:33 GMT
+      Server:
+      - ESF
+      Cache-Control:
+      - private
+      X-Xss-Protection:
+      - '0'
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Content-Type-Options:
+      - nosniff
+      Alt-Svc:
+      - quic=":443"; ma=2592000; v="46,43",h3-Q050=":443"; ma=2592000,h3-Q049=":443";
+        ma=2592000,h3-Q048=":443"; ma=2592000,h3-Q046=":443"; ma=2592000,h3-Q043=":443";
+        ma=2592000
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+          "access_token": "ya29.c.Kl2wBz8xljZV9s2OHmoj7otZSahgaM1wzmwYf0QYQ9fhNfVR6Sejx6au9C_Vp7yYCAQ9Rl-JeCla6LIIAcqf9dtjcAmrxJCWFy9jsuK40Jw6ny6E8MfE4SZH5clw8zU",
+          "expires_in": 3600,
+          "token_type": "Bearer"
+        }
+    http_version: 
+  recorded_at: Fri, 08 Nov 2019 18:51:33 GMT
+- request:
+    method: get
+    uri: https://www.googleapis.com/analytics/v3/management/accounts/~all/webproperties/~all/profiles
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Authorization:
+      - Bearer ya29.c.Kl2wBz8xljZV9s2OHmoj7otZSahgaM1wzmwYf0QYQ9fhNfVR6Sejx6au9C_Vp7yYCAQ9Rl-JeCla6LIIAcqf9dtjcAmrxJCWFy9jsuK40Jw6ny6E8MfE4SZH5clw8zU
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - Fri, 08 Nov 2019 18:51:33 GMT
+      Date:
+      - Fri, 08 Nov 2019 18:51:33 GMT
+      Cache-Control:
+      - private, max-age=0, must-revalidate, no-transform
+      Etag:
+      - '"b1gm6ke8-tjIkX__6AMWPZx_gaQ/wSRWqYPAwQb2r0Y7S4B9_8C8FLQ"'
+      Vary:
+      - Origin
+      - X-Origin
+      Content-Type:
+      - application/json; charset=UTF-8
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      Server:
+      - GSE
+      Alt-Svc:
+      - quic=":443"; ma=2592000; v="46,43",h3-Q050=":443"; ma=2592000,h3-Q049=":443";
+        ma=2592000,h3-Q048=":443"; ma=2592000,h3-Q046=":443"; ma=2592000,h3-Q043=":443";
+        ma=2592000
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: '{"kind":"analytics#profiles","username":"EMAIL@BOGUS.COM","totalResults":1,"startIndex":1,"itemsPerPage":1000,"items":[{"id":"205120964","kind":"analytics#profile","selfLink":"https://www.googleapis.com/analytics/v3/management/accounts/151450089/webproperties/UA-BOGUS/profiles/205120964","accountId":"151450089","webPropertyId":"UA-BOGUS","internalWebPropertyId":"214350695","name":"All
+        Web Site Data","currency":"USD","timezone":"America/Chicago","websiteUrl":"http://dev.digitalhub.northwestern.edu","type":"WEB","permissions":{"effective":["READ_AND_ANALYZE"]},"created":"2019-11-04T19:27:08.687Z","updated":"2019-11-04T19:27:08.687Z","eCommerceTracking":false,"botFilteringEnabled":true,"parentLink":{"type":"analytics#webproperty","href":"https://www.googleapis.com/analytics/v3/management/accounts/151450089/webproperties/UA-BOGUS"},"childLink":{"type":"analytics#goals","href":"https://www.googleapis.com/analytics/v3/management/accounts/151450089/webproperties/UA-BOGUS/profiles/205120964/goals"}}]}'
+    http_version: 
+  recorded_at: Fri, 08 Nov 2019 18:51:33 GMT
+- request:
+    method: get
+    uri: https://www.googleapis.com/analytics/v3/data/ga?dimensions=ga:eventCategory,ga:eventAction,ga:eventLabel,ga:date&end-date=2019-11-07&fields=columnHeaders/name,rows,totalResults,totalsForAllResults&filters=ga:eventLabel==bogus-file-id&ids=ga:205120964&metrics=ga:totalEvents&sort=ga:date&start-date=2019-10-07
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Authorization:
+      - Bearer ya29.c.Kl2wBz8xljZV9s2OHmoj7otZSahgaM1wzmwYf0QYQ9fhNfVR6Sejx6au9C_Vp7yYCAQ9Rl-JeCla6LIIAcqf9dtjcAmrxJCWFy9jsuK40Jw6ny6E8MfE4SZH5clw8zU
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - Fri, 08 Nov 2019 18:51:33 GMT
+      Date:
+      - Fri, 08 Nov 2019 18:51:33 GMT
+      Cache-Control:
+      - private, max-age=0, must-revalidate, no-transform
+      Etag:
+      - '"b1gm6ke8-tjIkX__6AMWPZx_gaQ/KrRanqlShqOypsKk32FrXxwnBuo"'
+      Vary:
+      - Origin
+      - X-Origin
+      Content-Type:
+      - application/json; charset=UTF-8
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      Server:
+      - GSE
+      Alt-Svc:
+      - quic=":443"; ma=2592000; v="46,43",h3-Q050=":443"; ma=2592000,h3-Q049=":443";
+        ma=2592000,h3-Q048=":443"; ma=2592000,h3-Q046=":443"; ma=2592000,h3-Q043=":443";
+        ma=2592000
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: '{"totalResults":0,"columnHeaders":[{"name":"ga:eventCategory"},{"name":"ga:eventAction"},{"name":"ga:eventLabel"},{"name":"ga:date"},{"name":"ga:totalEvents"}],"totalsForAllResults":{"ga:totalEvents":"0"}}'
+    http_version: 
+  recorded_at: Fri, 08 Nov 2019 18:51:33 GMT
+- request:
+    method: post
+    uri: https://accounts.google.com/o/oauth2/token
+    body:
+      encoding: ASCII-8BIT
+      string: grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&assertion=eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJkZXZlbG9wbWVudC1kaWdpdGFsaHViQGF1dG9ub21vdXMtdGltZS0yNTgwMTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCJhdWQiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20vby9vYXV0aDIvdG9rZW4iLCJleHAiOjE1NzMyMzkxNTMsImlhdCI6MTU3MzIzOTAzMywic2NvcGUiOiJodHRwczovL3d3dy5nb29nbGVhcGlzLmNvbS9hdXRoL2FuYWx5dGljcy5yZWFkb25seSJ9.LvDa7CDO3FBc19EfWNSjuM10XbjbA-rjbBIjAbeVvFVebOH2KcinmDYfcmTEEGHkCuCKio3aWsvhWOdXubpU_IZn_PMWiZSforupXf1HxYRDAm0E6BtHiT_BGyAf7EP414vAo25rG6mH5MgtduVlMuinRIiS3NDbtRwgTAp420VhuAzXdVG4xTTjIlE88Wn8qEMpUyQ0goKDRzEcxRhLtKZFSOgaYH7ebIiHpgKQkB3a9db--gwRYJFzAZAHn905geGlkMO87IS8j0L9Bp8kciT78NN6ytCiQCqkG4bhoyNmUcv3comiIzvQmg_kwE93GXcLutdsSZ4QFnSvcnSiqg
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=utf-8
+      Vary:
+      - Origin
+      - Referer
+      - X-Origin
+      Date:
+      - Fri, 08 Nov 2019 18:51:33 GMT
+      Server:
+      - ESF
+      Cache-Control:
+      - private
+      X-Xss-Protection:
+      - '0'
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Content-Type-Options:
+      - nosniff
+      Alt-Svc:
+      - quic=":443"; ma=2592000; v="46,43",h3-Q050=":443"; ma=2592000,h3-Q049=":443";
+        ma=2592000,h3-Q048=":443"; ma=2592000,h3-Q046=":443"; ma=2592000,h3-Q043=":443";
+        ma=2592000
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+          "access_token": "ya29.c.Kl2wBz8xljZV9s2OHmoj7otZSahgaM1wzmwYf0QYQ9fhNfVR6Sejx6au9C_Vp7yYCAQ9Rl-JeCla6LIIAcqf9dtjcAmrxJCWFy9jsuK40Jw6ny6E8MfE4SZH5clw8zU",
+          "expires_in": 3600,
+          "token_type": "Bearer"
+        }
+    http_version: 
+  recorded_at: Fri, 08 Nov 2019 18:51:34 GMT
+- request:
+    method: get
+    uri: https://www.googleapis.com/analytics/v3/management/accounts/~all/webproperties/~all/profiles
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Authorization:
+      - Bearer ya29.c.Kl2wBz8xljZV9s2OHmoj7otZSahgaM1wzmwYf0QYQ9fhNfVR6Sejx6au9C_Vp7yYCAQ9Rl-JeCla6LIIAcqf9dtjcAmrxJCWFy9jsuK40Jw6ny6E8MfE4SZH5clw8zU
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - Fri, 08 Nov 2019 18:51:34 GMT
+      Date:
+      - Fri, 08 Nov 2019 18:51:34 GMT
+      Cache-Control:
+      - private, max-age=0, must-revalidate, no-transform
+      Etag:
+      - '"b1gm6ke8-tjIkX__6AMWPZx_gaQ/wSRWqYPAwQb2r0Y7S4B9_8C8FLQ"'
+      Vary:
+      - Origin
+      - X-Origin
+      Content-Type:
+      - application/json; charset=UTF-8
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      Server:
+      - GSE
+      Alt-Svc:
+      - quic=":443"; ma=2592000; v="46,43",h3-Q050=":443"; ma=2592000,h3-Q049=":443";
+        ma=2592000,h3-Q048=":443"; ma=2592000,h3-Q046=":443"; ma=2592000,h3-Q043=":443";
+        ma=2592000
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: '{"kind":"analytics#profiles","username":"EMAIL@BOGUS.COM","totalResults":1,"startIndex":1,"itemsPerPage":1000,"items":[{"id":"205120964","kind":"analytics#profile","selfLink":"https://www.googleapis.com/analytics/v3/management/accounts/151450089/webproperties/UA-BOGUS/profiles/205120964","accountId":"151450089","webPropertyId":"UA-BOGUS","internalWebPropertyId":"214350695","name":"All
+        Web Site Data","currency":"USD","timezone":"America/Chicago","websiteUrl":"http://dev.digitalhub.northwestern.edu","type":"WEB","permissions":{"effective":["READ_AND_ANALYZE"]},"created":"2019-11-04T19:27:08.687Z","updated":"2019-11-04T19:27:08.687Z","eCommerceTracking":false,"botFilteringEnabled":true,"parentLink":{"type":"analytics#webproperty","href":"https://www.googleapis.com/analytics/v3/management/accounts/151450089/webproperties/UA-BOGUS"},"childLink":{"type":"analytics#goals","href":"https://www.googleapis.com/analytics/v3/management/accounts/151450089/webproperties/UA-BOGUS/profiles/205120964/goals"}}]}'
+    http_version: 
+  recorded_at: Fri, 08 Nov 2019 18:51:34 GMT
+- request:
+    method: get
+    uri: https://www.googleapis.com/analytics/v3/data/ga?dimensions=ga:date&end-date=2019-11-08&fields=columnHeaders/name,rows,totalResults,totalsForAllResults&filters=ga:pagePath=~/files/bogus-file-id&ids=ga:205120964&metrics=ga:pageviews&sort=ga:date&start-date=2019-10-07
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Authorization:
+      - Bearer ya29.c.Kl2wBz8xljZV9s2OHmoj7otZSahgaM1wzmwYf0QYQ9fhNfVR6Sejx6au9C_Vp7yYCAQ9Rl-JeCla6LIIAcqf9dtjcAmrxJCWFy9jsuK40Jw6ny6E8MfE4SZH5clw8zU
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - Fri, 08 Nov 2019 18:51:34 GMT
+      Date:
+      - Fri, 08 Nov 2019 18:51:34 GMT
+      Cache-Control:
+      - private, max-age=0, must-revalidate, no-transform
+      Etag:
+      - '"b1gm6ke8-tjIkX__6AMWPZx_gaQ/I4epwbiOWU1mP6Vb9pAx3SK0A3M"'
+      Vary:
+      - Origin
+      - X-Origin
+      Content-Type:
+      - application/json; charset=UTF-8
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      Server:
+      - GSE
+      Alt-Svc:
+      - quic=":443"; ma=2592000; v="46,43",h3-Q050=":443"; ma=2592000,h3-Q049=":443";
+        ma=2592000,h3-Q048=":443"; ma=2592000,h3-Q046=":443"; ma=2592000,h3-Q043=":443";
+        ma=2592000
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: '{"totalResults":33,"columnHeaders":[{"name":"ga:date"},{"name":"ga:pageviews"}],"totalsForAllResults":{"ga:pageviews":"0"},"rows":[["20191007","0"],["20191008","0"],["20191009","0"],["20191010","0"],["20191011","0"],["20191012","0"],["20191013","0"],["20191014","0"],["20191015","0"],["20191016","0"],["20191017","0"],["20191018","0"],["20191019","0"],["20191020","0"],["20191021","0"],["20191022","0"],["20191023","0"],["20191024","0"],["20191025","0"],["20191026","0"],["20191027","0"],["20191028","0"],["20191029","0"],["20191030","0"],["20191031","0"],["20191101","0"],["20191102","0"],["20191103","0"],["20191104","0"],["20191105","0"],["20191106","0"],["20191107","0"],["20191108","0"]]}'
+    http_version: 
+  recorded_at: Fri, 08 Nov 2019 18:51:34 GMT
+- request:
+    method: post
+    uri: https://accounts.google.com/o/oauth2/token
+    body:
+      encoding: ASCII-8BIT
+      string: grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&assertion=eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJkZXZlbG9wbWVudC1kaWdpdGFsaHViQGF1dG9ub21vdXMtdGltZS0yNTgwMTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCJhdWQiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20vby9vYXV0aDIvdG9rZW4iLCJleHAiOjE1NzMyMzkxNTQsImlhdCI6MTU3MzIzOTAzNCwic2NvcGUiOiJodHRwczovL3d3dy5nb29nbGVhcGlzLmNvbS9hdXRoL2FuYWx5dGljcy5yZWFkb25seSJ9.Ls2JIs2Ng3FXoYSqR3IqQHLwu4ADn2zD6hv3eXNLt8z31sbz-JX5YBi98yYQgf2opJAHpt39iwR9dySg22MGUdyaWP9kXJWWM0wVe3DzQZYN_l47gYbP8r2MMETPB_5HQk8JCSeOjCnorrs2sFJjZnM7M43KzZH7vS9-42PM8AaCSGHgEfIF4SyY3I9Yg5H3vaUU6vQjx-lsuYJA5sQExRTWw4gIk6AlQx3O5edQnLX40XCYXTpxy93cni0svnP_4SKxb25kx3zNsvIJ40rApeq6Je0ZYfSXpfq2GBlwocwJZBq8u8yKxwA6IGgtCoztRx9VcgbWHCmm5V57qT0E9w
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=utf-8
+      Vary:
+      - Origin
+      - Referer
+      - X-Origin
+      Date:
+      - Fri, 08 Nov 2019 18:51:34 GMT
+      Server:
+      - ESF
+      Cache-Control:
+      - private
+      X-Xss-Protection:
+      - '0'
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Content-Type-Options:
+      - nosniff
+      Alt-Svc:
+      - quic=":443"; ma=2592000; v="46,43",h3-Q050=":443"; ma=2592000,h3-Q049=":443";
+        ma=2592000,h3-Q048=":443"; ma=2592000,h3-Q046=":443"; ma=2592000,h3-Q043=":443";
+        ma=2592000
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+          "access_token": "ya29.c.Kl2wB68aCNqVqFNucvtHRXMAJksPlYw2LqKMFtTz43jB9NBSPNFsMpgLQXPdSZw1MqQa5yV3Qr2NGFxeJgK98lcKOpsCePg4yDubrwqcPQRhRA-3qXIR_tSk7Ji8mog",
+          "expires_in": 3600,
+          "token_type": "Bearer"
+        }
+    http_version: 
+  recorded_at: Fri, 08 Nov 2019 18:51:34 GMT
+- request:
+    method: get
+    uri: https://www.googleapis.com/analytics/v3/management/accounts/~all/webproperties/~all/profiles
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Authorization:
+      - Bearer ya29.c.Kl2wB68aCNqVqFNucvtHRXMAJksPlYw2LqKMFtTz43jB9NBSPNFsMpgLQXPdSZw1MqQa5yV3Qr2NGFxeJgK98lcKOpsCePg4yDubrwqcPQRhRA-3qXIR_tSk7Ji8mog
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - Fri, 08 Nov 2019 18:51:35 GMT
+      Date:
+      - Fri, 08 Nov 2019 18:51:35 GMT
+      Cache-Control:
+      - private, max-age=0, must-revalidate, no-transform
+      Etag:
+      - '"b1gm6ke8-tjIkX__6AMWPZx_gaQ/wSRWqYPAwQb2r0Y7S4B9_8C8FLQ"'
+      Vary:
+      - Origin
+      - X-Origin
+      Content-Type:
+      - application/json; charset=UTF-8
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      Server:
+      - GSE
+      Alt-Svc:
+      - quic=":443"; ma=2592000; v="46,43",h3-Q050=":443"; ma=2592000,h3-Q049=":443";
+        ma=2592000,h3-Q048=":443"; ma=2592000,h3-Q046=":443"; ma=2592000,h3-Q043=":443";
+        ma=2592000
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: '{"kind":"analytics#profiles","username":"EMAIL@BOGUS.COM","totalResults":1,"startIndex":1,"itemsPerPage":1000,"items":[{"id":"205120964","kind":"analytics#profile","selfLink":"https://www.googleapis.com/analytics/v3/management/accounts/151450089/webproperties/UA-BOGUS/profiles/205120964","accountId":"151450089","webPropertyId":"UA-BOGUS","internalWebPropertyId":"214350695","name":"All
+        Web Site Data","currency":"USD","timezone":"America/Chicago","websiteUrl":"http://dev.digitalhub.northwestern.edu","type":"WEB","permissions":{"effective":["READ_AND_ANALYZE"]},"created":"2019-11-04T19:27:08.687Z","updated":"2019-11-04T19:27:08.687Z","eCommerceTracking":false,"botFilteringEnabled":true,"parentLink":{"type":"analytics#webproperty","href":"https://www.googleapis.com/analytics/v3/management/accounts/151450089/webproperties/UA-BOGUS"},"childLink":{"type":"analytics#goals","href":"https://www.googleapis.com/analytics/v3/management/accounts/151450089/webproperties/UA-BOGUS/profiles/205120964/goals"}}]}'
+    http_version: 
+  recorded_at: Fri, 08 Nov 2019 18:51:35 GMT
+- request:
+    method: get
+    uri: https://www.googleapis.com/analytics/v3/data/ga?dimensions=ga:eventCategory,ga:eventAction,ga:eventLabel,ga:date&end-date=2019-11-07&fields=columnHeaders/name,rows,totalResults,totalsForAllResults&filters=ga:eventLabel==bogus-file-id&ids=ga:205120964&metrics=ga:totalEvents&sort=ga:date&start-date=2019-10-07
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Authorization:
+      - Bearer ya29.c.Kl2wB68aCNqVqFNucvtHRXMAJksPlYw2LqKMFtTz43jB9NBSPNFsMpgLQXPdSZw1MqQa5yV3Qr2NGFxeJgK98lcKOpsCePg4yDubrwqcPQRhRA-3qXIR_tSk7Ji8mog
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - Fri, 08 Nov 2019 18:51:35 GMT
+      Date:
+      - Fri, 08 Nov 2019 18:51:35 GMT
+      Cache-Control:
+      - private, max-age=0, must-revalidate, no-transform
+      Etag:
+      - '"b1gm6ke8-tjIkX__6AMWPZx_gaQ/KrRanqlShqOypsKk32FrXxwnBuo"'
+      Vary:
+      - Origin
+      - X-Origin
+      Content-Type:
+      - application/json; charset=UTF-8
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      Server:
+      - GSE
+      Alt-Svc:
+      - quic=":443"; ma=2592000; v="46,43",h3-Q050=":443"; ma=2592000,h3-Q049=":443";
+        ma=2592000,h3-Q048=":443"; ma=2592000,h3-Q046=":443"; ma=2592000,h3-Q043=":443";
+        ma=2592000
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: '{"totalResults":0,"columnHeaders":[{"name":"ga:eventCategory"},{"name":"ga:eventAction"},{"name":"ga:eventLabel"},{"name":"ga:date"},{"name":"ga:totalEvents"}],"totalsForAllResults":{"ga:totalEvents":"0"}}'
+    http_version: 
+  recorded_at: Fri, 08 Nov 2019 18:51:35 GMT
+recorded_with: VCR 4.0.0

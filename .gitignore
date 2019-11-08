@@ -19,7 +19,10 @@ gvblack
 db/vocabularies
 public/system
 public/uploads
+
+# Ignore config files
 config/local_env.rb
+config/analytics.yml
 
 spec/mock_upload_directory
 public/assets

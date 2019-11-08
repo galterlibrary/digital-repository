@@ -6,6 +6,11 @@ VCR.configure do |c|
   c.hook_into :webmock
   c.allow_http_connections_when_no_cassette = true
   c.configure_rspec_metadata!
+  c.filter_sensitive_data('UA-BOGUS') { ENV['GOOGLE_ANALYTICS_ID'] }
+  c.filter_sensitive_data('BOGUS APP') { ENV['GOOGLE_ANALYTICS_APP_NAME'] }
+  c.filter_sensitive_data('BOGUS/PATH') { ENV['GOOGLE_ANALYTICS_PRIVKEY_PATH'] }
+  c.filter_sensitive_data('BOGUS SECRET') { ENV['GOOGLE_ANALYTICS_PRIVKEY_SECRET'] }
+  c.filter_sensitive_data('EMAIL@BOGUS.COM') { ENV['GOOGLE_ANALYTICS_CLIENT_EMAIL'] }
 end
 
 RSpec.configure do |c|

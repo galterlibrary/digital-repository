@@ -10,3 +10,6 @@ nucats_grants_repository_stats = CollectionMembersViewAndDownloadStats.new(
 )
 nucats_grants_repository_stats.get_stats_and_add_to_csv(type: "pageviews")
 nucats_grants_repository_stats.get_stats_and_add_to_csv(type: "downloads")
+
+nucats_grants_repository_stats.pageviews_csv_file.close
+nucats_grants_repository_stats.downloads_csv_file.close
