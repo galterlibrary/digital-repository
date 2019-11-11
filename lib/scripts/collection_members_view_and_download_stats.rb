@@ -6,7 +6,7 @@ class CollectionMembersViewAndDownloadStats
   attr_accessor :collection, :downloads_csv_file, :pageviews_csv_file
 
   def initialize(collection)
-    @collection = Collection.find(collection) 
+    @collection = Collection.find(collection)
     @downloads_csv_file = CSV.open(
       File.join(Rails.root, "/lib/scripts/results/#{sanitize_title(@collection.title)}_downloads_stats.csv"),
       "w"
@@ -31,7 +31,7 @@ class CollectionMembersViewAndDownloadStats
     end
 
     file_name = "#{type}_csv_file"
-    csv_file = self.send(file_name.to_sym) 
+    csv_file = self.send(file_name.to_sym)
 
     collection.members.each do |member|
       if member.class == Collection
@@ -55,10 +55,16 @@ class CollectionMembersViewAndDownloadStats
         end
       end
 
+      if csv_file.closed?
+        csv_file.reopen(csv_file.path, "a")
+      end
+
       stat_totals.each do |k,v|
         next if v.to_i == 0
         csv_file << [collection.title, member.title.first, member_uri, k, v]
       end
     end
+
+    csv_file.close
   end
 end

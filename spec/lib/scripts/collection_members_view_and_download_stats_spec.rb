@@ -13,9 +13,6 @@ RSpec.describe 'lib/scripts/collection_members_views_and_download_stats.rb', :vc
   before do
     parent_collection.members << file
     parent_collection.save!
-    # add fake views and downloads data for file
-    FileViewStat.create(file_id: file.id, views: 2, date: DateTime.parse("19-10-07"))
-    FileDownloadStat.create(file_id: file.id, downloads: 1, date: DateTime.parse("19-10-07"))
   end
 
   describe 'CollectionMembersViewAndDownloadStats' do
@@ -43,13 +40,14 @@ RSpec.describe 'lib/scripts/collection_members_views_and_download_stats.rb', :vc
     describe '#get_stats_and_add_to_csv' do
       context 'collection with one file' do
         before do
-          subject.get_stats_and_add_to_csv(type: 'pageviews')
-          subject.get_stats_and_add_to_csv(type: 'downloads')
-          subject.pageviews_csv_file.close
-          subject.downloads_csv_file.close
+          mock_file_usage = double("File Usage")
+          allow(FileUsage).to receive(:new).with(file.id).and_return(mock_file_usage)
+          allow(mock_file_usage).to receive(:pageviews).and_return([[1570406400000, 2]])
+          allow(mock_file_usage).to receive(:downloads).and_return([[1570406400000, 1]])
         end
 
         it 'adds pageviews data to Test_Collection_pageviews_stats.csv' do
+          subject.get_stats_and_add_to_csv(type: 'pageviews')
           pageviews_csv_result = File.readlines(
             "#{Rails.root}/lib/scripts/results/Test_Collection_pageviews_stats.csv"
           )
@@ -62,6 +60,7 @@ RSpec.describe 'lib/scripts/collection_members_views_and_download_stats.rb', :vc
         end
 
         it 'adds downloads data to Test_Collection_downloads_stats.csv' do
+          subject.get_stats_and_add_to_csv(type: 'downloads')
           downloads_csv_result = File.readlines(
             "#{Rails.root}/lib/scripts/results/Test_Collection_downloads_stats.csv"
           )
@@ -87,16 +86,20 @@ RSpec.describe 'lib/scripts/collection_members_views_and_download_stats.rb', :vc
           child_collection.save!
           parent_collection.members << child_collection
           parent_collection.save!
-          # add fake views and downloads data for file
-          FileViewStat.create(file_id: child_file.id, views: 99, date: DateTime.parse("19-11-07"))
-          FileDownloadStat.create(file_id: child_file.id, downloads: 49, date: DateTime.parse("19-11-07"))
-          subject.get_stats_and_add_to_csv(type: 'pageviews')
-          subject.get_stats_and_add_to_csv(type: 'downloads')
-          subject.pageviews_csv_file.close
-          subject.downloads_csv_file.close
+
+          mock_file_usage = double("File Usage")
+          allow(FileUsage).to receive(:new).with(file.id).and_return(mock_file_usage)
+          allow(mock_file_usage).to receive(:pageviews).and_return([[1570406400000, 2]])
+          allow(mock_file_usage).to receive(:downloads).and_return([[1570406400000, 1]])
+
+          mock_child_file_usage = double("Child File Usage")
+          allow(FileUsage).to receive(:new).with(child_file.id).and_return(mock_child_file_usage)
+          allow(mock_child_file_usage).to receive(:pageviews).and_return([[1573084800000, 99]])
+          allow(mock_child_file_usage).to receive(:downloads).and_return([[1573084800000, 49]])
         end
 
         it 'adds pageviews data to Test_Collection_pageviews_stats.csv' do
+          subject.get_stats_and_add_to_csv(type: 'pageviews')
           pageviews_csv_result = File.readlines(
             "#{Rails.root}/lib/scripts/results/Test_Collection_pageviews_stats.csv"
           )
@@ -115,6 +118,7 @@ RSpec.describe 'lib/scripts/collection_members_views_and_download_stats.rb', :vc
         end
 
         it 'adds downloads data to Test_Collection_downloads_stats.csv' do
+          subject.get_stats_and_add_to_csv(type: 'downloads')
           downloads_csv_result = File.readlines(
             "#{Rails.root}/lib/scripts/results/Test_Collection_downloads_stats.csv"
           )
