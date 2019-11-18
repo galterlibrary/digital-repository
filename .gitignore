@@ -11,7 +11,7 @@
 /db/*.sqlite3
 /db/*.sqlite3-journal
 
-# Ignore all logfiles and tempfiles.
+# Ignore all logfiles, tempfiles, and System files.
 /log/*.log
 /tmp
 *swp
@@ -19,7 +19,11 @@ gvblack
 db/vocabularies
 public/system
 public/uploads
+*.DS_Store
+
+# Ignore config files
 config/local_env.rb
+config/analytics.yml
 
 spec/mock_upload_directory
 public/assets

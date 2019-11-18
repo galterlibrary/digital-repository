@@ -391,7 +391,7 @@ Sufia.config do |config|
 
   # Enable displaying usage statistics in the UI
   # Defaults to FALSE
-  if Rails.env.production? || Rails.env.staging?
+  if ENV['GOOGLE_ANALYTICS_ID']
     # Requires a Google Analytics id and OAuth2 keyfile.  See README for more info
     config.analytics = true
 
