@@ -6,7 +6,7 @@
 # used in the form of a range, starting from 'a'. i.e. if 'letter' is 'c',
 # range is a..c => a,b,c
 # Example to create 10 template collections with 3 collections for each:
-# current_sufia/ $ bundle exec rails runner lib/scripts/create_template_collections.rb "abc-123" 10 "c"
+# current_sufia/ $ bundle exec rails runner lib/scripts/create_blank_subcollections.rb "abc-123" 10 "c"
 
 if ARGV.length != 3
   puts "Need collection ID, number of templates, and letter for range of "\
