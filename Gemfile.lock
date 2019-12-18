@@ -366,7 +366,7 @@ GEM
       sparql (~> 1.99)
       sparql-client (~> 1.99)
     little-plugger (1.1.4)
-    logger (1.2.8)
+    logger (1.4.2)
     logging (2.1.0)
       little-plugger (~> 1.1)
       multi_json (~> 1.10)
@@ -466,7 +466,7 @@ GEM
       nokogiri (~> 1.6)
       rails (>= 4.2.0, < 6.0)
       rdf
-    rack (1.6.10)
+    rack (1.6.12)
     rack-attack (6.0.0)
       rack (>= 1.0, < 3)
     rack-mini-profiler (0.10.7)
