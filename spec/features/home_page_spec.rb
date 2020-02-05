@@ -4,15 +4,15 @@ feature "HomePage", :type => :feature do
   subject { page }
   let(:user) { FactoryGirl.create(:user) }
   
-  describe 'branding' do
-    before { visit '/'}
-    
-    it 'has nm brand' do
-      expect(page).to have_selector(:css, "div a.institutionLogo")
-    end
-    
-    it 'has home link' do
-      expect(page).to have_link('DigitalHub', href: '/')
+  describe 'masthead' do
+    it 'has branding and links' do
+      visit '/'
+
+      within('#masthead') do
+        expect(page).to have_link(nil, href: "https://www.feinberg.northwestern.edu/")
+        expect(page).to have_selector(:css, "div a.institutionLogo")
+        expect(page).to have_link('DigitalHub', href: '/')
+      end
     end
   end
 
