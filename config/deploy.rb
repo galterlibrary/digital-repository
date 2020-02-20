@@ -249,7 +249,7 @@ WantedBy=multi-user.target
             styleSheet="/shibboleth-sp/main.css"/>
 
         <MetadataProvider type="XML"
-                          path="/etc/shibboleth/nu-idp-metadata.xml"
+                          path="/etc/shibboleth/#{fetch(:shib_metadata)}.xml"
                           reloadInterval="7200"/>
         <AttributeExtractor type="XML" validate="true" reloadChanges="false" path="attribute-map.xml"/>
         <AttributeResolver type="Query" subjectMatch="true"/>
@@ -265,9 +265,9 @@ WantedBy=multi-user.target
       upload! shib_config, tmp_file
       execute :sudo, :mv, tmp_file, '/etc/shibboleth/shibboleth2.xml'
       execute :sudo, :chmod, '644', '/etc/shibboleth/shibboleth2.xml'
-      execute :sudo, :cp, '/var/www/apps/shib/nu-idp-metadata.xml',
-                          '/etc/shibboleth/nu-idp-metadata.xml'
-      execute :sudo, :chmod, '644', '/etc/shibboleth/nu-idp-metadata.xml'
+      execute :sudo, :cp, "/var/www/apps/shib/#{fetch(:shib_metadata)}.xml",
+                          "/etc/shibboleth/#{fetch(:shib_metadata)}.xml"
+      execute :sudo, :chmod, '644', "/etc/shibboleth/#{fetch(:shib_metadata)}.xml"
     end
   end
 
