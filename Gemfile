@@ -103,7 +103,7 @@ gem 'browser'
 
 gem 'savon', '~> 2.11.0'
 
-gem 'nokogiri', '~> 1.8.1'
+gem 'nokogiri', '~> 1.10.8'
 
 gem 'puma'
 

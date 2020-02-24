@@ -366,7 +366,7 @@ GEM
       sparql (~> 1.99)
       sparql-client (~> 1.99)
     little-plugger (1.1.4)
-    logger (1.2.8)
+    logger (1.4.2)
     logging (2.1.0)
       little-plugger (~> 1.1)
       multi_json (~> 1.10)
@@ -390,7 +390,7 @@ GEM
     mimemagic (0.3.2)
     mini_magick (4.5.1)
     mini_mime (1.0.0)
-    mini_portile2 (2.3.0)
+    mini_portile2 (2.4.0)
     minitest (5.11.3)
     mono_logger (1.1.0)
     multi_json (1.12.1)
@@ -405,8 +405,8 @@ GEM
     net-ssh (3.2.0)
     newrelic_rpm (3.16.1.320)
     noid (0.9.0)
-    nokogiri (1.8.4)
-      mini_portile2 (~> 2.3.0)
+    nokogiri (1.10.8)
+      mini_portile2 (~> 2.4.0)
     nom-xml (0.5.4)
       activesupport (>= 3.2.18)
       i18n
@@ -809,7 +809,7 @@ DEPENDENCIES
   kaminari!
   memory_profiler
   newrelic_rpm
-  nokogiri (~> 1.8.1)
+  nokogiri (~> 1.10.8)
   omniauth-shibboleth
   openseadragon
   osullivan
