@@ -19,8 +19,10 @@ describe 'Shibboleth Authentication', :type => :feature do
         login_as(user)
         visit '/users/sign_out'
         expect(current_path).to eq('/')
-        expect(page).to have_text('Signed out successfully.')
-        expect(page).not_to have_text('You MUST close your browser')
+        expect(page).to have_text(
+          'You have successfully signed out of DigitalHub. IMPORTANT: Close '\
+          'the browser window to complete the logout process and protect the '\
+          'security of your NetID.')
       end
     end
   end
