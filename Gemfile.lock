@@ -366,7 +366,7 @@ GEM
       sparql (~> 1.99)
       sparql-client (~> 1.99)
     little-plugger (1.1.4)
-    logger (1.2.8)
+    logger (1.4.2)
     logging (2.1.0)
       little-plugger (~> 1.1)
       multi_json (~> 1.10)
@@ -609,7 +609,7 @@ GEM
       oauth2
     ruby-ldap (0.9.20)
     ruby-prof (0.15.9)
-    rubyzip (1.2.1)
+    rubyzip (2.2.0)
     safe_yaml (1.0.4)
     sass (3.4.22)
     sass-rails (5.0.6)
