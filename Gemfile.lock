@@ -366,7 +366,7 @@ GEM
       sparql (~> 1.99)
       sparql-client (~> 1.99)
     little-plugger (1.1.4)
-    logger (1.2.8)
+    logger (1.4.2)
     logging (2.1.0)
       little-plugger (~> 1.1)
       multi_json (~> 1.10)
@@ -404,6 +404,7 @@ GEM
       net-ssh (>= 2.6.5)
     net-ssh (3.2.0)
     newrelic_rpm (3.16.1.320)
+    nio4r (2.5.2)
     noid (0.9.0)
     nokogiri (1.8.4)
       mini_portile2 (~> 2.3.0)
@@ -458,7 +459,8 @@ GEM
       pry (~> 0.10)
     pry-rails (0.3.4)
       pry (>= 0.9.10)
-    puma (3.11.2)
+    puma (4.3.3)
+      nio4r (~> 2.0)
     qa (1.2.0)
       activerecord-import
       deprecation
