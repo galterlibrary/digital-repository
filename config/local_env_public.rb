@@ -10,7 +10,7 @@ ENV['LDAP_PORT']     = '636'
 
 begin
   if Rails.env == 'production'
-    ENV['SSO_SIGN_OUT_URL'] = '/Shibboleth.sso/Logout?return=https%3A%2F%2Fprod-nusso.it.northwestern.edu%2Fnusso%2FXUI%2F%23logout%26goto%3Dhttps%253A%252F%252Fdigitalhub.northwestern.edu'
+    ENV['SSO_SIGN_OUT_URL'] = '/Shibboleth.sso/Logout?return=https%3A%2F%2Fprd-nusso.it.northwestern.edu%2Fnusso%2FXUI%2F%3Frealm%3D%2Fnorthwestern%23logout%2F'
   else
     ENV['SSO_SIGN_OUT_URL'] = '/Shibboleth.sso/Logout?return=https%3A%2F%2Fuat-nusso.it.northwestern.edu%2Fnusso%2FXUI%2F%23logout%26goto%3Dhttps%253A%252F%252Fvtfsmghslrepo01.fsm.northwestern.edu'
   end
