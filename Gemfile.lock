@@ -366,7 +366,7 @@ GEM
       sparql (~> 1.99)
       sparql-client (~> 1.99)
     little-plugger (1.1.4)
-    logger (1.2.8)
+    logger (1.4.2)
     logging (2.1.0)
       little-plugger (~> 1.1)
       multi_json (~> 1.10)
@@ -769,7 +769,7 @@ GEM
       hashdiff
     websocket-driver (0.6.4)
       websocket-extensions (>= 0.1.0)
-    websocket-extensions (0.1.2)
+    websocket-extensions (0.1.5)
     whenever (0.10.0)
       chronic (>= 0.6.3)
     xml-simple (1.1.5)
