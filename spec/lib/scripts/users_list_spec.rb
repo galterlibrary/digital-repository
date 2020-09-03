@@ -32,6 +32,6 @@ RSpec.describe 'lib/scripts/users_list.rb' do
   end
 
   after do
-    FileUtils.rm_rf(Dir["#{Rails.root}/lib/scripts/results/users_list.csv"])
+    FileUtils.rm_f(Dir["#{Rails.root}/lib/scripts/results/users_list.csv"])
   end
 end

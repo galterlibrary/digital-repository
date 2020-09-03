@@ -140,6 +140,6 @@ RSpec.describe 'lib/scripts/collection_members_views_and_download_stats.rb', :vc
   end
 
   after do
-    FileUtils.rm_rf(Dir["#{Rails.root}/lib/scripts/results/Test_Collection_*.csv"])
+    FileUtils.rm_f(Dir["#{Rails.root}/lib/scripts/results/Test_Collection_*.csv"])
   end
 end
