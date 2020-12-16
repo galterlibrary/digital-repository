@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180301175352) do
+ActiveRecord::Schema.define(version: 20200813221318) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -271,6 +271,15 @@ ActiveRecord::Schema.define(version: 20180301175352) do
   end
 
   add_index "subject_local_authority_entries", ["lowerLabel"], name: "entries_by_lower_label", using: :btree
+
+  create_table "sufia_migration_survey_items", force: :cascade do |t|
+    t.string   "object_id"
+    t.string   "object_class"
+    t.text     "object_title"
+    t.integer  "migration_status"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+  end
 
   create_table "tinymce_assets", force: :cascade do |t|
     t.string   "file"
