@@ -113,6 +113,15 @@ ActiveRecord::Schema.define(version: 20200813221318) do
   add_index "follows", ["followable_id", "followable_type"], name: "fk_followables", using: :btree
   add_index "follows", ["follower_id", "follower_type"], name: "fk_follows", using: :btree
 
+  create_table "galter_ir_exporter_migration_survey_items", force: :cascade do |t|
+    t.string   "object_id"
+    t.string   "object_class"
+    t.text     "object_title"
+    t.integer  "migration_status"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+  end
+
   create_table "local_authorities", force: :cascade do |t|
     t.string "name"
   end
