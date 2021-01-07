@@ -8,7 +8,12 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   #
   # @param [GenericFile] generic_file file to be converted for export
   def initialize(generic_file)
-    @id = generic_file.id
+    #PIDs
+    @pids = {"doi": {
+      "identifier": generic_file.doi.shift, # doi is stored in an array
+      "provider": "datacite",
+      "client": "digitalhub"
+    }}
     @provenance = generic_file.depositor
     # @label = generic_file.label
     # @depositor = generic_file.depositor
