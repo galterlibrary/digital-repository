@@ -4,6 +4,8 @@ include Sufia::Export
 # so that the metadata can be exported in json format using to_json
 #
 class InvenioRdmRecordConverter < Sufia::Export::Converter
+  include Galtersufia::GenericFile::InvenioResourceTypeMappings
+
   # Create an instance of a InvenioRdmRecordConverter converter containing all the metadata for json export
   #
   # @param [GenericFile] generic_file file to be converted for export
@@ -15,6 +17,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       "client": "digitalhub"
     }}
     @provenance = generic_file.depositor
+    @metadata = invenio_metadata(generic_file)
     # @label = generic_file.label
     # @depositor = generic_file.depositor
     # @arkivo_checksum = generic_file.arkivo_checksum
@@ -49,5 +52,21 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     def versions(gf)
       return [] unless gf.content.has_versions?
       Sufia::Export::VersionGraphConverter.new(gf.content.versions).versions
+    end
+
+    def invenio_metadata(gf)
+      {
+        "resource_type": resource_type(gf)
+      }
+    end
+
+    def resource_type(gf)
+      irdm_subtype = DH_RESOURCE_TYPES[gf.resource_type.shift]
+      irdm_type = IRDM_RESOURCE_TYPES[irdm_subtype]
+
+      {
+        "type": irdm_type,
+        "subtype": irdm_subtype
+      }
     end
 end
