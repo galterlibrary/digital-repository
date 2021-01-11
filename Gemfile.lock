@@ -441,7 +441,7 @@ GEM
     mimemagic (0.3.5)
     mini_magick (4.10.1)
     mini_mime (1.0.0)
-    mini_portile2 (2.4.0)
+    mini_portile2 (2.5.0)
     minitest (5.11.3)
     mono_logger (1.1.0)
     multi_json (1.15.0)
@@ -457,8 +457,9 @@ GEM
     newrelic_rpm (3.16.1.320)
     nio4r (2.5.2)
     noid (0.9.0)
-    nokogiri (1.10.9)
-      mini_portile2 (~> 2.4.0)
+    nokogiri (1.11.1)
+      mini_portile2 (~> 2.5.0)
+      racc (~> 1.4)
     nom-xml (1.1.0)
       activesupport (>= 3.2.18)
       i18n
@@ -518,6 +519,7 @@ GEM
       nokogiri (~> 1.6)
       rails (>= 4.2.0, < 6.0)
       rdf
+    racc (1.5.2)
     rack (1.6.13)
     rack-attack (6.0.0)
       rack (>= 1.0, < 3)
@@ -822,7 +824,7 @@ DEPENDENCIES
   kaminari!
   memory_profiler
   newrelic_rpm
-  nokogiri (~> 1.10.9)
+  nokogiri (~> 1.11.1)
   omniauth-shibboleth
   openseadragon
   osullivan
