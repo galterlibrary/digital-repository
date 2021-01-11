@@ -67,6 +67,7 @@ group :development, :test do
   gem 'flamegraph'
   gem 'memory_profiler'
   gem 'timecop'
+  gem 'resque', '1.26.0'
 end
 
 gem "better_errors",  group: :development
