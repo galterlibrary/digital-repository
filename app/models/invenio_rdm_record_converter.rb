@@ -11,13 +11,9 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   # @param [GenericFile] generic_file file to be converted for export
   def initialize(generic_file)
     #PIDs
-    @pids = {"doi": {
-      "identifier": generic_file.doi.shift, # doi is stored in an array
-      "provider": "datacite",
-      "client": "digitalhub"
-    }}
-    @provenance = generic_file.depositor
+    @pids = invennio_pids(generic_file.doi.shift)
     @metadata = invenio_metadata(generic_file)
+    @provenance = invenio_provenance(generic_file.proxy_depositor, generic_file.on_behalf_of)
     # @label = generic_file.label
     # @depositor = generic_file.depositor
     # @arkivo_checksum = generic_file.arkivo_checksum
@@ -49,24 +45,45 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
 
   private
 
-    def versions(gf)
-      return [] unless gf.content.has_versions?
-      Sufia::Export::VersionGraphConverter.new(gf.content.versions).versions
-    end
+  def versions(gf)
+    return [] unless gf.content.has_versions?
+    Sufia::Export::VersionGraphConverter.new(gf.content.versions).versions
+  end
 
-    def invenio_metadata(gf)
-      {
-        "resource_type": resource_type(gf)
+  def invennio_pids(doi)
+    {
+      "doi": {
+        "identifier": doi, # doi is stored in an array
+        "provider": "datacite",
+        "client": "digitalhub"
       }
-    end
+    }
+  end
 
-    def resource_type(gf)
-      irdm_subtype = DH_RESOURCE_TYPES[gf.resource_type.shift]
-      irdm_type = IRDM_RESOURCE_TYPES[irdm_subtype]
+  def invenio_metadata(gf)
+    {
+      "resource_type": resource_type(gf)
+    }
+  end
 
-      {
-        "type": irdm_type,
-        "subtype": irdm_subtype
+  def resource_type(gf)
+    irdm_subtype = DH_RESOURCE_TYPES[gf.resource_type.shift]
+    irdm_type = IRDM_RESOURCE_TYPES[irdm_subtype]
+
+    {
+      "type": irdm_type,
+      "subtype": irdm_subtype
+    }
+  end
+
+  def invenio_provenance(proxy_depositor, on_behalf_of)
+    {
+      "created_by": {
+        "user": proxy_depositor
+      },
+      "on_behalf_of": {
+        "user": on_behalf_of
       }
-    end
+    }
+  end
 end
