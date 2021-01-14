@@ -1,14 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe InvenioRdmRecordConverter do
-  let(:user) { FactoryGirl.create(:user, username: "usr1234", formal_name: "Tester, Mock", orcid: "https://orcid.org/1234-5678-9123-4567",
+  let(:user) { FactoryGirl.create(:user, username: "usr1234", formal_name: "Tester, Mock", orcid: "https://orcid.org/1234-5678-9123-4567", \
                                     display_name: 'Mock Tester') }
   let(:assistant) { FactoryGirl.create(:user, username: "ast9876") }
-
-  before do
-    ProxyDepositRights.create(grantor_id: assistant.id, grantee_id: user.id)
-  end
-
   let(:generic_file) {
     make_generic_file(
       user,
@@ -16,10 +11,10 @@ RSpec.describe InvenioRdmRecordConverter do
       resource_type: ["Account Books"],
       proxy_depositor: assistant.username,
       on_behalf_of: user.username,
-      creator: [user.formal_name]
+      creator: [user.formal_name],
+      title: ["Primary Title"]
     )
   }
-
   let(:json) do
     {
       "pids": {
@@ -44,6 +39,17 @@ RSpec.describe InvenioRdmRecordConverter do
             "orcid": "#{user.orcid.split('/').last}"
           },
           "affiliations": []
+        }],
+        "title": "#{generic_file.title.first}",
+        "additional_titles": [{
+          "title": "Secondary Title",
+          "type": "alternative_title",
+          "lang": "eng"
+        },
+        {
+          "title": "Tertiary Title",
+          "type": "alternative_title",
+          "lang": "eng"
         }]
       },
       "provenance": {
@@ -55,6 +61,12 @@ RSpec.describe InvenioRdmRecordConverter do
         }
       }
     }.to_json
+  end
+
+  before do
+    ProxyDepositRights.create(grantor_id: assistant.id, grantee_id: user.id)
+    # ensure order of titles is consistent by updating generic file with additional titles after creation
+    generic_file.title << ["Secondary Title", "Tertiary Title"]
   end
 
   describe "#to_json" do

@@ -77,7 +77,9 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   def invenio_metadata(gf)
     {
       "resource_type": resource_type(gf.resource_type.shift),
-      "creators": creators(gf.creator)
+      "creators": creators(gf.creator),
+      "title": gf.title.first,
+      "additional_titles": gf.title.last(gf.title.size-1).map{ |title| {"title": title, "type": "alternative_title", "lang": "eng"} }
     }
   end
 
