@@ -79,7 +79,8 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       "resource_type": resource_type(gf.resource_type.shift),
       "creators": creators(gf.creator),
       "title": gf.title.first,
-      "additional_titles": gf.title.last(gf.title.size-1).map{ |title| {"title": title, "type": "alternative_title", "lang": "eng"} }
+      "additional_titles": gf.title.last(gf.title.size-1).map{ |title| {"title": title, "type": "alternative_title", "lang": "eng"} },
+      "formats": gf.mime_type
     }
   end
 
@@ -136,10 +137,5 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
         "affiliations": affiliations
       }
     end
-  end
-
-  def format_creator_names(creator_name)
-    family_name = creator_name.pop # remove last value from display name
-    given_name = creator_name.join(' ') # the remaining strings becomes given name
   end
 end
