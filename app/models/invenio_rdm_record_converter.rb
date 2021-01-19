@@ -5,11 +5,14 @@ include Sufia::Export
 #
 class InvenioRdmRecordConverter < Sufia::Export::Converter
   include Galtersufia::GenericFile::InvenioResourceTypeMappings
+  include Galtersufia::GenericFile::KnownOrganizations
 
   # Create an instance of a InvenioRdmRecordConverter converter containing all the metadata for json export
   #
   # @param [GenericFile] generic_file file to be converted for export
-  def initialize(generic_file)
+  def initialize(generic_file=nil)
+    return unless generic_file
+
     #PIDs
     @pids = invennio_pids(generic_file.doi.shift)
     @metadata = invenio_metadata(generic_file)
@@ -60,22 +63,6 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     }
   end
 
-  def invenio_metadata(gf)
-    {
-      "resource_type": resource_type(gf)
-    }
-  end
-
-  def resource_type(gf)
-    irdm_subtype = DH_RESOURCE_TYPES[gf.resource_type.shift]
-    irdm_type = IRDM_RESOURCE_TYPES[irdm_subtype]
-
-    {
-      "type": irdm_type,
-      "subtype": irdm_subtype
-    }
-  end
-
   def invenio_provenance(proxy_depositor, on_behalf_of)
     {
       "created_by": {
@@ -85,5 +72,72 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
         "user": on_behalf_of
       }
     }
+  end
+
+  def invenio_metadata(gf)
+    {
+      "resource_type": resource_type(gf.resource_type.shift),
+      "creators": creators(gf.creator)
+    }
+  end
+
+
+  def resource_type(digitalhub_subtype)
+    irdm_subtype = DH_RESOURCE_TYPES[digitalhub_subtype]
+    irdm_type = IRDM_RESOURCE_TYPES[irdm_subtype]
+
+    {
+      "type": irdm_type,
+      "subtype": irdm_subtype
+    }
+  end
+
+  def creators(creators)
+    creators.map do |creator|
+      # Galter Health Sciences Library is a User on production DigitalHub, but it does NOT have a formal_name value
+      dh_user = User.find_by(formal_name: creator)
+
+      # organization
+      if organization?(creator)
+        name = creator
+        creator_type = "organisational"
+        family_name = ""
+        given_name = ""
+        identifiers = {}
+        affiliations = [] # only used for creator_type "personal"
+      # user
+      elsif dh_user.present?
+        name = dh_user.formal_name # will always be this regardless of type
+        creator_type = "personal"
+        dh_user_display_name = dh_user.display_name.split(' ') # split name into components to be reused
+        family_name = dh_user_display_name.pop # remove last value from display name
+        given_name = dh_user_display_name.join(' ') # the remaining strings becomes given name
+        identifiers = dh_user.orcid.present? ? {"orcid": dh_user.orcid.split('/').pop} : {}
+        affiliations = [] # TODO: user.affiliation is nil for all users on production... where do we get this value?
+      # TODO: unknown personal, what do we enter for these fields?
+      else
+        name = creator
+        creator_type = "personal"
+        family_name = ""
+        given_name = ""
+        identifiers = {}
+        affiliations = [] # TODO: user.affiliation is nil for all users on production... where do we get this value?
+      end
+
+      {
+        "name": name.include?("not identified") ? "" : creator,
+        "type": creator_type,
+        "role": "",
+        "given_name": given_name,
+        "family_name": family_name,
+        "identifiers": identifiers, # TODO: where can we find additional identifiers?
+        "affiliations": affiliations
+      }
+    end
+  end
+
+  def format_creator_names(creator_name)
+    family_name = creator_name.pop # remove last value from display name
+    given_name = creator_name.join(' ') # the remaining strings becomes given name
   end
 end
