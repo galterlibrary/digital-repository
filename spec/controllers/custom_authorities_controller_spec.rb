@@ -195,10 +195,10 @@ RSpec.describe CustomAuthoritiesController, :type => :controller do
     end
   end # query_users
 
-  describe '#lcsh_names', :vcr do
+  describe '#lcnaf_names', :vcr do
     context 'invalid query' do
       describe 'no params passed' do
-        subject { get :lcsh_names }
+        subject { get :lcnaf_names }
 
         it { is_expected.to have_http_status(:success) }
 
@@ -206,10 +206,10 @@ RSpec.describe CustomAuthoritiesController, :type => :controller do
           expect(subject["response"]).to be_nil
         end
       end
-      
+
       describe 'no results returned' do
-        subject { JSON.parse(get(:lcsh_names, q: 'fictional name').body) }
-        
+        subject { JSON.parse(get(:lcnaf_names, q: 'fictional name').body) }
+
         it 'returns empty array' do
           expect(subject.count).to eq(0)
         end
@@ -218,7 +218,7 @@ RSpec.describe CustomAuthoritiesController, :type => :controller do
 
     context 'valid query' do
       context 'lower case query' do
-        subject { JSON.parse(get(:lcsh_names, q: 'name').body) }
+        subject { JSON.parse(get(:lcnaf_names, q: 'name').body) }
 
         it 'returns values from LOC' do
           expect(subject.count).to eq(10)
@@ -229,7 +229,7 @@ RSpec.describe CustomAuthoritiesController, :type => :controller do
       end
 
       context 'upper case query' do
-        subject { JSON.parse(get(:lcsh_names, q: 'NAME').body) }
+        subject { JSON.parse(get(:lcnaf_names, q: 'NAME').body) }
 
         it 'returns values from LOC' do
           expect(subject.count).to eq(10)
@@ -238,18 +238,18 @@ RSpec.describe CustomAuthoritiesController, :type => :controller do
           }
         end
       end
-      
+
       context 'with one result' do
-        subject { JSON.parse(get(:lcsh_names, q: 'galter, dollie').body) }
+        subject { JSON.parse(get(:lcnaf_names, q: 'galter, dollie').body) }
 
         it 'returns one value from LOC' do
           expect(subject.count).to eq(1)
-          
+
           expect(subject.first.downcase).to include('galter, dollie')
         end
       end
     end
-  end # lcsh_names
+  end # lcnaf_names
 
   describe '#query_mesh', :vcr do
     context 'invalid query' do
@@ -261,10 +261,10 @@ RSpec.describe CustomAuthoritiesController, :type => :controller do
         it 'returns empty array' do
           expect(subject["response"]).to be_nil
         end
-        
+
         describe 'no results returned' do
           subject { JSON.parse(get(:query_mesh, q: 'nothing').body) }
-          
+
           it 'returns empty array' do
             expect(subject.count).to eq(0)
           end
@@ -294,13 +294,13 @@ RSpec.describe CustomAuthoritiesController, :type => :controller do
           }
         end
       end
-      
+
       context 'with one result' do
         subject { JSON.parse(get(:query_mesh, q: 'translational sciences').body) }
 
         it 'returns one value from MeSH sparql' do
           expect(subject.count).to eq(1)
-          
+
           expect(subject.first.downcase).to include('translational sciences')
         end
       end

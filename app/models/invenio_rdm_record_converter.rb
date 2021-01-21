@@ -6,6 +6,9 @@ include Sufia::Export
 class InvenioRdmRecordConverter < Sufia::Export::Converter
   include Galtersufia::GenericFile::InvenioResourceTypeMappings
   include Galtersufia::GenericFile::KnownOrganizations
+  include Galtersufia::GenericFile::HeaderLookup
+
+  SUBJECT_SCHEMES = [:tag, :mesh, :lcsh]
 
   # Create an instance of a InvenioRdmRecordConverter converter containing all the metadata for json export
   #
@@ -46,6 +49,11 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     # @permissions = permissions(generic_file)
   end
 
+  def to_json(options={})
+    options[:except] ||= ["memoized_mesh", "memoized_lcsh"]
+    super
+  end
+
   private
 
   def versions(gf)
@@ -80,6 +88,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       "creators": creators(gf.creator),
       "title": gf.title.first,
       "additional_titles": gf.title.last(gf.title.size-1).map{ |title| {"title": title, "type": "alternative_title", "lang": "eng"} },
+      "subjects": SUBJECT_SCHEMES.map{ |subject_type| subjects_for_scheme(gf.send(subject_type), subject_type) }.flatten,
       "formats": gf.mime_type
     }
   end
@@ -136,6 +145,15 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
         "identifiers": identifiers, # TODO: where can we find additional identifiers?
         "affiliations": affiliations
       }
+    end
+  end
+
+  # return array of invenio formatted subjects
+  def subjects_for_scheme(terms, scheme)
+    if scheme != :tag
+      terms.map{ |term| {subject: term, identifier: pid_lookup_by_scheme(term, scheme), scheme: scheme} }
+    else
+      terms.map{ |term| {subject: term} }
     end
   end
 end

@@ -15,7 +15,7 @@ class CustomAuthoritiesController < ApplicationController
     render json: hits
   end
 
-  def lcsh_names
+  def lcnaf_names
     lcnaf_base_uri = "http://id.loc.gov/authorities/names/suggest/?q="
     if params[:q].present?
       hits = JSON.parse(HTTParty.get(
@@ -23,7 +23,7 @@ class CustomAuthoritiesController < ApplicationController
       ))
       hits = hits.try(:[], 1) ? hits[1] : ["Error Searching"]
     end
-    
+
     render json: hits
   end
 
