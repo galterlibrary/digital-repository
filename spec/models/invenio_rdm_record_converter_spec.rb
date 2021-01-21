@@ -12,7 +12,8 @@ RSpec.describe InvenioRdmRecordConverter do
       proxy_depositor: assistant.username,
       on_behalf_of: user.username,
       creator: [user.formal_name],
-      title: ["Primary Title"]
+      title: ["Primary Title"],
+      mime_type: 'application/pdf'
     )
   }
   let(:json) do
@@ -50,7 +51,8 @@ RSpec.describe InvenioRdmRecordConverter do
           "title": "Tertiary Title",
           "type": "alternative_title",
           "lang": "eng"
-        }]
+        }],
+        "formats": "application/pdf"
       },
       "provenance": {
         "created_by": {
