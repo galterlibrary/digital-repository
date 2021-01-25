@@ -24,7 +24,7 @@ RSpec.describe 'lib/scripts/users_list.rb' do
         users_list_result = File.readlines(
           "#{Rails.root}/lib/scripts/results/users_list.csv"
         )
-        expected_data = "\"Vera, Sam\",abc123,fake@email.com,#{test_date},#{test_date}\n"
+        expected_data = "\"Vera, Sam\",abc123,fake@email.com,#{test_date},#{test_date},0,No File Uploaded\n"
 
         expect(users_list_result[1]).to eq(expected_data)
       end
