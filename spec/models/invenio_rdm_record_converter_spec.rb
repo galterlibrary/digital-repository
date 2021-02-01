@@ -16,7 +16,8 @@ RSpec.describe InvenioRdmRecordConverter do
       tag: ["keyword subject"],
       mesh: [mesh_term],
       lcsh: [lcsh_term],
-      mime_type: 'application/pdf'
+      mime_type: 'application/pdf',
+      based_near: ["'Boston, Massachusetts, United States', 'East Peoria, Illinois, United States'"]
     )
   }
   let(:json) do
@@ -73,6 +74,7 @@ RSpec.describe InvenioRdmRecordConverter do
           }
         ],
         "formats": "application/pdf",
+        "locations": [{"place": "Boston, Massachusetts, United States"}, {"place": "East Peoria, Illinois, United States"}]
       },
       "provenance": {
         "created_by": {
