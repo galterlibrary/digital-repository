@@ -1,0 +1,134 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://id.loc.gov/authorities/names/suggest/?q=*NAME*
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 301
+      message: Moved Permanently
+    headers:
+      Date:
+      - Thu, 28 Jan 2021 18:58:46 GMT
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Cache-Control:
+      - max-age=3600
+      Expires:
+      - Thu, 28 Jan 2021 19:58:46 GMT
+      Location:
+      - https://id.loc.gov/authorities/names/suggest/?q=*NAME*
+      Cf-Request-Id:
+      - 07ebf5cf3e0000e1fe5e02d000000001
+      Vary:
+      - Accept-Encoding
+      Server:
+      - cloudflare
+      Cf-Ray:
+      - 618cf25ece89e1fe-ORD
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version:
+  recorded_at: Thu, 28 Jan 2021 18:58:46 GMT
+- request:
+    method: get
+    uri: https://id.loc.gov/authorities/names/suggest/?q=*NAME*
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Thu, 28 Jan 2021 18:58:47 GMT
+      Content-Type:
+      - application/x-suggestions+json; charset=utf-8
+      Content-Length:
+      - '1224'
+      Connection:
+      - keep-alive
+      Set-Cookie:
+      - __cfduid=dfa962fbd6f0fde0fdcfde0f6e1ababfc1611860326; expires=Sat, 27-Feb-21
+        18:58:46 GMT; path=/; domain=.id.loc.gov; HttpOnly; SameSite=Lax
+      Cache-Control:
+      - public, max-age=2419200
+      X-Varnish:
+      - '124823792'
+      Age:
+      - '0'
+      Via:
+      - 1.1 varnish (Varnish/6.0)
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - HEAD, POST, GET, OPTIONS
+      Access-Control-Allow-Headers:
+      - Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With
+      Accept-Ranges:
+      - bytes
+      Cf-Cache-Status:
+      - DYNAMIC
+      Cf-Request-Id:
+      - 07ebf5cf830000c55480272000000001
+      Expect-Ct:
+      - max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"
+      Server:
+      - cloudflare
+      Cf-Ray:
+      - 618cf25f3ffdc554-ORD
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        WyIqTkFNRSoiLFsiXCJBa3R1ZWxsZSBQcm9ibGVtZSBkZXIgTmFtZW5mb3Jz
+        Y2h1bmcgaW4gZGVyIEREUlwiICgxOTc5IDogS2FybC1NYXJ4LVVuaXZlcnNp
+        dMOkdCBMZWlwemlnKSIsIlwiRGVuIE9wZmVybiBlaW5lbiBOYW1lbiBnZWJl
+        blwiIChDb25mZXJlbmNlKSAoMjAxNiA6IChCZXJsaW4sIEdlcm1hbnkpIiwi
+        XCJJY2ggaGFiZSBkaWNoIGJlaW0gTmFtZW4gZ2VydWZlbi5cIiBNZXRhcGhl
+        cm4gZGVyIFdlbHQtIHVuZCBTZWxic3RyZWZlcmVueiAoQ29uZmVyZW5jZSkg
+        KDIwMTAgOiBVbml2ZXJzaXTDpHQgTHV4ZW1idXJnKSIsIlwiU3VuZGF5IENo
+        cm9uaWNsZVwiIENoZXNzIFRvdXJuYW1lbnQgKDE5NDYgOiBMb25kb24sIEVu
+        Z2xhbmQpIiwiXCJWZWtoaVwiIGthayB6bmFtZW5pZSB2cmVtZW5pIiwiKFJl
+        KW9yZ2FuaXNhdGllLCBmdXNpZSBlbiBvdmVybmFtZSIsIi5aQSBEb21haW4g
+        TmFtZSBBdXRob3JpdHkgKFNvdXRoIEFmcmljYSkiLCIxMDAwIHZlbGlraWto
+        IGkgem5hbWVuaXR5a2ggaW1lbiIsIjE4IE5hbWVzIChNdXNpY2FsIGdyb3Vw
+        KSIsIjIxc3QgY2VudHVyeSBzeW5vbnltIGFuZCBhbnRvbnltIGZpbmRlci4g
+        VmlldG5hbWVzZSAmIEVuZ2xpc2giXSxbIjEgcmVzdWx0IiwiMSByZXN1bHQi
+        LCIxIHJlc3VsdCIsIjEgcmVzdWx0IiwiMSByZXN1bHQiLCIxIHJlc3VsdCIs
+        IjEgcmVzdWx0IiwiMSByZXN1bHQiLCIxIHJlc3VsdCIsIjEgcmVzdWx0Il0s
+        WyJodHRwOi8vaWQubG9jLmdvdi9hdXRob3JpdGllcy9uYW1lcy9uODcxMjA5
+        NjQiLCJodHRwOi8vaWQubG9jLmdvdi9hdXRob3JpdGllcy9uYW1lcy9uMjAx
+        NzA0ODE0NSIsImh0dHA6Ly9pZC5sb2MuZ292L2F1dGhvcml0aWVzL25hbWVz
+        L24yMDE1MDU0NTY5IiwiaHR0cDovL2lkLmxvYy5nb3YvYXV0aG9yaXRpZXMv
+        bmFtZXMvbm8yMDE2MDI2Njk4IiwiaHR0cDovL2lkLmxvYy5nb3YvYXV0aG9y
+        aXRpZXMvbmFtZXMvbm8yMDA4MDM5Nzc0IiwiaHR0cDovL2lkLmxvYy5nb3Yv
+        YXV0aG9yaXRpZXMvbmFtZXMvbm8yMDEzMDM1NzMyIiwiaHR0cDovL2lkLmxv
+        Yy5nb3YvYXV0aG9yaXRpZXMvbmFtZXMvbm8yMDE2MTAyMzAxIiwiaHR0cDov
+        L2lkLmxvYy5nb3YvYXV0aG9yaXRpZXMvbmFtZXMvbm8yMDAyMDM5ODYxIiwi
+        aHR0cDovL2lkLmxvYy5nb3YvYXV0aG9yaXRpZXMvbmFtZXMvbm8yMDA4MTI4
+        NDIwIiwiaHR0cDovL2lkLmxvYy5nb3YvYXV0aG9yaXRpZXMvbmFtZXMvbjk3
+        MDc3MjIwIl1d
+    http_version:
+  recorded_at: Thu, 28 Jan 2021 18:58:47 GMT
+recorded_with: VCR 4.0.0
