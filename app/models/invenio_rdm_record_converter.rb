@@ -88,6 +88,8 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       "creators": creators(gf.creator),
       "title": gf.title.first,
       "additional_titles": gf.title.last(gf.title.size-1).map{ |title| {"title": title, "type": "alternative_title", "lang": "eng"} },
+      "description": gf.description.first,
+      "additional_descriptions": gf.description.last(gf.description.size-1).map{ |add_desc| {"description": add_desc, "type": "other", "lang": "eng"} },
       "subjects": SUBJECT_SCHEMES.map{ |subject_type| subjects_for_scheme(gf.send(subject_type), subject_type) }.flatten,
       "formats": gf.mime_type,
       "locations": gf.based_near.present? ? gf.based_near.shift.split("', ").map{ |location| {place: location.gsub("'", "")} } : {}

@@ -17,7 +17,8 @@ RSpec.describe InvenioRdmRecordConverter do
       mesh: [mesh_term],
       lcsh: [lcsh_term],
       mime_type: 'application/pdf',
-      based_near: ["'Boston, Massachusetts, United States', 'East Peoria, Illinois, United States'"]
+      based_near: ["'Boston, Massachusetts, United States', 'East Peoria, Illinois, United States'"],
+      description: ["This is a generic file for specs only", "This is an additional description to help test"]
     )
   }
   let(:json) do
@@ -58,6 +59,8 @@ RSpec.describe InvenioRdmRecordConverter do
             "lang": "eng"
           }
         ],
+        "description": generic_file.description.shift,
+        "additional_descriptions": [{"description": generic_file.description.last, "type": "other", "lang": "eng"}],
         "subjects": [
           {
             "subject": "keyword subject",
