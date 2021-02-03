@@ -3,6 +3,7 @@ module Galtersufia
     module HeaderLookup
       extend ActiveSupport::Concern
 
+      NA = "N/A"
       BASE_SPARQL_MESH_URI ="https://id.nlm.nih.gov/mesh/sparql?format=JSON&limit=10&inference=true&query=PREFIX%20rdfs"\
         "%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0D%0APREFIX%20meshv%3A%20%3Chttp%3A%2F%2Fid.nlm."\
         "nih.gov%2Fmesh%2Fvocab%23%3E%0D%0APREFIX%20mesh2018%3A%20%3Chttp%3A%2F%2Fid.nlm.nih.gov%2Fmesh%3E%0D%0A%0D%0ASELECT"\
@@ -11,43 +12,39 @@ module Galtersufia
       END_SPARQL_MESH_URI = "%27%2C%20%27i%27))%20%0D%0A%7D%20%0D%0AORDER%20BY%20%3Fd%20%0D%0A"
       LCSH_BASE_URI = "http://id.loc.gov/authorities/subjects/suggest/?q="
 
-      def pid_lookup_by_scheme(term, scheme)
-        scheme == :mesh ? mesh_term_pid_lookup(term) : lcsh_term_pid_lookup(term)
+      def pid_lookup_by_scheme(term="", scheme="")
+        if term.blank? || scheme.blank?
+          return
+        elsif scheme == :mesh
+          memoized_mesh_lookups[term] || mesh_term_pid_lookup(term)
+        elsif scheme == :lcsh
+          memoized_lcsh_lookups[term] || lcsh_term_pid_lookup(term)
+        else
+          return
+        end
       end
 
       # return PID for provided mesh_header using SPARQL query
       def mesh_term_pid_lookup(mesh_term="")
-        return unless mesh_term.present?
+        hits = perform_and_parse_mesh_query(mesh_term)
 
-        result = memoized_mesh_lookups[mesh_term]
-        return result if result.present?
-
-        query_result  = HTTParty.get(BASE_SPARQL_MESH_URI + mesh_term + END_SPARQL_MESH_URI)
-        json_parsed_result = JSON.parse(query_result)
-
-        if hits = hits_from_mesh_sparql(json_parsed_result)
+        if hits.present?
           result = pid_from_mesh_hits(hits)
           memoized_mesh_lookups[mesh_term] = result
-          result
         else
-          ["Error Searching"]
+          nil
         end
       end
 
       # return PID for provided lcsh_term
       def lcsh_term_pid_lookup(lcsh_term="")
-        return unless lcsh_term.present?
-
-        result = memoized_lcsh_lookups[lcsh_term]
-        return result if result.present?
-
         subject_names, subject_id_uris = perform_and_parse_lcsh_query(lcsh_term)
 
-        if subject_names && subject_id_uris
+        if subject_names.present? && subject_id_uris.present?
           result = pid_from_lcsh_hits(lcsh_term, subject_names, subject_id_uris)
           memoized_lcsh_lookups[lcsh_term] = result
         else
-          ["Error Searching"]
+          nil
         end
       end
 
@@ -65,11 +62,15 @@ module Galtersufia
       end
 
       def pid_from_lcsh_hits(lcsh_term, subject_names, subject_id_uris)
+        # for multiple matches in a search find the exact match index...
         subject_match_index = subject_names.index{ |name| name == lcsh_term }
+        # ...then use that index ith the subject_id_uris array to get the pid
         subject_id_uris[subject_match_index].split('/').last
       end
 
-      def hits_from_mesh_sparql(json_parsed_result)
+      def perform_and_parse_mesh_query(mesh_term)
+        query_result = HTTParty.get(BASE_SPARQL_MESH_URI + mesh_term + END_SPARQL_MESH_URI)
+        json_parsed_result = JSON.parse(query_result)
         json_parsed_result.try(:[], "results").try(:[], "bindings")
       end
 
