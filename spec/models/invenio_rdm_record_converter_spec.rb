@@ -195,25 +195,51 @@ RSpec.describe InvenioRdmRecordConverter do
       }
     }"
   end
+  let(:empty_mesh_api_response) do
+    "{
+     \"head\": {
+       \"vars\": [ \"d\" , \"dName\" ]
+       } ,
+       \"results\": {
+           \"bindings\": [
+           ]
+       }
+     }"
+  end
   let(:expected_mesh_pid) { "D018875" }
   let(:expected_memoized_mesh) { {mesh_term=>expected_mesh_pid} }
+  let(:blank_mesh_term) { "mesh term does not exist" }
+  let(:expected_failed_mesh) { "#{blank_mesh_term} - MESH" }
 
   describe "#mesh_term_pid_lookup" do
-    before do
-      allow(HTTParty).to receive(:get).and_return(mesh_api_response)
-      @mesh_pid = converter.mesh_term_pid_lookup(mesh_term)
+    context 'search returns no values' do
+      before do
+        allow(HTTParty).to receive(:get).and_return(mesh_api_response)
+        @mesh_pid = converter.mesh_term_pid_lookup(mesh_term)
+      end
+
+      it 'calls api with correct term' do
+        expect(HTTParty).to have_received(:get).with(mesh_query_url)
+      end
+
+      it 'returns PID for mesh term' do
+        expect(@mesh_pid).to eq(expected_mesh_pid)
+      end
+
+      it 'memoizes the result on success' do
+        expect(converter.send(:memoized_mesh_lookups)).to eq(expected_memoized_mesh)
+      end
     end
 
-    it 'calls api with correct term' do
-      expect(HTTParty).to have_received(:get).with(mesh_query_url)
-    end
+    context 'search returns no values' do
+      before do
+        allow(HTTParty).to receive(:get).and_return(empty_mesh_api_response)
+        @mesh_pid = converter.mesh_term_pid_lookup(blank_mesh_term)
+      end
 
-    it 'returns PID for mesh term' do
-      expect(@mesh_pid).to eq(expected_mesh_pid)
-    end
-
-    it 'memoizes the result on success' do
-      expect(converter.send(:memoized_mesh_lookups)).to eq(expected_memoized_mesh)
+      it 'returns N/A for PID for mesh term' do
+        expect(@mesh_pid).to eq(nil)
+      end
     end
   end
 
@@ -225,26 +251,59 @@ RSpec.describe InvenioRdmRecordConverter do
     v/authorities/subjects/sh2002000569\",\"http://id.loc.gov/authorities/subjects/sh2010112582\"]]
     """
   end
+  let(:empty_lcsh_api_response) { "[\"*this*is*not*a*real*search*\",[],[],[]]" }
   let(:expected_lcsh_pid) { "sh2002000569" }
   let(:expected_memoized_lcsh) { {lcsh_term=>expected_lcsh_pid} }
+  let(:blank_lcsh_term) { "lcsh term does not exist" }
+  let(:expected_failed_lcsh) { "#{blank_lcsh_term} - LCSH" }
 
   describe "#lcsh_term_pid_lookup" do
+    context 'search returns values' do
+      before do
+        allow(HTTParty).to receive(:get).and_return(lcsh_api_response)
+        @lcsh_pids = converter.lcsh_term_pid_lookup(lcsh_term)
+      end
+
+      it 'calls api with correct term' do
+        expect(HTTParty).to have_received(:get).with(lcsh_query_url)
+      end
+
+      # TODO figure out what to do with terms that have multiple PIDs returned from query
+      it 'returns PID for lcsh term' do
+        expect(@lcsh_pids).to eq(expected_lcsh_pid)
+      end
+
+      it 'memoizes the result on success' do
+        expect(converter.send(:memoized_lcsh_lookups)).to eq(expected_memoized_lcsh)
+      end
+    end
+
+    context 'search returns no values' do
+      before do
+        allow(HTTParty).to receive(:get).and_return(empty_lcsh_api_response)
+        @lcsh_pids = converter.lcsh_term_pid_lookup(lcsh_term)
+      end
+
+      it 'returns nil for PID for lcsh term' do
+        expect(@lcsh_pids).to eq(nil)
+      end
+    end
+  end
+
+  let(:no_pid_mesh_subject) { [{subject: "Fake Mesh Term: DigitalHub field mesh"}] }
+  let(:no_pid_lcsh_subject) { [{subject: "Fake Lcsh Term: DigitalHub field lcsh"}] }
+
+  describe "#subjects_for_scheme" do
     before do
-      allow(HTTParty).to receive(:get).and_return(lcsh_api_response)
-      @lcsh_pids = converter.lcsh_term_pid_lookup(lcsh_term)
+      allow(subject).to receive(:pid_lookup_by_scheme).and_return(nil)
     end
 
-    it 'calls api with correct term' do
-      expect(HTTParty).to have_received(:get).with(lcsh_query_url)
+    it 'returns properly formatted subject for lcsh subject with no pid' do
+      expect(subject.send(:subjects_for_scheme, ["Fake Lcsh Term"], :lcsh)).to eq(no_pid_lcsh_subject)
     end
 
-    # TODO figure out what to do with terms that have multiple PIDs returned from query
-    it 'returns PID for lcsh term' do
-      expect(@lcsh_pids).to eq(expected_lcsh_pid)
-    end
-
-    it 'memoizes the result on success' do
-      expect(converter.send(:memoized_lcsh_lookups)).to eq(expected_memoized_lcsh)
+    it 'returns properly formatted subject for mesh subject with no pid' do
+      expect(subject.send(:subjects_for_scheme, ["Fake Mesh Term"], :mesh)).to eq(no_pid_mesh_subject)
     end
   end
 end

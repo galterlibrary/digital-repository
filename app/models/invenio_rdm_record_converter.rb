@@ -154,7 +154,15 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   # return array of invenio formatted subjects
   def subjects_for_scheme(terms, scheme)
     if scheme != :tag
-      terms.map{ |term| {subject: term, identifier: pid_lookup_by_scheme(term, scheme), scheme: scheme} }
+      terms.map do |term|
+        pid = pid_lookup_by_scheme(term, scheme)
+
+        if pid.present?
+          {subject: term, identifier: pid, scheme: scheme}
+        else
+          {subject: "#{term}: DigitalHub field #{scheme}"}
+        end
+      end
     else
       terms.map{ |term| {subject: term} }
     end
