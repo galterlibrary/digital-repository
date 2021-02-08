@@ -97,6 +97,17 @@ RSpec.describe InvenioRdmRecordConverter do
           "on_behalf_of": {
             "user": user.username
           }
+        ],
+        "dates": [{"date": "1-1-2021", "type": "other", "description": "When the item was originally created."}],
+        "formats": "application/pdf",
+        "locations": [{"place": "Boston, Massachusetts, United States"}, {"place": "East Peoria, Illinois, United States"}]
+      },
+      "provenance": {
+        "created_by": {
+          "user": assistant.username
+        },
+        "on_behalf_of": {
+          "user": user.username
         }
       },
       "file": {
