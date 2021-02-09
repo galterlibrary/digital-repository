@@ -18,7 +18,8 @@ RSpec.describe InvenioRdmRecordConverter do
       lcsh: [lcsh_term],
       mime_type: 'application/pdf',
       based_near: ["'Boston, Massachusetts, United States', 'East Peoria, Illinois, United States'"],
-      description: ["This is a generic file for specs only", "This is an additional description to help test"]
+      description: ["This is a generic file for specs only", "This is an additional description to help test"],
+      date_created: ["1-1-2021"]
     )
   }
   let(:json) do
@@ -76,6 +77,7 @@ RSpec.describe InvenioRdmRecordConverter do
             "scheme": "lcsh"
           }
         ],
+        "dates": [{"date": "1-1-2021", "type": "other", "description": "When the item was originally created."}],
         "formats": "application/pdf",
         "locations": [{"place": "Boston, Massachusetts, United States"}, {"place": "East Peoria, Illinois, United States"}]
       },
