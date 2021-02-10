@@ -14,6 +14,8 @@ RSpec.describe InvenioRdmRecordConverter do
       creator: [user.formal_name],
       title: ["Primary Title"],
       tag: ["keyword subject"],
+      publisher: ["DigitalHub. Galter Health Sciences Library & Learning Center"],
+      date_uploaded: Time.new(2020, 2, 3),
       mesh: [mesh_term],
       lcsh: [lcsh_term],
       mime_type: 'application/pdf',
@@ -62,6 +64,8 @@ RSpec.describe InvenioRdmRecordConverter do
         ],
         "description": generic_file.description.shift,
         "additional_descriptions": [{"description": generic_file.description.last, "type": "other", "lang": "eng"}],
+        "publisher": "DigitalHub. Galter Health Sciences Library & Learning Center",
+        "publication_date": "2020-2-3",
         "subjects": [
           {
             "subject": "keyword subject",

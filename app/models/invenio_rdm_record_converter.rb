@@ -90,6 +90,8 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       "additional_titles": gf.title.last(gf.title.size-1).map{ |title| {"title": title, "type": "alternative_title", "lang": "eng"} },
       "description": gf.description.first,
       "additional_descriptions": gf.description.last(gf.description.size-1).map{ |add_desc| {"description": add_desc, "type": "other", "lang": "eng"} },
+      "publisher": gf.publisher.shift,
+      "publication_date": "#{gf.date_uploaded.year}-#{gf.date_uploaded.month}-#{gf.date_uploaded.day}",
       "subjects": SUBJECT_SCHEMES.map{ |subject_type| subjects_for_scheme(gf.send(subject_type), subject_type) }.flatten,
       "dates": gf.date_created.map{ |date| {"date": date, "type": "other", "description": "When the item was originally created."} },
       "formats": gf.mime_type,
