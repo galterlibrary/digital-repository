@@ -6,7 +6,6 @@ include Sufia::Export
 class InvenioRdmRecordConverter < Sufia::Export::Converter
   include Galtersufia::GenericFile::InvenioResourceTypeMappings
   include Galtersufia::GenericFile::KnownOrganizations
-  include Galtersufia::GenericFile::HeaderLookup
 
   SUBJECT_SCHEMES = [:tag, :mesh, :lcsh]
 
@@ -15,6 +14,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   # @param [GenericFile] generic_file file to be converted for export
   def initialize(generic_file=nil)
     return unless generic_file
+    @@header_lookup = HeaderLookup.new
 
     #PIDs
     @pids = invennio_pids(generic_file.doi.shift)
@@ -87,9 +87,9 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       "resource_type": resource_type(gf.resource_type.shift),
       "creators": creators(gf.creator),
       "title": gf.title.first,
-      "additional_titles": gf.title.last(gf.title.size-1).map{ |title| {"title": title, "type": "alternative_title", "lang": "eng"} },
+      "additional_titles": additional_titles(gf.title),
       "description": gf.description.first,
-      "additional_descriptions": gf.description.last(gf.description.size-1).map{ |add_desc| {"description": add_desc, "type": "other", "lang": "eng"} },
+      "additional_descriptions": additional_descriptions(gf.description),
       "publisher": gf.publisher.shift,
       "publication_date": "#{gf.date_uploaded.year}-#{gf.date_uploaded.month}-#{gf.date_uploaded.day}",
       "subjects": SUBJECT_SCHEMES.map{ |subject_type| subjects_for_scheme(gf.send(subject_type), subject_type) }.flatten,
@@ -158,7 +158,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   def subjects_for_scheme(terms, scheme)
     if scheme != :tag
       terms.map do |term|
-        pid = pid_lookup_by_scheme(term, scheme)
+        pid = @@header_lookup.pid_lookup_by_scheme(term, scheme)
 
         if pid.present?
           {subject: term, identifier: pid, scheme: scheme}
@@ -169,5 +169,17 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     else
       terms.map{ |term| {subject: term} }
     end
+  end
+
+  def additional_titles(titles)
+    additional_titles_size = titles.size-1
+    return nil if additional_titles_size < 0
+    titles.last(additional_titles_size).map{ |title| {"title": title, "type": "alternative_title", "lang": "eng"} }
+  end
+
+  def additional_descriptions(descriptions)
+    additional_descriptions_size = descriptions.size-1
+    return nil if additional_descriptions_size < 0
+    descriptions.last(additional_descriptions_size).map{ |add_desc| {"description": add_desc, "type": "other", "lang": "eng"} }
   end
 end
