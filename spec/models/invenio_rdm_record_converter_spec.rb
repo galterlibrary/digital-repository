@@ -30,72 +30,78 @@ RSpec.describe InvenioRdmRecordConverter do
   }
   let(:json) do
     {
-      "pids": {
-        "doi": {
-          "identifier": "#{generic_file.doi.shift}",
-          "provider":"datacite",
-          "client":"digitalhub"
+      "record": {
+        "pids": {
+          "doi": {
+            "identifier": "#{generic_file.doi.shift}",
+            "provider":"datacite",
+            "client":"digitalhub"
+          }
+        },
+        "metadata": {
+          "resource_type": {
+            "type": "Books",
+            "subtype": "Account Book"
+          },
+          "creators": [{
+            "name": "#{user.formal_name}",
+            "type": "personal",
+            "role": "",
+            "given_name": "#{user.display_name.split.first}",
+            "family_name": "#{user.display_name.split.last}",
+            "identifiers": {
+              "orcid": "#{user.orcid.split('/').last}"
+            },
+            "affiliations": []
+          }],
+          "title": "#{generic_file.title.first}",
+          "additional_titles": [
+            {
+              "title": "Secondary Title",
+              "type": "alternative_title",
+              "lang": "eng"
+            },
+            {
+              "title": "Tertiary Title",
+              "type": "alternative_title",
+              "lang": "eng"
+            }
+          ],
+          "description": generic_file.description.shift,
+          "additional_descriptions": [{"description": generic_file.description.last, "type": "other", "lang": "eng"}],
+          "publisher": "DigitalHub. Galter Health Sciences Library & Learning Center",
+          "publication_date": "2020-2-3",
+          "subjects": [
+            {
+              "subject": "keyword subject",
+            },
+            {
+              "subject": mesh_term,
+              "identifier": expected_mesh_pid,
+              "scheme": "mesh"
+            },
+            {
+              "subject": lcsh_term,
+              "identifier": expected_lcsh_pid,
+              "scheme": "lcsh"
+            }
+          ],
+          "dates": [{"date": "1-1-2021", "type": "other", "description": "When the item was originally created."}],
+          "formats": "application/pdf",
+          "locations": [{"place": "Boston, Massachusetts, United States"}, {"place": "East Peoria, Illinois, United States"}]
+        },
+        "provenance": {
+          "created_by": {
+            "user": assistant.username
+          },
+          "on_behalf_of": {
+            "user": user.username
+          }
         }
       },
-      "metadata": {
-        "resource_type": {
-          "type": "Books",
-          "subtype": "Account Book"
-        },
-        "creators": [{
-          "name": "#{user.formal_name}",
-          "type": "personal",
-          "role": "",
-          "given_name": "#{user.display_name.split.first}",
-          "family_name": "#{user.display_name.split.last}",
-          "identifiers": {
-            "orcid": "#{user.orcid.split('/').last}"
-          },
-          "affiliations": []
-        }],
-        "title": "#{generic_file.title.first}",
-        "additional_titles": [
-          {
-            "title": "Secondary Title",
-            "type": "alternative_title",
-            "lang": "eng"
-          },
-          {
-            "title": "Tertiary Title",
-            "type": "alternative_title",
-            "lang": "eng"
-          }
-        ],
-        "description": generic_file.description.shift,
-        "additional_descriptions": [{"description": generic_file.description.last, "type": "other", "lang": "eng"}],
-        "publisher": "DigitalHub. Galter Health Sciences Library & Learning Center",
-        "publication_date": "2020-2-3",
-        "subjects": [
-          {
-            "subject": "keyword subject",
-          },
-          {
-            "subject": mesh_term,
-            "identifier": expected_mesh_pid,
-            "scheme": "mesh"
-          },
-          {
-            "subject": lcsh_term,
-            "identifier": expected_lcsh_pid,
-            "scheme": "lcsh"
-          }
-        ],
-        "dates": [{"date": "1-1-2021", "type": "other", "description": "When the item was originally created."}],
-        "formats": "application/pdf",
-        "locations": [{"place": "Boston, Massachusetts, United States"}, {"place": "East Peoria, Illinois, United States"}]
-      },
-      "provenance": {
-        "created_by": {
-          "user": assistant.username
-        },
-        "on_behalf_of": {
-          "user": user.username
-        }
+      "file": {
+        "filename": generic_file.filename,
+        "content_path": nil # there is no file/content attached with this factory made GewnericFile
       }
     }.to_json
   end

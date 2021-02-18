@@ -16,10 +16,34 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     return unless generic_file
     @@header_lookup ||= HeaderLookup.new
 
-    #PIDs
-    @pids = invennio_pids(generic_file.doi.shift)
-    @metadata = invenio_metadata(generic_file)
-    @provenance = invenio_provenance(generic_file.proxy_depositor, generic_file.on_behalf_of)
+    @record = record_for_export(generic_file)
+    @file = filename_and_content_path(generic_file)
+  end
+
+  def to_json(options={})
+    options[:except] ||= ["memoized_mesh", "memoized_lcsh"]
+    super
+  end
+
+  private
+
+  def filename_and_content_path(generic_file)
+    {
+      "filename": generic_file.filename,
+      "content_path": generic_file_content_path(generic_file.content.checksum.value)
+    }
+  end
+
+  def generic_file_content_path(checksum)
+    "/#{checksum[0..1]}/#{checksum[2..3]}/#{checksum[4..5]}/#{checksum}" unless !checksum
+  end
+
+  def record_for_export(generic_file)
+    {
+      "pids": invennio_pids(generic_file.doi.shift),
+      "metadata": invenio_metadata(generic_file),
+      "provenance": invenio_provenance(generic_file.proxy_depositor, generic_file.on_behalf_of)
+    }
     # @label = generic_file.label
     # @depositor = generic_file.depositor
     # @arkivo_checksum = generic_file.arkivo_checksum
@@ -48,13 +72,6 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     # @versions = versions(generic_file)
     # @permissions = permissions(generic_file)
   end
-
-  def to_json(options={})
-    options[:except] ||= ["memoized_mesh", "memoized_lcsh"]
-    super
-  end
-
-  private
 
   def versions(gf)
     return [] unless gf.content.has_versions?
@@ -98,7 +115,6 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       "locations": gf.based_near.present? ? gf.based_near.shift.split("', ").map{ |location| {place: location.gsub("'", "")} } : {}
     }
   end
-
 
   def resource_type(digitalhub_subtype)
     irdm_subtype = DH_RESOURCE_TYPES[digitalhub_subtype]
