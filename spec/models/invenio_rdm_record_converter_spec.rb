@@ -121,6 +121,7 @@ RSpec.describe InvenioRdmRecordConverter do
   end
 
   let(:converter) { InvenioRdmRecordConverter.new }
+  let(:checksum) { "abcd1234" }
   let(:non_user_creator_name) { "I Don't Exist" }
   let(:personal_creator_without_user_json) {
     {
@@ -183,6 +184,12 @@ RSpec.describe InvenioRdmRecordConverter do
       it 'assigns' do
         expect({creators: converter.send(:creators, [organization_name])}).to eq(organizational_creator_json)
       end
+    end
+  end
+
+  describe "#generic_file_content_path" do
+    it "returns the content's path" do
+      expect(converter.send(:generic_file_content_path, checksum)).to eq("/ab/cd/12/abcd1234")
     end
   end
 
