@@ -189,7 +189,7 @@ RSpec.describe InvenioRdmRecordConverter do
 
   describe "#generic_file_content_path" do
     it "returns the content's path" do
-      expect(converter.send(:generic_file_content_path, checksum)).to eq("/ab/cd/12/abcd1234")
+      expect(converter.send(:generic_file_content_path, checksum)).to eq("#{ENV['FEDORA_BINARY_PATH']}/ab/cd/12/abcd1234")
     end
   end
 
