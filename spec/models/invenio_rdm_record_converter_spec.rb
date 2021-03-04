@@ -47,15 +47,15 @@ RSpec.describe InvenioRdmRecordConverter do
             "subtype": "Account Book"
           },
           "creators": [{
-            "name": "#{user.formal_name}",
-            "type": "personal",
-            "role": "",
-            "given_name": "#{user.display_name.split.first}",
-            "family_name": "#{user.display_name.split.last}",
-            "identifiers": {
-              "orcid": "#{user.orcid.split('/').last}"
-            },
-            "affiliations": []
+            "person_or_org": {
+              "type": "personal",
+              "given_name": "#{user.formal_name.split(',').last}",
+              "family_name": "#{user.formal_name.split(',').first}",
+              "identifiers": {
+                "scheme": "orcid",
+                "identifier": "#{user.orcid.split('/').last}"
+              }
+            }
           }],
           "title": "#{generic_file.title.first}",
           "additional_titles": [
@@ -138,67 +138,75 @@ RSpec.describe InvenioRdmRecordConverter do
 
   let(:converter) { InvenioRdmRecordConverter.new }
   let(:checksum) { "abcd1234" }
-  let(:non_user_creator_name) { "I Don't Exist" }
+  let(:non_user_creator_name) { "Laster, Firston" }
   let(:personal_creator_without_user_json) {
     {
       "creators": [{
-          "name": non_user_creator_name,
+        "person_or_org": {
           "type": "personal",
-          "role": "",
-          "given_name": "",
-          "family_name": "",
-          "identifiers": {},
-          "affiliations": []
-        }]
-    }
-  }.to_json
+          "given_name": "Firston",
+          "family_name": "Laster",
+        }
+      }]
+    }.with_indifferent_access
+  }
 
   let(:unidentified_creator_name) { "Creator not identified." }
+  let(:personal_creator_unidentified_json) {
+      {
+        "creators": [{
+          "person_or_org": {
+            "name": unidentified_creator_name
+          }
+        }]
+      }.with_indifferent_access
+    }
+
+  let(:unknown_creator_name) { "Unknown" }
   let(:personal_creator_unknown_json) {
     {
       "creators": [{
-          "name": "",
-          "type": "personal",
-          "role": "",
-          "given_name": "",
-          "family_name": "",
-          "identifiers": {},
-          "affiliations": []
-        }]
-    }
-  }.to_json
+        "person_or_org": {
+          "name": unknown_creator_name
+        }
+      }]
+    }.with_indifferent_access
+  }
 
   let(:organization_name) { "Galter Health Sciences Library" }
   let(:organizational_creator_json) {
     {
       "creators": [{
+        "person_or_org": {
           "name": organization_name,
-          "type": "organisational",
-          "role": "",
-          "given_name": "",
-          "family_name": "",
-          "identifiers": {},
-          "affiliations": []
-        }]
-    }
-  }.to_json
+          "type": "organisational"
+        }
+      }]
+    }.with_indifferent_access
+  }
 
   describe "#creators" do
     context 'personal record without user in digital hub' do
       it 'assigns' do
-        expect({creators: converter.send(:creators, [non_user_creator_name])}).to eq(personal_creator_without_user_json)
+        expect({"creators": converter.send(:creators, [non_user_creator_name])}.with_indifferent_access).to eq(personal_creator_without_user_json)
+      end
+    end
+
+    context 'personal record with unknown creator' do
+      it 'assigns' do
+        expect({"creators": converter.send(:creators, [unknown_creator_name])}.with_indifferent_access).to eq(personal_creator_unknown_json)
       end
     end
 
     context 'personal record with unidentified user' do
       it 'assigns' do
-        expect({creators: converter.send(:creators, [unidentified_creator_name])}).to eq(personal_creator_unknown_json)
+        expect({"creators": converter.send(:creators, [unidentified_creator_name])}.with_indifferent_access).to eq(personal_creator_unidentified_json)
       end
     end
 
     context 'organizational record' do
       it 'assigns' do
-        expect({creators: converter.send(:creators, [organization_name])}).to eq(organizational_creator_json)
+        expect({"creators": converter.send(:creators, [organization_name])}.with_indifferent_access).to eq(organizational_creator_json)
       end
     end
   end

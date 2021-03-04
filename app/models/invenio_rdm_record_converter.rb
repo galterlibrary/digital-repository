@@ -10,6 +10,8 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   SUBJECT_SCHEMES = [:tag, :mesh, :lcsh]
   ENG = "eng"
   ENGLISH = "english"
+  CREATOR_UNKNOWN = 'unknown'
+  CREATOR_NOT_IDENTIFIED = "creator not identified."
 
   # Create an instance of a InvenioRdmRecordConverter converter containing all the metadata for json export
   #
@@ -138,42 +140,50 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       # Galter Health Sciences Library is a User on production DigitalHub, but it does NOT have a formal_name value
       dh_user = User.find_by(formal_name: creator)
 
-      # organization
+      # Organization
       if organization?(creator)
-        name = creator
-        creator_type = "organisational"
-        family_name = ""
-        given_name = ""
-        identifiers = {}
-        affiliations = [] # only used for creator_type "personal"
-      # user
+        {
+          "person_or_org":
+            Hash.new.tap do |hash|
+              hash["name"] =  creator if creator.present? && (!creator.include?(CREATOR_NOT_IDENTIFIED) || !creator.include(CREATOR_UNKNOWN))
+              hash["type"] = "organisational"
+            end
+        }
+      # User within DigitalHub
       elsif dh_user.present?
-        name = dh_user.formal_name # will always be this regardless of type
-        creator_type = "personal"
-        dh_user_display_name = dh_user.display_name.split(' ') # split name into components to be reused
-        family_name = dh_user_display_name.pop # remove last value from display name
-        given_name = dh_user_display_name.join(' ') # the remaining strings becomes given name
-        identifiers = dh_user.orcid.present? ? {"orcid": dh_user.orcid.split('/').pop} : {}
-        affiliations = [] # TODO: user.affiliation is nil for all users on production... where do we get this value?
-      # TODO: unknown personal, what do we enter for these fields?
-      else
-        name = creator
-        creator_type = "personal"
-        family_name = ""
-        given_name = ""
-        identifiers = {}
-        affiliations = [] # TODO: user.affiliation is nil for all users on production... where do we get this value?
-      end
+        dh_user_formal_name = dh_user.formal_name.split(',') # split name into components to be reused
+        family_name = dh_user_formal_name.shift # remove first value from formal name
+        given_name = dh_user_formal_name.join(' ') # the remaining strings becomes given name
 
-      {
-        "name": name.include?("not identified") ? "" : creator,
-        "type": creator_type,
-        "role": "",
-        "given_name": given_name,
-        "family_name": family_name,
-        "identifiers": identifiers, # TODO: where can we find additional identifiers?
-        "affiliations": affiliations
-      }
+        {
+          "person_or_org":
+            Hash.new.tap do |hash|
+              hash["type"] = "personal"
+              hash["given_name"] = given_name
+              hash["family_name"] = family_name
+              hash["identifiers"] = {"scheme": "orcid", "identifier": dh_user.orcid.split('/').pop} if dh_user.orcid.present?
+            end
+        }
+      # Unknown / Not Identified creator
+      elsif creator.downcase == CREATOR_UNKNOWN || creator.downcase == CREATOR_NOT_IDENTIFIED
+        {
+          "person_or_org":
+            Hash.new.tap do |hash|
+              hash["name"] = creator
+            end
+        }
+      # Personal record without user in database
+      else
+        family_name, given_name = creator.split(',')
+        {
+          "person_or_org":
+            Hash.new.tap do |hash|
+              hash["type"] = "personal"
+              hash["given_name"] = given_name.lstrip
+              hash["family_name"] = family_name.lstrip
+            end
+        }
+      end
     end
   end
 
