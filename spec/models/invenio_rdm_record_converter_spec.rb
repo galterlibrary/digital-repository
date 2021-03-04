@@ -11,6 +11,7 @@ RSpec.describe InvenioRdmRecordConverter do
   let(:generic_file) {
     make_generic_file(
       user,
+      id: "ns0646000",
       doi: ["doi:123/ABC"],
       resource_type: ["Account Books"],
       proxy_depositor: assistant.username,
@@ -22,10 +23,11 @@ RSpec.describe InvenioRdmRecordConverter do
       date_uploaded: Time.new(2020, 2, 3),
       mesh: [mesh_term],
       lcsh: [lcsh_term],
-      mime_type: 'application/pdf',
       based_near: ["'Boston, Massachusetts, United States', 'East Peoria, Illinois, United States'"],
       description: ["This is a generic file for specs only", "This is an additional description to help test"],
-      date_created: ["1-1-2021"]
+      date_created: ["1-1-2021"],
+      mime_type: 'application/pdf',
+      grants_and_funding: ["European Commission 00k4n6c32"]
     )
   }
   let(:json) do
@@ -88,8 +90,19 @@ RSpec.describe InvenioRdmRecordConverter do
           ],
           "dates": [{"date": "1-1-2021", "type": "other", "description": "When the item was originally created."}],
           "formats": "application/pdf",
-          "locations": [{"place": "Boston, Massachusetts, United States"}, {"place": "East Peoria, Illinois, United States"}]
-        },
+          "locations": [{"place": "Boston, Massachusetts, United States"}, {"place": "East Peoria, Illinois, United States"}],
+          "funding": [{
+            "funder": {
+              "name": "National Library of Medicine (NLM)",
+              "identifier": "0060t0j89",
+              "scheme": "ror"
+            },
+            "award": {
+              "title": "",
+              "number": "F37 LM009568 ",
+              "identifier": "",
+              "scheme": ""
+            }}]},
         "provenance": {
           "created_by": {
             "user": assistant.username
@@ -97,7 +110,7 @@ RSpec.describe InvenioRdmRecordConverter do
           "on_behalf_of": {
             "user": user.username
           }
-        }
+        },
       },
       "file": {
         "filename": generic_file.filename,
@@ -105,6 +118,7 @@ RSpec.describe InvenioRdmRecordConverter do
       }
     }.to_json
   end
+  let(:invenio_rdm_record_converter) { described_class.new(generic_file) }
 
   before do
     ProxyDepositRights.create(grantor_id: assistant.id, grantee_id: user.id)
@@ -113,7 +127,7 @@ RSpec.describe InvenioRdmRecordConverter do
   end
 
   describe "#to_json" do
-    subject { described_class.new(generic_file).to_json } #(except: [:memoized_mesh, :memoized_lcsh]) }
+    subject { invenio_rdm_record_converter.to_json }
 
     it do
       is_expected.to eq json
@@ -190,6 +204,24 @@ RSpec.describe InvenioRdmRecordConverter do
   describe "#generic_file_content_path" do
     it "returns the content's path" do
       expect(converter.send(:generic_file_content_path, checksum)).to eq("#{ENV['FEDORA_BINARY_PATH']}/ab/cd/12/abcd1234")
+    end
+  end
+
+  describe "#funding" do
+    context "file has no funding data" do
+      let(:no_funding_file_id) { "this-is-not-a-file-id" }
+
+      it "returns empty hash" do
+        expect(invenio_rdm_record_converter.send(:funding, no_funding_file_id)).to eq({})
+      end
+    end
+
+    context "file has multiple funding sources" do
+      let(:multiple_funding_file_id) { "9z902z89q" }
+
+      it "returns all funding sources" do
+        expect(invenio_rdm_record_converter.send(:funding, multiple_funding_file_id).length).to eq(2)
+      end
     end
   end
 

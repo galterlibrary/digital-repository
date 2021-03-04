@@ -15,6 +15,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   def initialize(generic_file=nil)
     return unless generic_file
     @@header_lookup ||= HeaderLookup.new
+    @@funding_data ||= eval(File.read('app/models/concerns/galtersufia/generic_file/funding_data.txt'))
 
     @record = record_for_export(generic_file)
     @file = filename_and_content_path(generic_file)
@@ -114,7 +115,8 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       "subjects": SUBJECT_SCHEMES.map{ |subject_type| subjects_for_scheme(gf.send(subject_type), subject_type) }.flatten,
       "dates": gf.date_created.map{ |date| {"date": date, "type": "other", "description": "When the item was originally created."} },
       "formats": gf.mime_type,
-      "locations": gf.based_near.present? ? gf.based_near.shift.split("', ").map{ |location| {place: location.gsub("'", "")} } : {}
+      "locations": gf.based_near.present? ? gf.based_near.shift.split("', ").map{ |location| {place: location.gsub("'", "")} } : {},
+      "funding": funding(gf.id)
     }
   end
 
@@ -199,5 +201,9 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     additional_descriptions_size = descriptions.size-1
     return nil if additional_descriptions_size < 0
     descriptions.last(additional_descriptions_size).map{ |add_desc| {"description": add_desc, "type": "other", "lang": "eng"} }
+  end
+
+  def funding(file_id)
+    @@funding_data[file_id] || {}
   end
 end
