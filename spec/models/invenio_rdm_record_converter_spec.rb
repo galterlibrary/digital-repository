@@ -43,8 +43,8 @@ RSpec.describe InvenioRdmRecordConverter do
         },
         "metadata": {
           "resource_type": {
-            "type": "Books",
-            "subtype": "Account Book"
+            "type": "book",
+            "subtype": "book-account_book"
           },
           "creators": [{
             "person_or_org": {
@@ -231,6 +231,46 @@ RSpec.describe InvenioRdmRecordConverter do
 
       it "returns all funding sources" do
         expect(invenio_rdm_record_converter.send(:funding, multiple_funding_file_id).length).to eq(2)
+      end
+    end
+  end
+
+  describe "#resource_type" do
+    context "with type and subtype" do
+      let(:image) {
+        {
+          "type": "image",
+          "subtype": "image-pictorial_work"
+        }
+      }.to_json
+
+      it "returns type and subtype" do
+        expect(invenio_rdm_record_converter.send(:resource_type, "Image")).to eq(image)
+      end
+    end
+
+    context "with type only" do
+      let(:dataset) {
+        {
+          "type": "dataset"
+        }
+      }.to_json
+
+      it "returns type only" do
+        expect(invenio_rdm_record_converter.send(:resource_type, "Dataset")).to eq(dataset)
+      end
+    end
+
+    context "with no mapping" do
+      let(:project) {
+        {
+          "type": "other",
+          "subtype": "other-other"
+        }
+      }.to_json
+
+      it "returns 'other' type" do
+        expect(invenio_rdm_record_converter.send(:resource_type, "Project")).to eq(project)
       end
     end
   end
