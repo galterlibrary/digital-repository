@@ -27,7 +27,8 @@ RSpec.describe InvenioRdmRecordConverter do
       description: ["This is a generic file for specs only", "This is an additional description to help test"],
       date_created: ["1-1-2021"],
       mime_type: 'application/pdf',
-      grants_and_funding: ["European Commission 00k4n6c32"]
+      grants_and_funding: ["European Commission 00k4n6c32"],
+      language: ["English"]
     )
   }
   let(:json) do
@@ -61,16 +62,16 @@ RSpec.describe InvenioRdmRecordConverter do
             {
               "title": "Secondary Title",
               "type": "alternative_title",
-              "lang": "eng"
+              "lang": InvenioRdmRecordConverter::ENG
             },
             {
               "title": "Tertiary Title",
               "type": "alternative_title",
-              "lang": "eng"
+              "lang": InvenioRdmRecordConverter::ENG
             }
           ],
           "description": generic_file.description.shift,
-          "additional_descriptions": [{"description": generic_file.description.last, "type": "other", "lang": "eng"}],
+          "additional_descriptions": [{"description": generic_file.description.last, "type": "other", "lang": InvenioRdmRecordConverter::ENG}],
           "publisher": "DigitalHub. Galter Health Sciences Library & Learning Center",
           "publication_date": "2020-2-3",
           "subjects": [
@@ -89,6 +90,7 @@ RSpec.describe InvenioRdmRecordConverter do
             }
           ],
           "dates": [{"date": "1-1-2021", "type": "other", "description": "When the item was originally created."}],
+          "languages": ["eng"],
           "formats": "application/pdf",
           "locations": [{"place": "Boston, Massachusetts, United States"}, {"place": "East Peoria, Illinois, United States"}],
           "funding": [{

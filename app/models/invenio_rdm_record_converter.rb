@@ -8,6 +8,8 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   include Galtersufia::GenericFile::KnownOrganizations
 
   SUBJECT_SCHEMES = [:tag, :mesh, :lcsh]
+  ENG = "eng"
+  ENGLISH = "english"
 
   # Create an instance of a InvenioRdmRecordConverter converter containing all the metadata for json export
   #
@@ -114,6 +116,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       "publication_date": "#{gf.date_uploaded.year}-#{gf.date_uploaded.month}-#{gf.date_uploaded.day}",
       "subjects": SUBJECT_SCHEMES.map{ |subject_type| subjects_for_scheme(gf.send(subject_type), subject_type) }.flatten,
       "dates": gf.date_created.map{ |date| {"date": date, "type": "other", "description": "When the item was originally created."} },
+      "languages": gf.language.any?{ |lang| lang.downcase == ENGLISH} ? ["eng"] : "",
       "formats": gf.mime_type,
       "locations": gf.based_near.present? ? gf.based_near.shift.split("', ").map{ |location| {place: location.gsub("'", "")} } : {},
       "funding": funding(gf.id)
@@ -194,13 +197,13 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   def additional_titles(titles)
     additional_titles_size = titles.size-1
     return nil if additional_titles_size < 0
-    titles.last(additional_titles_size).map{ |title| {"title": title, "type": "alternative_title", "lang": "eng"} }
+    titles.last(additional_titles_size).map{ |title| {"title": title, "type": "alternative_title", "lang": ENG} }
   end
 
   def additional_descriptions(descriptions)
     additional_descriptions_size = descriptions.size-1
     return nil if additional_descriptions_size < 0
-    descriptions.last(additional_descriptions_size).map{ |add_desc| {"description": add_desc, "type": "other", "lang": "eng"} }
+    descriptions.last(additional_descriptions_size).map{ |add_desc| {"description": add_desc, "type": "other", "lang": ENG} }
   end
 
   def funding(file_id)
