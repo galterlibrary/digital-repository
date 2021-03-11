@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe InvenioRdmRecordConverter do
   let(:user) { FactoryGirl.create(:user, username: "usr1234", formal_name: "Tester, Mock", orcid: "https://orcid.org/1234-5678-9123-4567", \
                                     display_name: 'Mock Tester') }
+  let(:contributor_user) { FactoryGirl.create(:user, username: "contributor_user", formal_name: "User, Contributor",  display_name: 'Contributor User') }
   let(:assistant) { FactoryGirl.create(:user, username: "ast9876") }
   let(:mesh_term) { "Vocabulary, Controlled" }
   let(:expected_mesh_pid) { "D018875" }
@@ -17,6 +18,7 @@ RSpec.describe InvenioRdmRecordConverter do
       proxy_depositor: assistant.username,
       on_behalf_of: user.username,
       creator: [user.formal_name],
+      contributor: [contributor_user.formal_name],
       title: ["Primary Title"],
       tag: ["keyword subject"],
       publisher: ["DigitalHub. Galter Health Sciences Library & Learning Center"],
@@ -89,6 +91,14 @@ RSpec.describe InvenioRdmRecordConverter do
               "scheme": "lcsh"
             }
           ],
+          "contributors": [{
+            "person_or_org": {
+              "type": "personal",
+              "given_name": "#{contributor_user.formal_name.split(',').last}",
+              "family_name": "#{contributor_user.formal_name.split(',').first}",
+              "role": InvenioRdmRecordConverter::ROLE_OTHER
+            }
+          }],
           "dates": [{"date": "1-1-2021", "type": "other", "description": "When the item was originally created."}],
           "languages": ["eng"],
           "formats": "application/pdf",
@@ -141,72 +151,64 @@ RSpec.describe InvenioRdmRecordConverter do
   let(:non_user_creator_name) { "Laster, Firston" }
   let(:personal_creator_without_user_json) {
     {
-      "creators": [{
-        "person_or_org": {
-          "type": "personal",
-          "given_name": "Firston",
-          "family_name": "Laster",
-        }
-      }]
+      "person_or_org": {
+        "type": "personal",
+        "given_name": "Firston",
+        "family_name": "Laster",
+      }
     }.with_indifferent_access
   }
 
   let(:unidentified_creator_name) { "Creator not identified." }
   let(:personal_creator_unidentified_json) {
       {
-        "creators": [{
-          "person_or_org": {
-            "name": unidentified_creator_name
-          }
-        }]
+        "person_or_org": {
+          "name": unidentified_creator_name
+        }
       }.with_indifferent_access
     }
 
   let(:unknown_creator_name) { "Unknown" }
   let(:personal_creator_unknown_json) {
     {
-      "creators": [{
-        "person_or_org": {
-          "name": unknown_creator_name
-        }
-      }]
+      "person_or_org": {
+        "name": unknown_creator_name
+      }
     }.with_indifferent_access
   }
 
   let(:organization_name) { "Galter Health Sciences Library" }
   let(:organizational_creator_json) {
     {
-      "creators": [{
-        "person_or_org": {
-          "name": organization_name,
-          "type": "organisational"
-        }
-      }]
+      "person_or_org": {
+        "name": organization_name,
+        "type": "organisational"
+      }
     }.with_indifferent_access
   }
 
-  describe "#creators" do
+  describe "#build_creator_contributor_json" do
     context 'personal record without user in digital hub' do
       it 'assigns' do
-        expect({"creators": converter.send(:creators, [non_user_creator_name])}.with_indifferent_access).to eq(personal_creator_without_user_json)
+        expect(converter.send(:build_creator_contributor_json, non_user_creator_name).with_indifferent_access).to eq(personal_creator_without_user_json)
       end
     end
 
     context 'personal record with unknown creator' do
       it 'assigns' do
-        expect({"creators": converter.send(:creators, [unknown_creator_name])}.with_indifferent_access).to eq(personal_creator_unknown_json)
+        expect(converter.send(:build_creator_contributor_json, unknown_creator_name).with_indifferent_access).to eq(personal_creator_unknown_json)
       end
     end
 
     context 'personal record with unidentified user' do
       it 'assigns' do
-        expect({"creators": converter.send(:creators, [unidentified_creator_name])}.with_indifferent_access).to eq(personal_creator_unidentified_json)
+        expect(converter.send(:build_creator_contributor_json, unidentified_creator_name).with_indifferent_access).to eq(personal_creator_unidentified_json)
       end
     end
 
     context 'organizational record' do
       it 'assigns' do
-        expect({"creators": converter.send(:creators, [organization_name])}.with_indifferent_access).to eq(organizational_creator_json)
+        expect(converter.send(:build_creator_contributor_json, organization_name).with_indifferent_access).to eq(organizational_creator_json)
       end
     end
   end

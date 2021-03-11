@@ -12,14 +12,18 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   ENGLISH = "english"
   CREATOR_UNKNOWN = 'unknown'
   CREATOR_NOT_IDENTIFIED = "creator not identified."
+  MEMOIZED_PERSON_OR_ORG_DATA_FILE = 'memoized_person_or_org_data.txt'
+  ROLE_OTHER = 'other'
 
   # Create an instance of a InvenioRdmRecordConverter converter containing all the metadata for json export
   #
   # @param [GenericFile] generic_file file to be converted for export
   def initialize(generic_file=nil)
     return unless generic_file
+
     @@header_lookup ||= HeaderLookup.new
     @@funding_data ||= eval(File.read('app/models/concerns/galtersufia/generic_file/funding_data.txt'))
+    @@person_or_org_data ||= eval(File.read(MEMOIZED_PERSON_OR_ORG_DATA_FILE))
 
     @record = record_for_export(generic_file)
     @file = filename_and_content_path(generic_file)
@@ -109,7 +113,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   def invenio_metadata(gf)
     {
       "resource_type": resource_type(gf.resource_type.shift),
-      "creators": creators(gf.creator),
+      "creators": gf.creator.map{ |creator| build_creator_contributor_json(creator) },
       "title": gf.title.first,
       "additional_titles": additional_titles(gf.title),
       "description": gf.description.first,
@@ -117,6 +121,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       "publisher": gf.publisher.shift,
       "publication_date": "#{gf.date_uploaded.year}-#{gf.date_uploaded.month}-#{gf.date_uploaded.day}",
       "subjects": SUBJECT_SCHEMES.map{ |subject_type| subjects_for_scheme(gf.send(subject_type), subject_type) }.flatten,
+      "contributors": contributors(gf.contributor),
       "dates": gf.date_created.map{ |date| {"date": date, "type": "other", "description": "When the item was originally created."} },
       "languages": gf.language.any?{ |lang| lang.downcase == ENGLISH} ? ["eng"] : "",
       "formats": gf.mime_type,
@@ -145,56 +150,66 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     end
   end
 
-  def creators(creators)
-    creators.map do |creator|
-      # Galter Health Sciences Library is a User on production DigitalHub, but it does NOT have a formal_name value
-      dh_user = User.find_by(formal_name: creator)
-
-      # Organization
-      if organization?(creator)
-        {
-          "person_or_org":
-            Hash.new.tap do |hash|
-              hash["name"] =  creator if creator.present? && (!creator.include?(CREATOR_NOT_IDENTIFIED) || !creator.include(CREATOR_UNKNOWN))
-              hash["type"] = "organisational"
-            end
-        }
-      # User within DigitalHub
-      elsif dh_user.present?
-        dh_user_formal_name = dh_user.formal_name.split(',') # split name into components to be reused
-        family_name = dh_user_formal_name.shift # remove first value from formal name
-        given_name = dh_user_formal_name.join(' ') # the remaining strings becomes given name
-
-        {
-          "person_or_org":
-            Hash.new.tap do |hash|
-              hash["type"] = "personal"
-              hash["given_name"] = given_name
-              hash["family_name"] = family_name
-              hash["identifiers"] = {"scheme": "orcid", "identifier": dh_user.orcid.split('/').pop} if dh_user.orcid.present?
-            end
-        }
-      # Unknown / Not Identified creator
-      elsif creator.downcase == CREATOR_UNKNOWN || creator.downcase == CREATOR_NOT_IDENTIFIED
-        {
-          "person_or_org":
-            Hash.new.tap do |hash|
-              hash["name"] = creator
-            end
-        }
-      # Personal record without user in database
-      else
-        family_name, given_name = creator.split(',')
-        {
-          "person_or_org":
-            Hash.new.tap do |hash|
-              hash["type"] = "personal"
-              hash["given_name"] = given_name.lstrip
-              hash["family_name"] = family_name.lstrip
-            end
-        }
-      end
+  def contributors(contributors)
+    contributors.map do |contributor|
+      contributor_json = build_creator_contributor_json(contributor)
+      contributor_json[:person_or_org].merge!({"role": ROLE_OTHER})
+      contributor_json
     end
+  end
+
+  def build_creator_contributor_json(creator)
+    if creator_data = @@person_or_org_data[creator]
+      return creator_data
+    # Organization
+    elsif organization?(creator)
+      json = @@person_or_org_data[creator] = {
+        "person_or_org":
+          Hash.new.tap do |hash|
+            hash["name"] =  creator if creator.present? && (!creator.include?(CREATOR_NOT_IDENTIFIED) || !creator.include(CREATOR_UNKNOWN))
+            hash["type"] = "organisational"
+          end
+      }
+    # User within DigitalHub
+    elsif dh_user = User.find_by(formal_name: creator)
+      dh_user_formal_name = dh_user.formal_name.split(',') # split name into components to be reused
+      family_name = dh_user_formal_name.shift # remove first value from formal name
+      given_name = dh_user_formal_name.join(' ') # the remaining strings becomes given name
+
+      json = @@person_or_org_data[creator] = {
+        "person_or_org":
+          Hash.new.tap do |hash|
+            hash["type"] = "personal"
+            hash["given_name"] = given_name
+            hash["family_name"] = family_name
+            hash["identifiers"] = {"scheme": "orcid", "identifier": dh_user.orcid.split('/').pop} if dh_user.orcid.present?
+          end
+      }
+    # Unknown / Not Identified creator
+    elsif creator.downcase == CREATOR_UNKNOWN || creator.downcase == CREATOR_NOT_IDENTIFIED
+      json = @@person_or_org_data[creator] = {
+        "person_or_org":
+          Hash.new.tap do |hash|
+            hash["name"] = creator
+          end
+      }
+    # Personal record without user in database
+    else
+      family_name, given_name = creator.split(',')
+      json = @@person_or_org_data[creator] = {
+        "person_or_org":
+          Hash.new.tap do |hash|
+            hash["type"] = "personal"
+            hash["given_name"] = given_name.lstrip
+            hash["family_name"] = family_name.lstrip
+          end
+      }
+    end
+
+    # this line only runs if there is an update to @@person_or_org_data
+    File.write(MEMOIZED_PERSON_OR_ORG_DATA_FILE, @@person_or_org_data)
+    # return the actual json
+    json
   end
 
   # return array of invenio formatted subjects
