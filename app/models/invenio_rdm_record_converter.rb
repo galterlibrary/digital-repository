@@ -124,6 +124,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       "contributors": contributors(gf.contributor),
       "dates": gf.date_created.map{ |date| {"date": date, "type": "other", "description": "When the item was originally created."} },
       "languages": gf.language.any?{ |lang| lang.downcase == ENGLISH} ? ["eng"] : "",
+      "sizes": Array.new.tap{ |size_json| size_json << "#{gf.page_count} pages" if !gf.page_count.blank? },
       "formats": gf.mime_type,
       "locations": gf.based_near.present? ? gf.based_near.shift.split("', ").map{ |location| {place: location.gsub("'", "")} } : {},
       "funding": funding(gf.id)

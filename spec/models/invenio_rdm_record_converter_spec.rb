@@ -30,7 +30,8 @@ RSpec.describe InvenioRdmRecordConverter do
       date_created: ["1-1-2021"],
       mime_type: 'application/pdf',
       grants_and_funding: ["European Commission 00k4n6c32"],
-      language: ["English"]
+      language: ["English"],
+      page_count: [rand(1..1000).to_s]
     )
   }
   let(:json) do
@@ -101,6 +102,7 @@ RSpec.describe InvenioRdmRecordConverter do
           }],
           "dates": [{"date": "1-1-2021", "type": "other", "description": "When the item was originally created."}],
           "languages": ["eng"],
+          "sizes": ["#{generic_file.page_count} pages"],
           "formats": "application/pdf",
           "locations": [{"place": "Boston, Massachusetts, United States"}, {"place": "East Peoria, Illinois, United States"}],
           "funding": [{
