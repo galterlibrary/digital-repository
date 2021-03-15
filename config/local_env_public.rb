@@ -27,3 +27,5 @@ ENV['VIVO_PROFILES'] = 'http://vfsmvivo.fsm.northwestern.edu/vivo/individual?uri
 ENV['FITS_PATH_GLOBAL'] = '/var/www/apps/fits-0.8.6/fits.sh'
 
 ENV['PRODUCTION_URL'] = 'https://digitalhub.northwestern.edu'
+
+ENV['FEDORA_BINARY_PATH'] = '/hydra-jetty/fcrepo4-data/fcrepo.binary.directory'
