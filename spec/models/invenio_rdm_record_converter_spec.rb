@@ -31,7 +31,8 @@ RSpec.describe InvenioRdmRecordConverter do
       mime_type: 'application/pdf',
       grants_and_funding: ["European Commission 00k4n6c32"],
       language: ["English"],
-      page_count: [rand(1..1000).to_s]
+      page_count: [rand(1..1000).to_s],
+      rights: ["http://creativecommons.org/licenses/by-nc-sa/3.0/us/"]
     )
   }
   let(:json) do
@@ -104,6 +105,8 @@ RSpec.describe InvenioRdmRecordConverter do
           "languages": ["eng"],
           "sizes": ["#{generic_file.page_count} pages"],
           "formats": "application/pdf",
+          "rights": [{"rights": 'Creative Commons Attribution Non Commercial Share Alike 3.0 United States', "scheme": "spdx", "identifier": \
+                      "CC-BY-NC-SA-3.0-US", "url": "http://creativecommons.org/licenses/by-nc-sa/3.0/us/"}],
           "locations": [{"place": "Boston, Massachusetts, United States"}, {"place": "East Peoria, Illinois, United States"}],
           "funding": [{
             "funder": {
@@ -276,6 +279,45 @@ RSpec.describe InvenioRdmRecordConverter do
       it "returns 'other' type" do
         expect(invenio_rdm_record_converter.send(:resource_type, "Project")).to eq(project)
       end
+    end
+  end
+
+  let(:creative_commons_attribution_v3_url) { "http://creativecommons.org/licenses/by/3.0/us/" }
+  let(:expected_creative_commons_attribution_v3_url) do
+    {
+      "rights": "Creative Commons Attribution 3.0 United States",
+      "scheme": "spdx",
+      "identifier": "CC-BY-3.0-US",
+      "url": creative_commons_attribution_v3_url
+    }
+  end
+
+  let(:creative_commons_zero_url) { "http://creativecommons.org/publicdomain/zero/1.0/" }
+  let(:expected_mit) do
+    {
+      "rights": "Creative Commons Zero v1.0 Universal",
+      "scheme": "spdx",
+      "identifier": "CC0-1.0",
+      "url": creative_commons_zero_url
+    }
+  end
+
+
+  let(:mit_license_url) { "https://opensource.org/licenses/MIT" }
+  let(:expected_mit) do
+    {
+      "rights": "MIT License",
+      "scheme": "spdx",
+      "identifier": "MIT",
+      "url": mit_license_url
+    }
+  end
+
+  describe "#rights" do
+    it 'returns the expected license information' do
+      expect(subject.send(:rights, [creative_commons_attribution_v3_url])).to eq(expected_creative_commons_attribution_v3_url)
+      expect(subject.send(:rights, [creative_commons_zero_url])).to eq(expected_creative_commons_zero_url)
+      expect(subject.send(:rights, [mit_license_url])).to eq(expected_mit)
     end
   end
 
