@@ -10,8 +10,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   SUBJECT_SCHEMES = [:tag, :mesh, :lcsh]
   ENG = "eng"
   ENGLISH = "english"
-  CREATOR_UNKNOWN = 'unknown'
-  CREATOR_NOT_IDENTIFIED = "creator not identified."
+  MEMOIZED_PERSON_OR_ORG_DATA_FILE = 'memoized_person_or_org_data.txt'
   ROLE_OTHER = 'other'
   DEFAULT_RIGHTS_SCHEME = "spdx"
   MEMOIZED_PERSON_OR_ORG_DATA_FILE = 'memoized_person_or_org_data.txt'
@@ -172,7 +171,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       json = @@person_or_org_data[creator] = {
         "person_or_org":
           Hash.new.tap do |hash|
-            hash["name"] =  creator if creator.present? && (!creator.include?(CREATOR_NOT_IDENTIFIED) || !creator.include(CREATOR_UNKNOWN))
+            hash["name"] =  creator
             hash["type"] = "organisational"
           end
       }
@@ -191,16 +190,8 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
             hash["identifiers"] = {"scheme": "orcid", "identifier": dh_user.orcid.split('/').pop} if dh_user.orcid.present?
           end
       }
-    # Unknown / Not Identified creator
-    elsif creator.downcase == CREATOR_UNKNOWN || creator.downcase == CREATOR_NOT_IDENTIFIED
-      json = @@person_or_org_data[creator] = {
-        "person_or_org":
-          Hash.new.tap do |hash|
-            hash["name"] = creator
-          end
-      }
     # Personal record without user in database
-    else
+    elsif creator.include?(",")
       family_name, given_name = creator.split(',')
       json = @@person_or_org_data[creator] = {
         "person_or_org":
@@ -208,6 +199,15 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
             hash["type"] = "personal"
             hash["given_name"] = given_name.lstrip
             hash["family_name"] = family_name.lstrip
+          end
+      }
+    # Unknown / Not Identified creator
+    else
+      json = @@person_or_org_data[creator] = {
+        "person_or_org":
+          Hash.new.tap do |hash|
+            hash["name"] = creator
+            hash["type"] = "organisational"
           end
       }
     end
