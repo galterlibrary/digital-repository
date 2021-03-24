@@ -343,7 +343,6 @@ RSpec.describe InvenioRdmRecordConverter do
     }]
   end
 
-
   let(:mit_license_url) { "https://opensource.org/licenses/MIT" }
   let(:expected_mit) do
     [{
@@ -361,12 +360,29 @@ RSpec.describe InvenioRdmRecordConverter do
     }]
   end
 
+  let(:multiple_rights) { ["https://opensource.org/licenses/MIT", "http://creativecommons.org/publicdomain/zero/1.0/"] }
+  let(:expected_multiple_rights) do
+    [{
+      "rights": "MIT License",
+      "scheme": "spdx",
+      "identifier": "MIT",
+      "url": mit_license_url
+    },
+    {
+      "rights": "Creative Commons Zero v1.0 Universal",
+      "scheme": "spdx",
+      "identifier": "CC0-1.0",
+      "url": creative_commons_zero_url
+    }]
+  end
+
   describe "#rights" do
     it 'returns the expected license information' do
       expect(subject.send(:rights, [creative_commons_attribution_v3_url])).to eq(expected_creative_commons_attribution_v3)
       expect(subject.send(:rights, [creative_commons_zero_url])).to eq(expected_creative_commons_zero)
       expect(subject.send(:rights, [mit_license_url])).to eq(expected_mit)
       expect(subject.send(:rights, [all_rights_reserved])).to eq(expected_all_rights_reserved)
+      expect(subject.send(:rights, multiple_rights)).to eq(expected_multiple_rights)
     end
   end
 

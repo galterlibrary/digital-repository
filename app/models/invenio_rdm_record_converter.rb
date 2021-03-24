@@ -140,6 +140,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       "contributors": contributors(gf.contributor),
       "dates": gf.date_created.map{ |date| {"date": date, "type": "other", "description": "When the item was originally created."} },
       "languages": gf.language.map{ |lang| lang.present? && lang.downcase == ENGLISH ? {"id": "eng"} : nil }.compact,
+      "identifiers": identifiers(gf.doi.shift),
       "related_identifiers": related_identifiers(gf.related_url),
       "sizes": Array.new.tap{ |size_json| size_json << "#{gf.page_count} pages" if !gf.page_count.blank? },
       "formats": gf.mime_type,
@@ -161,14 +162,6 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       {
         "id": "other-other"
       }
-    end
-  end
-
-  def contributors(contributors)
-    contributors.map do |contributor|
-      contributor_json = build_creator_contributor_json(contributor)
-      contributor_json[:person_or_org].merge!({"role": ROLE_OTHER})
-      contributor_json
     end
   end
 
@@ -225,6 +218,18 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     File.write(MEMOIZED_PERSON_OR_ORG_DATA_FILE, @@person_or_org_data)
     # return the actual json
     json
+  end # build_creator_contributor_json
+
+  def additional_titles(titles)
+    additional_titles_size = titles.size-1
+    return nil if additional_titles_size < 0
+    titles.last(additional_titles_size).map{ |title| {"title": title, "type": "alternative_title", "lang": ENG} }
+  end
+
+  def additional_descriptions(descriptions)
+    additional_descriptions_size = descriptions.size-1
+    return nil if additional_descriptions_size < 0
+    descriptions.last(additional_descriptions_size).map{ |add_desc| {"description": add_desc, "type": "other", "lang": ENG} }
   end
 
   # return array of invenio formatted subjects
@@ -244,20 +249,19 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     end
   end
 
-  def additional_titles(titles)
-    additional_titles_size = titles.size-1
-    return nil if additional_titles_size < 0
-    titles.last(additional_titles_size).map{ |title| {"title": title, "type": "alternative_title", "lang": ENG} }
+  def contributors(contributors)
+    contributors.map do |contributor|
+      contributor_json = build_creator_contributor_json(contributor)
+      contributor_json[:person_or_org].merge!({"role": ROLE_OTHER})
+      contributor_json
+    end
   end
 
-  def additional_descriptions(descriptions)
-    additional_descriptions_size = descriptions.size-1
-    return nil if additional_descriptions_size < 0
-    descriptions.last(additional_descriptions_size).map{ |add_desc| {"description": add_desc, "type": "other", "lang": ENG} }
-  end
-
-  def funding(file_id)
-    @@funding_data[file_id] || {}
+  def identifiers(doi)
+    [{
+      "identifier": doi,
+      "scheme": "doi"
+    }]
   end
 
   def rights(license_urls)
@@ -286,6 +290,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     "v#{version_number}.0.0"
   end
 
+<<<<<<< HEAD
   def related_identifiers(related_url)
     identifiers = related_url.map do |url|
       next if url.blank?
@@ -383,5 +388,9 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     else
       ""
     end
+=======
+  def funding(file_id)
+    @@funding_data[file_id] || {}
+>>>>>>> ea9e0a6 ([#799] Metadata Subfield Identifiers)
   end
 end
