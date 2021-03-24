@@ -12,18 +12,22 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   ENGLISH = "english"
   CREATOR_UNKNOWN = 'unknown'
   CREATOR_NOT_IDENTIFIED = "creator not identified."
-  MEMOIZED_PERSON_OR_ORG_DATA_FILE = 'memoized_person_or_org_data.txt'
   ROLE_OTHER = 'other'
+  DEFAULT_RIGHTS_SCHEME = "spdx"
+  MEMOIZED_PERSON_OR_ORG_DATA_FILE = 'memoized_person_or_org_data.txt'
+  FUNDING_DATA_FILE = 'app/models/concerns/galtersufia/generic_file/funding_data.txt'
+  LICENSE_DATA_FILE = 'app/models/concerns/galtersufia/generic_file/license_data.txt'
+
+  @@header_lookup ||= HeaderLookup.new
+  @@funding_data ||= eval(File.read(FUNDING_DATA_FILE))
+  @@person_or_org_data ||= eval(File.read(MEMOIZED_PERSON_OR_ORG_DATA_FILE))
+  @@license_data ||= eval(File.read(LICENSE_DATA_FILE))
 
   # Create an instance of a InvenioRdmRecordConverter converter containing all the metadata for json export
   #
   # @param [GenericFile] generic_file file to be converted for export
   def initialize(generic_file=nil)
     return unless generic_file
-
-    @@header_lookup ||= HeaderLookup.new
-    @@funding_data ||= eval(File.read('app/models/concerns/galtersufia/generic_file/funding_data.txt'))
-    @@person_or_org_data ||= eval(File.read(MEMOIZED_PERSON_OR_ORG_DATA_FILE))
 
     @record = record_for_export(generic_file)
     @file = filename_and_content_path(generic_file)
@@ -126,6 +130,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       "languages": gf.language.any?{ |lang| lang.downcase == ENGLISH} ? ["eng"] : "",
       "sizes": Array.new.tap{ |size_json| size_json << "#{gf.page_count} pages" if !gf.page_count.blank? },
       "formats": gf.mime_type,
+      "rights": rights(gf.rights),
       "locations": gf.based_near.present? ? gf.based_near.shift.split("', ").map{ |location| {place: location.gsub("'", "")} } : {},
       "funding": funding(gf.id)
     }
@@ -244,5 +249,18 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
 
   def funding(file_id)
     @@funding_data[file_id] || {}
+  end
+
+  def rights(license_urls)
+    license_urls.map do |license_url|
+      license_data = @@license_data[license_url.to_sym]
+
+      {
+        "rights": license_data[:"name"],
+        "scheme": DEFAULT_RIGHTS_SCHEME,
+        "identifier": license_data[:"licenseId"],
+        "url": license_url
+      }
+    end
   end
 end
