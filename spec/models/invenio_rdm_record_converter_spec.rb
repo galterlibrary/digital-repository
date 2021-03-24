@@ -153,7 +153,7 @@ RSpec.describe InvenioRdmRecordConverter do
 
   let(:converter) { InvenioRdmRecordConverter.new }
   let(:checksum) { "abcd1234" }
-  let(:non_user_creator_name) { "Laster, Firston" }
+  let(:non_user_properly_formatted) { "Laster, Firston" }
   let(:personal_creator_without_user_json) {
     {
       "person_or_org": {
@@ -164,11 +164,22 @@ RSpec.describe InvenioRdmRecordConverter do
     }.with_indifferent_access
   }
 
+  let(:non_user_improperly_formatted) { "Firston Laster" }
+  let(:organisational_creator_without_user_json) {
+    {
+      "person_or_org": {
+        "name": "Firston Laster",
+        "type": "organisational"
+      }
+    }.with_indifferent_access
+  }
+
   let(:unidentified_creator_name) { "Creator not identified." }
   let(:personal_creator_unidentified_json) {
       {
         "person_or_org": {
-          "name": unidentified_creator_name
+          "name": unidentified_creator_name,
+          "type": "organisational"
         }
       }.with_indifferent_access
     }
@@ -177,7 +188,8 @@ RSpec.describe InvenioRdmRecordConverter do
   let(:personal_creator_unknown_json) {
     {
       "person_or_org": {
-        "name": unknown_creator_name
+        "name": unknown_creator_name,
+        "type": "organisational"
       }
     }.with_indifferent_access
   }
@@ -193,9 +205,15 @@ RSpec.describe InvenioRdmRecordConverter do
   }
 
   describe "#build_creator_contributor_json" do
-    context 'personal record without user in digital hub' do
+    context 'personal record without user in digital hub, with proper name formatting' do
       it 'assigns' do
-        expect(converter.send(:build_creator_contributor_json, non_user_creator_name).with_indifferent_access).to eq(personal_creator_without_user_json)
+        expect(converter.send(:build_creator_contributor_json, non_user_properly_formatted).with_indifferent_access).to eq(personal_creator_without_user_json)
+      end
+    end
+
+    context 'personal record without user in digital hub, with improper name formatting' do
+      it 'assigns' do
+        expect(converter.send(:build_creator_contributor_json, non_user_improperly_formatted).with_indifferent_access).to eq(organisational_creator_without_user_json)
       end
     end
 
