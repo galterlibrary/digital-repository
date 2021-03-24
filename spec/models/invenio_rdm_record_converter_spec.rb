@@ -103,6 +103,10 @@ RSpec.describe InvenioRdmRecordConverter do
           }],
           "dates": [{"date": "1-1-2021", "type": "other", "description": "When the item was originally created."}],
           "languages": ["eng"],
+          "identifiers": [{
+            "identifier": "doi:123/ABC",
+            "scheme": "doi"
+          }],
           "sizes": ["#{generic_file.page_count} pages"],
           "formats": "application/pdf",
           "rights": [{"rights": 'Creative Commons Attribution Non Commercial Share Alike 3.0 United States', "scheme": "spdx", "identifier": \
@@ -302,33 +306,48 @@ RSpec.describe InvenioRdmRecordConverter do
 
   let(:creative_commons_attribution_v3_url) { "http://creativecommons.org/licenses/by/3.0/us/" }
   let(:expected_creative_commons_attribution_v3_url) do
-    {
+    [{
       "rights": "Creative Commons Attribution 3.0 United States",
       "scheme": "spdx",
       "identifier": "CC-BY-3.0-US",
       "url": creative_commons_attribution_v3_url
-    }
+    }]
   end
 
   let(:creative_commons_zero_url) { "http://creativecommons.org/publicdomain/zero/1.0/" }
+  let(:expected_creative_commons_zero_url) do
+    [{
+      "rights": "Creative Commons Zero v1.0 Universal",
+      "scheme": "spdx",
+      "identifier": "CC0-1.0",
+      "url": creative_commons_zero_url
+    }]
+  end
+
+  let(:mit_license_url) { "https://opensource.org/licenses/MIT" }
   let(:expected_mit) do
+    [{
+      "rights": "MIT License",
+      "scheme": "spdx",
+      "identifier": "MIT",
+      "url": mit_license_url
+    }]
+  end
+
+  let(:multiple_rights) { ["https://opensource.org/licenses/MIT", "http://creativecommons.org/publicdomain/zero/1.0/"] }
+  let(:expected_multiple_rights) do
+    [{
+      "rights": "MIT License",
+      "scheme": "spdx",
+      "identifier": "MIT",
+      "url": mit_license_url
+    },
     {
       "rights": "Creative Commons Zero v1.0 Universal",
       "scheme": "spdx",
       "identifier": "CC0-1.0",
       "url": creative_commons_zero_url
-    }
-  end
-
-
-  let(:mit_license_url) { "https://opensource.org/licenses/MIT" }
-  let(:expected_mit) do
-    {
-      "rights": "MIT License",
-      "scheme": "spdx",
-      "identifier": "MIT",
-      "url": mit_license_url
-    }
+    }]
   end
 
   describe "#rights" do
@@ -336,6 +355,7 @@ RSpec.describe InvenioRdmRecordConverter do
       expect(subject.send(:rights, [creative_commons_attribution_v3_url])).to eq(expected_creative_commons_attribution_v3_url)
       expect(subject.send(:rights, [creative_commons_zero_url])).to eq(expected_creative_commons_zero_url)
       expect(subject.send(:rights, [mit_license_url])).to eq(expected_mit)
+      expect(subject.send(:rights, multiple_rights)).to eq(expected_multiple_rights)
     end
   end
 
