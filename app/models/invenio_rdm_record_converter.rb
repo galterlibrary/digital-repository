@@ -54,7 +54,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
 
   def record_for_export(generic_file)
     {
-      "pids": invennio_pids(generic_file.doi.shift),
+      "pids": invenio_pids(generic_file.doi.shift),
       "metadata": invenio_metadata(generic_file),
       "provenance": invenio_provenance(generic_file.proxy_depositor, generic_file.on_behalf_of)
     }
@@ -92,7 +92,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     Sufia::Export::VersionGraphConverter.new(gf.content.versions).versions
   end
 
-  def invennio_pids(doi)
+  def invenio_pids(doi)
     {
       "doi": {
         "identifier": doi, # doi is stored in an array
@@ -127,7 +127,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       "contributors": contributors(gf.contributor),
       "dates": gf.date_created.map{ |date| {"date": date, "type": "other", "description": "When the item was originally created."} },
       "languages": gf.language.any?{ |lang| lang.downcase == ENGLISH} ? ["eng"] : "",
-      "identifiers": identifiers(gf.doi.shift),
+      "identifiers": ark_identifiers(gf.ark),
       "sizes": Array.new.tap{ |size_json| size_json << "#{gf.page_count} pages" if !gf.page_count.blank? },
       "formats": gf.mime_type,
       "rights": rights(gf.rights),
@@ -248,11 +248,13 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     end
   end
 
-  def identifiers(doi)
-    [{
-      "identifier": doi,
-      "scheme": "doi"
-    }]
+  def ark_identifiers(arks)
+    arks.map do |ark|
+      {
+        "identifier": ark,
+        "scheme": "ark"
+      }
+    end
   end
 
   def rights(license_urls)
