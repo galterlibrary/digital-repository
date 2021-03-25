@@ -61,7 +61,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
 
   def record_for_export(generic_file)
     {
-      "pids": invennio_pids(generic_file.doi.shift),
+      "pids": invenio_pids(generic_file.doi.shift),
       "metadata": invenio_metadata(generic_file),
       "files": {"enabled": true},
       "provenance": invenio_provenance(generic_file.proxy_depositor, generic_file.on_behalf_of),
@@ -96,7 +96,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     # @permissions = permissions(generic_file)
   end
 
-  def invennio_pids(doi)
+  def invenio_pids(doi)
     {
       "doi": {
         "identifier": doi, # doi is stored in an array
@@ -140,7 +140,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       "contributors": contributors(gf.contributor),
       "dates": gf.date_created.map{ |date| {"date": date, "type": "other", "description": "When the item was originally created."} },
       "languages": gf.language.map{ |lang| lang.present? && lang.downcase == ENGLISH ? {"id": "eng"} : nil }.compact,
-      "identifiers": identifiers(gf.doi.shift),
+      "identifiers": ark_identifiers(gf.ark),
       "related_identifiers": related_identifiers(gf.related_url),
       "sizes": Array.new.tap{ |size_json| size_json << "#{gf.page_count} pages" if !gf.page_count.blank? },
       "formats": gf.mime_type,
@@ -257,11 +257,13 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     end
   end
 
-  def identifiers(doi)
-    [{
-      "identifier": doi,
-      "scheme": "doi"
-    }]
+  def ark_identifiers(arks)
+    arks.map do |ark|
+      {
+        "identifier": ark,
+        "scheme": "ark"
+      }
+    end
   end
 
   def rights(license_urls)
@@ -290,7 +292,6 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     "v#{version_number}.0.0"
   end
 
-<<<<<<< HEAD
   def related_identifiers(related_url)
     identifiers = related_url.map do |url|
       next if url.blank?
@@ -388,9 +389,9 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     else
       ""
     end
-=======
+  end
+
   def funding(file_id)
     @@funding_data[file_id] || {}
->>>>>>> ea9e0a6 ([#799] Metadata Subfield Identifiers)
   end
 end

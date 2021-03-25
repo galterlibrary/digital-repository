@@ -15,6 +15,7 @@ RSpec.describe InvenioRdmRecordConverter do
       user,
       id: "ns0646000",
       doi: ["doi:123/ABC"],
+      ark: ["10.6666/ARK"],
       resource_type: ["Account Books"],
       proxy_depositor: assistant.username,
       on_behalf_of: user.username,
@@ -110,6 +111,10 @@ RSpec.describe InvenioRdmRecordConverter do
           }],
           "dates": [{"date": "2021-1-1", "type": "other", "description": "When the item was originally created."}],
           "languages": [{"id": "eng"}],
+          "identifiers": [{
+            "identifier": "10.6666/ARK",
+            "scheme": "ark"
+          }],
           "related_identifiers": [{
               "identifier": generic_file_doi,
               "scheme": "doi",
