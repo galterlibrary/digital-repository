@@ -13,6 +13,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   MEMOIZED_PERSON_OR_ORG_DATA_FILE = 'memoized_person_or_org_data.txt'
   ROLE_OTHER = 'other'
   DEFAULT_RIGHTS_SCHEME = "spdx"
+  DOI_ORG = "doi.org/"
   MEMOIZED_PERSON_OR_ORG_DATA_FILE = 'memoized_person_or_org_data.txt'
   FUNDING_DATA_FILE = 'app/models/concerns/galtersufia/generic_file/funding_data.txt'
   LICENSE_DATA_FILE = 'app/models/concerns/galtersufia/generic_file/license_data.txt'
@@ -127,6 +128,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       "contributors": contributors(gf.contributor),
       "dates": gf.date_created.map{ |date| {"date": date, "type": "other", "description": "When the item was originally created."} },
       "languages": gf.language.any?{ |lang| lang.downcase == ENGLISH} ? ["eng"] : "",
+      "related_identifiers": related_identifiers(gf.related_url),
       "sizes": Array.new.tap{ |size_json| size_json << "#{gf.page_count} pages" if !gf.page_count.blank? },
       "formats": gf.mime_type,
       "rights": rights(gf.rights),
@@ -262,5 +264,25 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
         "url": license_url
       }
     end
+  end
+
+  def related_identifiers(related_url)
+    identifiers = related_url.map do |url|
+      next if url.blank? || !doi_url?(url)
+
+      doi = url.split(DOI_ORG).last
+
+      {
+        "identifier": doi,
+        "scheme": "doi",
+        "relation": "related url"
+      }
+    end
+
+    identifiers.compact
+  end
+
+  def doi_url?(url)
+    url.include?(DOI_ORG)
   end
 end
