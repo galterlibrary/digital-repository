@@ -32,7 +32,8 @@ RSpec.describe InvenioRdmRecordConverter do
       grants_and_funding: ["European Commission 00k4n6c32"],
       language: ["English"],
       page_count: [rand(1..1000).to_s],
-      rights: ["http://creativecommons.org/licenses/by-nc-sa/3.0/us/"]
+      rights: ["http://creativecommons.org/licenses/by-nc-sa/3.0/us/"],
+      visibility: InvenioRdmRecordConverter::OPEN_ACCESS
     )
   }
   let(:generic_file_checksum) { generic_file.content.checksum.value }
@@ -134,6 +135,10 @@ RSpec.describe InvenioRdmRecordConverter do
             "user": user.username
           }
         },
+        "access": {
+          "record": InvenioRdmRecordConverter::INVENIO_PUBLIC,
+          "files": InvenioRdmRecordConverter::INVENIO_PUBLIC
+        }
       },
       "file": {
         "filename": generic_file.filename,
