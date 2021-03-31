@@ -10,7 +10,7 @@ RSpec.describe InvenioRdmRecordConverter do
   let(:lcsh_term) { "Semantic Web" }
   let(:expected_lcsh_pid) { "sh2002000569" }
   let(:generic_file) {
-    make_generic_file(
+    make_generic_file_with_content(
       user,
       id: "ns0646000",
       doi: ["doi:123/ABC"],
@@ -34,6 +34,11 @@ RSpec.describe InvenioRdmRecordConverter do
       page_count: [rand(1..1000).to_s],
       rights: ["http://creativecommons.org/licenses/by-nc-sa/3.0/us/"]
     )
+  }
+  let(:generic_file_checksum) { generic_file.content.checksum.value }
+  let(:generic_file_content_path) {
+    "#{ENV["FEDORA_BINARY_PATH"]}/#{generic_file_checksum[0..1]}/"\
+    "#{generic_file_checksum[2..3]}/#{generic_file_checksum[4..5]}/#{generic_file_checksum}"
   }
   let(:json) do
     {
@@ -105,6 +110,7 @@ RSpec.describe InvenioRdmRecordConverter do
           "languages": ["eng"],
           "sizes": ["#{generic_file.page_count} pages"],
           "formats": "application/pdf",
+          "version": "v1.0.0",
           "rights": [{"rights": 'Creative Commons Attribution Non Commercial Share Alike 3.0 United States', "scheme": "spdx", "identifier": \
                       "CC-BY-NC-SA-3.0-US", "url": "http://creativecommons.org/licenses/by-nc-sa/3.0/us/"}],
           "locations": [{"place": "Boston, Massachusetts, United States"}, {"place": "East Peoria, Illinois, United States"}],
@@ -131,7 +137,7 @@ RSpec.describe InvenioRdmRecordConverter do
       },
       "file": {
         "filename": generic_file.filename,
-        "content_path": nil # there is no file/content attached with this factory made GewnericFile
+        "content_path": generic_file_content_path
       }
     }.to_json
   end
@@ -301,40 +307,40 @@ RSpec.describe InvenioRdmRecordConverter do
   end
 
   let(:creative_commons_attribution_v3_url) { "http://creativecommons.org/licenses/by/3.0/us/" }
-  let(:expected_creative_commons_attribution_v3_url) do
-    {
+  let(:expected_creative_commons_attribution_v3) do
+    [{
       "rights": "Creative Commons Attribution 3.0 United States",
       "scheme": "spdx",
       "identifier": "CC-BY-3.0-US",
       "url": creative_commons_attribution_v3_url
-    }
+    }]
   end
 
   let(:creative_commons_zero_url) { "http://creativecommons.org/publicdomain/zero/1.0/" }
-  let(:expected_mit) do
-    {
+  let(:expected_creative_commons_zero) do
+    [{
       "rights": "Creative Commons Zero v1.0 Universal",
       "scheme": "spdx",
       "identifier": "CC0-1.0",
       "url": creative_commons_zero_url
-    }
+    }]
   end
 
 
   let(:mit_license_url) { "https://opensource.org/licenses/MIT" }
   let(:expected_mit) do
-    {
+    [{
       "rights": "MIT License",
       "scheme": "spdx",
       "identifier": "MIT",
       "url": mit_license_url
-    }
+    }]
   end
 
   describe "#rights" do
     it 'returns the expected license information' do
-      expect(subject.send(:rights, [creative_commons_attribution_v3_url])).to eq(expected_creative_commons_attribution_v3_url)
-      expect(subject.send(:rights, [creative_commons_zero_url])).to eq(expected_creative_commons_zero_url)
+      expect(subject.send(:rights, [creative_commons_attribution_v3_url])).to eq(expected_creative_commons_attribution_v3)
+      expect(subject.send(:rights, [creative_commons_zero_url])).to eq(expected_creative_commons_zero)
       expect(subject.send(:rights, [mit_license_url])).to eq(expected_mit)
     end
   end

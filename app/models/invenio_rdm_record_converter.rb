@@ -10,7 +10,6 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   SUBJECT_SCHEMES = [:tag, :mesh, :lcsh]
   ENG = "eng"
   ENGLISH = "english"
-  MEMOIZED_PERSON_OR_ORG_DATA_FILE = 'memoized_person_or_org_data.txt'
   ROLE_OTHER = 'other'
   DEFAULT_RIGHTS_SCHEME = "spdx"
   MEMOIZED_PERSON_OR_ORG_DATA_FILE = 'memoized_person_or_org_data.txt'
@@ -87,11 +86,6 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     # @permissions = permissions(generic_file)
   end
 
-  def versions(gf)
-    return [] unless gf.content.has_versions?
-    Sufia::Export::VersionGraphConverter.new(gf.content.versions).versions
-  end
-
   def invennio_pids(doi)
     {
       "doi": {
@@ -129,6 +123,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       "languages": gf.language.any?{ |lang| lang.downcase == ENGLISH} ? ["eng"] : "",
       "sizes": Array.new.tap{ |size_json| size_json << "#{gf.page_count} pages" if !gf.page_count.blank? },
       "formats": gf.mime_type,
+      "version": version(gf.content),
       "rights": rights(gf.rights),
       "locations": gf.based_near.present? ? gf.based_near.shift.split("', ").map{ |location| {place: location.gsub("'", "")} } : {},
       "funding": funding(gf.id)
@@ -262,5 +257,12 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
         "url": license_url
       }
     end
+  end
+
+  def version(content)
+    return "" unless content.has_versions?
+    version_number = content.versions.all.length
+
+    "v#{version_number}.0.0"
   end
 end
