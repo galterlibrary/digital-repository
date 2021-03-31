@@ -10,7 +10,6 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   SUBJECT_SCHEMES = [:tag, :mesh, :lcsh]
   ENG = "eng"
   ENGLISH = "english"
-  MEMOIZED_PERSON_OR_ORG_DATA_FILE = 'memoized_person_or_org_data.txt'
   ROLE_OTHER = 'other'
   DEFAULT_RIGHTS_SCHEME = "spdx"
   MEMOIZED_PERSON_OR_ORG_DATA_FILE = 'memoized_person_or_org_data.txt'

@@ -10,7 +10,7 @@ RSpec.describe InvenioRdmRecordConverter do
   let(:lcsh_term) { "Semantic Web" }
   let(:expected_lcsh_pid) { "sh2002000569" }
   let(:generic_file) {
-    make_generic_file(
+    make_generic_file_with_content(
       user,
       id: "ns0646000",
       doi: ["doi:123/ABC"],
@@ -34,6 +34,11 @@ RSpec.describe InvenioRdmRecordConverter do
       page_count: [rand(1..1000).to_s],
       rights: ["http://creativecommons.org/licenses/by-nc-sa/3.0/us/"]
     )
+  }
+  let(:generic_file_checksum) { generic_file.content.checksum.value }
+  let(:generic_file_content_path) {
+    "#{ENV["FEDORA_BINARY_PATH"]}/#{generic_file_checksum[0..1]}/"\
+    "#{generic_file_checksum[2..3]}/#{generic_file_checksum[4..5]}/#{generic_file_checksum}"
   }
   let(:json) do
     {
@@ -105,7 +110,7 @@ RSpec.describe InvenioRdmRecordConverter do
           "languages": ["eng"],
           "sizes": ["#{generic_file.page_count} pages"],
           "formats": "application/pdf",
-          "version": "",
+          "version": "v1.0.0",
           "rights": [{"rights": 'Creative Commons Attribution Non Commercial Share Alike 3.0 United States', "scheme": "spdx", "identifier": \
                       "CC-BY-NC-SA-3.0-US", "url": "http://creativecommons.org/licenses/by-nc-sa/3.0/us/"}],
           "locations": [{"place": "Boston, Massachusetts, United States"}, {"place": "East Peoria, Illinois, United States"}],
@@ -132,7 +137,7 @@ RSpec.describe InvenioRdmRecordConverter do
       },
       "file": {
         "filename": generic_file.filename,
-        "content_path": nil
+        "content_path": generic_file_content_path
       }
     }.to_json
   end
