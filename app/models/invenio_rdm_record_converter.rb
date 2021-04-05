@@ -11,6 +11,9 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   ENG = "eng"
   ENGLISH = "english"
   ROLE_OTHER = 'other'
+  OPEN_ACCESS = "open"
+  INVENIO_PUBLIC = "public"
+  INVENIO_RESTRICTED = "restricted"
   DEFAULT_RIGHTS_SCHEME = "spdx"
   MEMOIZED_PERSON_OR_ORG_DATA_FILE = 'memoized_person_or_org_data.txt'
   FUNDING_DATA_FILE = 'app/models/concerns/galtersufia/generic_file/funding_data.txt'
@@ -55,7 +58,8 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     {
       "pids": invennio_pids(generic_file.doi.shift),
       "metadata": invenio_metadata(generic_file),
-      "provenance": invenio_provenance(generic_file.proxy_depositor, generic_file.on_behalf_of)
+      "provenance": invenio_provenance(generic_file.proxy_depositor, generic_file.on_behalf_of),
+      "access": invenio_access(generic_file.visibility)
     }
     # @label = generic_file.label
     # @depositor = generic_file.depositor
@@ -104,6 +108,15 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       "on_behalf_of": {
         "user": on_behalf_of
       }
+    }
+  end
+
+  def invenio_access(file_visibility)
+    accessibility = file_visibility == OPEN_ACCESS ? INVENIO_PUBLIC : INVENIO_RESTRICTED
+
+    {
+      "record": accessibility,
+      "files": accessibility
     }
   end
 
