@@ -342,11 +342,19 @@ RSpec.describe InvenioRdmRecordConverter do
     }]
   end
 
+  let(:all_rights_reserved) { 'All rights reserved' }
+  let(:expected_all_rights_reserved) do
+    [{
+      "rights": all_rights_reserved
+    }]
+  end
+
   describe "#rights" do
     it 'returns the expected license information' do
       expect(subject.send(:rights, [creative_commons_attribution_v3_url])).to eq(expected_creative_commons_attribution_v3)
       expect(subject.send(:rights, [creative_commons_zero_url])).to eq(expected_creative_commons_zero)
       expect(subject.send(:rights, [mit_license_url])).to eq(expected_mit)
+      expect(subject.send(:rights, [all_rights_reserved])).to eq(expected_all_rights_reserved)
     end
   end
 

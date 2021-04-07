@@ -15,6 +15,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   INVENIO_PUBLIC = "public"
   INVENIO_RESTRICTED = "restricted"
   DEFAULT_RIGHTS_SCHEME = "spdx"
+  ALL_RIGHTS_RESERVED = 'All rights reserved'
   MEMOIZED_PERSON_OR_ORG_DATA_FILE = 'memoized_person_or_org_data.txt'
   FUNDING_DATA_FILE = 'app/models/concerns/galtersufia/generic_file/funding_data.txt'
   LICENSE_DATA_FILE = 'app/models/concerns/galtersufia/generic_file/license_data.txt'
@@ -263,12 +264,18 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     license_urls.map do |license_url|
       license_data = @@license_data[license_url.to_sym]
 
-      {
-        "rights": license_data[:"name"],
-        "scheme": DEFAULT_RIGHTS_SCHEME,
-        "identifier": license_data[:"licenseId"],
-        "url": license_url
-      }
+      if license_url == ALL_RIGHTS_RESERVED
+        {
+          "rights": license_data[:"name"],
+        }
+      elsif license_data.present?
+        {
+          "rights": license_data[:"name"],
+          "scheme": DEFAULT_RIGHTS_SCHEME,
+          "identifier": license_data[:"licenseId"],
+          "url": license_url
+        }
+      end
     end
   end
 
