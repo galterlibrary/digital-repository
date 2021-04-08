@@ -10,20 +10,26 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   SUBJECT_SCHEMES = [:tag, :mesh, :lcsh]
   ENG = "eng"
   ENGLISH = "english"
-  CREATOR_UNKNOWN = 'unknown'
-  CREATOR_NOT_IDENTIFIED = "creator not identified."
-  MEMOIZED_PERSON_OR_ORG_DATA_FILE = 'memoized_person_or_org_data.txt'
   ROLE_OTHER = 'other'
+  OPEN_ACCESS = "open"
+  INVENIO_PUBLIC = "public"
+  INVENIO_RESTRICTED = "restricted"
+  DEFAULT_RIGHTS_SCHEME = "spdx"
+  ALL_RIGHTS_RESERVED = 'All rights reserved'
+  MEMOIZED_PERSON_OR_ORG_DATA_FILE = 'memoized_person_or_org_data.txt'
+  FUNDING_DATA_FILE = 'app/models/concerns/galtersufia/generic_file/funding_data.txt'
+  LICENSE_DATA_FILE = 'app/models/concerns/galtersufia/generic_file/license_data.txt'
+
+  @@header_lookup ||= HeaderLookup.new
+  @@funding_data ||= eval(File.read(FUNDING_DATA_FILE))
+  @@person_or_org_data ||= eval(File.read(MEMOIZED_PERSON_OR_ORG_DATA_FILE))
+  @@license_data ||= eval(File.read(LICENSE_DATA_FILE))
 
   # Create an instance of a InvenioRdmRecordConverter converter containing all the metadata for json export
   #
   # @param [GenericFile] generic_file file to be converted for export
   def initialize(generic_file=nil)
     return unless generic_file
-
-    @@header_lookup ||= HeaderLookup.new
-    @@funding_data ||= eval(File.read('app/models/concerns/galtersufia/generic_file/funding_data.txt'))
-    @@person_or_org_data ||= eval(File.read(MEMOIZED_PERSON_OR_ORG_DATA_FILE))
 
     @record = record_for_export(generic_file)
     @file = filename_and_content_path(generic_file)
@@ -53,7 +59,8 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     {
       "pids": invennio_pids(generic_file.doi.shift),
       "metadata": invenio_metadata(generic_file),
-      "provenance": invenio_provenance(generic_file.proxy_depositor, generic_file.on_behalf_of)
+      "provenance": invenio_provenance(generic_file.proxy_depositor, generic_file.on_behalf_of),
+      "access": invenio_access(generic_file.visibility)
     }
     # @label = generic_file.label
     # @depositor = generic_file.depositor
@@ -84,11 +91,6 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     # @permissions = permissions(generic_file)
   end
 
-  def versions(gf)
-    return [] unless gf.content.has_versions?
-    Sufia::Export::VersionGraphConverter.new(gf.content.versions).versions
-  end
-
   def invennio_pids(doi)
     {
       "doi": {
@@ -110,6 +112,15 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     }
   end
 
+  def invenio_access(file_visibility)
+    accessibility = file_visibility == OPEN_ACCESS ? INVENIO_PUBLIC : INVENIO_RESTRICTED
+
+    {
+      "record": accessibility,
+      "files": accessibility
+    }
+  end
+
   def invenio_metadata(gf)
     {
       "resource_type": resource_type(gf.resource_type.shift),
@@ -126,6 +137,8 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       "languages": gf.language.any?{ |lang| lang.downcase == ENGLISH} ? ["eng"] : "",
       "sizes": Array.new.tap{ |size_json| size_json << "#{gf.page_count} pages" if !gf.page_count.blank? },
       "formats": gf.mime_type,
+      "version": version(gf.content),
+      "rights": rights(gf.rights),
       "locations": gf.based_near.present? ? gf.based_near.shift.split("', ").map{ |location| {place: location.gsub("'", "")} } : {},
       "funding": funding(gf.id)
     }
@@ -167,7 +180,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       json = @@person_or_org_data[creator] = {
         "person_or_org":
           Hash.new.tap do |hash|
-            hash["name"] =  creator if creator.present? && (!creator.include?(CREATOR_NOT_IDENTIFIED) || !creator.include(CREATOR_UNKNOWN))
+            hash["name"] =  creator
             hash["type"] = "organisational"
           end
       }
@@ -186,16 +199,8 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
             hash["identifiers"] = {"scheme": "orcid", "identifier": dh_user.orcid.split('/').pop} if dh_user.orcid.present?
           end
       }
-    # Unknown / Not Identified creator
-    elsif creator.downcase == CREATOR_UNKNOWN || creator.downcase == CREATOR_NOT_IDENTIFIED
-      json = @@person_or_org_data[creator] = {
-        "person_or_org":
-          Hash.new.tap do |hash|
-            hash["name"] = creator
-          end
-      }
     # Personal record without user in database
-    else
+    elsif creator.include?(",")
       family_name, given_name = creator.split(',')
       json = @@person_or_org_data[creator] = {
         "person_or_org":
@@ -203,6 +208,15 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
             hash["type"] = "personal"
             hash["given_name"] = given_name.lstrip
             hash["family_name"] = family_name.lstrip
+          end
+      }
+    # Unknown / Not Identified creator
+    else
+      json = @@person_or_org_data[creator] = {
+        "person_or_org":
+          Hash.new.tap do |hash|
+            hash["name"] = creator
+            hash["type"] = "organisational"
           end
       }
     end
@@ -244,5 +258,31 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
 
   def funding(file_id)
     @@funding_data[file_id] || {}
+  end
+
+  def rights(license_urls)
+    license_urls.map do |license_url|
+      license_data = @@license_data[license_url.to_sym]
+
+      if license_url == ALL_RIGHTS_RESERVED
+        {
+          "rights": license_data[:"name"],
+        }
+      elsif license_data.present?
+        {
+          "rights": license_data[:"name"],
+          "scheme": DEFAULT_RIGHTS_SCHEME,
+          "identifier": license_data[:"licenseId"],
+          "url": license_url
+        }
+      end
+    end
+  end
+
+  def version(content)
+    return "" unless content.has_versions?
+    version_number = content.versions.all.length
+
+    "v#{version_number}.0.0"
   end
 end
