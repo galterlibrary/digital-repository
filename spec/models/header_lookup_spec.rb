@@ -7,8 +7,8 @@ RSpec.describe HeaderLookup do
     ".w3.org%2F2000%2F01%2Frdf-schema%23%3E%0D%0APREFIX%20meshv%3A%20%3Chttp%3A%2F%2Fid.nlm.nih.gov%2Fmesh%2Fvocab%23%3E"\
     "%0D%0APREFIX%20mesh2018%3A%20%3Chttp%3A%2F%2Fid.nlm.nih.gov%2Fmesh%3E%0D%0A%0D%0ASELECT%20%3Fd%20%3FdName%0D%0AFROM"\
     "%20%3Chttp%3A%2F%2Fid.nlm.nih.gov%2Fmesh%3E%0D%0AWHERE%20%7B%0D%0A%20%20%3Fd%20a%20meshv%3ADescriptor%20.%0D%0A%20%"\
-    "20%3Fd%20rdfs%3Alabel%20%3FdName%0D%0A%20%20FILTER(REGEX(%3FdName%2C%27Vocabulary, Controlled%27%2C%20%27i%27))%20%0"\
-    "D%0A%7D%20%0D%0AORDER%20BY%20%3Fd%20%0D%0A"
+    "20%3Fd%20rdfs%3Alabel%20%3FdName%0D%0A%20%20FILTER(REGEX(%3FdName%2C%27Vocabulary%2C+Controlled%27%2C%20%27i%27))%2"\
+    "0%0D%0A%7D%20%0D%0AORDER%20BY%20%3Fd%20%0D%0A"
   end
   let(:mesh_api_response) do
     "{
@@ -42,7 +42,7 @@ RSpec.describe HeaderLookup do
   let(:expected_failed_mesh) { "#{blank_mesh_term} - MESH" }
 
   describe "#mesh_term_pid_lookup" do
-    context 'search returns no values' do
+    context 'search returns values' do
       before do
         allow(HTTParty).to receive(:get).and_return(mesh_api_response)
         @mesh_pid = subject.mesh_term_pid_lookup(mesh_term)
@@ -70,7 +70,7 @@ RSpec.describe HeaderLookup do
   end
 
   let(:lcsh_term) { "Semantic Web" }
-  let(:lcsh_query_url) { "http://id.loc.gov/authorities/subjects/suggest/?q=*Semantic*Web*" }
+  let(:lcsh_query_url) { "http://id.loc.gov/authorities/subjects/suggest/?q=*Semantic+Web*" }
   let(:lcsh_api_response) do
     """\
     [\"*Semantic*Web*\",[\"Semantic Web\",\"Semantic Web--Congresses\"],[\"1 result\",\"1 result\"],[\"http://id.loc.go\
