@@ -28,7 +28,7 @@ class HeaderLookup
 
   # return PID for provided mesh_header using SPARQL query
   def mesh_term_pid_lookup(mesh_term="")
-    hits = perform_and_parse_mesh_query(mesh_term)
+    hits = perform_and_parse_mesh_query(CGI.escape(mesh_term))
 
     if hits.present?
       mesh_pid = pid_from_mesh_hits(hits)
@@ -43,7 +43,7 @@ class HeaderLookup
   # lookup lcsh term, memoize it, write it to file, return PID
   def lcsh_term_pid_lookup(lcsh_term="")
     stripped_lcsh_term = strip_accents(lcsh_term)
-    subject_names, subject_id_uris = perform_and_parse_lcsh_query(stripped_lcsh_term)
+    subject_names, subject_id_uris = perform_and_parse_lcsh_query(CGI.escape(stripped_lcsh_term))
 
     if subject_names.present? && subject_id_uris.present?
       lcsh_pid = pid_from_lcsh_hits(lcsh_term, stripped_lcsh_term, subject_names, subject_id_uris)
