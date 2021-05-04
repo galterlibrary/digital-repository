@@ -79,7 +79,8 @@ namespace :config do
   SSLCertificateFile #{cert_path}/#{cert_host_name}_cert.cer
   SSLCertificateChainFile #{cert_path}/#{cert_host_name}_interm.cer
   SSLCertificateKeyFile #{cert_path}/#{cert_host_name}_key.cer
-  SSLProtocol all -SSLv2 -SSLv3
+  SSLProtocol TLSv1.2
+  SSLCipherSuite ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384
 
   #{"RailsEnv staging" if fetch(:rails_env) == 'staging'}
   RailsBaseURI /
