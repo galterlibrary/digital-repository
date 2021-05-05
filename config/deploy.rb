@@ -79,6 +79,8 @@ namespace :config do
   SSLCertificateFile #{cert_path}/#{cert_host_name}_cert.cer
   SSLCertificateChainFile #{cert_path}/#{cert_host_name}_interm.cer
   SSLCertificateKeyFile #{cert_path}/#{cert_host_name}_key.cer
+  SSLProtocol TLSv1.2
+  SSLCipherSuite ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384
 
   #{"RailsEnv staging" if fetch(:rails_env) == 'staging'}
   RailsBaseURI /
@@ -120,7 +122,7 @@ PassengerPreStart https://#{fetch(:www_host)}/
       execute :sudo, :chmod, "644", httpd_file
     end
   end
-  
+
   desc 'Install passenger apache'
   task :install_passenger_apache do
     on roles(:web) do
@@ -129,7 +131,7 @@ PassengerPreStart https://#{fetch(:www_host)}/
           if ENV['INSTALL_PASS_APACHE'] == 'true'
             puts "INSTALLING Passenger Apache"
             options = ['--auto']
-            
+
             execute('bundle', 'exec', 'passenger-install-apache2-module', *options)
           else
             puts "SKIPPING Passenger Apache Installation(config:install_passenger_apache)"
@@ -139,7 +141,7 @@ PassengerPreStart https://#{fetch(:www_host)}/
       end
     end
   end
-  
+
   desc 'Set up passenger.conf'
   task :set_up_passenger_conf do
     on roles(:web) do
