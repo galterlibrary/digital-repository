@@ -74,3 +74,13 @@ digital-repository/$ rspec spec/
 ```
 digital-repository/$ cap <stage> deploy
 ```
+
+##### Digital Hub Export
+* Export repo to JSON formatted for InvenioRDM
+```
+./bin/rake repo_export
+```
+* Same as above, but with extra debugging information
+```
+./bin/rake verbose debug repo_export
+```
