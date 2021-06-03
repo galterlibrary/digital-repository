@@ -139,7 +139,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       "formats": gf.mime_type,
       "version": version(gf.content),
       "rights": rights(gf.rights),
-      "locations": gf.based_near.present? ? gf.based_near.shift.split("', ").map{ |location| {place: location.gsub("'", "")} } : {},
+      "locations": {"features": gf.based_near.present? ? gf.based_near.shift.split("', ").map{ |location| {place: location.gsub("'", "")} } : []},
       "funding": funding(gf.id)
     }
   end
