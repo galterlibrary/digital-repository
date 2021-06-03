@@ -126,7 +126,12 @@ RSpec.describe InvenioRdmRecordConverter do
               "number": "F37 LM009568 ",
               "identifier": "",
               "scheme": ""
-            }}]},
+            }
+          }]
+        },
+        "files": {
+          "enabled": true
+        },
         "provenance": {
           "created_by": {
             "user": assistant.username
