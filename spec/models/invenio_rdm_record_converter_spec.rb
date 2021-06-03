@@ -28,7 +28,7 @@ RSpec.describe InvenioRdmRecordConverter do
       lcsh: [lcsh_term],
       based_near: ["'Boston, Massachusetts, United States', 'East Peoria, Illinois, United States'"],
       description: ["This is a generic file for specs only", "This is an additional description to help test"],
-      date_created: ["1-1-2021"],
+      date_created: ["2021-1-1"],
       mime_type: 'application/pdf',
       grants_and_funding: ["European Commission 00k4n6c32"],
       language: ["English"],
@@ -85,7 +85,7 @@ RSpec.describe InvenioRdmRecordConverter do
           "description": generic_file.description.shift,
           "additional_descriptions": [{"description": generic_file.description.last, "type": "other", "lang": InvenioRdmRecordConverter::ENG}],
           "publisher": "DigitalHub. Galter Health Sciences Library & Learning Center",
-          "publication_date": "2020-2-3",
+          "publication_date": "2021-01-01",
           "subjects": [
             {
               "subject": "keyword subject",
@@ -109,7 +109,7 @@ RSpec.describe InvenioRdmRecordConverter do
               "role": InvenioRdmRecordConverter::ROLE_OTHER
             }
           }],
-          "dates": [{"date": "1-1-2021", "type": "other", "description": "When the item was originally created."}],
+          "dates": [{"date": "2021-1-1", "type": "other", "description": "When the item was originally created."}],
           "languages": [{"id": "eng"}],
           "related_identifiers": [{
               "identifier": generic_file_doi,
@@ -428,6 +428,110 @@ RSpec.describe InvenioRdmRecordConverter do
     describe "#additional_descriptions" do
       it 'returns empty array' do
         expect(subject.send(:additional_descriptions, blank_text_field)).to eq([])
+      end
+    end
+  end
+
+  describe "#normalize_date" do
+    context "formatted date" do
+      let(:expected_formatted_date_1){ "1907-09-06" }
+      let(:expected_formatted_date_2){ "1920-12-01" }
+      let(:date_without_zero_padding_1){ "1920-12-1" }
+      let(:date_without_zero_padding_2){ "1907-9-6" }
+      let(:date_with_dashes){ expected_formatted_date_1 }
+      let(:date_with_slashes){ "1907/09/06" }
+
+      it "normalizes date" do
+        expect(invenio_rdm_record_converter.send(:normalize_date, date_without_zero_padding_1)).to eq(expected_formatted_date_2)
+        expect(invenio_rdm_record_converter.send(:normalize_date, date_without_zero_padding_2)).to eq(expected_formatted_date_1)
+        expect(invenio_rdm_record_converter.send(:normalize_date, date_with_dashes)).to eq(expected_formatted_date_1)
+        expect(invenio_rdm_record_converter.send(:normalize_date, date_with_slashes)).to eq(expected_formatted_date_1)
+      end
+    end
+
+    context "date with month and year only" do
+      let(:date_with_dashes_month_only){ "1903-06" }
+      let(:date_with_slashes_month_only){ "1903/06" }
+
+      it "normalizes date with year and month available" do
+        expect(invenio_rdm_record_converter.send(:normalize_date, date_with_dashes_month_only)).to eq(date_with_dashes_month_only)
+        expect(invenio_rdm_record_converter.send(:normalize_date, date_with_slashes_month_only)).to eq(date_with_dashes_month_only)
+      end
+    end
+
+    context "date with year only" do
+      let(:date_with_year_only){ "1899" }
+      let(:expected_date_with_year_only){ "1899" }
+
+      it "normalizes date with only year available" do
+        expect(invenio_rdm_record_converter.send(:normalize_date, date_with_year_only)).to eq(expected_date_with_year_only)
+      end
+    end
+
+    context "normalizes date with ca or similar text" do
+      let(:circa_date){ "ca. 1900" }
+      let(:formatted_circa_date){ "1900" }
+
+      it "normalizes date" do
+        expect(invenio_rdm_record_converter.send(:normalize_date, circa_date)).to eq(formatted_circa_date)
+      end
+    end
+
+    context "date with month name or abbreviation" do
+      let(:january_month_name_date){ "January 12, 2020" }
+      let(:march_month_name_date){ "MARCH 2020" }
+      let(:november_month_name_date){ "november 15, 1900" }
+
+      let(:january_abr_month_name_date){ "Jan 12, 2020" }
+      let(:march_abr_month_name_date){ "MAR 2020" }
+      let(:november_abr_month_name_date){ "nov 15, 1900" }
+
+      let(:normalized_january_month_name_date){ "2020-01-12" }
+      let(:normalized_march_month_name_date){"2020-03"}
+      let(:normalized_november_month_name_date){ "1900-11-15" }
+
+      let(:range_uppercase){ "JANUARY-JUNE 2002" }
+      let(:range_titlecase){ "May 2014-July 2014" }
+      let(:normalized_range_uppercase){ "2002-01/2002-06" }
+      let(:normalized_range_titlecase){ "2014-05/2014-07" }
+
+      it "normalizes abbreviation" do
+        expect(invenio_rdm_record_converter.send(:normalize_date, january_abr_month_name_date)).to eq(normalized_january_month_name_date)
+        expect(invenio_rdm_record_converter.send(:normalize_date, march_abr_month_name_date)).to eq(normalized_march_month_name_date)
+        expect(invenio_rdm_record_converter.send(:normalize_date, november_abr_month_name_date)).to eq(normalized_november_month_name_date)
+      end
+
+      it "normalizes full name" do
+        expect(invenio_rdm_record_converter.send(:normalize_date, january_month_name_date)).to eq(normalized_january_month_name_date)
+        expect(invenio_rdm_record_converter.send(:normalize_date, march_month_name_date)).to eq(normalized_march_month_name_date)
+        expect(invenio_rdm_record_converter.send(:normalize_date, november_month_name_date)).to eq(normalized_november_month_name_date)
+      end
+
+      it "normalizes date with month range" do
+        expect(invenio_rdm_record_converter.send(:normalize_date, range_uppercase)).to eq(normalized_range_uppercase)
+        expect(invenio_rdm_record_converter.send(:normalize_date, range_titlecase)).to eq(normalized_range_titlecase)
+      end
+    end
+
+    context "date ranges" do
+      let(:slash_range){ "1895/1905" }
+      let(:dash_range){ "1895-1905" }
+
+      it 'normalizes date with year range' do
+        expect(invenio_rdm_record_converter.send(:normalize_date, slash_range)).to eq(slash_range)
+        expect(invenio_rdm_record_converter.send(:normalize_date, dash_range)).to eq(slash_range)
+      end
+    end
+
+    context "blank or undated" do
+      let(:blank_string){ "" }
+      let(:undated_lower_case){ "undated" }
+      let(:undated_upper_case){ "UNDATED" }
+
+      it "normalizes undated or blank dates" do
+        expect(invenio_rdm_record_converter.send(:normalize_date, blank_string)).to eq(blank_string)
+        expect(invenio_rdm_record_converter.send(:normalize_date, undated_lower_case)).to eq(blank_string)
+        expect(invenio_rdm_record_converter.send(:normalize_date, undated_upper_case)).to eq(blank_string)
       end
     end
   end
