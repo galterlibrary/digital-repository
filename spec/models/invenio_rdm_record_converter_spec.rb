@@ -112,8 +112,10 @@ RSpec.describe InvenioRdmRecordConverter do
           "sizes": ["#{generic_file.page_count} pages"],
           "formats": "application/pdf",
           "version": "v1.0.0",
-          "rights": [{"rights": 'Creative Commons Attribution Non Commercial Share Alike 3.0 United States', "scheme": "spdx", "identifier": \
-                      "CC-BY-NC-SA-3.0-US", "url": "http://creativecommons.org/licenses/by-nc-sa/3.0/us/"}],
+          "rights": [{
+            "id": "CC-BY-NC-SA-3.0-US",
+            "link": "http://creativecommons.org/licenses/by-nc-sa/3.0/us/",
+            "title": 'Creative Commons Attribution Non Commercial Share Alike 3.0 United States'}],
           "locations": {
             "features": [{"place": "Boston, Massachusetts, United States"},
                          {"place": "East Peoria, Illinois, United States"}],
@@ -322,20 +324,18 @@ RSpec.describe InvenioRdmRecordConverter do
   let(:creative_commons_attribution_v3_url) { "http://creativecommons.org/licenses/by/3.0/us/" }
   let(:expected_creative_commons_attribution_v3) do
     [{
-      "rights": "Creative Commons Attribution 3.0 United States",
-      "scheme": "spdx",
-      "identifier": "CC-BY-3.0-US",
-      "url": creative_commons_attribution_v3_url
+      "id": "CC-BY-3.0-US",
+      "link": creative_commons_attribution_v3_url,
+      "title": "Creative Commons Attribution 3.0 United States"
     }]
   end
 
   let(:creative_commons_zero_url) { "http://creativecommons.org/publicdomain/zero/1.0/" }
   let(:expected_creative_commons_zero) do
     [{
-      "rights": "Creative Commons Zero v1.0 Universal",
-      "scheme": "spdx",
-      "identifier": "CC0-1.0",
-      "url": creative_commons_zero_url
+      "id": "CC0-1.0",
+      "link": creative_commons_zero_url,
+      "title": "Creative Commons Zero v1.0 Universal"
     }]
   end
 
@@ -343,17 +343,16 @@ RSpec.describe InvenioRdmRecordConverter do
   let(:mit_license_url) { "https://opensource.org/licenses/MIT" }
   let(:expected_mit) do
     [{
-      "rights": "MIT License",
-      "scheme": "spdx",
-      "identifier": "MIT",
-      "url": mit_license_url
+      "id": "MIT",
+      "link": mit_license_url,
+      "title": "MIT License"
     }]
   end
 
   let(:all_rights_reserved) { 'All rights reserved' }
   let(:expected_all_rights_reserved) do
     [{
-      "rights": all_rights_reserved
+      "title": all_rights_reserved
     }]
   end
 
