@@ -59,6 +59,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     {
       "pids": invennio_pids(generic_file.doi.shift),
       "metadata": invenio_metadata(generic_file),
+      "files": {"enabled": true},
       "provenance": invenio_provenance(generic_file.proxy_depositor, generic_file.on_behalf_of),
       "access": invenio_access(generic_file.visibility)
     }
@@ -139,7 +140,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       "formats": gf.mime_type,
       "version": version(gf.content),
       "rights": rights(gf.rights),
-      "locations": gf.based_near.present? ? gf.based_near.shift.split("', ").map{ |location| {place: location.gsub("'", "")} } : {},
+      "locations": {"features": gf.based_near.present? ? gf.based_near.shift.split("', ").map{ |location| {place: location.gsub("'", "")} } : []},
       "funding": funding(gf.id)
     }
   end

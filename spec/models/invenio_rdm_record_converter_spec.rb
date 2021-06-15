@@ -114,7 +114,10 @@ RSpec.describe InvenioRdmRecordConverter do
           "version": "v1.0.0",
           "rights": [{"rights": 'Creative Commons Attribution Non Commercial Share Alike 3.0 United States', "scheme": "spdx", "identifier": \
                       "CC-BY-NC-SA-3.0-US", "url": "http://creativecommons.org/licenses/by-nc-sa/3.0/us/"}],
-          "locations": [{"place": "Boston, Massachusetts, United States"}, {"place": "East Peoria, Illinois, United States"}],
+          "locations": {
+            "features": [{"place": "Boston, Massachusetts, United States"},
+                         {"place": "East Peoria, Illinois, United States"}],
+          },
           "funding": [{
             "funder": {
               "name": "National Library of Medicine (NLM)",
@@ -126,7 +129,12 @@ RSpec.describe InvenioRdmRecordConverter do
               "number": "F37 LM009568 ",
               "identifier": "",
               "scheme": ""
-            }}]},
+            }
+          }]
+        },
+        "files": {
+          "enabled": true
+        },
         "provenance": {
           "created_by": {
             "user": assistant.username
