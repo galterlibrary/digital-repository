@@ -108,7 +108,7 @@ RSpec.describe InvenioRdmRecordConverter do
             }
           }],
           "dates": [{"date": "1-1-2021", "type": "other", "description": "When the item was originally created."}],
-          "languages": ["eng"],
+          "languages": [{"id": "eng"}],
           "sizes": ["#{generic_file.page_count} pages"],
           "formats": "application/pdf",
           "version": "v1.0.0",
