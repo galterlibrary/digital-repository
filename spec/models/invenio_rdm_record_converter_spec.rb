@@ -114,7 +114,7 @@ RSpec.describe InvenioRdmRecordConverter do
           "related_identifiers": [{
               "identifier": generic_file_doi,
               "scheme": "doi",
-              "relation": "related url"
+              "relation_type": {"id": "isRelatedTo"}
             }],
           "sizes": ["#{generic_file.page_count} pages"],
           "formats": "application/pdf",
@@ -386,30 +386,32 @@ RSpec.describe InvenioRdmRecordConverter do
     end
   end
 
-  let(:expected_related_identifiers_json) do
+  let(:expected_doi_related_identifiers_json) do
     {
       "identifier": doi,
       "scheme": "doi",
-      "relation": "related url"
+      "relation_type": {"id": "isRelatedTo"}
+    }
+  end
+  let(:expected_related_identifiers_json) do
+    {
+      "identifier": non_doi_url,
+      "scheme": "url",
+      "relation_type": {"id": "isRelatedTo"}
     }
   end
 
   describe "#related_identifiers" do
-    context 'the related_url is not a doi url' do
-      it 'returns an empty array' do
-        expect(subject.send(:related_identifiers, [non_doi_url])).to eq([])
-      end
-    end
-
     context 'there is no related_url' do
       it 'returns an empty array' do
         expect(subject.send(:related_identifiers, [])).to eq([])
       end
     end
 
-    context 'the related url is a doi url' do
+    context 'with related_url' do
       it 'returns formatted json' do
-        expect(subject.send(:related_identifiers, [doi_org_url])).to eq([expected_related_identifiers_json])
+        expect(subject.send(:related_identifiers, [doi_org_url])).to eq([expected_doi_related_identifiers_json])
+        expect(subject.send(:related_identifiers, [non_doi_url])).to eq([expected_related_identifiers_json])
       end
     end
   end

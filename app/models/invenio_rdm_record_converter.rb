@@ -291,15 +291,23 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
 
   def related_identifiers(related_url)
     identifiers = related_url.map do |url|
-      next if url.blank? || !doi_url?(url)
+      next if url.blank?
 
-      doi = url.split(DOI_ORG).last
+      if doi_url?(url)
+        doi = url.split(DOI_ORG).last
 
-      {
-        "identifier": doi,
-        "scheme": "doi",
-        "relation": "related url"
-      }
+        {
+          "identifier": doi,
+          "scheme": "doi",
+          "relation_type": {"id": "isRelatedTo"}
+        }
+      else
+        {
+          "identifier": url,
+          "scheme": "url",
+          "relation_type": {"id": "isRelatedTo"}
+        }
+      end
     end
 
     identifiers.compact
