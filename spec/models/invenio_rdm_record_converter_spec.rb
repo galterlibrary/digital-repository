@@ -9,6 +9,7 @@ RSpec.describe InvenioRdmRecordConverter do
   let(:expected_mesh_pid) { "D018875" }
   let(:lcsh_term) { "Semantic Web" }
   let(:expected_lcsh_pid) { "sh2002000569" }
+  let(:generic_file_doi) { "10.5438/55e5-t5c0" }
   let(:generic_file) {
     make_generic_file_with_content(
       user,
@@ -33,7 +34,8 @@ RSpec.describe InvenioRdmRecordConverter do
       language: ["English"],
       page_count: [rand(1..1000).to_s],
       rights: ["http://creativecommons.org/licenses/by-nc-sa/3.0/us/"],
-      visibility: InvenioRdmRecordConverter::OPEN_ACCESS
+      visibility: InvenioRdmRecordConverter::OPEN_ACCESS,
+      related_url: ["https://doi.org/10.5438/55e5-t5c0"]
     )
   }
   let(:generic_file_checksum) { generic_file.content.checksum.value }
@@ -109,6 +111,11 @@ RSpec.describe InvenioRdmRecordConverter do
           }],
           "dates": [{"date": "1-1-2021", "type": "other", "description": "When the item was originally created."}],
           "languages": [{"id": "eng"}],
+          "related_identifiers": [{
+              "identifier": generic_file_doi,
+              "scheme": "doi",
+              "relation_type": {"id": "isRelatedTo"}
+            }],
           "sizes": ["#{generic_file.page_count} pages"],
           "formats": "application/pdf",
           "version": "v1.0.0",
@@ -363,6 +370,49 @@ RSpec.describe InvenioRdmRecordConverter do
       expect(subject.send(:rights, [creative_commons_zero_url])).to eq(expected_creative_commons_zero)
       expect(subject.send(:rights, [mit_license_url])).to eq(expected_mit)
       expect(subject.send(:rights, [all_rights_reserved])).to eq(expected_all_rights_reserved)
+    end
+  end
+
+  let(:doi) { "10.18131/g3-hgs7-ag90" }
+  let(:doi_org_url) { "https://doi.org/#{doi}" }
+  let(:dx_doi_org_url) { "https://dx.doi.org/10.6084/m9.figshare.2002149" }
+  let(:non_doi_url) { "www.google.com" }
+
+  describe "#doi_url?" do
+    it 'returns true for urls that include doi.org' do
+      expect(subject.send(:doi_url?, doi_org_url)).to eq(true)
+      expect(subject.send(:doi_url?, dx_doi_org_url)).to eq(true)
+      expect(subject.send(:doi_url?, non_doi_url)).to eq(false)
+    end
+  end
+
+  let(:expected_doi_related_identifiers_json) do
+    {
+      "identifier": doi,
+      "scheme": "doi",
+      "relation_type": {"id": "isRelatedTo"}
+    }
+  end
+  let(:expected_related_identifiers_json) do
+    {
+      "identifier": non_doi_url,
+      "scheme": "url",
+      "relation_type": {"id": "isRelatedTo"}
+    }
+  end
+
+  describe "#related_identifiers" do
+    context 'there is no related_url' do
+      it 'returns an empty array' do
+        expect(subject.send(:related_identifiers, [])).to eq([])
+      end
+    end
+
+    context 'with related_url' do
+      it 'returns formatted json' do
+        expect(subject.send(:related_identifiers, [doi_org_url])).to eq([expected_doi_related_identifiers_json])
+        expect(subject.send(:related_identifiers, [non_doi_url])).to eq([expected_related_identifiers_json])
+      end
     end
   end
 
