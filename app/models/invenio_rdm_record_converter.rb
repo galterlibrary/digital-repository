@@ -8,6 +8,10 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   include Galtersufia::GenericFile::KnownOrganizations
 
   SUBJECT_SCHEMES = [:tag, :mesh, :lcsh]
+  CIRCA_VALUES = ["ca.", "ca", "circa", "CA.", "CA", "CIRCA"]
+  UNDATED = ["undated", "UNDATED"]
+  ABBR_MONTHNAMES = Date::ABBR_MONTHNAMES.map{ |abbr_monthname| abbr_monthname.downcase if abbr_monthname.present? }
+  MONTHNAMES = Date::MONTHNAMES.map{ |monthname| monthname.downcase if monthname.present? }
   ENG = "eng"
   ENGLISH = "english"
   ROLE_OTHER = 'other'
@@ -132,7 +136,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       "description": gf.description.first,
       "additional_descriptions": additional_descriptions(gf.description),
       "publisher": gf.publisher.shift,
-      "publication_date": "#{gf.date_uploaded.year}-#{gf.date_uploaded.month}-#{gf.date_uploaded.day}",
+      "publication_date": format_publication_date(gf.date_created.shift || gf.date_uploaded.shift),
       "subjects": SUBJECT_SCHEMES.map{ |subject_type| subjects_for_scheme(gf.send(subject_type), subject_type) }.flatten,
       "contributors": contributors(gf.contributor),
       "dates": gf.date_created.map{ |date| {"date": date, "type": "other", "description": "When the item was originally created."} },
@@ -315,5 +319,76 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
 
   def doi_url?(url)
     url.include?(DOI_ORG)
+  end
+
+  def format_publication_date(publication_date)
+    normalize_date(publication_date)
+  end
+
+  def normalize_date(date_string)
+    split_date = date_string.split(/[-,\/ ]/).map(&:downcase)
+    month_names = (split_date & MONTHNAMES)
+    abbr_month_names = (split_date & ABBR_MONTHNAMES)
+
+    # blank and unddated
+    if date_string.blank? || (split_date & UNDATED).any?
+      return ""
+    # circa date
+    elsif (split_date & CIRCA_VALUES).any?
+      return date_string.gsub(Regexp.union(CIRCA_VALUES), "").strip
+    # date range without month name or month abbreviations
+    elsif (split_date.length != 3 && date_string.length == 9)
+      return date_string.gsub(" ", "").gsub("-", "/")
+    # date range with month name or month abbreviations
+    elsif month_names.length > 1 || abbr_month_names.length > 1
+      # two months, one year
+      if split_date.length == 3
+        start_month = MONTHNAMES.index(split_date[0]) || ABBR_MONTHNAMES.index(split_date[0])
+        end_month = MONTHNAMES.index(split_date[1]) || ABBR_MONTHNAMES.index(split_date[1])
+        year = split_date.last.to_i
+
+        return "#{Date.new(year, start_month).strftime("%Y-%m")}/#{Date.new(year, end_month).strftime("%Y-%m")}"
+      # two months, two years
+      else
+        start_month = MONTHNAMES.index(split_date[0]) || ABBR_MONTHNAMES.index(split_date[0])
+        start_year = split_date[1].to_i
+        end_month = MONTHNAMES.index(split_date[2]) || ABBR_MONTHNAMES.index(split_date[2])
+        end_year = split_date[3].to_i
+
+        return "#{Date.new(start_year, start_month).strftime("%Y-%m")}/#{Date.new(end_year, end_month).strftime("%Y-%m")}"
+      end
+    # date with month or month abbreviation in it
+    elsif month_names.present? || abbr_month_names.present?
+      year = split_date.last.to_i
+      month = MONTHNAMES.index(split_date[0]) || ABBR_MONTHNAMES.index(split_date[0])
+      day = split_date[1].to_i
+      day = nil if day == year
+    # regular date
+    else
+      split_date.map!(&:to_i)
+      split_date_length = split_date.length
+
+      if split_date_length == 3
+        year = split_date[0]
+        month = split_date[1]
+        day = split_date[2]
+      elsif split_date_length == 2
+        year = split_date[0]
+        month = split_date[1]
+      else split_date_length == 1
+        year = split_date[0]
+      end
+    end
+
+    # build the date
+    if day && month && year
+      Date.new(year, month, day).strftime("%Y-%m-%d")
+    elsif month && year
+      Date.new(year, month).strftime("%Y-%m")
+    elsif year
+      Date.new(year).strftime("%Y")
+    else
+      ""
+    end
   end
 end
