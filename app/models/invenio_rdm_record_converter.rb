@@ -266,6 +266,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
 
       if license_url == ALL_RIGHTS_RESERVED
         {
+          "id": license_data[:"licenseId"],
           "title": license_data[:"name"]
         }
       elsif license_data.present?

@@ -1,6 +1,7 @@
 {
   'All rights reserved': {
     "name": 'All rights reserved',
+    "licenseId": 'GALTER-ARR-1.0'
   },
   'http://creativecommons.org/publicdomain/mark/1.0/': {
     "name": 'Creative Commons Public Domain Mark 1.0',

@@ -352,6 +352,7 @@ RSpec.describe InvenioRdmRecordConverter do
   let(:all_rights_reserved) { 'All rights reserved' }
   let(:expected_all_rights_reserved) do
     [{
+      "id": "GALTER-ARR-1.0",
       "title": all_rights_reserved
     }]
   end
