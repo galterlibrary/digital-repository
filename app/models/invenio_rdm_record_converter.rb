@@ -154,19 +154,13 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   def resource_type(digitalhub_subtype)
     irdm_types = DH_IRDM_RESOURCE_TYPES[digitalhub_subtype]
 
-    if irdm_types && irdm_types[1]
+    if irdm_types
       {
-        "type": irdm_types[0],
-        "subtype": irdm_types[1]
-      }
-    elsif irdm_types # only Dataset has no subtype
-      {
-        "type": irdm_types[0]
+        "id": irdm_types[1]
       }
     else # for resource types with no mappings
       {
-        "type": "other",
-        "subtype": "other-other"
+        "id": "other-other"
       }
     end
   end

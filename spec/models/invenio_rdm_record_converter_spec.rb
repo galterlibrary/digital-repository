@@ -55,8 +55,7 @@ RSpec.describe InvenioRdmRecordConverter do
         },
         "metadata": {
           "resource_type": {
-            "type": "book",
-            "subtype": "book-account_book"
+            "id": "book-account_book"
           },
           "creators": [{
             "person_or_org": {
@@ -290,8 +289,7 @@ RSpec.describe InvenioRdmRecordConverter do
     context "with type and subtype" do
       let(:image) {
         {
-          "type": "image",
-          "subtype": "image-pictorial_work"
+          "id": "image-pictorial_work"
         }
       }.to_json
 
@@ -300,28 +298,27 @@ RSpec.describe InvenioRdmRecordConverter do
       end
     end
 
-    context "with type only" do
-      let(:dataset) {
-        {
-          "type": "dataset"
-        }
-      }.to_json
+    let(:dataset) {
+      {
+        "id": "dataset"
+      }
+    }.to_json
 
+    context "with type only" do
       it "returns type only" do
         expect(invenio_rdm_record_converter.send(:resource_type, "Dataset")).to eq(dataset)
       end
     end
 
     context "with no mapping" do
-      let(:project) {
+      let(:other) {
         {
-          "type": "other",
-          "subtype": "other-other"
+          "id": "other-other"
         }
       }.to_json
 
       it "returns 'other' type" do
-        expect(invenio_rdm_record_converter.send(:resource_type, "Project")).to eq(project)
+        expect(invenio_rdm_record_converter.send(:resource_type, "Project")).to eq(other)
       end
     end
   end
