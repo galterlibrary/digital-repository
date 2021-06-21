@@ -25,7 +25,7 @@ module Galtersufia
         "Collected Correspondence": ["archival", "archival-collection"],
         "Conference Proceeding": ["conference", "conference-conference_proceeding"],
         "Congresses": ["conference", "conference-congress"],
-        "Dataset": ["dataset"],
+        "Dataset": ["dataset", "dataset"],
         "Dictionary": ["book", "book-book"],
         "Drawings": ["image", "image-drawing"],
         "Editorial Article": ["article", "article-editorial"],
