@@ -27,7 +27,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
 
   @@header_lookup ||= HeaderLookup.new
   @@funding_data ||= eval(File.read(FUNDING_DATA_FILE))
-  @@person_or_org_data ||= eval(File.read(MEMOIZED_PERSON_OR_ORG_DATA_FILE))
+  @@person_or_org_data ||= (eval(File.read(MEMOIZED_PERSON_OR_ORG_DATA_FILE)) || {})
   @@license_data ||= eval(File.read(LICENSE_DATA_FILE))
 
   # Create an instance of a InvenioRdmRecordConverter converter containing all the metadata for json export
@@ -174,14 +174,14 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   def contributors(contributors)
     contributors.map do |contributor|
       contributor_json = build_creator_contributor_json(contributor)
-      contributor_json[:person_or_org].merge!({"role": ROLE_OTHER})
+      contributor_json.merge!({"role": {}})
       contributor_json
     end
   end
 
   def build_creator_contributor_json(creator)
     if creator_data = @@person_or_org_data[creator]
-      return creator_data
+      return creator_data.merge({"role": {}, "affiliations": {}})
     # Organization
     elsif organization?(creator)
       json = @@person_or_org_data[creator] = {
@@ -231,7 +231,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     # this line only runs if there is an update to @@person_or_org_data
     File.write(MEMOIZED_PERSON_OR_ORG_DATA_FILE, @@person_or_org_data)
     # return the actual json
-    json
+    json.merge({"role": {}, "affiliations": {}})
   end
 
   # return array of invenio formatted subjects

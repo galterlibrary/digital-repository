@@ -60,14 +60,16 @@ RSpec.describe InvenioRdmRecordConverter do
           },
           "creators": [{
             "person_or_org": {
-              "type": "personal",
-              "given_name": "#{user.formal_name.split(',').last}",
-              "family_name": "#{user.formal_name.split(',').first}",
-              "identifiers": {
-                "scheme": "orcid",
-                "identifier": "#{user.orcid.split('/').last}"
-              }
-            }
+               "type": "personal",
+               "given_name": "#{user.formal_name.split(',').last}",
+               "family_name": "#{user.formal_name.split(',').first}",
+               "identifiers": {
+                 "scheme": "orcid",
+                 "identifier": "#{user.orcid.split('/').last}"
+               }
+            },
+            "role": {}, # TBD on June InvenioRDM release, will contain "id": <id of role>
+            "affiliations": {}
           }],
           "title": "#{generic_file.title.first}",
           "additional_titles": [
@@ -106,8 +108,9 @@ RSpec.describe InvenioRdmRecordConverter do
               "type": "personal",
               "given_name": "#{contributor_user.formal_name.split(',').last}",
               "family_name": "#{contributor_user.formal_name.split(',').first}",
-              "role": InvenioRdmRecordConverter::ROLE_OTHER
-            }
+            },
+            "role": {}, # TBD with June InvenioRDM release
+            "affiliations": {} # No user on Prod DigitalHub has an affiliation
           }],
           "dates": [{"date": "2021-1-1", "type": "other", "description": "When the item was originally created."}],
           "languages": [{"id": "eng"}],
@@ -186,7 +189,9 @@ RSpec.describe InvenioRdmRecordConverter do
         "type": "personal",
         "given_name": "Firston",
         "family_name": "Laster",
-      }
+      },
+      "role": {},
+      "affiliations": {}
     }.with_indifferent_access
   }
 
@@ -196,7 +201,9 @@ RSpec.describe InvenioRdmRecordConverter do
       "person_or_org": {
         "name": "Firston Laster",
         "type": "organisational"
-      }
+      },
+      "role": {},
+      "affiliations": {}
     }.with_indifferent_access
   }
 
@@ -206,7 +213,9 @@ RSpec.describe InvenioRdmRecordConverter do
         "person_or_org": {
           "name": unidentified_creator_name,
           "type": "organisational"
-        }
+        },
+        "role": {},
+        "affiliations": {}
       }.with_indifferent_access
     }
 
@@ -216,7 +225,9 @@ RSpec.describe InvenioRdmRecordConverter do
       "person_or_org": {
         "name": unknown_creator_name,
         "type": "organisational"
-      }
+      },
+      "role": {},
+      "affiliations": {}
     }.with_indifferent_access
   }
 
@@ -226,7 +237,9 @@ RSpec.describe InvenioRdmRecordConverter do
       "person_or_org": {
         "name": organization_name,
         "type": "organisational"
-      }
+      },
+      "role": {},
+      "affiliations": {}
     }.with_indifferent_access
   }
 
