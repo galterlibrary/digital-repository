@@ -7,11 +7,13 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   include Galtersufia::GenericFile::InvenioResourceTypeMappings
   include Galtersufia::GenericFile::KnownOrganizations
 
-  SUBJECT_SCHEMES = [:tag, :mesh, :lcsh]
+  SUBJECT_SCHEMES = [:tag, :mesh, :lcsh, :subject_name]
   CIRCA_VALUES = ["ca.", "ca", "circa", "CA.", "CA", "CIRCA"]
   UNDATED = ["undated", "UNDATED"]
+  REFERENCE_FIELDS = ["bibliographic_citation", "part_of"]
   ABBR_MONTHNAMES = Date::ABBR_MONTHNAMES.map{ |abbr_monthname| abbr_monthname.downcase if abbr_monthname.present? }
   MONTHNAMES = Date::MONTHNAMES.map{ |monthname| monthname.downcase if monthname.present? }
+  SEASONS = ["spring", "summer", "fall", "winter"]
   ENG = "eng"
   ENGLISH = "english"
   ROLE_OTHER = 'other'
@@ -135,8 +137,8 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       "description": gf.description.first,
       "additional_descriptions": additional(category: "description", array: gf.description),
       "publisher": gf.publisher.shift,
-      "publication_date": format_publication_date(gf.date_created.shift || gf.date_uploaded.shift),
-      "subjects": SUBJECT_SCHEMES.map{ |subject_type| subjects_for_scheme(gf.send(subject_type), subject_type) }.flatten,
+      "publication_date": format_publication_date(gf.date_created.shift || gf.date_uploaded.to_s),
+      "subjects": SUBJECT_SCHEMES.map{ |subject_type| subjects_for_scheme(gf.send(subject_type), subject_type) }.compact.flatten,
       "contributors": contributors(gf.contributor),
       "dates": gf.date_created.map{ |date| {"date": date, "type": "other", "description": "When the item was originally created."} },
       "languages": gf.language.map{ |lang| lang.present? && lang.downcase == ENGLISH ? {"id": "eng"} : nil }.compact,
@@ -222,12 +224,14 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
 
   def additional(category:, array:)
     type = set_type(category)
+    # return all values except the first
+    tail_values = array.slice(1..-1)
+    return [] if tail_values.blank?
 
-    # return all values except the first, remove the strings that contain only
-    # spaces or are empty, then map
-    array.slice(1..-1).delete_if(&:blank?).map{ |word|
+    # remove the strings that contain only spaces or are empty, then map
+    tail_values.delete_if(&:blank?).map do |word|
       {"#{category}": word, "type": type, "lang": {"id": ENG}}
-    }
+    end
   end
 
   def set_type(type)
@@ -241,19 +245,19 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
 
   # return array of invenio formatted subjects
   def subjects_for_scheme(terms, scheme)
-    if scheme != :tag
-      terms.map do |term|
-        pid = @@header_lookup.pid_lookup_by_scheme(term, scheme)
+    mapped_terms = terms.map do |term|
+      pid = @@header_lookup.pid_lookup_by_scheme(term, scheme)
 
-        if pid.present?
-          {subject: term, identifier: pid, scheme: scheme}
-        else
-          {subject: "#{term}: DigitalHub field #{scheme}"}
-        end
+      if pid.present?
+        {id: pid}
+      elsif scheme == :subject_name
+        {subject: term}
+      elsif scheme == :tag
+        {subject: "galter-keyword-#{term.parameterize}"}
       end
-    else
-      terms.map{ |term| {subject: term} }
     end
+
+    mapped_terms.compact
   end
 
   def contributors(contributors)
@@ -337,7 +341,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     abbr_month_names = (split_date & ABBR_MONTHNAMES)
 
     # blank and unddated
-    if date_string.blank? || (split_date & UNDATED).any?
+    if date_string.blank? || (split_date & UNDATED).any? || (split_date & SEASONS).any?
       return ""
     # circa date
     elsif (split_date & CIRCA_VALUES).any?

@@ -88,17 +88,13 @@ RSpec.describe InvenioRdmRecordConverter do
           "publication_date": "2021-01-01",
           "subjects": [
             {
-              "subject": "keyword subject",
+              "subject": "galter-keyword-keyword-subject"
             },
             {
-              "subject": mesh_term,
-              "identifier": expected_mesh_pid,
-              "scheme": "mesh"
+              "id": expected_mesh_pid,
             },
             {
-              "subject": lcsh_term,
-              "identifier": expected_lcsh_pid,
-              "scheme": "lcsh"
+              "id": expected_lcsh_pid,
             }
           ],
           "contributors": [{
@@ -530,6 +526,16 @@ RSpec.describe InvenioRdmRecordConverter do
       end
     end
 
+    context "seasonal name" do
+      let(:two_seasonal_names){ "Spring/Summer 1995" }
+      let(:single_seasonal_name){ "Spring 2001" }
+
+      it "ignores seasonal names" do
+        expect(invenio_rdm_record_converter.send(:normalize_date, two_seasonal_names)).to eq("")
+        expect(invenio_rdm_record_converter.send(:normalize_date, single_seasonal_name)).to eq("")
+      end
+    end
+
     context "date with month name or abbreviation" do
       let(:january_month_name_date){ "January 12, 2020" }
       let(:march_month_name_date){ "MARCH 2020" }
@@ -585,6 +591,58 @@ RSpec.describe InvenioRdmRecordConverter do
         expect(invenio_rdm_record_converter.send(:normalize_date, blank_string)).to eq(blank_string)
         expect(invenio_rdm_record_converter.send(:normalize_date, undated_lower_case)).to eq(blank_string)
         expect(invenio_rdm_record_converter.send(:normalize_date, undated_upper_case)).to eq(blank_string)
+      end
+    end
+  end
+
+  describe "#subjects_for_scheme" do
+    context "mesh scheme" do
+      let(:unknown_mesh_term){ ["nothing but lies"] }
+      let(:known_mesh_term){ ["neoplasm"] }
+      let(:mesh_subject_type){ :mesh }
+      let(:expected_mesh_result){ [{"id": "D000008"}]}
+
+      it "returns '[]' for unknown term" do
+        expect(invenio_rdm_record_converter.send(:subjects_for_scheme, unknown_mesh_term, mesh_subject_type)).to eq([])
+      end
+
+      it "returns metadata for known term" do
+        expect(invenio_rdm_record_converter.send(:subjects_for_scheme, known_mesh_term, mesh_subject_type)).to eq(expected_mesh_result)
+      end
+    end
+
+    context "lcsh scheme" do
+      let(:unknown_lcsh_term){ ["nothing but lies"] }
+      let(:known_lcsh_term){ ["cancer"] }
+      let(:lcsh_subject_type){ :lcsh }
+      let(:expected_lcsh_result){ ["id": "sh85000095"] }
+
+      it "returns '[]' for unknown term" do
+        expect(invenio_rdm_record_converter.send(:subjects_for_scheme, unknown_lcsh_term, lcsh_subject_type)).to eq([])
+      end
+
+      it "returns metadata for known term" do
+        expect(invenio_rdm_record_converter.send(:subjects_for_scheme, known_lcsh_term, lcsh_subject_type)).to eq(expected_lcsh_result)
+      end
+    end
+
+    context "subject_name scheme" do
+      let(:subject_name_term){ ["malignant"] }
+      let(:subject_name_subject_type){ :subject_name }
+      let(:expected_subject_name_result){ ["subject": "malignant"] }
+
+      it "returns metadata for known term" do
+        expect(invenio_rdm_record_converter.send(:subjects_for_scheme, subject_name_term, subject_name_subject_type)).to eq(expected_subject_name_result)
+      end
+    end
+
+    context "tag scheme" do
+      let(:tag_term){ ["tumor"] }
+      let(:tag_subject_type){ :tag }
+      let(:expected_tag_result){ ["subject": "galter-keyword-tumor"] }
+
+      it "returns metadata for term" do
+        expect(invenio_rdm_record_converter.send(:subjects_for_scheme, tag_term, tag_subject_type)).to eq(expected_tag_result)
       end
     end
   end
