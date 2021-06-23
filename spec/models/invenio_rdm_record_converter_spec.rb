@@ -368,16 +368,14 @@ RSpec.describe InvenioRdmRecordConverter do
   let(:multiple_rights) { ["https://opensource.org/licenses/MIT", "http://creativecommons.org/publicdomain/zero/1.0/"] }
   let(:expected_multiple_rights) do
     [{
-      "rights": "MIT License",
-      "scheme": "spdx",
-      "identifier": "MIT",
-      "url": mit_license_url
+      "id": "MIT",
+      "link": mit_license_url,
+      "title": "MIT License"
     },
     {
-      "rights": "Creative Commons Zero v1.0 Universal",
-      "scheme": "spdx",
-      "identifier": "CC0-1.0",
-      "url": creative_commons_zero_url
+      "id": "CC0-1.0",
+      "link": creative_commons_zero_url,
+      "title": "Creative Commons Zero v1.0 Universal"
     }]
   end
 
