@@ -18,7 +18,6 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   OPEN_ACCESS = "open"
   INVENIO_PUBLIC = "public"
   INVENIO_RESTRICTED = "restricted"
-  DEFAULT_RIGHTS_SCHEME = "spdx"
   ALL_RIGHTS_RESERVED = 'All rights reserved'
   DOI_ORG = "doi.org/"
   MEMOIZED_PERSON_OR_ORG_DATA_FILE = 'memoized_person_or_org_data.txt'
@@ -267,14 +266,14 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
 
       if license_url == ALL_RIGHTS_RESERVED
         {
-          "rights": license_data[:"name"],
+          "id": license_data[:"licenseId"],
+          "title": license_data[:"name"]
         }
       elsif license_data.present?
         {
-          "rights": license_data[:"name"],
-          "scheme": DEFAULT_RIGHTS_SCHEME,
-          "identifier": license_data[:"licenseId"],
-          "url": license_url
+          "id": license_data[:"licenseId"],
+          "link": license_url,
+          "title": license_data[:"name"]
         }
       end
     end
