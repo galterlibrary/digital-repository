@@ -15,6 +15,7 @@ RSpec.describe InvenioRdmRecordConverter do
       user,
       id: "ns0646000",
       doi: ["doi:123/ABC"],
+      ark: ["10.6666/ARK"],
       resource_type: ["Account Books"],
       proxy_depositor: assistant.username,
       on_behalf_of: user.username,
@@ -110,6 +111,10 @@ RSpec.describe InvenioRdmRecordConverter do
           }],
           "dates": [{"date": "2021-1-1", "type": "other", "description": "When the item was originally created."}],
           "languages": [{"id": "eng"}],
+          "identifiers": [{
+            "identifier": "10.6666/ARK",
+            "scheme": "ark"
+          }],
           "related_identifiers": [{
               "identifier": generic_file_doi,
               "scheme": "doi",
@@ -343,7 +348,6 @@ RSpec.describe InvenioRdmRecordConverter do
     }]
   end
 
-
   let(:mit_license_url) { "https://opensource.org/licenses/MIT" }
   let(:expected_mit) do
     [{
@@ -361,12 +365,27 @@ RSpec.describe InvenioRdmRecordConverter do
     }]
   end
 
+  let(:multiple_rights) { ["https://opensource.org/licenses/MIT", "http://creativecommons.org/publicdomain/zero/1.0/"] }
+  let(:expected_multiple_rights) do
+    [{
+      "id": "MIT",
+      "link": mit_license_url,
+      "title": "MIT License"
+    },
+    {
+      "id": "CC0-1.0",
+      "link": creative_commons_zero_url,
+      "title": "Creative Commons Zero v1.0 Universal"
+    }]
+  end
+
   describe "#rights" do
     it 'returns the expected license information' do
       expect(subject.send(:rights, [creative_commons_attribution_v3_url])).to eq(expected_creative_commons_attribution_v3)
       expect(subject.send(:rights, [creative_commons_zero_url])).to eq(expected_creative_commons_zero)
       expect(subject.send(:rights, [mit_license_url])).to eq(expected_mit)
       expect(subject.send(:rights, [all_rights_reserved])).to eq(expected_all_rights_reserved)
+      expect(subject.send(:rights, multiple_rights)).to eq(expected_multiple_rights)
     end
   end
 
