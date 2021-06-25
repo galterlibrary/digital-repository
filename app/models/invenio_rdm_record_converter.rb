@@ -131,9 +131,9 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       "resource_type": resource_type(gf.resource_type.shift),
       "creators": gf.creator.map{ |creator| build_creator_contributor_json(creator) },
       "title": gf.title.first,
-      "additional_titles": abstracted_additional_category(category: "title", array: gf.title),
+      "additional_titles": additional(category: "title", array: gf.title),
       "description": gf.description.first,
-      "additional_descriptions": abstracted_additional_category(category: "description", array: gf.description),
+      "additional_descriptions": additional(category: "description", array: gf.description),
       "publisher": gf.publisher.shift,
       "publication_date": format_publication_date(gf.date_created.shift || gf.date_uploaded.shift),
       "subjects": SUBJECT_SCHEMES.map{ |subject_type| subjects_for_scheme(gf.send(subject_type), subject_type) }.flatten,
@@ -220,14 +220,13 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     json
   end # build_creator_contributor_json
 
-  def abstracted_additional_category(category:, array:)
-    array.delete_if(&:blank?)
-    return [] if array.size <= 1
-
+  def additional(category:, array:)
     type = set_type(category)
 
-    array.last(array.size - 1).map{ |word|
-      {"#{category}": word, "type": type, "lang": ENG}
+    # return all values except the first, remove the strings that contain only
+    # spaces or are empty, then map
+    array.slice(1..-1).delete_if(&:blank?).map{ |word|
+      {"#{category}": word, "type": type, "lang": {"id": ENG}}
     }
   end
 
