@@ -74,16 +74,16 @@ RSpec.describe InvenioRdmRecordConverter do
             {
               "title": "Secondary Title",
               "type": "alternative_title",
-              "lang": InvenioRdmRecordConverter::ENG
+              "lang": {"id": InvenioRdmRecordConverter::ENG}
             },
             {
               "title": "Tertiary Title",
               "type": "alternative_title",
-              "lang": InvenioRdmRecordConverter::ENG
+              "lang": {"id": InvenioRdmRecordConverter::ENG}
             }
           ],
           "description": generic_file.description.shift,
-          "additional_descriptions": [{"description": generic_file.description.last, "type": "other", "lang": InvenioRdmRecordConverter::ENG}],
+          "additional_descriptions": [{"description": generic_file.description.last, "type": "other", "lang": {"id": InvenioRdmRecordConverter::ENG}}],
           "publisher": "DigitalHub. Galter Health Sciences Library & Learning Center",
           "publication_date": "2021-01-01",
           "subjects": [
@@ -433,17 +433,54 @@ RSpec.describe InvenioRdmRecordConverter do
   end
 
   let(:blank_text_field) { [""] }
+  let(:white_space) {[" "]}
+  let(:multiple_blanks) {["", " "]}
+  let(:one_cat) {["One Cat"]}
+  let(:one_cat_with_blank) {["One Cat", ""]}
+  let!(:two_cats) {["One Cat", "Two Cats"]}
+  let(:two_cats_with_blank) {["One Cat", "Two Cats", ""]}
+  let(:expected_two_cats_title) {
+    [{
+      "title": "Two Cats",
+      "type": "alternative_title",
+      "lang": {"id": InvenioRdmRecordConverter::ENG}
+    }]
+  }
+  let(:expected_two_cats_description) {
+    [{
+      "description": "Two Cats",
+      "type": "other",
+      "lang": {"id": InvenioRdmRecordConverter::ENG}
+    }]
+  }
 
-  context 'when text field is empty' do
-    describe "#additional_titles" do
+  describe '#additional' do
+    context "blank results" do
       it 'returns empty array' do
-        expect(subject.send(:additional_titles, blank_text_field)).to eq([])
+        expect(subject.send(:additional, category: "title", array: blank_text_field)).to eq([])
+        expect(subject.send(:additional, category: "title", array: white_space)).to eq([])
+        expect(subject.send(:additional, category: "title", array: multiple_blanks)).to eq([])
+        expect(subject.send(:additional, category: "description", array: blank_text_field)).to eq([])
+        expect(subject.send(:additional, category: "description", array: white_space)).to eq([])
+        expect(subject.send(:additional, category: "description", array: multiple_blanks)).to eq([])
       end
     end
 
-    describe "#additional_descriptions" do
+    context "with one cat" do
       it 'returns empty array' do
-        expect(subject.send(:additional_descriptions, blank_text_field)).to eq([])
+        expect(subject.send(:additional, category: "title", array: one_cat)).to eq([])
+        expect(subject.send(:additional, category: "title", array: one_cat_with_blank)).to eq([])
+        expect(subject.send(:additional, category: "description", array: one_cat)).to eq([])
+        expect(subject.send(:additional, category: "description", array: one_cat_with_blank)).to eq([])
+      end
+    end
+
+    context "with two cats" do
+      it 'returns array with values' do
+        expect(subject.send(:additional, category: "title", array: two_cats)).to eq(expected_two_cats_title)
+        expect(subject.send(:additional, category: "title", array: two_cats_with_blank)).to eq(expected_two_cats_title)
+        expect(subject.send(:additional, category: "description", array: two_cats)).to eq(expected_two_cats_description)
+        expect(subject.send(:additional, category: "description", array: two_cats_with_blank)).to eq(expected_two_cats_description)
       end
     end
   end
