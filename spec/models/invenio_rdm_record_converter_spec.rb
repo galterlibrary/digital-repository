@@ -160,6 +160,9 @@ RSpec.describe InvenioRdmRecordConverter do
       "file": {
         "filename": generic_file.filename,
         "content_path": generic_file_content_path
+      },
+      "extras": {
+        "presentation_location": generic_file.based_near
       }
     }.to_json
   end
@@ -267,6 +270,20 @@ RSpec.describe InvenioRdmRecordConverter do
   describe "#generic_file_content_path" do
     it "returns the content's path" do
       expect(converter.send(:generic_file_content_path, checksum)).to eq("#{ENV['FEDORA_BINARY_PATH']}/ab/cd/12/abcd1234")
+    end
+  end
+
+  let(:expected_presentation_location) {
+    {
+      "presentation_location": ["'Boston, Massachusetts, United States', 'East Peoria, Illinois, United States'"]
+    }
+  }
+
+  describe "#extra_data" do
+    context "presentation_location" do
+      it "adds based_near to presentation_location" do
+        expect(converter.send(:extra_data, generic_file)).to eq(expected_presentation_location)
+      end
     end
   end
 
