@@ -16,13 +16,13 @@ class HeaderLookup
 
   def pid_lookup_by_scheme(term="", scheme="")
     if term.blank? || scheme.blank?
-      return
+      nil
     elsif scheme == :mesh
       @@memoized_mesh[term] || mesh_term_pid_lookup(term)
     elsif scheme == :lcsh
       @@memoized_lcsh[term] || lcsh_term_pid_lookup(term)
     else
-      return
+      nil
     end
   end
 
