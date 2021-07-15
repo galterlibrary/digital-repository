@@ -365,6 +365,12 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
         end_month = MONTHNAMES.index(split_date[2]) || ABBR_MONTHNAMES.index(split_date[2])
         end_year = split_date[3].to_i
 
+        if start_year.nil?
+          raise "start year nil for #{date_string}"
+        elsif start_month.nil?
+          raise "start_month nil #{date_string}"
+        end
+
         return "#{Date.new(start_year, start_month).strftime("%Y-%m")}/#{Date.new(end_year, end_month).strftime("%Y-%m")}"
       end
     # date with month or month abbreviation in it
