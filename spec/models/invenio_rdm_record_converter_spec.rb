@@ -27,6 +27,7 @@ RSpec.describe InvenioRdmRecordConverter do
       date_uploaded: Time.new(2020, 2, 3),
       mesh: [mesh_term],
       lcsh: [lcsh_term],
+      subject_geographic: ["Boston, Massachusetts", "Chicago, Illinois"],
       based_near: ["'Boston, Massachusetts, United States', 'East Peoria, Illinois, United States'"],
       description: ["This is a generic file for specs only", "This is an additional description to help test"],
       date_created: ["2021-1-1"],
@@ -124,8 +125,7 @@ RSpec.describe InvenioRdmRecordConverter do
             "link": "http://creativecommons.org/licenses/by-nc-sa/3.0/us/",
             "title": 'Creative Commons Attribution Non Commercial Share Alike 3.0 United States'}],
           "locations": {
-            "features": [{"place": "Boston, Massachusetts, United States"},
-                         {"place": "East Peoria, Illinois, United States"}],
+            "features": [{"place": "Chicago, Illinois"}, {"place": "Boston, Massachusetts"}]
           },
           "funding": [{
             "funder": {
