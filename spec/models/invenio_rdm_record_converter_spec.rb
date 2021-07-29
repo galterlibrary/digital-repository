@@ -166,6 +166,10 @@ RSpec.describe InvenioRdmRecordConverter do
         "owner": {
           "netid": user.username,
           "email": user.email
+        },
+        "permissions": {
+          "read": ["public"],
+          "edit": [user.username]
         }
       }
     }.to_json
@@ -283,6 +287,10 @@ RSpec.describe InvenioRdmRecordConverter do
       "owner": {
         "netid": user.username,
         "email": user.email
+      },
+      "permissions": {
+        "read": ["public"],
+        "edit": [user.username]
       }
     }.with_indifferent_access
   }

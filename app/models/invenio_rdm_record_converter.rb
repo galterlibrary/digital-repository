@@ -69,6 +69,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
         data["presentation_location"] = generic_file.based_near
     end
     data["owner"] = owner_info(generic_file)
+    data["permissions"] = file_permissions(generic_file)
 
     data
   end
@@ -87,6 +88,16 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
         "email": "unknown"
       }
     end
+  end
+
+  def file_permissions(generic_file)
+    permission_data = Hash.new { |h,k| h[k] = [] }
+
+    generic_file.permissions.each do |permission|
+      permission_data[permission.access] << permission.agent_name
+    end
+
+    permission_data
   end
 
   def record_for_export(generic_file)
