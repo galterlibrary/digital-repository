@@ -162,7 +162,11 @@ RSpec.describe InvenioRdmRecordConverter do
         "content_path": generic_file_content_path
       },
       "extras": {
-        "presentation_location": generic_file.based_near
+        "presentation_location": generic_file.based_near,
+        "owner": {
+          "netid": user.username,
+          "email": user.email
+        }
       }
     }.to_json
   end
@@ -273,17 +277,19 @@ RSpec.describe InvenioRdmRecordConverter do
     end
   end
 
-  let(:expected_presentation_location) {
+  let(:expected_extra_data) {
     {
-      "presentation_location": ["'Boston, Massachusetts, United States', 'East Peoria, Illinois, United States'"]
-    }
+      "presentation_location": ["'Boston, Massachusetts, United States', 'East Peoria, Illinois, United States'"],
+      "owner": {
+        "netid": user.username,
+        "email": user.email
+      }
+    }.with_indifferent_access
   }
 
   describe "#extra_data" do
-    context "presentation_location" do
-      it "adds based_near to presentation_location" do
-        expect(converter.send(:extra_data, generic_file)).to eq(expected_presentation_location)
-      end
+    it "adds data" do
+      expect(converter.send(:extra_data, generic_file).with_indifferent_access).to eq(expected_extra_data)
     end
   end
 

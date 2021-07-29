@@ -63,9 +63,28 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def extra_data(generic_file)
+    data = {}
+
     if !generic_file.based_near.empty?
+        data["presentation_location"] = generic_file.based_near
+    end
+    data["owner"] = owner_info(generic_file)
+
+    data
+  end
+
+  def owner_info(generic_file)
+    user = User.find_by(username: generic_file.depositor)
+
+    if user
       {
-        "presentation_location": generic_file.based_near
+        "netid": user.username,
+        "email": user.email
+      }
+    else
+      {
+        "netid": "unknown",
+        "email": "unknown"
       }
     end
   end
