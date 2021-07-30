@@ -36,23 +36,24 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   # @param [GenericFile] generic_file file to be converted for export
   def initialize(generic_file=nil)
     return unless generic_file
+    @generic_file = generic_file
 
-    @record = record_for_export(generic_file)
-    @file = filename_and_content_path(generic_file)
-    @extras = extra_data(generic_file)
+    @record = record_for_export
+    @file = filename_and_content_path
+    @extras = extra_data
   end
 
   def to_json(options={})
-    options[:except] ||= ["memoized_mesh", "memoized_lcsh"]
+    options[:except] ||= ["memoized_mesh", "memoized_lcsh", "generic_file"]
     super
   end
 
   private
 
-  def filename_and_content_path(generic_file)
+  def filename_and_content_path
     {
-      "filename": generic_file.filename,
-      "content_path": generic_file_content_path(generic_file.content.checksum.value)
+      "filename": @generic_file.filename,
+      "content_path": generic_file_content_path(@generic_file.content.checksum.value)
     }
   end
 
@@ -62,20 +63,20 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     "#{ENV["FEDORA_BINARY_PATH"]}/#{checksum[0..1]}/#{checksum[2..3]}/#{checksum[4..5]}/#{checksum}" unless !checksum
   end
 
-  def extra_data(generic_file)
+  def extra_data
     data = {}
 
-    if !generic_file.based_near.empty?
-        data["presentation_location"] = generic_file.based_near
+    if !@generic_file.based_near.empty?
+        data["presentation_location"] = @generic_file.based_near
     end
-    data["owner"] = owner_info(generic_file)
-    data["permissions"] = file_permissions(generic_file)
+    data["owner"] = owner_info
+    data["permissions"] = file_permissions
 
     data
   end
 
-  def owner_info(generic_file)
-    user = User.find_by(username: generic_file.depositor)
+  def owner_info
+    user = User.find_by(username: @generic_file.depositor)
 
     if user
       {
@@ -90,23 +91,23 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     end
   end
 
-  def file_permissions(generic_file)
+  def file_permissions
     permission_data = Hash.new { |h,k| h[k] = [] }
 
-    generic_file.permissions.each do |permission|
+    @generic_file.permissions.each do |permission|
       permission_data[permission.access] << permission.agent_name
     end
 
     permission_data
   end
 
-  def record_for_export(generic_file)
+  def record_for_export
     {
-      "pids": invenio_pids(generic_file.doi.shift),
-      "metadata": invenio_metadata(generic_file),
+      "pids": invenio_pids(@generic_file.doi.shift),
+      "metadata": invenio_metadata,
       "files": {"enabled": true},
-      "provenance": invenio_provenance(generic_file.proxy_depositor, generic_file.on_behalf_of),
-      "access": invenio_access(generic_file.visibility)
+      "provenance": invenio_provenance(@generic_file.proxy_depositor, @generic_file.on_behalf_of),
+      "access": invenio_access(@generic_file.visibility)
     }
     # @label = generic_file.label
     # @depositor = generic_file.depositor
@@ -167,28 +168,28 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     }
   end
 
-  def invenio_metadata(gf)
+  def invenio_metadata
     {
-      "resource_type": resource_type(gf.resource_type.shift),
-      "creators": gf.creator.map{ |creator| build_creator_contributor_json(creator) },
-      "title": gf.title.first,
-      "additional_titles": additional(category: "title", array: gf.title),
-      "description": gf.description.first,
-      "additional_descriptions": additional(category: "description", array: gf.description),
-      "publisher": gf.publisher.shift,
-      "publication_date": format_publication_date(gf.date_created.shift || gf.date_uploaded.to_s),
-      "subjects": SUBJECT_SCHEMES.map{ |subject_type| subjects_for_scheme(gf.send(subject_type), subject_type) }.compact.flatten,
-      "contributors": contributors(gf.contributor),
-      "dates": gf.date_created.map{ |date| {"date": date, "type": "other", "description": "When the item was originally created."} },
-      "languages": gf.language.map{ |lang| lang.present? && lang.downcase == ENGLISH ? {"id": "eng"} : nil }.compact,
-      "identifiers": ark_identifiers(gf.ark),
-      "related_identifiers": related_identifiers(gf.related_url),
-      "sizes": Array.new.tap{ |size_json| size_json << "#{gf.page_count} pages" if !gf.page_count.blank? },
-      "formats": gf.mime_type,
-      "version": version(gf.content),
-      "rights": rights(gf.rights),
-      "locations": {"features": gf.subject_geographic.present? ? gf.subject_geographic.map{ |location| {place: location} } : []},
-      "funding": funding(gf.id)
+      "resource_type": resource_type(@generic_file.resource_type.shift),
+      "creators": @generic_file.creator.map{ |creator| build_creator_contributor_json(creator) },
+      "title": @generic_file.title.first,
+      "additional_titles": additional(category: "title", array: @generic_file.title),
+      "description": @generic_file.description.first,
+      "additional_descriptions": additional(category: "description", array: @generic_file.description),
+      "publisher": @generic_file.publisher.shift,
+      "publication_date": format_publication_date(@generic_file.date_created.shift || @generic_file.date_uploaded.to_s),
+      "subjects": SUBJECT_SCHEMES.map{ |subject_type| subjects_for_scheme(@generic_file.send(subject_type), subject_type) }.compact.flatten,
+      "contributors": contributors(@generic_file.contributor),
+      "dates": @generic_file.date_created.map{ |date| {"date": date, "type": "other", "description": "When the item was originally created."} },
+      "languages": @generic_file.language.map{ |lang| lang.present? && lang.downcase == ENGLISH ? {"id": "eng"} : nil }.compact,
+      "identifiers": ark_identifiers(@generic_file.ark),
+      "related_identifiers": related_identifiers(@generic_file.related_url),
+      "sizes": Array.new.tap{ |size_json| size_json << "#{@generic_file.page_count} pages" if !@generic_file.page_count.blank? },
+      "formats": @generic_file.mime_type,
+      "version": version(@generic_file.content),
+      "rights": rights(@generic_file.rights),
+      "locations": {"features": @generic_file.subject_geographic.present? ? @generic_file.subject_geographic.map{ |location| {place: location} } : []},
+      "funding": funding(@generic_file.id)
     }
   end
 

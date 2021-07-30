@@ -297,7 +297,7 @@ RSpec.describe InvenioRdmRecordConverter do
 
   describe "#extra_data" do
     it "adds data" do
-      expect(converter.send(:extra_data, generic_file).with_indifferent_access).to eq(expected_extra_data)
+      expect(invenio_rdm_record_converter.send(:extra_data).with_indifferent_access).to eq(expected_extra_data)
     end
   end
 
