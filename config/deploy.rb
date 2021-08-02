@@ -39,7 +39,7 @@ set :linked_files, [
 set :rvm_type, :user
 set :rvm_ruby_version, 'ruby-2.3.7'
 set :rvm_ruby_path, "#{fetch(:ssh_user_home)}/.rvm/wrappers/#{fetch(:rvm_ruby_version)}/ruby"
-set :passenger_version, '5.2.3'
+set :passenger_version, '5.3.4'
 set :rvm_ruby_gems_version, '2.3.0'
 set :passenger_dir, "#{fetch(:deploy_to)}/shared/gems/ruby/#{fetch(:rvm_ruby_gems_version)}/gems/passenger-#{fetch(:passenger_version)}"
 set :bundle_without, %w{development test ci}.join(' ')
