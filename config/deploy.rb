@@ -7,11 +7,19 @@ set :log_level, :info # :debug, :error or :info
 set :pty, true
 
 # SVC stuff
-if ARGV[1] =~ /^deploy/
-  puts "Current Branch: #{`git rev-parse --abbrev-ref HEAD`.chomp}"
+set :current_branch, `git rev-parse --abbrev-ref HEAD`.chomp
+puts "Current Branch: #{fetch(:current_branch)}"
+if "#{ARGV[0]}" =~ /^production/ && fetch(:current_branch) != "production"
+  puts "!!!NOT ON THE PRODUCTION BRANCH!!!"
+  puts "Only `production` branch can deploy to production."
+  exit
+elsif "#{ARGV[0]} #{ARGV[1]}" =~ /^production deploy/
   puts "Current Tag: #{`git describe --always --tag`.chomp}"
   ask :branch, proc { `git describe --always --tag`.chomp }
+else
+  ask :branch, proc { fetch(:current_branch) }
 end
+
 set :scm, :git
 set :ssh_options, { :forward_agent => true }
 set :ssh_user, "deploy"
