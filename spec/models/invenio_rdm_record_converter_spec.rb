@@ -98,14 +98,14 @@ RSpec.describe InvenioRdmRecordConverter do
               "id": expected_lcsh_pid,
             }
           ],
-          "contributors": [{
+          "contributors": [
             "person_or_org": {
               "type": "personal",
               "given_name": "#{contributor_user.formal_name.split(',').last}",
               "family_name": "#{contributor_user.formal_name.split(',').first}",
-              "role": InvenioRdmRecordConverter::ROLE_OTHER
-            }
-          }],
+            },
+            "role": {"id": InvenioRdmRecordConverter::ROLE_OTHER}
+          ],
           "dates": [{"date": "2021-1-1", "type": "other", "description": "When the item was originally created."}],
           "languages": [{"id": "eng"}],
           "identifiers": [{
