@@ -16,7 +16,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   SEASONS = ["spring", "summer", "fall", "winter"]
   ENG = "eng"
   ENGLISH = "english"
-  ROLE_OTHER = 'other'
+  ROLE_OTHER = 'role-other'
   OPEN_ACCESS = "open"
   INVENIO_PUBLIC = "public"
   INVENIO_RESTRICTED = "restricted"
@@ -303,7 +303,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   def contributors(contributors)
     contributors.map do |contributor|
       contributor_json = build_creator_contributor_json(contributor)
-      contributor_json[:person_or_org].merge!({"role": ROLE_OTHER})
+      contributor_json.merge!({"role": {id: ROLE_OTHER}})
       contributor_json
     end
   end
