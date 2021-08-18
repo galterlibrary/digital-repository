@@ -89,7 +89,7 @@ RSpec.describe InvenioRdmRecordConverter do
           "publication_date": "2021-01-01",
           "subjects": [
             {
-              "subject": "galter-keyword-keyword-subject"
+              "subject": "keyword subject"
             },
             {
               "id": expected_mesh_id,
@@ -670,7 +670,7 @@ RSpec.describe InvenioRdmRecordConverter do
     context "tag scheme" do
       let(:tag_term){ ["tumor"] }
       let(:tag_subject_type){ :tag }
-      let(:expected_tag_result){ ["subject": "galter-keyword-tumor"] }
+      let(:expected_tag_result){ ["subject": "tumor"] }
 
       it "returns metadata for term" do
         expect(invenio_rdm_record_converter.send(:subjects_for_scheme, tag_term, tag_subject_type)).to eq(expected_tag_result)
