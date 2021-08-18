@@ -290,10 +290,8 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
 
       if pid.present?
         {id: pid}
-      elsif scheme == :subject_name
+      elsif scheme == :subject_name || scheme == :tag
         {subject: term}
-      elsif scheme == :tag
-        {subject: "galter-keyword-#{term.parameterize}"}
       end
     end
 
