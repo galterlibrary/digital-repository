@@ -6,9 +6,9 @@ RSpec.describe InvenioRdmRecordConverter do
   let(:contributor_user) { FactoryGirl.create(:user, username: "contributor_user", formal_name: "User, Contributor",  display_name: 'Contributor User') }
   let(:assistant) { FactoryGirl.create(:user, username: "ast9876") }
   let(:mesh_term) { "Vocabulary, Controlled" }
-  let(:expected_mesh_pid) { "D018875" }
+  let(:expected_mesh_id) { ::HeaderLookup::MESH_ID_URI + "D018875" }
   let(:lcsh_term) { "Semantic Web" }
-  let(:expected_lcsh_pid) { "sh2002000569" }
+  let(:expected_lcsh_id) { ::HeaderLookup::LCSH_ID_URI + "sh2002000569" }
   let(:generic_file_doi) { "10.5438/55e5-t5c0" }
   let(:generic_file) {
     make_generic_file_with_content(
@@ -92,10 +92,10 @@ RSpec.describe InvenioRdmRecordConverter do
               "subject": "galter-keyword-keyword-subject"
             },
             {
-              "id": expected_mesh_pid,
+              "id": expected_mesh_id,
             },
             {
-              "id": expected_lcsh_pid,
+              "id": expected_lcsh_id,
             }
           ],
           "contributors": [{
@@ -631,7 +631,7 @@ RSpec.describe InvenioRdmRecordConverter do
       let(:unknown_mesh_term){ ["nothing but lies"] }
       let(:known_mesh_term){ ["neoplasm"] }
       let(:mesh_subject_type){ :mesh }
-      let(:expected_mesh_result){ [{"id": "D000008"}]}
+      let(:expected_mesh_result){ [{"id": ::HeaderLookup::MESH_ID_URI + "D000008"}]}
 
       it "returns '[]' for unknown term" do
         expect(invenio_rdm_record_converter.send(:subjects_for_scheme, unknown_mesh_term, mesh_subject_type)).to eq([])
@@ -646,7 +646,7 @@ RSpec.describe InvenioRdmRecordConverter do
       let(:unknown_lcsh_term){ ["nothing but lies"] }
       let(:known_lcsh_term){ ["cancer"] }
       let(:lcsh_subject_type){ :lcsh }
-      let(:expected_lcsh_result){ ["id": "sh85000095"] }
+      let(:expected_lcsh_result){ ["id": ::HeaderLookup::LCSH_ID_URI + "sh85000095"] }
 
       it "returns '[]' for unknown term" do
         expect(invenio_rdm_record_converter.send(:subjects_for_scheme, unknown_lcsh_term, lcsh_subject_type)).to eq([])
