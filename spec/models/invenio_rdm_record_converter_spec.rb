@@ -116,7 +116,7 @@ RSpec.describe InvenioRdmRecordConverter do
               "relation_type": {"id": "isRelatedTo"}
             }],
           "sizes": ["#{generic_file.page_count} pages"],
-          "formats": "application/pdf",
+          "formats": ["application/pdf"],
           "version": "v1.0.0",
           "rights": [{
             "id": "CC-BY-NC-SA-3.0-US",
@@ -304,7 +304,7 @@ RSpec.describe InvenioRdmRecordConverter do
       let(:no_funding_file_id) { "this-is-not-a-file-id" }
 
       it "returns empty hash" do
-        expect(invenio_rdm_record_converter.send(:funding, no_funding_file_id)).to eq({})
+        expect(invenio_rdm_record_converter.send(:funding, no_funding_file_id)).to eq([{}])
       end
     end
 
