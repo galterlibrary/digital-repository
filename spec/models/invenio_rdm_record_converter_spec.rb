@@ -74,17 +74,15 @@ RSpec.describe InvenioRdmRecordConverter do
           "additional_titles": [
             {
               "title": "Secondary Title",
-              "type": "alternative_title",
-              "lang": {"id": InvenioRdmRecordConverter::ENG}
+              "type": {"id": "alternative-title", "title": {"en": "Alternative Title"}}
             },
             {
               "title": "Tertiary Title",
-              "type": "alternative_title",
-              "lang": {"id": InvenioRdmRecordConverter::ENG}
+              "type": {"id": "alternative-title", "title": {"en": "Alternative Title"}}
             }
           ],
           "description": generic_file.description.shift,
-          "additional_descriptions": [{"description": generic_file.description.last, "type": "other", "lang": {"id": InvenioRdmRecordConverter::ENG}}],
+          "additional_descriptions": [{"description": generic_file.description.last, "type": {"id": "other", "title": {"en": "Other"}}}],
           "publisher": "DigitalHub. Galter Health Sciences Library & Learning Center",
           "publication_date": "2021-01-01",
           "subjects": [
@@ -123,7 +121,7 @@ RSpec.describe InvenioRdmRecordConverter do
           "rights": [{
             "id": "CC-BY-NC-SA-3.0-US",
             "link": "http://creativecommons.org/licenses/by-nc-sa/3.0/us/",
-            "title": 'Creative Commons Attribution Non Commercial Share Alike 3.0 United States'}],
+            "title": {"en": 'Creative Commons Attribution Non Commercial Share Alike 3.0 United States'}}],
           "locations": {
             "features": [{"place": "Chicago, Illinois"}, {"place": "Boston, Massachusetts"}]
           },
@@ -362,7 +360,7 @@ RSpec.describe InvenioRdmRecordConverter do
     [{
       "id": "CC-BY-3.0-US",
       "link": creative_commons_attribution_v3_url,
-      "title": "Creative Commons Attribution 3.0 United States"
+      "title": {"en": "Creative Commons Attribution 3.0 United States"}
     }]
   end
 
@@ -371,7 +369,7 @@ RSpec.describe InvenioRdmRecordConverter do
     [{
       "id": "CC0-1.0",
       "link": creative_commons_zero_url,
-      "title": "Creative Commons Zero v1.0 Universal"
+      "title": {"en": "Creative Commons Zero v1.0 Universal"}
     }]
   end
 
@@ -380,7 +378,7 @@ RSpec.describe InvenioRdmRecordConverter do
     [{
       "id": "MIT",
       "link": mit_license_url,
-      "title": "MIT License"
+      "title": {"en": "MIT License"}
     }]
   end
 
@@ -388,7 +386,7 @@ RSpec.describe InvenioRdmRecordConverter do
   let(:expected_all_rights_reserved) do
     [{
       "id": "GALTER-ARR-1.0",
-      "title": all_rights_reserved
+      "title": {"en": all_rights_reserved}
     }]
   end
 
@@ -397,12 +395,12 @@ RSpec.describe InvenioRdmRecordConverter do
     [{
       "id": "MIT",
       "link": mit_license_url,
-      "title": "MIT License"
+      "title": {"en": "MIT License"}
     },
     {
       "id": "CC0-1.0",
       "link": creative_commons_zero_url,
-      "title": "Creative Commons Zero v1.0 Universal"
+      "title": {"en": "Creative Commons Zero v1.0 Universal"}
     }]
   end
 
@@ -469,15 +467,13 @@ RSpec.describe InvenioRdmRecordConverter do
   let(:expected_two_cats_title) {
     [{
       "title": "Two Cats",
-      "type": "alternative_title",
-      "lang": {"id": InvenioRdmRecordConverter::ENG}
+      "type": {"id": "alternative-title", "title": {"en": "Alternative Title"}}
     }]
   }
   let(:expected_two_cats_description) {
     [{
       "description": "Two Cats",
-      "type": "other",
-      "lang": {"id": InvenioRdmRecordConverter::ENG}
+      "type": {"id": "other", "title": {"en": "Other"}}
     }]
   }
 

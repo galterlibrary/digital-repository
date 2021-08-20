@@ -270,14 +270,14 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
 
     # remove the strings that contain only spaces or are empty, then map
     tail_values.delete_if(&:blank?).map do |word|
-      {"#{category}": word, "type": type, "lang": {"id": ENG}}
+      {"#{category}": word, "type": {"id": type, "title": {"en": type.titleize}}}
     end
   end
 
   def set_type(type)
     case type
     when "title"
-      "alternative_title"
+      "alternative-title"
     when "description"
       "other"
     end
@@ -322,13 +322,13 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       if license_url == ALL_RIGHTS_RESERVED
         {
           "id": license_data[:"licenseId"],
-          "title": license_data[:"name"]
+          "title": {"en": license_data[:"name"]}
         }
       elsif license_data.present?
         {
           "id": license_data[:"licenseId"],
           "link": license_url,
-          "title": license_data[:"name"]
+          "title": {"en": license_data[:"name"]}
         }
       end
     end
