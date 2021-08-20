@@ -185,7 +185,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       "identifiers": ark_identifiers(@generic_file.ark),
       "related_identifiers": related_identifiers(@generic_file.related_url),
       "sizes": Array.new.tap{ |size_json| size_json << "#{@generic_file.page_count} pages" if !@generic_file.page_count.blank? },
-      "formats": @generic_file.mime_type,
+      "formats": [@generic_file.mime_type],
       "version": version(@generic_file.content),
       "rights": rights(@generic_file.rights),
       "locations": {"features": @generic_file.subject_geographic.present? ? @generic_file.subject_geographic.map{ |location| {place: location} } : []},
@@ -441,6 +441,6 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def funding(file_id)
-    @@funding_data[file_id] || {}
+    @@funding_data[file_id] || [{}]
   end
 end
