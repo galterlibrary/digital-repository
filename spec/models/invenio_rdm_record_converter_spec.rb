@@ -116,7 +116,7 @@ RSpec.describe InvenioRdmRecordConverter do
               "relation_type": {"id": "isRelatedTo"}
             }],
           "sizes": ["#{generic_file.page_count} pages"],
-          "formats": "application/pdf",
+          "formats": ["application/pdf"],
           "version": "v1.0.0",
           "rights": [{
             "id": "CC-BY-NC-SA-3.0-US",
