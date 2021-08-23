@@ -6,14 +6,16 @@ RSpec.describe InvenioRdmRecordConverter do
   let(:contributor_user) { FactoryGirl.create(:user, username: "contributor_user", formal_name: "User, Contributor",  display_name: 'Contributor User') }
   let(:assistant) { FactoryGirl.create(:user, username: "ast9876") }
   let(:mesh_term) { "Vocabulary, Controlled" }
-  let(:expected_mesh_pid) { "D018875" }
+  let(:expected_mesh_id) { ::HeaderLookup::MESH_ID_URI + "D018875" }
   let(:lcsh_term) { "Semantic Web" }
-  let(:expected_lcsh_pid) { "sh2002000569" }
+  let(:expected_lcsh_id) { ::HeaderLookup::LCSH_ID_URI + "sh2002000569" }
+  let(:generic_file_doi) { "10.5438/55e5-t5c0" }
   let(:generic_file) {
     make_generic_file_with_content(
       user,
       id: "ns0646000",
       doi: ["doi:123/ABC"],
+      ark: ["10.6666/ARK"],
       resource_type: ["Account Books"],
       proxy_depositor: assistant.username,
       on_behalf_of: user.username,
@@ -25,15 +27,17 @@ RSpec.describe InvenioRdmRecordConverter do
       date_uploaded: Time.new(2020, 2, 3),
       mesh: [mesh_term],
       lcsh: [lcsh_term],
+      subject_geographic: ["Boston, Massachusetts", "Chicago, Illinois"],
       based_near: ["'Boston, Massachusetts, United States', 'East Peoria, Illinois, United States'"],
       description: ["This is a generic file for specs only", "This is an additional description to help test"],
-      date_created: ["1-1-2021"],
+      date_created: ["2021-1-1"],
       mime_type: 'application/pdf',
       grants_and_funding: ["European Commission 00k4n6c32"],
       language: ["English"],
       page_count: [rand(1..1000).to_s],
       rights: ["http://creativecommons.org/licenses/by-nc-sa/3.0/us/"],
-      visibility: InvenioRdmRecordConverter::OPEN_ACCESS
+      visibility: InvenioRdmRecordConverter::OPEN_ACCESS,
+      related_url: ["https://doi.org/10.5438/55e5-t5c0"]
     )
   }
   let(:generic_file_checksum) { generic_file.content.checksum.value }
@@ -53,8 +57,7 @@ RSpec.describe InvenioRdmRecordConverter do
         },
         "metadata": {
           "resource_type": {
-            "type": "book",
-            "subtype": "book-account_book"
+            "id": "book-account_book"
           },
           "creators": [{
             "person_or_org": {
@@ -71,32 +74,26 @@ RSpec.describe InvenioRdmRecordConverter do
           "additional_titles": [
             {
               "title": "Secondary Title",
-              "type": "alternative_title",
-              "lang": InvenioRdmRecordConverter::ENG
+              "type": {"id": "alternative-title", "title": {"en": "Alternative Title"}}
             },
             {
               "title": "Tertiary Title",
-              "type": "alternative_title",
-              "lang": InvenioRdmRecordConverter::ENG
+              "type": {"id": "alternative-title", "title": {"en": "Alternative Title"}}
             }
           ],
           "description": generic_file.description.shift,
-          "additional_descriptions": [{"description": generic_file.description.last, "type": "other", "lang": InvenioRdmRecordConverter::ENG}],
+          "additional_descriptions": [{"description": generic_file.description.last, "type": {"id": "other", "title": {"en": "Other"}}}],
           "publisher": "DigitalHub. Galter Health Sciences Library & Learning Center",
-          "publication_date": "2020-2-3",
+          "publication_date": "2021-01-01",
           "subjects": [
             {
-              "subject": "keyword subject",
+              "subject": "keyword subject"
             },
             {
-              "subject": mesh_term,
-              "identifier": expected_mesh_pid,
-              "scheme": "mesh"
+              "id": expected_mesh_id,
             },
             {
-              "subject": lcsh_term,
-              "identifier": expected_lcsh_pid,
-              "scheme": "lcsh"
+              "id": expected_lcsh_id,
             }
           ],
           "contributors": [{
@@ -104,19 +101,29 @@ RSpec.describe InvenioRdmRecordConverter do
               "type": "personal",
               "given_name": "#{contributor_user.formal_name.split(',').last}",
               "family_name": "#{contributor_user.formal_name.split(',').first}",
-              "role": InvenioRdmRecordConverter::ROLE_OTHER
-            }
+            },
+            "role": {"id": InvenioRdmRecordConverter::ROLE_OTHER}
           }],
-          "dates": [{"date": "1-1-2021", "type": "other", "description": "When the item was originally created."}],
-          "languages": ["eng"],
+          "dates": [{"date": "2021-1-1", "type": "other", "description": "When the item was originally created."}],
+          "languages": [{"id": "eng"}],
+          "identifiers": [{
+            "identifier": "10.6666/ARK",
+            "scheme": "ark"
+          }],
+          "related_identifiers": [{
+              "identifier": generic_file_doi,
+              "scheme": "doi",
+              "relation_type": {"id": "isRelatedTo"}
+            }],
           "sizes": ["#{generic_file.page_count} pages"],
-          "formats": "application/pdf",
+          "formats": ["application/pdf"],
           "version": "v1.0.0",
-          "rights": [{"rights": 'Creative Commons Attribution Non Commercial Share Alike 3.0 United States', "scheme": "spdx", "identifier": \
-                      "CC-BY-NC-SA-3.0-US", "url": "http://creativecommons.org/licenses/by-nc-sa/3.0/us/"}],
+          "rights": [{
+            "id": "CC-BY-NC-SA-3.0-US",
+            "link": "http://creativecommons.org/licenses/by-nc-sa/3.0/us/",
+            "title": {"en": 'Creative Commons Attribution Non Commercial Share Alike 3.0 United States'}}],
           "locations": {
-            "features": [{"place": "Boston, Massachusetts, United States"},
-                         {"place": "East Peoria, Illinois, United States"}],
+            "features": [{"place": "Chicago, Illinois"}, {"place": "Boston, Massachusetts"}]
           },
           "funding": [{
             "funder": {
@@ -151,6 +158,17 @@ RSpec.describe InvenioRdmRecordConverter do
       "file": {
         "filename": generic_file.filename,
         "content_path": generic_file_content_path
+      },
+      "extras": {
+        "presentation_location": generic_file.based_near,
+        "owner": {
+          "netid": user.username,
+          "email": user.email
+        },
+        "permissions": {
+          "read": ["public"],
+          "edit": [user.username]
+        }
       }
     }.to_json
   end
@@ -261,12 +279,32 @@ RSpec.describe InvenioRdmRecordConverter do
     end
   end
 
+  let(:expected_extra_data) {
+    {
+      "presentation_location": ["'Boston, Massachusetts, United States', 'East Peoria, Illinois, United States'"],
+      "owner": {
+        "netid": user.username,
+        "email": user.email
+      },
+      "permissions": {
+        "read": ["public"],
+        "edit": [user.username]
+      }
+    }.with_indifferent_access
+  }
+
+  describe "#extra_data" do
+    it "adds data" do
+      expect(invenio_rdm_record_converter.send(:extra_data).with_indifferent_access).to eq(expected_extra_data)
+    end
+  end
+
   describe "#funding" do
     context "file has no funding data" do
       let(:no_funding_file_id) { "this-is-not-a-file-id" }
 
       it "returns empty hash" do
-        expect(invenio_rdm_record_converter.send(:funding, no_funding_file_id)).to eq({})
+        expect(invenio_rdm_record_converter.send(:funding, no_funding_file_id)).to eq([{}])
       end
     end
 
@@ -283,8 +321,7 @@ RSpec.describe InvenioRdmRecordConverter do
     context "with type and subtype" do
       let(:image) {
         {
-          "type": "image",
-          "subtype": "image-pictorial_work"
+          "id": "image-pictorial_work"
         }
       }.to_json
 
@@ -293,28 +330,27 @@ RSpec.describe InvenioRdmRecordConverter do
       end
     end
 
-    context "with type only" do
-      let(:dataset) {
-        {
-          "type": "dataset"
-        }
-      }.to_json
+    let(:dataset) {
+      {
+        "id": "dataset"
+      }
+    }.to_json
 
+    context "with type only" do
       it "returns type only" do
         expect(invenio_rdm_record_converter.send(:resource_type, "Dataset")).to eq(dataset)
       end
     end
 
     context "with no mapping" do
-      let(:project) {
+      let(:other) {
         {
-          "type": "other",
-          "subtype": "other-other"
+          "id": "other-other"
         }
       }.to_json
 
       it "returns 'other' type" do
-        expect(invenio_rdm_record_converter.send(:resource_type, "Project")).to eq(project)
+        expect(invenio_rdm_record_converter.send(:resource_type, "Project")).to eq(other)
       end
     end
   end
@@ -322,38 +358,49 @@ RSpec.describe InvenioRdmRecordConverter do
   let(:creative_commons_attribution_v3_url) { "http://creativecommons.org/licenses/by/3.0/us/" }
   let(:expected_creative_commons_attribution_v3) do
     [{
-      "rights": "Creative Commons Attribution 3.0 United States",
-      "scheme": "spdx",
-      "identifier": "CC-BY-3.0-US",
-      "url": creative_commons_attribution_v3_url
+      "id": "CC-BY-3.0-US",
+      "link": creative_commons_attribution_v3_url,
+      "title": {"en": "Creative Commons Attribution 3.0 United States"}
     }]
   end
 
   let(:creative_commons_zero_url) { "http://creativecommons.org/publicdomain/zero/1.0/" }
   let(:expected_creative_commons_zero) do
     [{
-      "rights": "Creative Commons Zero v1.0 Universal",
-      "scheme": "spdx",
-      "identifier": "CC0-1.0",
-      "url": creative_commons_zero_url
+      "id": "CC0-1.0",
+      "link": creative_commons_zero_url,
+      "title": {"en": "Creative Commons Zero v1.0 Universal"}
     }]
   end
-
 
   let(:mit_license_url) { "https://opensource.org/licenses/MIT" }
   let(:expected_mit) do
     [{
-      "rights": "MIT License",
-      "scheme": "spdx",
-      "identifier": "MIT",
-      "url": mit_license_url
+      "id": "MIT",
+      "link": mit_license_url,
+      "title": {"en": "MIT License"}
     }]
   end
 
   let(:all_rights_reserved) { 'All rights reserved' }
   let(:expected_all_rights_reserved) do
     [{
-      "rights": all_rights_reserved
+      "id": "GALTER-ARR-1.0",
+      "title": {"en": all_rights_reserved}
+    }]
+  end
+
+  let(:multiple_rights) { ["https://opensource.org/licenses/MIT", "http://creativecommons.org/publicdomain/zero/1.0/"] }
+  let(:expected_multiple_rights) do
+    [{
+      "id": "MIT",
+      "link": mit_license_url,
+      "title": {"en": "MIT License"}
+    },
+    {
+      "id": "CC0-1.0",
+      "link": creative_commons_zero_url,
+      "title": {"en": "Creative Commons Zero v1.0 Universal"}
     }]
   end
 
@@ -363,21 +410,266 @@ RSpec.describe InvenioRdmRecordConverter do
       expect(subject.send(:rights, [creative_commons_zero_url])).to eq(expected_creative_commons_zero)
       expect(subject.send(:rights, [mit_license_url])).to eq(expected_mit)
       expect(subject.send(:rights, [all_rights_reserved])).to eq(expected_all_rights_reserved)
+      expect(subject.send(:rights, multiple_rights)).to eq(expected_multiple_rights)
+    end
+  end
+
+  let(:doi) { "10.18131/g3-hgs7-ag90" }
+  let(:doi_org_url) { "https://doi.org/#{doi}" }
+  let(:dx_doi_org_url) { "https://dx.doi.org/10.6084/m9.figshare.2002149" }
+  let(:non_doi_url) { "www.google.com" }
+
+  describe "#doi_url?" do
+    it 'returns true for urls that include doi.org' do
+      expect(subject.send(:doi_url?, doi_org_url)).to eq(true)
+      expect(subject.send(:doi_url?, dx_doi_org_url)).to eq(true)
+      expect(subject.send(:doi_url?, non_doi_url)).to eq(false)
+    end
+  end
+
+  let(:expected_doi_related_identifiers_json) do
+    {
+      "identifier": doi,
+      "scheme": "doi",
+      "relation_type": {"id": "isRelatedTo"}
+    }
+  end
+  let(:expected_related_identifiers_json) do
+    {
+      "identifier": non_doi_url,
+      "scheme": "url",
+      "relation_type": {"id": "isRelatedTo"}
+    }
+  end
+
+  describe "#related_identifiers" do
+    context 'there is no related_url' do
+      it 'returns an empty array' do
+        expect(subject.send(:related_identifiers, [])).to eq([])
+      end
+    end
+
+    context 'with related_url' do
+      it 'returns formatted json' do
+        expect(subject.send(:related_identifiers, [doi_org_url])).to eq([expected_doi_related_identifiers_json])
+        expect(subject.send(:related_identifiers, [non_doi_url])).to eq([expected_related_identifiers_json])
+      end
     end
   end
 
   let(:blank_text_field) { [""] }
+  let(:white_space) {[" "]}
+  let(:multiple_blanks) {["", " "]}
+  let(:one_cat) {["One Cat"]}
+  let(:one_cat_with_blank) {["One Cat", ""]}
+  let!(:two_cats) {["One Cat", "Two Cats"]}
+  let(:two_cats_with_blank) {["One Cat", "Two Cats", ""]}
+  let(:expected_two_cats_title) {
+    [{
+      "title": "Two Cats",
+      "type": {"id": "alternative-title", "title": {"en": "Alternative Title"}}
+    }]
+  }
+  let(:expected_two_cats_description) {
+    [{
+      "description": "Two Cats",
+      "type": {"id": "other", "title": {"en": "Other"}}
+    }]
+  }
 
-  context 'when text field is empty' do
-    describe "#additional_titles" do
+  describe '#additional' do
+    context "blank results" do
       it 'returns empty array' do
-        expect(subject.send(:additional_titles, blank_text_field)).to eq([])
+        expect(subject.send(:additional, category: "title", array: blank_text_field)).to eq([])
+        expect(subject.send(:additional, category: "title", array: white_space)).to eq([])
+        expect(subject.send(:additional, category: "title", array: multiple_blanks)).to eq([])
+        expect(subject.send(:additional, category: "description", array: blank_text_field)).to eq([])
+        expect(subject.send(:additional, category: "description", array: white_space)).to eq([])
+        expect(subject.send(:additional, category: "description", array: multiple_blanks)).to eq([])
       end
     end
 
-    describe "#additional_descriptions" do
+    context "with one cat" do
       it 'returns empty array' do
-        expect(subject.send(:additional_descriptions, blank_text_field)).to eq([])
+        expect(subject.send(:additional, category: "title", array: one_cat)).to eq([])
+        expect(subject.send(:additional, category: "title", array: one_cat_with_blank)).to eq([])
+        expect(subject.send(:additional, category: "description", array: one_cat)).to eq([])
+        expect(subject.send(:additional, category: "description", array: one_cat_with_blank)).to eq([])
+      end
+    end
+
+    context "with two cats" do
+      it 'returns array with values' do
+        expect(subject.send(:additional, category: "title", array: two_cats)).to eq(expected_two_cats_title)
+        expect(subject.send(:additional, category: "title", array: two_cats_with_blank)).to eq(expected_two_cats_title)
+        expect(subject.send(:additional, category: "description", array: two_cats)).to eq(expected_two_cats_description)
+        expect(subject.send(:additional, category: "description", array: two_cats_with_blank)).to eq(expected_two_cats_description)
+      end
+    end
+  end
+
+  describe "#normalize_date" do
+    context "formatted date" do
+      let(:expected_formatted_date_1){ "1907-09-06" }
+      let(:expected_formatted_date_2){ "1920-12-01" }
+      let(:date_without_zero_padding_1){ "1920-12-1" }
+      let(:date_without_zero_padding_2){ "1907-9-6" }
+      let(:date_with_dashes){ expected_formatted_date_1 }
+      let(:date_with_slashes){ "1907/09/06" }
+
+      it "normalizes date" do
+        expect(invenio_rdm_record_converter.send(:normalize_date, date_without_zero_padding_1)).to eq(expected_formatted_date_2)
+        expect(invenio_rdm_record_converter.send(:normalize_date, date_without_zero_padding_2)).to eq(expected_formatted_date_1)
+        expect(invenio_rdm_record_converter.send(:normalize_date, date_with_dashes)).to eq(expected_formatted_date_1)
+        expect(invenio_rdm_record_converter.send(:normalize_date, date_with_slashes)).to eq(expected_formatted_date_1)
+      end
+    end
+
+    context "date with month and year only" do
+      let(:date_with_dashes_month_only){ "1903-06" }
+      let(:date_with_slashes_month_only){ "1903/06" }
+
+      it "normalizes date with year and month available" do
+        expect(invenio_rdm_record_converter.send(:normalize_date, date_with_dashes_month_only)).to eq(date_with_dashes_month_only)
+        expect(invenio_rdm_record_converter.send(:normalize_date, date_with_slashes_month_only)).to eq(date_with_dashes_month_only)
+      end
+    end
+
+    context "date with year only" do
+      let(:date_with_year_only){ "1899" }
+      let(:expected_date_with_year_only){ "1899" }
+
+      it "normalizes date with only year available" do
+        expect(invenio_rdm_record_converter.send(:normalize_date, date_with_year_only)).to eq(expected_date_with_year_only)
+      end
+    end
+
+    context "normalizes date with ca or similar text" do
+      let(:circa_date){ "ca. 1900" }
+      let(:formatted_circa_date){ "1900" }
+
+      it "normalizes date" do
+        expect(invenio_rdm_record_converter.send(:normalize_date, circa_date)).to eq(formatted_circa_date)
+      end
+    end
+
+    context "seasonal name" do
+      let(:two_seasonal_names){ "Spring/Summer 1995" }
+      let(:single_seasonal_name){ "Spring 2001" }
+
+      it "ignores seasonal names" do
+        expect(invenio_rdm_record_converter.send(:normalize_date, two_seasonal_names)).to eq("")
+        expect(invenio_rdm_record_converter.send(:normalize_date, single_seasonal_name)).to eq("")
+      end
+    end
+
+    context "date with month name or abbreviation" do
+      let(:january_month_name_date){ "January 12, 2020" }
+      let(:march_month_name_date){ "MARCH 2020" }
+      let(:november_month_name_date){ "november 15, 1900" }
+
+      let(:january_abr_month_name_date){ "Jan 12, 2020" }
+      let(:march_abr_month_name_date){ "MAR 2020" }
+      let(:november_abr_month_name_date){ "nov 15, 1900" }
+
+      let(:normalized_january_month_name_date){ "2020-01-12" }
+      let(:normalized_march_month_name_date){"2020-03"}
+      let(:normalized_november_month_name_date){ "1900-11-15" }
+
+      let(:range_uppercase){ "JANUARY-JUNE 2002" }
+      let(:range_titlecase){ "May 2014-July 2014" }
+      let(:normalized_range_uppercase){ "2002-01/2002-06" }
+      let(:normalized_range_titlecase){ "2014-05/2014-07" }
+
+      it "normalizes abbreviation" do
+        expect(invenio_rdm_record_converter.send(:normalize_date, january_abr_month_name_date)).to eq(normalized_january_month_name_date)
+        expect(invenio_rdm_record_converter.send(:normalize_date, march_abr_month_name_date)).to eq(normalized_march_month_name_date)
+        expect(invenio_rdm_record_converter.send(:normalize_date, november_abr_month_name_date)).to eq(normalized_november_month_name_date)
+      end
+
+      it "normalizes full name" do
+        expect(invenio_rdm_record_converter.send(:normalize_date, january_month_name_date)).to eq(normalized_january_month_name_date)
+        expect(invenio_rdm_record_converter.send(:normalize_date, march_month_name_date)).to eq(normalized_march_month_name_date)
+        expect(invenio_rdm_record_converter.send(:normalize_date, november_month_name_date)).to eq(normalized_november_month_name_date)
+      end
+
+      it "normalizes date with month range" do
+        expect(invenio_rdm_record_converter.send(:normalize_date, range_uppercase)).to eq(normalized_range_uppercase)
+        expect(invenio_rdm_record_converter.send(:normalize_date, range_titlecase)).to eq(normalized_range_titlecase)
+      end
+    end
+
+    context "date ranges" do
+      let(:slash_range){ "1895/1905" }
+      let(:dash_range){ "1895-1905" }
+
+      it 'normalizes date with year range' do
+        expect(invenio_rdm_record_converter.send(:normalize_date, slash_range)).to eq(slash_range)
+        expect(invenio_rdm_record_converter.send(:normalize_date, dash_range)).to eq(slash_range)
+      end
+    end
+
+    context "blank or undated" do
+      let(:blank_string){ "" }
+      let(:undated_lower_case){ "undated" }
+      let(:undated_upper_case){ "UNDATED" }
+
+      it "normalizes undated or blank dates" do
+        expect(invenio_rdm_record_converter.send(:normalize_date, blank_string)).to eq(blank_string)
+        expect(invenio_rdm_record_converter.send(:normalize_date, undated_lower_case)).to eq(blank_string)
+        expect(invenio_rdm_record_converter.send(:normalize_date, undated_upper_case)).to eq(blank_string)
+      end
+    end
+  end
+
+  describe "#subjects_for_scheme" do
+    context "mesh scheme" do
+      let(:unknown_mesh_term){ ["nothing but lies"] }
+      let(:known_mesh_term){ ["neoplasm"] }
+      let(:mesh_subject_type){ :mesh }
+      let(:expected_mesh_result){ [{"id": ::HeaderLookup::MESH_ID_URI + "D000008"}]}
+
+      it "returns '[]' for unknown term" do
+        expect(invenio_rdm_record_converter.send(:subjects_for_scheme, unknown_mesh_term, mesh_subject_type)).to eq([])
+      end
+
+      it "returns metadata for known term" do
+        expect(invenio_rdm_record_converter.send(:subjects_for_scheme, known_mesh_term, mesh_subject_type)).to eq(expected_mesh_result)
+      end
+    end
+
+    context "lcsh scheme" do
+      let(:unknown_lcsh_term){ ["nothing but lies"] }
+      let(:known_lcsh_term){ ["cancer"] }
+      let(:lcsh_subject_type){ :lcsh }
+      let(:expected_lcsh_result){ ["id": ::HeaderLookup::LCSH_ID_URI + "sh85000095"] }
+
+      it "returns '[]' for unknown term" do
+        expect(invenio_rdm_record_converter.send(:subjects_for_scheme, unknown_lcsh_term, lcsh_subject_type)).to eq([])
+      end
+
+      it "returns metadata for known term" do
+        expect(invenio_rdm_record_converter.send(:subjects_for_scheme, known_lcsh_term, lcsh_subject_type)).to eq(expected_lcsh_result)
+      end
+    end
+
+    context "subject_name scheme" do
+      let(:subject_name_term){ ["malignant"] }
+      let(:subject_name_subject_type){ :subject_name }
+      let(:expected_subject_name_result){ ["subject": "malignant"] }
+
+      it "returns metadata for known term" do
+        expect(invenio_rdm_record_converter.send(:subjects_for_scheme, subject_name_term, subject_name_subject_type)).to eq(expected_subject_name_result)
+      end
+    end
+
+    context "tag scheme" do
+      let(:tag_term){ ["tumor"] }
+      let(:tag_subject_type){ :tag }
+      let(:expected_tag_result){ ["subject": "tumor"] }
+
+      it "returns metadata for term" do
+        expect(invenio_rdm_record_converter.send(:subjects_for_scheme, tag_term, tag_subject_type)).to eq(expected_tag_result)
       end
     end
   end
