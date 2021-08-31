@@ -1,31 +1,31 @@
 {
   'All rights reserved': {
     "name": 'All rights reserved',
-    "licenseId": 'GALTER-ARR-1.0'
+    "licenseId": 'galter-arr-1.0'
   },
   'http://creativecommons.org/publicdomain/mark/1.0/': {
     "name": 'Creative Commons Public Domain Mark 1.0',
-    "licenseId": 'CC-PDM-1.0'
+    "licenseId": 'cc-pdm-1.0'
   },
   'http://creativecommons.org/licenses/by-nc-sa/3.0/us/': {
     "name": 'Creative Commons Attribution Non Commercial Share Alike 3.0 United States',
-    "licenseId": "CC-BY-NC-SA-3.0-US"
+    "licenseId": "cc-by-nc-sa-3.0-us"
   },
   'http://creativecommons.org/licenses/by-nc-nd/3.0/us/': {
     "name": 'Creative Commons Attribution Non Commercial No Derivatives 3.0 United States',
-    "licenseId": "CC-BY-NC-ND-3.0-US"
+    "licenseId": "cc-by-nc-nd-3.0-us"
   },
   'http://creativecommons.org/licenses/by-nd/3.0/us/': {
     "name": 'Creative Commons Attribution No Derivatives 3.0 United States',
-    "licenseId": "CC-BY-ND-3.0-US"
+    "licenseId": "cc-by-nd-3.0-us"
   },
   'http://creativecommons.org/licenses/by-nc/3.0/us/': {
     "name": 'Createive Commons Attribution Non Commercial 3.0 United States',
-    "licenseId": "CC-BY-NC-3.0-US",
+    "licenseId": "cc-by-nc-3.0-us",
   },
   'http://creativecommons.org/licenses/by-sa/3.0/us/': {
     "name": "Creative Commons Attribution Share Alike 3.0 United States",
-    "licenseId": "CC-BY-SA-3.0-US",
+    "licenseId": "cc-by-sa-3.0-us",
   },
   'http://creativecommons.org/licenses/by/4.0/': {
     "reference": "./CC-BY-4.0.json",
@@ -33,7 +33,7 @@
     "detailsUrl": "./CC-BY-4.0.html",
     "referenceNumber": 109,
     "name": "Creative Commons Attribution 4.0 International",
-    "licenseId": "CC-BY-4.0",
+    "licenseId": "cc-by-4.0",
     "seeAlso": [
     	"https://creativecommons.org/licenses/by/4.0/legalcode"
     ],
@@ -45,7 +45,7 @@
     "detailsUrl": "./CC-BY-3.0-US.html",
     "referenceNumber": 70,
     "name": "Creative Commons Attribution 3.0 United States",
-    "licenseId": "CC-BY-3.0-US",
+    "licenseId": "cc-by-3.0-us",
     "seeAlso": [
       "https://creativecommons.org/licenses/by/3.0/us/legalcode"
     ],
@@ -57,7 +57,7 @@
     "detailsUrl": "./CC0-1.0.html",
     "referenceNumber": 104,
     "name": "Creative Commons Zero v1.0 Universal",
-    "licenseId": "CC0-1.0",
+    "licenseId": "cc0-1.0",
     "seeAlso": [
       "https://creativecommons.org/publicdomain/zero/1.0/legalcode"
     ],
@@ -69,7 +69,7 @@
     "detailsUrl": "./MIT.html",
     "referenceNumber": 275,
     "name": "MIT License",
-    "licenseId": "MIT",
+    "licenseId": "mit",
     "seeAlso": [
       "https://opensource.org/licenses/MIT"
     ],

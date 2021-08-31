@@ -119,7 +119,7 @@ RSpec.describe InvenioRdmRecordConverter do
           "formats": ["application/pdf"],
           "version": "v1.0.0",
           "rights": [{
-            "id": "CC-BY-NC-SA-3.0-US",
+            "id": "cc-by-nc-sa-3.0-us",
             "link": "http://creativecommons.org/licenses/by-nc-sa/3.0/us/",
             "title": {"en": 'Creative Commons Attribution Non Commercial Share Alike 3.0 United States'}}],
           "locations": {
@@ -358,7 +358,7 @@ RSpec.describe InvenioRdmRecordConverter do
   let(:creative_commons_attribution_v3_url) { "http://creativecommons.org/licenses/by/3.0/us/" }
   let(:expected_creative_commons_attribution_v3) do
     [{
-      "id": "CC-BY-3.0-US",
+      "id": "cc-by-3.0-us",
       "link": creative_commons_attribution_v3_url,
       "title": {"en": "Creative Commons Attribution 3.0 United States"}
     }]
@@ -367,7 +367,7 @@ RSpec.describe InvenioRdmRecordConverter do
   let(:creative_commons_zero_url) { "http://creativecommons.org/publicdomain/zero/1.0/" }
   let(:expected_creative_commons_zero) do
     [{
-      "id": "CC0-1.0",
+      "id": "cc0-1.0",
       "link": creative_commons_zero_url,
       "title": {"en": "Creative Commons Zero v1.0 Universal"}
     }]
@@ -376,7 +376,7 @@ RSpec.describe InvenioRdmRecordConverter do
   let(:mit_license_url) { "https://opensource.org/licenses/MIT" }
   let(:expected_mit) do
     [{
-      "id": "MIT",
+      "id": "mit",
       "link": mit_license_url,
       "title": {"en": "MIT License"}
     }]
@@ -385,7 +385,7 @@ RSpec.describe InvenioRdmRecordConverter do
   let(:all_rights_reserved) { 'All rights reserved' }
   let(:expected_all_rights_reserved) do
     [{
-      "id": "GALTER-ARR-1.0",
+      "id": "galter-arr-1.0",
       "title": {"en": all_rights_reserved}
     }]
   end
@@ -393,12 +393,12 @@ RSpec.describe InvenioRdmRecordConverter do
   let(:multiple_rights) { ["https://opensource.org/licenses/MIT", "http://creativecommons.org/publicdomain/zero/1.0/"] }
   let(:expected_multiple_rights) do
     [{
-      "id": "MIT",
+      "id": "mit",
       "link": mit_license_url,
       "title": {"en": "MIT License"}
     },
     {
-      "id": "CC0-1.0",
+      "id": "cc0-1.0",
       "link": creative_commons_zero_url,
       "title": {"en": "Creative Commons Zero v1.0 Universal"}
     }]
