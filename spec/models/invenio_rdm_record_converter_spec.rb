@@ -104,7 +104,7 @@ RSpec.describe InvenioRdmRecordConverter do
             },
             "role": {"id": InvenioRdmRecordConverter::ROLE_OTHER}
           }],
-          "dates": [{"date": "2021-1-1", "type": "other", "description": "When the item was originally created."}],
+          "dates": [{"date": "2021-1-1", "type": {"id":"other"}, "description": "When the item was originally created."}],
           "languages": [{"id": "eng"}],
           "identifiers": [{
             "identifier": "10.6666/ARK",

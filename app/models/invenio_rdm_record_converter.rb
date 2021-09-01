@@ -180,7 +180,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       "publication_date": format_publication_date(@generic_file.date_created.shift || @generic_file.date_uploaded.to_s),
       "subjects": SUBJECT_SCHEMES.map{ |subject_type| subjects_for_scheme(@generic_file.send(subject_type), subject_type) }.compact.flatten,
       "contributors": contributors(@generic_file.contributor),
-      "dates": @generic_file.date_created.map{ |date| {"date": date, "type": "other", "description": "When the item was originally created."} },
+      "dates": @generic_file.date_created.map{ |date| {"date": date, "type": {"id": "other"}, "description": "When the item was originally created."} },
       "languages": @generic_file.language.map{ |lang| lang.present? && lang.downcase == ENGLISH ? {"id": "eng"} : nil }.compact,
       "identifiers": ark_identifiers(@generic_file.ark),
       "related_identifiers": related_identifiers(@generic_file.related_url),
