@@ -216,7 +216,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
         "person_or_org":
           Hash.new.tap do |hash|
             hash["name"] =  creator
-            hash["type"] = "organisational"
+            hash["type"] = "organizational"
           end
       }
     # User within DigitalHub
@@ -251,7 +251,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
         "person_or_org":
           Hash.new.tap do |hash|
             hash["name"] = creator
-            hash["type"] = "organisational"
+            hash["type"] = "organizational"
           end
       }
     end

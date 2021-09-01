@@ -202,11 +202,11 @@ RSpec.describe InvenioRdmRecordConverter do
   }
 
   let(:non_user_improperly_formatted) { "Firston Laster" }
-  let(:organisational_creator_without_user_json) {
+  let(:organizational_creator_without_user_json) {
     {
       "person_or_org": {
         "name": "Firston Laster",
-        "type": "organisational"
+        "type": "organizational"
       }
     }.with_indifferent_access
   }
@@ -216,7 +216,7 @@ RSpec.describe InvenioRdmRecordConverter do
       {
         "person_or_org": {
           "name": unidentified_creator_name,
-          "type": "organisational"
+          "type": "organizational"
         }
       }.with_indifferent_access
     }
@@ -226,7 +226,7 @@ RSpec.describe InvenioRdmRecordConverter do
     {
       "person_or_org": {
         "name": unknown_creator_name,
-        "type": "organisational"
+        "type": "organizational"
       }
     }.with_indifferent_access
   }
@@ -236,7 +236,7 @@ RSpec.describe InvenioRdmRecordConverter do
     {
       "person_or_org": {
         "name": organization_name,
-        "type": "organisational"
+        "type": "organizational"
       }
     }.with_indifferent_access
   }
@@ -250,7 +250,7 @@ RSpec.describe InvenioRdmRecordConverter do
 
     context 'personal record without user in digital hub, with improper name formatting' do
       it 'assigns' do
-        expect(converter.send(:build_creator_contributor_json, non_user_improperly_formatted).with_indifferent_access).to eq(organisational_creator_without_user_json)
+        expect(converter.send(:build_creator_contributor_json, non_user_improperly_formatted).with_indifferent_access).to eq(organizational_creator_without_user_json)
       end
     end
 
