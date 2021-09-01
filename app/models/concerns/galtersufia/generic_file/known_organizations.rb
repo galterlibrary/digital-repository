@@ -41,7 +41,8 @@ module Galtersufia
         "World's Columbian Dental Congress (1893 : Chicago, Ill.)",
         "World's Columbian Dental Congress (1893 : Chicago, Ill.). Committee on Essays.",
         "World's Columbian Dental Congress (1893 : Chicago, Ill.). Finance Committee for Illinois",
-        "World's Columbian Exposition (1893 : Chicago, Ill.). World's Congress Auxiliary"
+        "World's Columbian Exposition (1893 : Chicago, Ill.). World's Congress Auxiliary",
+        "Northwestern University (Evanston, Ill.). Women's Health Research Institute"
       ]
 
       def organization?(creator_formal_name)
@@ -50,4 +51,3 @@ module Galtersufia
     end
   end
 end
-
