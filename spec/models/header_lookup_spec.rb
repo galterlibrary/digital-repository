@@ -125,4 +125,22 @@ RSpec.describe HeaderLookup do
       expect(subject.send(:pid_lookup_by_scheme, no_pid_mesh_subject, :mesh)).to eq(nil)
     end
   end
+
+  let(:lcsh_local_subject) { "Cancer" }
+  let(:expected_lcsh_local_subject) { "http://id.loc.gov/authorities/subjects/sh85019492" }
+
+  describe "#lcsh_term_pid_local_lookup" do
+    it "returns expected pid" do
+      expect(subject.lcsh_term_pid_local_lookup(lcsh_local_subject)).to eq(expected_lcsh_local_subject)
+    end
+  end
+
+  let(:mesh_local_subject) { "Abrin" }
+  let(:expected_mesh_local_subject) { "https://id.nlm.nih.gov/mesh/D000036" }
+
+  describe "#mesh_term_pid_local_lookup" do
+    it "returns expected pid" do
+      expect(subject.mesh_term_pid_local_lookup(mesh_local_subject)).to eq(expected_mesh_local_subject)
+    end
+  end
 end
