@@ -64,10 +64,10 @@ RSpec.describe InvenioRdmRecordConverter do
               "type": "personal",
               "given_name": "#{user.formal_name.split(',').last}",
               "family_name": "#{user.formal_name.split(',').first}",
-              "identifiers": {
+              "identifiers": [{
                 "scheme": "orcid",
                 "identifier": "#{user.orcid.split('/').last}"
-              }
+              }]
             }
           }],
           "title": "#{generic_file.title.first}",

@@ -231,7 +231,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
             hash["type"] = "personal"
             hash["given_name"] = given_name
             hash["family_name"] = family_name
-            hash["identifiers"] = {"scheme": "orcid", "identifier": dh_user.orcid.split('/').pop} if dh_user.orcid.present?
+            hash["identifiers"] = [{"scheme": "orcid", "identifier": dh_user.orcid.split('/').pop}] if dh_user.orcid.present?
           end
       }
     # Personal record without user in database
