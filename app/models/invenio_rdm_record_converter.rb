@@ -25,6 +25,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   MEMOIZED_PERSON_OR_ORG_DATA_FILE = 'memoized_person_or_org_data.txt'
   FUNDING_DATA_FILE = 'app/models/concerns/galtersufia/generic_file/funding_data.txt'
   LICENSE_DATA_FILE = 'app/models/concerns/galtersufia/generic_file/license_data.txt'
+  BLANK_FUNDER_SOURCE = {funder: {name: "", identifier: "", scheme: "ror"}, award: {title: "", number: "", identifier: "", scheme: ""}}
 
   @@header_lookup ||= HeaderLookup.new
   @@funding_data ||= eval(File.read(FUNDING_DATA_FILE))
@@ -441,6 +442,26 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def funding(file_id)
-    @@funding_data[file_id] || [{}]
+    funding_sources = @@funding_data[file_id]
+
+    if funding_sources.blank?
+      return []
+    end
+
+    funding_sources.map do |source|
+      # if the source is empty except for funder scheme, return empty
+      if source == BLANK_FUNDER_SOURCE
+        nil
+      # if the title is blank, replace it with the award number
+      elsif source[:award][:title].blank?
+        source[:award][:title] = source[:award][:number]
+        source
+      else
+        source
+      end
+    end
+
+    # remove nil values
+    funding_sources.compact
   end
 end
