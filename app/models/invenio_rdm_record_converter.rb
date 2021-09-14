@@ -180,7 +180,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       "publication_date": format_publication_date(@generic_file.date_created.shift || @generic_file.date_uploaded.to_s),
       "subjects": SUBJECT_SCHEMES.map{ |subject_type| subjects_for_scheme(@generic_file.send(subject_type), subject_type) }.compact.flatten,
       "contributors": contributors(@generic_file.contributor),
-      "dates": @generic_file.date_created.map{ |date| {"date": date, "type": {"id": "other"}, "description": "When the item was originally created."} },
+      "dates": @generic_file.date_created.map{ |date| {"date": normalize_date(date), "type": {"id": "created"}, "description": "When the item was originally created."} },
       "languages": @generic_file.language.map{ |lang| lang.present? && lang.downcase == ENGLISH ? {"id": "eng"} : nil }.compact,
       "identifiers": ark_identifiers(@generic_file.ark),
       "related_identifiers": related_identifiers(@generic_file.related_url),
@@ -375,6 +375,11 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
 
   def normalize_date(date_string)
     split_date = date_string.split(/[-,\/ ]/).map(&:downcase)
+    # date format starts with month first
+    if (!split_date.blank? && split_date[0].length < 3)
+      split_date = rearrange_year(split_date)
+    end
+
     month_names = (split_date & MONTHNAMES)
     abbr_month_names = (split_date & ABBR_MONTHNAMES)
 
@@ -438,6 +443,19 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     else
       ""
     end
+  end
+
+  def rearrange_year(date_array)
+    if date_array[2].length == 2
+      # drawing the line at 22 as the year for when we no longer refer to 1900s
+      if date_array[2].to_i > 22
+        date_array[2] = "19#{date_array[2]}"
+      else
+        date_array[2] = "20#{date_array[2]}"
+      end
+    end
+
+    [date_array[2], date_array[0], date_array[1]]
   end
 
   def funding(file_id)
