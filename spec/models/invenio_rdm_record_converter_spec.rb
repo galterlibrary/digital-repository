@@ -132,7 +132,7 @@ RSpec.describe InvenioRdmRecordConverter do
               "scheme": "ror"
             },
             "award": {
-              "title": "",
+              "title": "F37 LM009568 ",
               "number": "F37 LM009568 ",
               "identifier": "",
               "scheme": ""
@@ -303,8 +303,8 @@ RSpec.describe InvenioRdmRecordConverter do
     context "file has no funding data" do
       let(:no_funding_file_id) { "this-is-not-a-file-id" }
 
-      it "returns empty hash" do
-        expect(invenio_rdm_record_converter.send(:funding, no_funding_file_id)).to eq([{}])
+      it "returns empty array" do
+        expect(invenio_rdm_record_converter.send(:funding, no_funding_file_id)).to eq([])
       end
     end
 
@@ -625,9 +625,9 @@ RSpec.describe InvenioRdmRecordConverter do
   describe "#subjects_for_scheme" do
     context "mesh scheme" do
       let(:unknown_mesh_term){ ["nothing but lies"] }
-      let(:known_mesh_term){ ["neoplasm"] }
+      let(:known_mesh_term){ ["Bile Duct Neoplasms"] }
       let(:mesh_subject_type){ :mesh }
-      let(:expected_mesh_result){ [{"id": ::HeaderLookup::MESH_ID_URI + "D000008"}]}
+      let(:expected_mesh_result){ [{"id": ::HeaderLookup::MESH_ID_URI + "D001650"}]}
 
       it "returns '[]' for unknown term" do
         expect(invenio_rdm_record_converter.send(:subjects_for_scheme, unknown_mesh_term, mesh_subject_type)).to eq([])
@@ -640,7 +640,7 @@ RSpec.describe InvenioRdmRecordConverter do
 
     context "lcsh scheme" do
       let(:unknown_lcsh_term){ ["nothing but lies"] }
-      let(:known_lcsh_term){ ["cancer"] }
+      let(:known_lcsh_term){ ["Abdomen--Cancer"] }
       let(:lcsh_subject_type){ :lcsh }
       let(:expected_lcsh_result){ ["id": ::HeaderLookup::LCSH_ID_URI + "sh85000095"] }
 

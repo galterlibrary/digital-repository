@@ -6,7 +6,7 @@ class HeaderLookup
     "meshv%3ADescriptor%20.%0D%0A%20%20%3Fd%20rdfs%3Alabel%20%3FdName%0D%0A%20%20FILTER(REGEX(%3FdName%2C%27"
   END_SPARQL_MESH_URI = "%27%2C%20%27i%27))%20%0D%0A%7D%20%0D%0AORDER%20BY%20%3Fd%20%0D%0A"
   LCSH_BASE_URI = "http://id.loc.gov/authorities/subjects/suggest/?q="
-  LCSH_ID_URI = "https://id.loc.gov/authorities/subjects/"
+  LCSH_ID_URI = "http://id.loc.gov/authorities/subjects/"
   MESH_ID_URI = "https://id.nlm.nih.gov/mesh/"
   MEMOIZED_MESH_FILE = "memoized_mesh.txt"
   MEMOIZED_LCSH_FILE = "memoized_lcsh.txt"
