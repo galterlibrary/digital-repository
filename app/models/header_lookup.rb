@@ -27,9 +27,9 @@ class HeaderLookup
     if term.blank? || scheme.blank?
       nil
     elsif scheme == :mesh
-      @@memoized_mesh[term] || mesh_term_pid_local_lookup(term) || mesh_term_pid_lookup(term)
+      @@memoized_mesh[term] || mesh_term_pid_local_lookup(term) || nil
     elsif scheme == :lcsh
-      @@memoized_lcsh[term] || lcsh_term_pid_local_lookup(term) || lcsh_term_pid_lookup(term)
+      @@memoized_lcsh[term] || lcsh_term_pid_local_lookup(term) || nil
     else
       nil
     end

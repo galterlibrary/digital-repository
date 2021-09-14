@@ -293,6 +293,8 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
         {id: pid}
       elsif scheme == :subject_name || scheme == :tag
         {subject: term}
+      else
+        puts "------\nUnable to map subject\nFile Id: #{@generic_file.id} Term: #{term} Scheme: #{scheme}\n------"
       end
     end
 
