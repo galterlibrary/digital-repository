@@ -535,24 +535,22 @@ RSpec.describe InvenioRdmRecordConverter do
 
       let(:padded_date){ "09/06/1927" }
       let(:unpadded_date){ "9/6/1927" }
-      let(:short_19_year_date){ "09/06/27" }
-      let(:short_20_year_date){ "09/06/07" }
 
       it "normalizes date" do
         expect(invenio_rdm_record_converter.send(:normalize_date, padded_date)).to eq(expected_formatted_date_1)
         expect(invenio_rdm_record_converter.send(:normalize_date, unpadded_date)).to eq(expected_formatted_date_1)
-        expect(invenio_rdm_record_converter.send(:normalize_date, short_19_year_date)).to eq(expected_formatted_date_1)
-        expect(invenio_rdm_record_converter.send(:normalize_date, short_20_year_date)).to eq(expected_formatted_date_2)
       end
     end
 
     context "date with month and year only" do
       let(:date_with_dashes_month_only){ "1903-06" }
       let(:date_with_slashes_month_only){ "1903/06" }
+      let(:date_with_month_first){ "06/1903" }
 
       it "normalizes date with year and month available" do
         expect(invenio_rdm_record_converter.send(:normalize_date, date_with_dashes_month_only)).to eq(date_with_dashes_month_only)
         expect(invenio_rdm_record_converter.send(:normalize_date, date_with_slashes_month_only)).to eq(date_with_dashes_month_only)
+        expect(invenio_rdm_record_converter.send(:normalize_date, date_with_month_first)).to eq(date_with_dashes_month_only)
       end
     end
 

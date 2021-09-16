@@ -446,16 +446,19 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def rearrange_year(date_array)
-    if date_array[2].length == 2
-      # drawing the line at 22 as the year for when we no longer refer to 1900s
-      if date_array[2].to_i > 22
-        date_array[2] = "19#{date_array[2]}"
-      else
-        date_array[2] = "20#{date_array[2]}"
+    if date_array[0].length == 4
+      return date_array
+    end
+
+    last_i = date_array.length - 1
+    (1..last_i).each do |i|
+      if date_array[i].length == 4
+        date_array.insert(0, date_array.delete_at(i))
+        return date_array
       end
     end
 
-    [date_array[2], date_array[0], date_array[1]]
+    date_array
   end
 
   def funding(file_id)
