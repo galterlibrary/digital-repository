@@ -104,7 +104,7 @@ RSpec.describe InvenioRdmRecordConverter do
             },
             "role": {"id": InvenioRdmRecordConverter::ROLE_OTHER}
           }],
-          "dates": [{"date": "2021-1-1", "type": "other", "description": "When the item was originally created."}],
+          "dates": [{"date": "2021-01-01", "type": {"id":"created"}, "description": "When the item was originally created."}],
           "languages": [{"id": "eng"}],
           "identifiers": [{
             "identifier": "10.6666/ARK",
@@ -512,26 +512,45 @@ RSpec.describe InvenioRdmRecordConverter do
     context "formatted date" do
       let(:expected_formatted_date_1){ "1907-09-06" }
       let(:expected_formatted_date_2){ "1920-12-01" }
-      let(:date_without_zero_padding_1){ "1920-12-1" }
-      let(:date_without_zero_padding_2){ "1907-9-6" }
+      let(:date_without_zero_padding_1){ "1907-9-6" }
+      let(:date_without_zero_padding_2){ "1920-12-1" }
       let(:date_with_dashes){ expected_formatted_date_1 }
       let(:date_with_slashes){ "1907/09/06" }
+      let(:date_starts_with_month_padded){ "09/06/1907" }
+      let(:date_starts_with_month_zero_padding){ "9/6/1907" }
 
       it "normalizes date" do
-        expect(invenio_rdm_record_converter.send(:normalize_date, date_without_zero_padding_1)).to eq(expected_formatted_date_2)
-        expect(invenio_rdm_record_converter.send(:normalize_date, date_without_zero_padding_2)).to eq(expected_formatted_date_1)
+        expect(invenio_rdm_record_converter.send(:normalize_date, date_without_zero_padding_1)).to eq(expected_formatted_date_1)
+        expect(invenio_rdm_record_converter.send(:normalize_date, date_without_zero_padding_2)).to eq(expected_formatted_date_2)
         expect(invenio_rdm_record_converter.send(:normalize_date, date_with_dashes)).to eq(expected_formatted_date_1)
         expect(invenio_rdm_record_converter.send(:normalize_date, date_with_slashes)).to eq(expected_formatted_date_1)
+        expect(invenio_rdm_record_converter.send(:normalize_date, date_starts_with_month_padded)).to eq(expected_formatted_date_1)
+        expect(invenio_rdm_record_converter.send(:normalize_date, date_starts_with_month_zero_padding)).to eq(expected_formatted_date_1)
+      end
+    end
+
+    context "month first date" do
+      let(:expected_formatted_date_1){ "1927-09-06" }
+      let(:expected_formatted_date_2){ "2007-09-06" }
+
+      let(:padded_date){ "09/06/1927" }
+      let(:unpadded_date){ "9/6/1927" }
+
+      it "normalizes date" do
+        expect(invenio_rdm_record_converter.send(:normalize_date, padded_date)).to eq(expected_formatted_date_1)
+        expect(invenio_rdm_record_converter.send(:normalize_date, unpadded_date)).to eq(expected_formatted_date_1)
       end
     end
 
     context "date with month and year only" do
       let(:date_with_dashes_month_only){ "1903-06" }
       let(:date_with_slashes_month_only){ "1903/06" }
+      let(:date_with_month_first){ "06/1903" }
 
       it "normalizes date with year and month available" do
         expect(invenio_rdm_record_converter.send(:normalize_date, date_with_dashes_month_only)).to eq(date_with_dashes_month_only)
         expect(invenio_rdm_record_converter.send(:normalize_date, date_with_slashes_month_only)).to eq(date_with_dashes_month_only)
+        expect(invenio_rdm_record_converter.send(:normalize_date, date_with_month_first)).to eq(date_with_dashes_month_only)
       end
     end
 
