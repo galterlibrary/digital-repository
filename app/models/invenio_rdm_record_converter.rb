@@ -174,9 +174,9 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       "resource_type": resource_type(@generic_file.resource_type.shift),
       "creators": @generic_file.creator.map{ |creator| build_creator_contributor_json(creator) },
       "title": @generic_file.title.first,
-      "additional_titles": additional(category: "title", array: @generic_file.title),
+      "additional_titles": format_additional("title", "alternative-title", @generic_file.title.drop(1)),
       "description": @generic_file.description.first,
-      "additional_descriptions": additional(category: "description", array: @generic_file.description),
+      "additional_descriptions": format_additional("description", "other", @generic_file.description.drop(1)) + format_additional("description", "acknowledgements", @generic_file.acknowledgments),
       "publisher": @generic_file.publisher.shift,
       "publication_date": format_publication_date(@generic_file.date_created.shift || @generic_file.date_uploaded.to_s),
       "subjects": SUBJECT_SCHEMES.map{ |subject_type| subjects_for_scheme(@generic_file.send(subject_type), subject_type) }.compact.flatten,
@@ -263,25 +263,16 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     json
   end # build_creator_contributor_json
 
-  def additional(category:, array:)
-    type = set_type(category)
-    # return all values except the first
-    tail_values = array.slice(1..-1)
-    return [] if tail_values.blank?
-
-    # remove the strings that contain only spaces or are empty, then map
-    tail_values.delete_if(&:blank?).map do |word|
-      {"#{category}": word, "type": {"id": type, "title": {"en": type.titleize}}}
+  def format_additional(content_type, invenio_type, values)
+    formatted_values = values.map do |value|
+      if value.blank?
+        next
+      else
+        {"#{content_type}": value, "type": {"id": invenio_type, "title": {"en": invenio_type.titleize}}}
+      end
     end
-  end
 
-  def set_type(type)
-    case type
-    when "title"
-      "alternative-title"
-    when "description"
-      "other"
-    end
+    formatted_values.compact
   end
 
   # return array of invenio formatted subjects
@@ -300,6 +291,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
 
     mapped_terms.compact
   end
+
 
   def contributors(contributors)
     contributors.map do |contributor|
