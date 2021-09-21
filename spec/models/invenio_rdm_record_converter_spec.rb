@@ -37,7 +37,8 @@ RSpec.describe InvenioRdmRecordConverter do
       page_count: [rand(1..1000).to_s],
       rights: ["http://creativecommons.org/licenses/by-nc-sa/3.0/us/"],
       visibility: InvenioRdmRecordConverter::OPEN_ACCESS,
-      related_url: ["https://doi.org/10.5438/55e5-t5c0"]
+      related_url: ["https://doi.org/10.5438/55e5-t5c0"],
+      acknowledgments: ["this is an acknowledgement"]
     )
   }
   let(:generic_file_checksum) { generic_file.content.checksum.value }
@@ -82,7 +83,8 @@ RSpec.describe InvenioRdmRecordConverter do
             }
           ],
           "description": generic_file.description.shift,
-          "additional_descriptions": [{"description": generic_file.description.last, "type": {"id": "other", "title": {"en": "Other"}}}],
+          "additional_descriptions": [{"description": generic_file.description.last, "type": {"id": "other", "title": {"en": "Other"}}},
+                                      {"description": generic_file.acknowledgments.first, "type": {"id": "acknowledgements", "title": {"en": "Acknowledgements"}}}],
           "publisher": "DigitalHub. Galter Health Sciences Library & Learning Center",
           "publication_date": "2021-01-01",
           "subjects": [
@@ -477,33 +479,33 @@ RSpec.describe InvenioRdmRecordConverter do
     }]
   }
 
-  describe '#additional' do
+  describe '#format_additional' do
     context "blank results" do
       it 'returns empty array' do
-        expect(subject.send(:additional, category: "title", array: blank_text_field)).to eq([])
-        expect(subject.send(:additional, category: "title", array: white_space)).to eq([])
-        expect(subject.send(:additional, category: "title", array: multiple_blanks)).to eq([])
-        expect(subject.send(:additional, category: "description", array: blank_text_field)).to eq([])
-        expect(subject.send(:additional, category: "description", array: white_space)).to eq([])
-        expect(subject.send(:additional, category: "description", array: multiple_blanks)).to eq([])
+        expect(subject.send(:format_additional, "title", "alternative-title", blank_text_field.drop(1))).to eq([])
+        expect(subject.send(:format_additional, "title", "alternative-title", white_space.drop(1))).to eq([])
+        expect(subject.send(:format_additional, "title", "alternative-title", multiple_blanks.drop(1))).to eq([])
+        expect(subject.send(:format_additional, "description", "other", blank_text_field.drop(1))).to eq([])
+        expect(subject.send(:format_additional, "description", "other", white_space.drop(1))).to eq([])
+        expect(subject.send(:format_additional, "description", "other", multiple_blanks.drop(1))).to eq([])
       end
     end
 
     context "with one cat" do
       it 'returns empty array' do
-        expect(subject.send(:additional, category: "title", array: one_cat)).to eq([])
-        expect(subject.send(:additional, category: "title", array: one_cat_with_blank)).to eq([])
-        expect(subject.send(:additional, category: "description", array: one_cat)).to eq([])
-        expect(subject.send(:additional, category: "description", array: one_cat_with_blank)).to eq([])
+        expect(subject.send(:format_additional, "title", "alternative-title", one_cat.drop(1))).to eq([])
+        expect(subject.send(:format_additional, "title", "alternative-title", one_cat_with_blank.drop(1))).to eq([])
+        expect(subject.send(:format_additional, "description", "other", one_cat.drop(1))).to eq([])
+        expect(subject.send(:format_additional, "description", "other", one_cat_with_blank.drop(1))).to eq([])
       end
     end
 
     context "with two cats" do
       it 'returns array with values' do
-        expect(subject.send(:additional, category: "title", array: two_cats)).to eq(expected_two_cats_title)
-        expect(subject.send(:additional, category: "title", array: two_cats_with_blank)).to eq(expected_two_cats_title)
-        expect(subject.send(:additional, category: "description", array: two_cats)).to eq(expected_two_cats_description)
-        expect(subject.send(:additional, category: "description", array: two_cats_with_blank)).to eq(expected_two_cats_description)
+        expect(subject.send(:format_additional, "title", "alternative-title", two_cats.drop(1))).to eq(expected_two_cats_title)
+        expect(subject.send(:format_additional, "title", "alternative-title", two_cats_with_blank.drop(1))).to eq(expected_two_cats_title)
+        expect(subject.send(:format_additional, "description", "other", two_cats.drop(1))).to eq(expected_two_cats_description)
+        expect(subject.send(:format_additional, "description", "other", two_cats_with_blank.drop(1))).to eq(expected_two_cats_description)
       end
     end
   end
