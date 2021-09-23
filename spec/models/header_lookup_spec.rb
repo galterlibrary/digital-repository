@@ -36,8 +36,8 @@ RSpec.describe HeaderLookup do
        }
      }"
   end
-  let(:expected_mesh_pid) { "D018875" }
-  let(:expected_memoized_mesh) { {mesh_term=>expected_mesh_pid} }
+  let(:expected_mesh_result) { "https://id.nlm.nih.gov/mesh/D018875" }
+  let(:expected_memoized_mesh) { {mesh_term=>expected_mesh_result} }
   let(:blank_mesh_term) { "mesh term does not exist" }
   let(:expected_failed_mesh) { "#{blank_mesh_term} - MESH" }
 
@@ -45,26 +45,26 @@ RSpec.describe HeaderLookup do
     context 'search returns values' do
       before do
         allow(HTTParty).to receive(:get).and_return(mesh_api_response)
-        @mesh_pid = subject.mesh_term_pid_lookup(mesh_term)
+        @mesh_result = subject.mesh_term_pid_lookup(mesh_term)
       end
 
       it 'calls api with correct term' do
         expect(HTTParty).to have_received(:get).with(mesh_query_url)
       end
 
-      it 'returns PID for mesh term' do
-        expect(@mesh_pid).to eq(expected_mesh_pid)
+      it 'returns result for mesh term' do
+        expect(@mesh_result).to eq(expected_mesh_result)
       end
     end
 
     context 'search returns no values' do
       before do
         allow(HTTParty).to receive(:get).and_return(empty_mesh_api_response)
-        @mesh_pid = subject.mesh_term_pid_lookup(blank_mesh_term)
+        @mesh_result = subject.mesh_term_pid_lookup(blank_mesh_term)
       end
 
       it 'returns N/A for PID for mesh term' do
-        expect(@mesh_pid).to eq(nil)
+        expect(@mesh_result).to eq(nil)
       end
     end
   end
@@ -78,8 +78,8 @@ RSpec.describe HeaderLookup do
     """
   end
   let(:empty_lcsh_api_response) { "[\"*this*is*not*a*real*search*\",[],[],[]]" }
-  let(:expected_lcsh_pid) { "sh2002000569" }
-  let(:expected_memoized_lcsh) { {lcsh_term=>expected_lcsh_pid} }
+  let(:expected_lcsh_result) { "https://id.loc.gov/authorities/subjects/sh2002000569" }
+  let(:expected_memoized_lcsh) { {lcsh_term=>expected_lcsh_result} }
   let(:blank_lcsh_term) { "lcsh term does not exist" }
   let(:expected_failed_lcsh) { "#{blank_lcsh_term} - LCSH" }
 
@@ -87,7 +87,7 @@ RSpec.describe HeaderLookup do
     context 'search returns values' do
       before do
         allow(HTTParty).to receive(:get).and_return(lcsh_api_response)
-        @lcsh_pids = subject.lcsh_term_pid_lookup(lcsh_term)
+        @lcsh_result = subject.lcsh_term_pid_lookup(lcsh_term)
       end
 
       it 'calls api with correct term' do
@@ -95,19 +95,19 @@ RSpec.describe HeaderLookup do
       end
 
       # TODO figure out what to do with terms that have multiple PIDs returned from query
-      it 'returns PID for lcsh term' do
-        expect(@lcsh_pids).to eq(expected_lcsh_pid)
+      it 'returns result for lcsh term' do
+        expect(@lcsh_result).to eq(expected_lcsh_result)
       end
     end
 
     context 'search returns no values' do
       before do
         allow(HTTParty).to receive(:get).and_return(empty_lcsh_api_response)
-        @lcsh_pids = subject.lcsh_term_pid_lookup(lcsh_term)
+        @lcsh_result = subject.lcsh_term_pid_lookup(lcsh_term)
       end
 
       it 'returns nil for PID for lcsh term' do
-        expect(@lcsh_pids).to eq(nil)
+        expect(@lcsh_result).to eq(nil)
       end
     end
   end
@@ -123,6 +123,24 @@ RSpec.describe HeaderLookup do
 
     it 'returns nil for subject header with no pid' do
       expect(subject.send(:pid_lookup_by_scheme, no_pid_mesh_subject, :mesh)).to eq(nil)
+    end
+  end
+
+  let(:lcsh_local_subject) { "Cancer" }
+  let(:expected_lcsh_local_subject) { "http://id.loc.gov/authorities/subjects/sh85019492" }
+
+  describe "#lcsh_term_pid_local_lookup" do
+    it "returns expected pid" do
+      expect(subject.lcsh_term_pid_local_lookup(lcsh_local_subject)).to eq(expected_lcsh_local_subject)
+    end
+  end
+
+  let(:mesh_local_subject) { "Abrin" }
+  let(:expected_mesh_local_subject) { "https://id.nlm.nih.gov/mesh/D000036" }
+
+  describe "#mesh_term_pid_local_lookup" do
+    it "returns expected pid" do
+      expect(subject.mesh_term_pid_local_lookup(mesh_local_subject)).to eq(expected_mesh_local_subject)
     end
   end
 end

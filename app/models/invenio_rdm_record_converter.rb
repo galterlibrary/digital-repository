@@ -25,6 +25,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   MEMOIZED_PERSON_OR_ORG_DATA_FILE = 'memoized_person_or_org_data.txt'
   FUNDING_DATA_FILE = 'app/models/concerns/galtersufia/generic_file/funding_data.txt'
   LICENSE_DATA_FILE = 'app/models/concerns/galtersufia/generic_file/license_data.txt'
+  BLANK_FUNDER_SOURCE = {funder: {name: "", identifier: "", scheme: "ror"}, award: {title: "", number: "", identifier: "", scheme: ""}}
 
   @@header_lookup ||= HeaderLookup.new
   @@funding_data ||= eval(File.read(FUNDING_DATA_FILE))
@@ -173,14 +174,14 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       "resource_type": resource_type(@generic_file.resource_type.shift),
       "creators": @generic_file.creator.map{ |creator| build_creator_contributor_json(creator) },
       "title": @generic_file.title.first,
-      "additional_titles": additional(category: "title", array: @generic_file.title),
+      "additional_titles": format_additional("title", "alternative-title", @generic_file.title.drop(1)),
       "description": @generic_file.description.first,
-      "additional_descriptions": additional(category: "description", array: @generic_file.description),
+      "additional_descriptions": format_additional("description", "other", @generic_file.description.drop(1)) + format_additional("description", "acknowledgements", @generic_file.acknowledgments),
       "publisher": @generic_file.publisher.shift,
       "publication_date": format_publication_date(@generic_file.date_created.shift || @generic_file.date_uploaded.to_s),
       "subjects": SUBJECT_SCHEMES.map{ |subject_type| subjects_for_scheme(@generic_file.send(subject_type), subject_type) }.compact.flatten,
       "contributors": contributors(@generic_file.contributor),
-      "dates": @generic_file.date_created.map{ |date| {"date": date, "type": "other", "description": "When the item was originally created."} },
+      "dates": @generic_file.date_created.map{ |date| {"date": normalize_date(date), "type": {"id": "created"}, "description": "When the item was originally created."} },
       "languages": @generic_file.language.map{ |lang| lang.present? && lang.downcase == ENGLISH ? {"id": "eng"} : nil }.compact,
       "identifiers": ark_identifiers(@generic_file.ark),
       "related_identifiers": related_identifiers(@generic_file.related_url),
@@ -216,7 +217,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
         "person_or_org":
           Hash.new.tap do |hash|
             hash["name"] =  creator
-            hash["type"] = "organisational"
+            hash["type"] = "organizational"
           end
       }
     # User within DigitalHub
@@ -231,7 +232,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
             hash["type"] = "personal"
             hash["given_name"] = given_name
             hash["family_name"] = family_name
-            hash["identifiers"] = {"scheme": "orcid", "identifier": dh_user.orcid.split('/').pop} if dh_user.orcid.present?
+            hash["identifiers"] = [{"scheme": "orcid", "identifier": dh_user.orcid.split('/').pop}] if dh_user.orcid.present?
           end
       }
     # Personal record without user in database
@@ -251,7 +252,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
         "person_or_org":
           Hash.new.tap do |hash|
             hash["name"] = creator
-            hash["type"] = "organisational"
+            hash["type"] = "organizational"
           end
       }
     end
@@ -262,25 +263,16 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     json
   end # build_creator_contributor_json
 
-  def additional(category:, array:)
-    type = set_type(category)
-    # return all values except the first
-    tail_values = array.slice(1..-1)
-    return [] if tail_values.blank?
-
-    # remove the strings that contain only spaces or are empty, then map
-    tail_values.delete_if(&:blank?).map do |word|
-      {"#{category}": word, "type": {"id": type, "title": {"en": type.titleize}}}
+  def format_additional(content_type, invenio_type, values)
+    formatted_values = values.map do |value|
+      if value.blank?
+        next
+      else
+        {"#{content_type}": value, "type": {"id": invenio_type, "title": {"en": invenio_type.titleize}}}
+      end
     end
-  end
 
-  def set_type(type)
-    case type
-    when "title"
-      "alternative-title"
-    when "description"
-      "other"
-    end
+    formatted_values.compact
   end
 
   # return array of invenio formatted subjects
@@ -292,11 +284,14 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
         {id: pid}
       elsif scheme == :subject_name || scheme == :tag
         {subject: term}
+      else
+        puts "------\nUnable to map subject\nFile Id: #{@generic_file.id} Term: #{term} Scheme: #{scheme}\n------"
       end
     end
 
     mapped_terms.compact
   end
+
 
   def contributors(contributors)
     contributors.map do |contributor|
@@ -375,6 +370,11 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
 
   def normalize_date(date_string)
     split_date = date_string.split(/[-,\/ ]/).map(&:downcase)
+    # date format starts with month first
+    if (!split_date.blank? && split_date[0].length < 3)
+      split_date = rearrange_year(split_date)
+    end
+
     month_names = (split_date & MONTHNAMES)
     abbr_month_names = (split_date & ABBR_MONTHNAMES)
 
@@ -440,7 +440,43 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     end
   end
 
+  def rearrange_year(date_array)
+    if date_array[0].length == 4
+      return date_array
+    end
+
+    last_i = date_array.length - 1
+    (1..last_i).each do |i|
+      if date_array[i].length == 4
+        date_array.insert(0, date_array.delete_at(i))
+        return date_array
+      end
+    end
+
+    date_array
+  end
+
   def funding(file_id)
-    @@funding_data[file_id] || [{}]
+    funding_sources = @@funding_data[file_id]
+
+    if funding_sources.blank?
+      return []
+    end
+
+    funding_sources.map do |source|
+      # if the source is empty except for funder scheme, return empty
+      if source == BLANK_FUNDER_SOURCE
+        nil
+      # if the title is blank, replace it with the award number
+      elsif source[:award][:title].blank?
+        source[:award][:title] = source[:award][:number]
+        source
+      else
+        source
+      end
+    end
+
+    # remove nil values
+    funding_sources.compact
   end
 end

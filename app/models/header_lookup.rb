@@ -6,41 +6,76 @@ class HeaderLookup
     "meshv%3ADescriptor%20.%0D%0A%20%20%3Fd%20rdfs%3Alabel%20%3FdName%0D%0A%20%20FILTER(REGEX(%3FdName%2C%27"
   END_SPARQL_MESH_URI = "%27%2C%20%27i%27))%20%0D%0A%7D%20%0D%0AORDER%20BY%20%3Fd%20%0D%0A"
   LCSH_BASE_URI = "http://id.loc.gov/authorities/subjects/suggest/?q="
-  LCSH_ID_URI = "https://id.loc.gov/authorities/subjects/"
+  LCSH_ID_URI = "http://id.loc.gov/authorities/subjects/"
   MESH_ID_URI = "https://id.nlm.nih.gov/mesh/"
   MEMOIZED_MESH_FILE = "memoized_mesh.txt"
   MEMOIZED_LCSH_FILE = "memoized_lcsh.txt"
+  SEARCHABLE_MESH_FILE = "subjects_mesh.yml"
+  SEARCHABLE_LCSH_FILE = "subjects_lcsh.yml"
 
-  def initialize(memoized_mesh_file_path=MEMOIZED_MESH_FILE, memoized_lcsh_file_path=MEMOIZED_LCSH_FILE)
-    @@memoized_mesh ||= read_memoized_headers(memoized_mesh_file_path)
-    @@memoized_lcsh ||= read_memoized_headers(memoized_lcsh_file_path)
+  def initialize
+    # these are the terms to search through for header lookups
+    @@searchable_mesh_terms ||= YAML.load_file(SEARCHABLE_MESH_FILE)
+    @@searchable_lcsh_terms ||= YAML.load_file(SEARCHABLE_LCSH_FILE)
+
+    # these are values that have been previously found from the searchable terms
+    @@memoized_mesh ||= read_memoized_headers(MEMOIZED_MESH_FILE)
+    @@memoized_lcsh ||= read_memoized_headers(MEMOIZED_LCSH_FILE)
   end
 
   def pid_lookup_by_scheme(term="", scheme="")
     if term.blank? || scheme.blank?
       nil
     elsif scheme == :mesh
-      @@memoized_mesh[term] || mesh_term_pid_lookup(term)
+      @@memoized_mesh[term] || mesh_term_pid_local_lookup(term) || nil
     elsif scheme == :lcsh
-      @@memoized_lcsh[term] || lcsh_term_pid_lookup(term)
+      @@memoized_lcsh[term] || lcsh_term_pid_local_lookup(term) || nil
     else
       nil
     end
+  end
+
+  def mesh_term_pid_local_lookup(mesh_term="")
+    @@searchable_mesh_terms.each do |term_json|
+      if term_json["subject"].downcase == mesh_term.downcase
+        mesh_id = term_json["id"]
+        @@memoized_mesh[mesh_term] = mesh_id
+        File.write(MEMOIZED_MESH_FILE, @@memoized_mesh)
+        return mesh_id
+      end
+    end
+
+    nil
+  end
+
+  def lcsh_term_pid_local_lookup(lcsh_term="")
+    @@searchable_lcsh_terms.each do |term_json|
+      if term_json["subject"].downcase == lcsh_term.downcase
+        lcsh_id = term_json["id"]
+        @@memoized_lcsh[lcsh_term] = lcsh_id
+        File.write(MEMOIZED_LCSH_FILE, @@memoized_lcsh)
+        return lcsh_id
+      end
+    end
+
+    nil
   end
 
   # return PID for provided mesh_header using SPARQL query
   def mesh_term_pid_lookup(mesh_term="")
     hits = perform_and_parse_mesh_query(CGI.escape(mesh_term))
 
-    if hits.present?
-      mesh_pid = pid_from_mesh_hits(hits)
-      mesh_id = MESH_ID_URI + mesh_pid.to_s
-      @@memoized_mesh[mesh_term] = mesh_id
-      File.write(MEMOIZED_MESH_FILE, @@memoized_mesh)
-      mesh_id
-    else
-      nil
+    hits.each do |hit|
+      if hit["dName"]["value"].downcase == mesh_term.downcase
+        mesh_pid = hit["d"]["value"].split('/').last
+        mesh_id = MESH_ID_URI + mesh_pid.to_s
+        @@memoized_mesh[mesh_term] = mesh_id
+        File.write(MEMOIZED_MESH_FILE, @@memoized_mesh)
+        return mesh_id
+      end
     end
+
+    nil
   end
 
   # lookup lcsh term, memoize it, write it to file, return PID
@@ -83,11 +118,6 @@ class HeaderLookup
     query_result = HTTParty.get(BASE_SPARQL_MESH_URI + mesh_term + END_SPARQL_MESH_URI)
     json_parsed_result = JSON.parse(query_result)
     json_parsed_result.try(:[], "results").try(:[], "bindings")
-  end
-
-  def pid_from_mesh_hits(id_uris)
-    # take the first match found, split it's URI to get the PID at the end
-    id_uris.shift["d"]["value"].split('/').last
   end
 
   def strip_accents(term="")
