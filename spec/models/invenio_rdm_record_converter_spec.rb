@@ -157,7 +157,8 @@ RSpec.describe InvenioRdmRecordConverter do
       },
       "file": {
         "filename": generic_file.filename,
-        "content_path": generic_file_content_path
+        "content_path": generic_file_content_path,
+        "original_checksum": generic_file.original_checksum
       },
       "extras": {
         "presentation_location": generic_file.based_near,
