@@ -1,4 +1,5 @@
 include Sufia::Export
+require 'digest/md5'
 
 # Convert a GenericFile including metadata, permissions and version metadata into a PORO
 # so that the metadata can be exported in json format using to_json
@@ -40,7 +41,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     @generic_file = generic_file
 
     @record = record_for_export
-    @file = filename_and_content_path
+    @file = file_info
     @extras = extra_data
   end
 
@@ -51,10 +52,11 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
 
   private
 
-  def filename_and_content_path
+  def file_info
     {
       "filename": @generic_file.filename,
-      "content_path": generic_file_content_path(@generic_file.content.checksum.value)
+      "content_path": generic_file_content_path(@generic_file.content.checksum.value),
+      "original_checksum": @generic_file.original_checksum
     }
   end
 
