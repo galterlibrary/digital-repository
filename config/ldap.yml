@@ -22,7 +22,7 @@ authorizations: &AUTHORIZATIONS
 ## Environment
 
 development:
-  host: registry.northwestern.edu
+  host: registry-uat.it.northwestern.edu
   port: 636
   attribute: uid
   base: ou=people,dc=northwestern,dc=edu
@@ -42,7 +42,7 @@ test:
   # <<: *AUTHORIZATIONS
 
 staging:
-  host: registry.northwestern.edu
+  host: registry-uat.it.northwestern.edu
   port: 636
   attribute: uid
   base: ou=people,dc=northwestern,dc=edu

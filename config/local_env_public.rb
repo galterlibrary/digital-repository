@@ -5,7 +5,7 @@
 
 # Authentication and authorization
 #ENV['LDAP_SERVER']   = 'localhost'
-ENV['LDAP_SERVER']   = 'registry.northwestern.edu'
+ENV['LDAP_SERVER']   = 'registry-uat.it.northwestern.edu'
 ENV['LDAP_PORT']     = '636'
 
 begin
