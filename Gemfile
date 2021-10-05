@@ -41,7 +41,7 @@ gem 'thin'
 #gem 'sufia', :git => 'https://github.com/phebal/sufia.git', :branch => 'fix/master/dashboard_sort_toggle_fix'
 #gem 'sufia', :git => 'https://github.com/projecthydra/sufia.git', :branch => 'master'
 #gem 'sufia', '6.7'
-gem 'sufia', git: 'https://github.com/samvera-deprecated/sufia', branch: '6.x-stable'
+gem 'sufia', path: '../sufia/'#git: 'https://github.com/samvera-deprecated/sufia', branch: '6.x-stable'
 gem 'kaminari', github: 'jcoyne/kaminari', branch: 'sufia' # required to handle pagination properly in dashboard. See https://github.com/amatsuda/kaminari/pull/322
 gem 'therubyracer', platforms: :ruby
 
