@@ -9,11 +9,9 @@ def generic_file_content_path(checksum)
   "#{ENV["FEDORA_BINARY_PATH"]}/#{checksum[0..1]}/#{checksum[2..3]}/#{checksum[4..5]}/#{checksum}" unless !checksum
 end
 
-generic_files = GenericFile.all
-
 total = 0
 errors = 0
-generic_files.each do |gf|
+GenericFile.find_each do |gf|
   total += 1
   potential_file = generic_file_content_path(gf.content.checksum.value)
   if !File.exists?(potential_file)
