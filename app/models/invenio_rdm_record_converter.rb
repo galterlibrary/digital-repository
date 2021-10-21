@@ -1,5 +1,6 @@
 include Sufia::Export
 require 'digest/md5'
+require 'logger'
 
 # Convert a GenericFile including metadata, permissions and version metadata into a PORO
 # so that the metadata can be exported in json format using to_json
@@ -172,28 +173,35 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def invenio_metadata
-    {
-      "resource_type": resource_type(@generic_file.resource_type.shift),
-      "creators": @generic_file.creator.map{ |creator| build_creator_contributor_json(creator) },
-      "title": @generic_file.title.first,
-      "additional_titles": format_additional("title", "alternative-title", @generic_file.title.drop(1)),
-      "description": @generic_file.description.first,
-      "additional_descriptions": format_additional("description", "other", @generic_file.description.drop(1)) + format_additional("description", "acknowledgements", @generic_file.acknowledgments),
-      "publisher": @generic_file.publisher.shift,
-      "publication_date": format_publication_date(@generic_file.date_created.shift || @generic_file.date_uploaded.to_s),
-      "subjects": SUBJECT_SCHEMES.map{ |subject_type| subjects_for_scheme(@generic_file.send(subject_type), subject_type) }.compact.flatten,
-      "contributors": contributors(@generic_file.contributor),
-      "dates": @generic_file.date_created.map{ |date| {"date": normalize_date(date), "type": {"id": "created"}, "description": "When the item was originally created."} },
-      "languages": @generic_file.language.map{ |lang| lang.present? && lang.downcase == ENGLISH ? {"id": "eng"} : nil }.compact,
-      "identifiers": ark_identifiers(@generic_file.ark),
-      "related_identifiers": related_identifiers(@generic_file.related_url),
-      "sizes": Array.new.tap{ |size_json| size_json << "#{@generic_file.page_count} pages" if !@generic_file.page_count.blank? },
-      "formats": [@generic_file.mime_type],
-      "version": version(@generic_file.content),
-      "rights": rights(@generic_file.rights),
-      "locations": {"features": @generic_file.subject_geographic.present? ? @generic_file.subject_geographic.map{ |location| {place: location} } : []},
-      "funding": funding(@generic_file.id)
-    }
+    begin
+      {
+        "resource_type": resource_type(@generic_file.resource_type.shift),
+        "creators": @generic_file.creator.map{ |creator| build_creator_contributor_json(creator) },
+        "title": @generic_file.title.first,
+        "additional_titles": format_additional("title", "alternative-title", @generic_file.title.drop(1)),
+        "description": @generic_file.description.first,
+        "additional_descriptions": format_additional("description", "other", @generic_file.description.drop(1)) + format_additional("description", "acknowledgements", @generic_file.acknowledgments),
+        "publisher": @generic_file.publisher.shift,
+        "publication_date": format_publication_date(@generic_file.date_created.shift || @generic_file.date_uploaded.to_s),
+        "subjects": SUBJECT_SCHEMES.map{ |subject_type| subjects_for_scheme(@generic_file.send(subject_type), subject_type) }.compact.flatten,
+        "contributors": contributors(@generic_file.contributor),
+        "dates": @generic_file.date_created.map{ |date| {"date": normalize_date(date), "type": {"id": "created"}, "description": "When the item was originally created."} },
+        "languages": @generic_file.language.map{ |lang| lang.present? && lang.downcase == ENGLISH ? {"id": "eng"} : nil }.compact,
+        "identifiers": ark_identifiers(@generic_file.ark),
+        "related_identifiers": related_identifiers(@generic_file.related_url),
+        "sizes": Array.new.tap{ |size_json| size_json << "#{@generic_file.page_count} pages" if !@generic_file.page_count.blank? },
+        "formats": [@generic_file.mime_type],
+        "version": version(@generic_file.content),
+        "rights": rights(@generic_file.rights),
+        "locations": {"features": @generic_file.subject_geographic.present? ? @generic_file.subject_geographic.map{ |location| {place: location} } : []},
+        "funding": funding(@generic_file.id)
+      }
+    rescue => e
+      logger = Logger.new("#{Rails.root}/tmp/export/export_errors.log")
+      logger.level = Logger::ERROR
+      logger.error("Problem for GenericFile: #{@generic_file.id}")
+      logger.error("Error - #{e}")
+    end
   end
 
   def resource_type(digitalhub_subtype)
