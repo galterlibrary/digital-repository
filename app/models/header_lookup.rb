@@ -14,6 +14,7 @@ class HeaderLookup
   SEARCHABLE_LCSH_FILE = "subjects_lcsh.yml"
 
   def initialize
+    puts "initializing header_lookup..."
     # these are the terms to search through for header lookups
     @@searchable_mesh_terms ||= YAML.load_file(SEARCHABLE_MESH_FILE)
     @@searchable_lcsh_terms ||= YAML.load_file(SEARCHABLE_LCSH_FILE)
@@ -36,6 +37,7 @@ class HeaderLookup
   end
 
   def mesh_term_pid_local_lookup(mesh_term="")
+    puts "mesh term pid local lookup"
     @@searchable_mesh_terms.each do |term_json|
       if term_json["subject"].downcase == mesh_term.downcase
         mesh_id = term_json["id"]
@@ -49,6 +51,7 @@ class HeaderLookup
   end
 
   def lcsh_term_pid_local_lookup(lcsh_term="")
+    puts "lcsh term pid local lookup"
     @@searchable_lcsh_terms.each do |term_json|
       if term_json["subject"].downcase == lcsh_term.downcase
         lcsh_id = term_json["id"]
@@ -63,6 +66,7 @@ class HeaderLookup
 
   # return PID for provided mesh_header using SPARQL query
   def mesh_term_pid_lookup(mesh_term="")
+    puts "mesh term networked lookup"
     hits = perform_and_parse_mesh_query(CGI.escape(mesh_term))
 
     hits.each do |hit|
@@ -80,6 +84,7 @@ class HeaderLookup
 
   # lookup lcsh term, memoize it, write it to file, return PID
   def lcsh_term_pid_lookup(lcsh_term="")
+    puts "lcsh term networked lookup"
     stripped_lcsh_term = strip_accents(lcsh_term)
     subject_names, subject_id_uris = perform_and_parse_lcsh_query(CGI.escape(stripped_lcsh_term))
 
