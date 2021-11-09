@@ -174,7 +174,8 @@ RSpec.describe InvenioRdmRecordConverter do
           "read": ["public"],
           "edit": [user.username]
         }
-      }
+      },
+      "communities": []
     }.to_json
   end
   let(:invenio_rdm_record_converter) { described_class.new(generic_file) }
@@ -302,6 +303,59 @@ RSpec.describe InvenioRdmRecordConverter do
   describe "#extra_data" do
     it "adds data" do
       expect(invenio_rdm_record_converter.send(:extra_data).with_indifferent_access).to eq(expected_extra_data)
+    end
+  end
+
+  describe "#list_collections" do
+    context "with one collection" do
+      before do
+        make_collection(user, title: "Community", id: "community-1", member_ids: [generic_file.id])
+      end
+
+      let(:expected_communities) {
+        [
+          [{"title": "Community", "id": "community-1"}]
+        ]
+      }
+
+      it "adds data" do
+        expect(invenio_rdm_record_converter.send(:list_collections)).to eq(expected_communities)
+      end
+    end
+
+    context "with two collections" do
+      before do
+        make_collection(user, title: "Community", id: "community-1", member_ids: [generic_file.id])
+        make_collection(user, title: "Collection", id: "collection-1", member_ids: [generic_file.id])
+      end
+
+      let(:expected_communities) {
+        [
+          [{"title": "Community", "id": "community-1"}],
+          [{"title": "Collection", "id": "collection-1"}]
+        ]
+      }
+
+      it "adds data" do
+        expect(invenio_rdm_record_converter.send(:list_collections)).to eq(expected_communities)
+      end
+    end
+
+    context "with parent collection" do
+      before do
+        make_collection(user, title: "Community", id: "community-1", member_ids: [generic_file.id])
+        make_collection(user, title: "Parent", id: "parent-1", member_ids: ["community-1"])
+      end
+
+      let(:expected_communities) {
+        [
+          [{"title": "Parent", "id": "parent-1"},{"title": "Community", "id": "community-1"}]
+        ]
+      }
+
+      it "adds data" do
+        expect(invenio_rdm_record_converter.send(:list_collections)).to eq(expected_communities)
+      end
     end
   end
 
