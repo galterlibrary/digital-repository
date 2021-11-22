@@ -35,19 +35,19 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   # Create an instance of a InvenioRdmRecordConverter converter containing all the metadata for json export
   #
   # @param [GenericFile] generic_file file to be converted for export
-  def initialize(generic_file=nil)
+  def initialize(generic_file=nil, collection_store={})
     return unless generic_file
     @generic_file = generic_file
 
-    puts "processing file: #{@generic_file.id}"
     @record = record_for_export
     @file = file_info
     @extras = extra_data
+    @collection_store = collection_store
     @communities = list_collections
   end
 
   def to_json(options={})
-    options[:except] ||= ["memoized_mesh", "memoized_lcsh", "generic_file"]
+    options[:except] ||= ["memoized_mesh", "memoized_lcsh", "generic_file", "collection_store"]
     super
   end
 
@@ -109,20 +109,10 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     collection_paths = []
 
     @generic_file.collections.each do |collection|
-      recursive_collection_path(collection, [{"title": collection.title, "id": collection.id}], collection_paths)
+      collection_paths << @collection_store[collection.id.to_sym]
     end
 
     collection_paths
-  end
-
-  def recursive_collection_path(collection, path, collection_paths)
-    if collection.collections.empty?
-      collection_paths << path
-    else
-      collection.collections.each do |collection|
-        recursive_collection_path(collection, [{"title": collection.title, "id": collection.id}] + path, collection_paths)
-      end
-    end
   end
 
   def record_for_export

@@ -1,3 +1,5 @@
+require "#{Rails.root}/lib/scripts/collection_list"
+
 # Before you run this script empty the directory tmp/export/!
 #   rm -rf tmp/export/; mkdir tmp/export/
 # Run this script with the following:
@@ -20,6 +22,12 @@ converters.each do |converter|
   raise(RegistryError, "Model (#{converter[:model_class].name}) for conversion must be an ActiveFedora::Base") unless converter[:model_class].ancestors.include?(ActiveFedora::Base)
 end
 
+puts "---------\nCreating Collection Store\n---------"
+collection_store = {}
+Collection.find_each do |collection|
+  collection_store[collection.id.to_sym] = collections_path(collection)
+end
+
 conversion_counts = {}
 # for each converter
 converters.each do |converter|
@@ -27,7 +35,9 @@ converters.each do |converter|
   conversion_count = 0
 
   converter[:model_class].find_each do |record_for_export|
-    converted_record = converter[:converter_class].new(record_for_export)
+    converted_record = converter[:converter_class].new(
+      record_for_export, collection_store
+    )
     puts "---------\n#{converter[:model_class].name} has id: #{record_for_export.id}\n---------"
     file_path = "tmp/export/#{converter[:model_class].name.underscore}_#{record_for_export.id}.json"
     File.write(file_path, converted_record.to_json(pretty: true))
