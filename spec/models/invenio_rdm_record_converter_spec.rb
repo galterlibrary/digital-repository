@@ -316,9 +316,7 @@ RSpec.describe InvenioRdmRecordConverter do
     context "with one collection" do
       let(:community_hash) { [{"title": "Community", "id": "community-1"}] }
       let(:expected_communities) {
-        [
-          community_hash
-        ]
+        community_hash
       }
 
       let(:collection_store) {
@@ -350,9 +348,12 @@ RSpec.describe InvenioRdmRecordConverter do
 
       let(:collection_store) {
         {"community-1": [
-          [{"title": "Community", "id": "community-1"}],
-          [{"title": "Collection", "id": "collection-1"}]
-        ]}.with_indifferent_access
+           [{"title": "Community", "id": "community-1"}]
+         ],
+         "collection-1": [
+           [{"title": "Collection", "id": "collection-1"}]
+         ]
+        }.with_indifferent_access
       }
       let(:converted_record_with_two_collections) {
         described_class.new(generic_file, collection_store)
@@ -360,7 +361,7 @@ RSpec.describe InvenioRdmRecordConverter do
 
       it "adds data" do
         expect(
-          converted_record_with_two_collections.send(:list_collections)[0]
+          converted_record_with_two_collections.send(:list_collections)
         ).to eq(expected_communities)
       end
     end
@@ -394,7 +395,7 @@ RSpec.describe InvenioRdmRecordConverter do
 
       it "adds data" do
         expect(
-          converted_record_with_parent_collection.send(:list_collections)[0]
+          converted_record_with_parent_collection.send(:list_collections)
         ).to eq(expected_communities)
       end
     end
@@ -430,7 +431,7 @@ RSpec.describe InvenioRdmRecordConverter do
 
       it "adds data" do
         expect(
-          converted_record_with_multiple_parents.send(:list_collections)[0]
+          converted_record_with_multiple_parents.send(:list_collections)
         ).to eq(expected_communities)
       end
     end
