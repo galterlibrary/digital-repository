@@ -181,7 +181,8 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
         "title": @generic_file.title.first,
         "additional_titles": format_additional("title", "alternative-title", @generic_file.title.drop(1)),
         "description": @generic_file.description.first,
-        "additional_descriptions": format_additional("description", "other", @generic_file.description.drop(1)) + format_additional("description", "acknowledgements", @generic_file.acknowledgments),
+        "additional_descriptions": format_additional("description", "other", @generic_file.description.drop(1)) + format_additional("description", "acknowledgements", @generic_file.acknowledgments)\
+          + format_additional("description", "abstract", @generic_file.abstract),
         "publisher": @generic_file.publisher.shift,
         "publication_date": format_publication_date(@generic_file.date_created.shift || @generic_file.date_uploaded.to_s.force_encoding("UTF-8")),
         "subjects": SUBJECT_SCHEMES.map{ |subject_type| subjects_for_scheme(@generic_file.send(subject_type), subject_type) }.compact.flatten,
@@ -283,7 +284,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       if value.blank?
         next
       else
-        {"#{content_type}": value.to_s.force_encoding("UTF-8"), "type": {"id": invenio_type, "title": {"en": invenio_type.titleize}}}
+        {"#{content_type}": value.to_s.force_encoding("UTF-8"), "type": {"id": invenio_type}}
       end
     end
 
