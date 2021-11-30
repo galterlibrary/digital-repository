@@ -38,7 +38,8 @@ RSpec.describe InvenioRdmRecordConverter do
       rights: ["http://creativecommons.org/licenses/by-nc-sa/3.0/us/"],
       visibility: InvenioRdmRecordConverter::OPEN_ACCESS,
       related_url: ["https://doi.org/10.5438/55e5-t5c0"],
-      acknowledgments: ["this is an acknowledgement"]
+      acknowledgments: ["this is an acknowledgement"],
+      abstract: ["this is an abstract"]
     )
   }
   let(:generic_file_checksum) { generic_file.content.checksum.value }
@@ -75,16 +76,17 @@ RSpec.describe InvenioRdmRecordConverter do
           "additional_titles": [
             {
               "title": "Secondary Title",
-              "type": {"id": "alternative-title", "title": {"en": "Alternative Title"}}
+              "type": {"id": "alternative-title"}
             },
             {
               "title": "Tertiary Title",
-              "type": {"id": "alternative-title", "title": {"en": "Alternative Title"}}
+              "type": {"id": "alternative-title"}
             }
           ],
           "description": generic_file.description.shift,
-          "additional_descriptions": [{"description": generic_file.description.last, "type": {"id": "other", "title": {"en": "Other"}}},
-                                      {"description": generic_file.acknowledgments.first, "type": {"id": "acknowledgements", "title": {"en": "Acknowledgements"}}}],
+          "additional_descriptions": [{"description": generic_file.description.last, "type": {"id": "other"}},
+                                      {"description": generic_file.acknowledgments.first, "type": {"id": "acknowledgements"}},
+                                      {"description": generic_file.abstract.first, "type": {"id": "abstract"}}],
           "publisher": "DigitalHub. Galter Health Sciences Library & Learning Center",
           "publication_date": "2021-01-01",
           "subjects": [
@@ -240,7 +242,8 @@ RSpec.describe InvenioRdmRecordConverter do
       "person_or_org": {
         "name": organization_name,
         "type": "organizational"
-      }
+      },
+      "role": {"id": InvenioRdmRecordConverter::ROLE_OTHER}
     }.with_indifferent_access
   }
 
@@ -470,13 +473,13 @@ RSpec.describe InvenioRdmRecordConverter do
   let(:expected_two_cats_title) {
     [{
       "title": "Two Cats",
-      "type": {"id": "alternative-title", "title": {"en": "Alternative Title"}}
+      "type": {"id": "alternative-title"}
     }]
   }
   let(:expected_two_cats_description) {
     [{
       "description": "Two Cats",
-      "type": {"id": "other", "title": {"en": "Other"}}
+      "type": {"id": "other"}
     }]
   }
 
