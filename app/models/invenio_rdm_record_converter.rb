@@ -38,7 +38,10 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   #
   # @param [GenericFile] generic_file file to be converted for export
   def initialize(generic_file=nil)
-    return unless generic_file
+    if generic_file.blank? || generic_file.unexportable?
+      return
+    end
+
     @generic_file = generic_file
 
     puts "processing file: #{@generic_file.id}"
