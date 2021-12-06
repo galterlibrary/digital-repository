@@ -625,4 +625,156 @@ RSpec.describe GenericFile do
       end
     end
   end
+
+  let(:public_permission_double) { double("Hydra::AccessControls::Permission") }
+  let(:gv_black_photo_sub_collection_double) { double("Collection") }
+  let(:gv_black_collection_double) { double("Collection") }
+  let(:random_doi) { "10.18131/g3-nqgv-4863" }
+  let(:blank_doi) { "" }
+  let(:public_record) { GenericFile.new(doi: []) }
+  let(:private_record) { GenericFile.new(doi: []) }
+
+  # if record is publc, has a doi, and is either in the gv black photograph sub collection or is not in the greater gv black collection
+  describe "#unexportable?" do
+    before do
+      allow(public_permission_double).to receive(:agent).and_return(GenericFile::PUBLIC_PERMISSION)
+
+      allow(gv_black_photo_sub_collection_double).to receive(:map).and_return([GenericFile::GV_BLACK_PHOTOGRAPH_SUB_COLLECTION_ID])
+      allow(gv_black_photo_sub_collection_double).to receive(:id)
+
+      allow(gv_black_collection_double).to receive(:map).and_return([GenericFile::GV_BLACK_COLLECTION_ID])
+      allow(gv_black_collection_double).to receive(:id)
+    end
+
+    context "record is public" do
+      before do
+        # GenericFile validates the type of permissions so simply passing a double to the constructor does not work
+        public_record.stub(:permissions).and_return([public_permission_double])
+      end
+
+      context "has doi" do
+        before do
+          public_record.stub(:doi).and_return(random_doi)
+        end
+
+        context "is in the gv black photograph sub collection" do
+          context "is NOT in the gv black papers collection" do
+            before do
+              public_record.stub(:collections).and_return([gv_black_photo_sub_collection_double])
+            end
+
+            it "returns true" do
+              expect(public_record.unexportable?).to eq(true)
+            end
+          end
+
+          context "is in the gv black papers collection" do
+            before do
+              public_record.stub(:collections).and_return([gv_black_photo_sub_collection_double, gv_black_collection_double])
+            end
+
+            it "returns true" do
+              expect(public_record.unexportable?).to eq(true)
+            end
+          end
+        end
+
+        context "is NOT in the gv black photograph sub collection" do
+          context "is NOT in the gv black papers collection" do
+            before do
+              public_record.stub(:collections).and_return([])
+            end
+
+            it "returns true" do
+              expect(public_record.unexportable?).to eq(true)
+            end
+          end
+
+          context "is in the gv black papers collection" do
+            before do
+              public_record.stub(:collections).and_return([gv_black_collection_double])
+            end
+
+            it "returns true" do
+              expect(public_record.unexportable?).to eq(true)
+            end
+          end
+        end
+      end
+
+      context "has no doi" do
+        before do
+          public_record.stub(:doi).and_return(blank_doi)
+        end
+
+        context "is in the gv black photograph sub collection" do
+          before do
+            public_record.stub(:collections).and_return(gv_black_photo_sub_collection_double)
+          end
+
+          context "is NOT in the gv black papers collection" do
+            it "returns true" do
+              expect(public_record.unexportable?).to eq(false)
+            end
+          end
+        end
+      end
+    end
+
+    context "record is NOT public" do
+      before do
+        allow(private_record).to receive(:permissions).and_return([])
+      end
+
+      context "has doi" do
+        before do
+          allow(private_record).to receive(:doi).and_return(random_doi)
+        end
+
+        context "is in the gv black photograph sub collection" do
+          context "is NOT in the gv black papers collection" do
+            before do
+              allow(private_record).to receive(:collections).and_return([gv_black_photo_sub_collection_double])
+            end
+
+            it "returns true" do
+              expect(private_record.unexportable?).to eq(false)
+            end
+          end
+
+          context "is in the gv black papers collection" do
+            before do
+              allow(private_record).to receive(:collections).and_return([gv_black_photo_sub_collection_double, gv_black_collection_double])
+            end
+
+            it "returns true" do
+              expect(private_record.unexportable?).to eq(false)
+            end
+          end
+        end
+
+        context "is NOT in the gv black photograph sub collection" do
+          context "is NOT in the gv black papers collection" do
+            before do
+              private_record.stub(:collections).and_return([])
+            end
+
+            it "returns true" do
+              expect(private_record.unexportable?).to eq(false)
+            end
+          end
+
+          context "is in the gv black papers collection" do
+            before do
+              private_record.stub(:collections).and_return([gv_black_collection_double])
+            end
+
+            it "returns true" do
+              expect(private_record.unexportable?).to eq(false)
+            end
+          end
+        end
+      end
+    end
+  end
 end

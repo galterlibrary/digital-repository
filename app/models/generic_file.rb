@@ -7,6 +7,11 @@ class GenericFile < ActiveFedora::Base
   include Galtersufia::GenericFile::FullTextIndexing
   include Galtersufia::GenericFile::MimeTypes
 
+  PUBLIC_PERMISSION = "http://projecthydra.org/ns/auth/group#public"
+  GV_BLACK_PHOTOGRAPH_SUB_COLLECTION_ID = "x346d4254"
+  GV_BLACK_COLLECTION_ID = "a4de96c9-7c6d-40d6-ad9e-cac8a24faad5"
+
+
   belongs_to :parent,
     predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf,
     class_name: "Collection"
@@ -136,6 +141,30 @@ class GenericFile < ActiveFedora::Base
     citation = super
     add_doi_to_citation(citation)
   end
+
+  def unexportable?
+    doi.empty? || in_old_gv_black_collection?
+  end
+
+  def in_old_gv_black_collection?
+    parent_collections_ids = self.collection_ids
+
+    # if broader restrictions -> add additional GV black collections
+    # if less restrictive -> use only GV black photograph sub collection
+    parent_collections_ids.include?(GV_BLACK_PHOTOGRAPH_SUB_COLLECTION_ID, GV_BLACK_COLLECTION_ID)
+  end
+  private :in_gv_black_collection?
+
+  # def public?
+  #   permissions.each do |permission|
+  #     if permission.agent == PUBLIC_PERMISSION
+  #       return true
+  #     end
+  #   end
+  #
+  #   false
+  # end
+  # private :public?
 
   def json_presentation_terms
     GalterGenericFilePresenter.terms -
