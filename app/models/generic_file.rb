@@ -143,10 +143,19 @@ class GenericFile < ActiveFedora::Base
   end
 
   def unexportable?
-    collection_ids = collections.map(&:id)
+    (open_access? && doi.empty?) || in_gv_black_collection?
+  end
 
-    # if record is publc, has a doi, and is either in the gv black photograph sub collection or is not in the greater gv black collection
-    public? && !doi.empty? && (collection_ids.include?(GV_BLACK_PHOTOGRAPH_SUB_COLLECTION_ID) || !collection_ids.include?(GV_BLACK_COLLECTION_ID))
+  def open_access?
+    self.visibility == InvenioRdmRecordConverter::OPEN_ACCESS
+  end
+
+  def in_gv_black_collection?
+    parent_collections_ids = self.collection_ids
+
+    # if broader restrictions -> add additional GV black collections
+    # if less restrictive -> use only GV black photograph sub collection
+    parent_collections_ids.include?(GV_BLACK_PHOTOGRAPH_SUB_COLLECTION_ID, GV_BLACK_COLLECTION_ID)
   end
 
   def public?
