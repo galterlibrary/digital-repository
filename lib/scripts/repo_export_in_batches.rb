@@ -23,10 +23,9 @@ converters.each do |converter|
 end
 
 puts "---------\nCreating Collection Store\n---------"
-collection_store = {}
-Collection.find_each do |collection|
-  collection_store[collection.id.to_sym] = collections_path(collection)
-end
+@collection_store = {}
+build_collection_store_data
+build_path_for_collection_store
 
 conversion_counts = {}
 # for each converter
@@ -36,7 +35,7 @@ converters.each do |converter|
 
   converter[:model_class].find_each do |record_for_export|
     converted_record = converter[:converter_class].new(
-      record_for_export, collection_store
+      record_for_export, @collection_store
     )
     puts "---------\n#{converter[:model_class].name} has id: #{record_for_export.id}\n---------"
     file_path = "tmp/export/#{converter[:model_class].name.underscore}_#{record_for_export.id}.json"

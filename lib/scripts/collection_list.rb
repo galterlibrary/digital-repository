@@ -1,37 +1,41 @@
-def collections_path(collection)
-  starting_collection_data = collection_title_id_data(collection)
-  if collection.collections.empty?
-    collection_paths = [[starting_collection_data]]
-  else
-    collection_paths = []
+def build_collection_store_data
+  Collection.find_each do |c|
+    @collection_store[c.id] = {
+      "id": c.id,
+      "title": c.title,
+      "collections": c.collection_ids,
+      "path": []
+    }
   end
-
-  collection.collections.each do |parent_collection|
-    recursive_collection_path(
-      parent_collection,
-      [collection_title_id_data(parent_collection),
-       starting_collection_data],
-      collection_paths
-    )
-  end
-
-  collection_paths
 end
 
-def recursive_collection_path(collection, path, collection_paths)
-  if collection.collections.empty?
-    collection_paths << path
+def build_path_for_collection_store
+  @collection_store.each do |collection|
+    collection_data = collection[1]
+    recursive_collection_path(
+      collection_data,
+      [collection_title_id_data(collection_data)],
+      collection_data
+    )
+  end
+end
+
+def recursive_collection_path(collection, path, starting_collection)
+  if collection[:collections].empty?
+    starting_collection[:path] << path
   else
-    collection.collections.each do |collection|
+    collection[:collections].each do |parent_collection|
+      parent_collection_data = @collection_store[parent_collection]
+
       recursive_collection_path(
-        collection,
-        [collection_title_id_data(collection)] + path,
-        collection_paths
+        parent_collection_data,
+        [collection_title_id_data(parent_collection_data)] + path,
+        starting_collection
       )
     end
   end
 end
 
 def collection_title_id_data(collection)
-  {"title": collection.title, "id": collection.id}
+  {"title": collection[:title], "id": collection[:id]}
 end
