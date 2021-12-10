@@ -314,13 +314,22 @@ RSpec.describe InvenioRdmRecordConverter do
     end
 
     context "with one collection" do
-      let(:community_hash) { [{"title": "Community", "id": "community-1"}] }
+      let(:community_hash) {
+        [
+          [{"title": "Community", "id": "community-1"}.with_indifferent_access]
+        ]
+      }
       let(:expected_communities) {
         community_hash
       }
 
       let(:collection_store) {
-        {:"community-1" => community_hash}
+        {"community-1": {
+          "id": "community-1",
+          "title": "Community",
+          "collections": [],
+          "path": [[{:title=>"Community", :id=>"community-1"}]]
+        }}.with_indifferent_access
       }
       let(:converted_record_with_collection) {
         described_class.new(generic_file, collection_store)
@@ -347,12 +356,19 @@ RSpec.describe InvenioRdmRecordConverter do
       }
 
       let(:collection_store) {
-        {"community-1": [
-           [{"title": "Community", "id": "community-1"}]
-         ],
-         "collection-1": [
-           [{"title": "Collection", "id": "collection-1"}]
-         ]
+        {
+          "community-1": {
+            "id": "community-1",
+            "title": "Community",
+            "collections": [],
+            "path": [[{:title=>"Community", :id=>"community-1"}]]
+          },
+          "collection-1": {
+            "id": "collection-1",
+            "title": "Collection",
+            "collections": [],
+            "path": [[{:title=>"Collection", :id=>"collection-1"}]]
+          }
         }.with_indifferent_access
       }
       let(:converted_record_with_two_collections) {
@@ -382,12 +398,15 @@ RSpec.describe InvenioRdmRecordConverter do
       }
 
       let(:collection_store) {
-        {"community-1": [
-          [
-            {"title": "Parent", "id": "parent-1"},
-            {"title": "Community", "id": "community-1"}
+        {"community-1": {
+          "id": "community-1",
+          "title": "Community",
+          "collections": [],
+          "path": [
+            [{:title=>"Parent", :id=>"parent-1"},
+             {:title=>"Community", :id=>"community-1"}]
           ]
-        ]}.with_indifferent_access
+        }}.with_indifferent_access
       }
       let(:converted_record_with_parent_collection) {
         described_class.new(generic_file, collection_store)
@@ -418,12 +437,17 @@ RSpec.describe InvenioRdmRecordConverter do
       }
 
       let(:collection_store) {
-        {"community-1": [
-          [{"title": "Mom", "id": "parent-1"},
-           {"title": "Community", "id": "community-1"}],
-          [{"title": "Dad", "id": "parent-2"},
-           {"title": "Community", "id": "community-1"}]
-        ]}.with_indifferent_access
+        {"community-1": {
+          "id": "community-1",
+          "title": "Community",
+          "collections": [],
+          "path": [
+            [{:title=>"Mom", :id=>"parent-1"},
+             {:title=>"Community", :id=>"community-1"}],
+            [{:title=>"Dad", :id=>"parent-2"},
+             {:title=>"Community", :id=>"community-1"}]
+          ]
+        }}.with_indifferent_access
       }
       let(:converted_record_with_multiple_parents) {
         described_class.new(generic_file, collection_store)
