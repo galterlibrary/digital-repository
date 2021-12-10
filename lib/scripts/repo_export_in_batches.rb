@@ -20,6 +20,11 @@ converters.each do |converter|
   raise(RegistryError, "Model (#{converter[:model_class].name}) for conversion must be an ActiveFedora::Base") unless converter[:model_class].ancestors.include?(ActiveFedora::Base)
 end
 
+puts "---------\nCreating Collection Store\n---------"
+collection_store = CollectionStore.new
+collection_store.build_collection_store_data
+collection_store.build_paths_for_collection_store
+
 conversion_counts = {}
 # for each converter
 converters.each do |converter|
@@ -27,7 +32,9 @@ converters.each do |converter|
   conversion_count = 0
 
   converter[:model_class].find_each do |record_for_export|
-    converted_record = converter[:converter_class].new(record_for_export)
+    converted_record = converter[:converter_class].new(
+      record_for_export, collection_store.data
+    )
     puts "---------\n#{converter[:model_class].name} has id: #{record_for_export.id}\n---------"
     file_path = "tmp/export/#{converter[:model_class].name.underscore}_#{record_for_export.id}.json"
     File.write(file_path, converted_record.to_json(pretty: true))

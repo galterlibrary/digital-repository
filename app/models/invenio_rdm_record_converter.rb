@@ -1,6 +1,4 @@
 include Sufia::Export
-require 'digest/md5'
-require 'logger'
 
 # Convert a GenericFile including metadata, permissions and version metadata into a PORO
 # so that the metadata can be exported in json format using to_json
@@ -37,18 +35,19 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   # Create an instance of a InvenioRdmRecordConverter converter containing all the metadata for json export
   #
   # @param [GenericFile] generic_file file to be converted for export
-  def initialize(generic_file=nil)
+  def initialize(generic_file=nil, collection_store={})
     return unless generic_file
     @generic_file = generic_file
 
-    puts "processing file: #{@generic_file.id}"
     @record = record_for_export
     @file = file_info
     @extras = extra_data
+    @collection_store = collection_store
+    @communities = list_collections
   end
 
   def to_json(options={})
-    options[:except] ||= ["memoized_mesh", "memoized_lcsh", "generic_file"]
+    options[:except] ||= ["memoized_mesh", "memoized_lcsh", "generic_file", "collection_store"]
     super
   end
 
@@ -104,6 +103,18 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     end
 
     permission_data
+  end
+
+  def list_collections
+    collection_paths = []
+
+    @generic_file.collection_ids.each do |collection_id|
+      @collection_store[collection_id][:paths].each do |path|
+        collection_paths << path
+      end
+    end
+
+    collection_paths
   end
 
   def record_for_export
@@ -199,8 +210,6 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
         "funding": funding(@generic_file.id)
       }
     rescue => e
-      # logger = Logger.new("#{Rails.root}/tmp/export/export_errors.log")
-      # logger.level = Logger::ERROR
       puts "[!!!ERROR!!!] Problem for GenericFile: #{@generic_file.id}"
       puts "Error - #{e}".force_encoding("UTF-8")
       puts "Continuing..."
