@@ -47,7 +47,7 @@ RSpec.describe InvenioRdmRecordConverter do
     "#{ENV["FEDORA_BINARY_PATH"]}/#{generic_file_checksum[0..1]}/"\
     "#{generic_file_checksum[2..3]}/#{generic_file_checksum[4..5]}/#{generic_file_checksum}"
   }
-  let(:collection_store) { Hash.new }
+  let(:collection_store) { CollectionStore.new }
   let(:json) do
     {
       "record": {
@@ -179,7 +179,7 @@ RSpec.describe InvenioRdmRecordConverter do
       "communities": []
     }.to_json
   end
-  let(:invenio_rdm_record_converter) { described_class.new(generic_file, collection_store) }
+  let(:invenio_rdm_record_converter) { described_class.new(generic_file, collection_store.data) }
 
   before do
     ProxyDepositRights.create(grantor_id: assistant.id, grantee_id: user.id)
@@ -314,25 +314,19 @@ RSpec.describe InvenioRdmRecordConverter do
     end
 
     context "with one collection" do
-      let(:community_hash) {
+      before do
+        collection_store.build_collection_store_data
+        collection_store.build_paths_for_collection_store
+      end
+
+      let(:expected_communities) {
         [
-          [{"title": "Community", "id": "community-1"}.with_indifferent_access]
+          [{"title": "Community", "id": "community-1"}]
         ]
       }
-      let(:expected_communities) {
-        community_hash
-      }
 
-      let(:collection_store) {
-        {"community-1": {
-          "id": "community-1",
-          "title": "Community",
-          "collections": [],
-          "path": [[{:title=>"Community", :id=>"community-1"}]]
-        }}.with_indifferent_access
-      }
       let(:converted_record_with_collection) {
-        described_class.new(generic_file, collection_store)
+        described_class.new(generic_file, collection_store.data)
       }
 
       it "adds data" do
@@ -346,33 +340,18 @@ RSpec.describe InvenioRdmRecordConverter do
       before do
         make_collection(user, title: "Collection", id: "collection-1",
                         member_ids: [generic_file.id])
+        collection_store.build_collection_store_data
+        collection_store.build_paths_for_collection_store
       end
 
       let(:expected_communities) {
         [
-          [{"title": "Community", "id": "community-1"}.with_indifferent_access],
-          [{"title": "Collection", "id": "collection-1"}.with_indifferent_access]
+          [{"title": "Community", "id": "community-1"}],
+          [{"title": "Collection", "id": "collection-1"}]
         ]
       }
-
-      let(:collection_store) {
-        {
-          "community-1": {
-            "id": "community-1",
-            "title": "Community",
-            "collections": [],
-            "path": [[{:title=>"Community", :id=>"community-1"}]]
-          },
-          "collection-1": {
-            "id": "collection-1",
-            "title": "Collection",
-            "collections": [],
-            "path": [[{:title=>"Collection", :id=>"collection-1"}]]
-          }
-        }.with_indifferent_access
-      }
       let(:converted_record_with_two_collections) {
-        described_class.new(generic_file, collection_store)
+        described_class.new(generic_file, collection_store.data)
       }
 
       it "adds data" do
@@ -386,30 +365,21 @@ RSpec.describe InvenioRdmRecordConverter do
       before do
         make_collection(user, title: "Parent", id: "parent-1",
                         member_ids: ["community-1"])
+        collection_store.build_collection_store_data
+        collection_store.build_paths_for_collection_store
       end
 
       let(:expected_communities) {
         [
           [
-            {"title": "Parent", "id": "parent-1"}.with_indifferent_access,
-            {"title": "Community", "id": "community-1"}.with_indifferent_access
+            {"title": "Parent", "id": "parent-1"},
+            {"title": "Community", "id": "community-1"}
           ]
         ]
       }
 
-      let(:collection_store) {
-        {"community-1": {
-          "id": "community-1",
-          "title": "Community",
-          "collections": [],
-          "path": [
-            [{:title=>"Parent", :id=>"parent-1"},
-             {:title=>"Community", :id=>"community-1"}]
-          ]
-        }}.with_indifferent_access
-      }
       let(:converted_record_with_parent_collection) {
-        described_class.new(generic_file, collection_store)
+        described_class.new(generic_file, collection_store.data)
       }
 
       it "adds data" do
@@ -425,32 +395,21 @@ RSpec.describe InvenioRdmRecordConverter do
                         member_ids: ["community-1"])
         make_collection(user, title: "Dad", id: "parent-2",
                         member_ids: ["community-1"])
+        collection_store.build_collection_store_data
+        collection_store.build_paths_for_collection_store
       end
 
       let(:expected_communities) {
         [
-          [{"title": "Mom", "id": "parent-1"}.with_indifferent_access,
-           {"title": "Community", "id": "community-1"}.with_indifferent_access],
-          [{"title": "Dad", "id": "parent-2"}.with_indifferent_access,
-           {"title": "Community", "id": "community-1"}.with_indifferent_access]
+          [{"title": "Mom", "id": "parent-1"},
+           {"title": "Community", "id": "community-1"}],
+          [{"title": "Dad", "id": "parent-2"},
+           {"title": "Community", "id": "community-1"}]
         ]
       }
 
-      let(:collection_store) {
-        {"community-1": {
-          "id": "community-1",
-          "title": "Community",
-          "collections": [],
-          "path": [
-            [{:title=>"Mom", :id=>"parent-1"},
-             {:title=>"Community", :id=>"community-1"}],
-            [{:title=>"Dad", :id=>"parent-2"},
-             {:title=>"Community", :id=>"community-1"}]
-          ]
-        }}.with_indifferent_access
-      }
       let(:converted_record_with_multiple_parents) {
-        described_class.new(generic_file, collection_store)
+        described_class.new(generic_file, collection_store.data)
       }
 
       it "adds data" do

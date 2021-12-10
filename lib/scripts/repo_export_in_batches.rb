@@ -1,5 +1,3 @@
-require "#{Rails.root}/lib/scripts/collection_list"
-
 # Before you run this script empty the directory tmp/export/!
 #   rm -rf tmp/export/; mkdir tmp/export/
 # Run this script with the following:
@@ -23,9 +21,9 @@ converters.each do |converter|
 end
 
 puts "---------\nCreating Collection Store\n---------"
-@collection_store = {}
-build_collection_store_data
-build_path_for_collection_store
+collection_store = CollectionStore.new
+collection_store.build_collection_store_data
+collection_store.build_paths_for_collection_store
 
 conversion_counts = {}
 # for each converter
@@ -35,7 +33,7 @@ converters.each do |converter|
 
   converter[:model_class].find_each do |record_for_export|
     converted_record = converter[:converter_class].new(
-      record_for_export, @collection_store
+      record_for_export, collection_store.data
     )
     puts "---------\n#{converter[:model_class].name} has id: #{record_for_export.id}\n---------"
     file_path = "tmp/export/#{converter[:model_class].name.underscore}_#{record_for_export.id}.json"

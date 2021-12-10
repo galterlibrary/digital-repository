@@ -109,7 +109,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     collection_paths = []
 
     @generic_file.collection_ids.each do |collection_id|
-      @collection_store[collection_id][:path].each do |path|
+      @collection_store[collection_id][:paths].each do |path|
         collection_paths << path
       end
     end
