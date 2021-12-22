@@ -3,126 +3,17 @@ module EzidGenerator
 
   attr_accessor :doi_message
 
-  def ezid_metadata(status, doi=nil)
-    Ezid::Metadata.new(
-      "datacite" => validate_datacite_metadata(datacite_xml(doi)),
-      '_status' => status,
-      '_target' => "#{ENV['PRODUCTION_URL']}/files/#{self.id}"
-    )
-  end
-  private :ezid_metadata
-
-  def datacite_schema
-    @datacite_schema ||= Nokogiri::XML.Schema(
-      open('db/datacite_xsd/metadata.xsd')
-    )
-  end
-
-  class DataciteSchemaError < StandardError; end
-  def validate_datacite_metadata(xml)
-    results = datacite_schema.validate(Nokogiri::XML(xml))
-    return xml if results.blank?
-    raise DataciteSchemaError.new(results)
-  end
-  private :validate_datacite_metadata
-
-  def resource_type_map(rtype)
-    {
-      'Audio Visual Document' => 'Audiovisual',
-      'Collections' => 'Collection',
-      'Research Paper' => 'DataPaper',
-      'Dataset' => 'Dataset',
-      'Image' => 'Image',
-      'Software or Program Code' => 'Software'
-    }[rtype] || 'Other'
-  end
-  private :resource_type_map
-
-  def datacite_xml(doi)
-    Nokogiri::XML::Builder.new(encoding: 'UTF-8') { |xml|
-      xml.resource(
-        "xmlns:xsi" => "http://www.w3.org/2001/XMLSchema-instance",
-        "xmlns" => "http://datacite.org/schema/kernel-4",
-        "xsi:schemaLocation" => "http://schema.datacite.org/meta/kernel-4/ http://datacite.org/schema/kernel-4/metadata.xsd"
-      ) {
-
-        xml.identifier(identifierType: "DOI") {
-          xml.text(doi.to_s.gsub('doi:', ''))
-        }
-
-        xml.creators {
-          self.creator.each do |creator|
-            xml.creator {
-              xml.creatorName {
-                xml.text(creator)
-              }
-            }
-          end
-        }
-
-        xml.titles {
-          self.title.each do |title|
-            xml.title {
-              xml.text(title)
-            }
-          end
-        }
-
-        xml.publisher {
-          xml.text('Galter Health Science Library & Learning Center')
-        }
-
-        xml.publicationYear {
-          xml.text(
-            (self.date_uploaded.try(:year) || Time.zone.today.year).to_s
-          )
-        }
-
-        xml.resourceType(
-          resourceTypeGeneral: resource_type_map(self.resource_type.first)
-        ) { xml.text(self.resource_type.first) }
-
-        xml.descriptions {
-          self.description.each do |description|
-            xml.description(descriptionType: "Abstract") {
-              xml.text(description)
-            }
-          end
-        }
-      }
-    }.to_xml
-  end
-  private :datacite_xml
-
-  def update_doi_metadata_message(identifier, new_status)
-    if new_status == 'unavailable' && identifier.status != new_status
-      self.doi_message = 'updated_unavailable'
+  def check_doi_presence
+    return self.doi_message unless can_get_doi?
+    if self.doi.present?
+      update_datacite_doi
     else
-      self.doi_message = 'updated'
+      create_datacite_doi
     end
-
+    self.doi_message
   end
-  private :update_doi_metadata_message
 
-  def update_doi_metadata
-    self.doi.each do |doi_str|
-      begin
-        identifier = Ezid::Identifier.find(doi_str.to_s.strip)
-        new_status = self.visibility == 'open' ? 'public' : 'unavailable'
-        update_doi_metadata_message(identifier, new_status)
-        identifier.update_metadata(
-          ezid_metadata(
-            new_status,
-            doi_str.to_s.strip
-          )
-        )
-        identifier.save
-      rescue Ezid::Error
-        next
-      end
-    end
-  end
-  private :update_doi_metadata
+  private
 
   def can_get_doi?
     # Only generate if required metadata is there
@@ -137,24 +28,135 @@ module EzidGenerator
     end
     true
   end
-  private :can_get_doi?
 
-  def create_doi
-    identifier = Ezid::Identifier.mint(ezid_metadata(
-      self.visibility == 'open' ? 'public' : 'reserved'))
-    self.update_attributes(doi: [identifier.id])
+  def create_datacite_doi
+    response = DataciteRest.new.mint(
+      datacite_api_json
+    )
+    data = JSON[response.body]["data"]
+    self.update_attributes(doi: [data["id"]])
     self.doi_message = 'generated'
-    self.doi_message = 'generated_reserved' if identifier.status == 'reserved'
+    self.doi_message = 'generated_draft' if data["attributes"]["state"] == 'draft'
   end
-  private :create_doi
 
-  def check_doi_presence
-    return self.doi_message unless can_get_doi?
-    if self.doi.present?
-      update_doi_metadata
-    else
-      create_doi
+  def update_datacite_doi
+    client = DataciteRest.new
+
+    self.doi.each do |doi|
+      response = client.get_doi(doi)
+      data = JSON[response.body]["data"]
+      identifier = data["id"]
+      new_state = visibility_to_state
+      current_state = data["attributes"]["state"]
+      # if state changes from findable to anything else, we hide it
+      if current_state == "findable" && new_state != "findable"
+        json = datacite_api_json(hide=true)
+      else
+        json = datacite_api_json
+      end
+      client.update_metadata(identifier, json)
+      update_doi_metadata_message(current_state, new_state)
     end
-    self.doi_message
+  end
+
+  def update_doi_metadata_message(old_state, new_state)
+    if new_state == 'registered' && old_state != new_state
+      self.doi_message = 'updated_registered'
+    else
+      self.doi_message = 'updated'
+    end
+
+  end
+
+  def datacite_api_json(event=false)
+    data = {
+      "data": {
+        "type": "dois",
+        "attributes": {
+          "creators": creators_json,
+          "titles": titles_json,
+          "publisher": self.publisher.first,
+          "publicationYear": self.date_uploaded.try(:year) || Time.zone.today.year,
+          "types": {
+            "resourceType": self.resource_type.first,
+            "resourceTypeGeneral": resource_type_map(self.resource_type.first)
+          },
+          "descriptions": descriptions_json,
+          "url": "#{ENV['PRODUCTION_URL']}/files/#{self.id}",
+          "schemaVersion": "http://datacite.org/schema/kernel-4"
+        }
+      }
+    }
+
+    set_datacite_prefix(data)
+    set_datacite_event(data, event)
+  end
+
+  def set_datacite_prefix(data)
+    if !self.doi.present?
+      data[:data][:attributes][:prefix] = ENV['EZID_DEFAULT_SHOULDER']
+    end
+
+    data
+  end
+
+  def set_datacite_event(data, hide=false)
+    state = visibility_to_state
+
+    if hide
+      data[:data][:attributes][:event] = "hide"
+    elsif state == "findable"
+      data[:data][:attributes][:event] = "publish"
+    elsif state == "registered"
+      data[:data][:attributes][:event] = "register"
+    end
+
+    data
+  end
+
+  def visibility_to_state
+    case self.visibility
+    when "restricted"
+      "draft"
+    when "open"
+      "findable"
+    when "authenticated"
+      "registered"
+    end
+  end
+
+  def creators_json
+    creators = []
+    self.creator.each do |creator|
+      creators << {"name": creator}
+    end
+    creators
+  end
+
+  def titles_json
+    titles = []
+    self.title.each do |title|
+      titles << {"title": title}
+    end
+    titles
+  end
+
+  def descriptions_json
+    descriptions = []
+    self.description.each do |description|
+      descriptions << {"description": description, "descriptionType": "Abstract"}
+    end
+    descriptions
+  end
+
+  def resource_type_map(rtype)
+    {
+      'Audio Visual Document' => 'Audiovisual',
+      'Collections' => 'Collection',
+      'Research Paper' => 'DataPaper',
+      'Dataset' => 'Dataset',
+      'Image' => 'Image',
+      'Software or Program Code' => 'Software'
+    }[rtype] || 'Other'
   end
 end
