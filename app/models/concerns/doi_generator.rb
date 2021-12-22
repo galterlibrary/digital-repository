@@ -1,4 +1,4 @@
-module EzidGenerator
+module DoiGenerator
   extend ActiveSupport::Concern
 
   attr_accessor :doi_message
@@ -94,7 +94,7 @@ module EzidGenerator
 
   def set_datacite_prefix(data)
     if !self.doi.present?
-      data[:data][:attributes][:prefix] = ENV['EZID_DEFAULT_SHOULDER']
+      data[:data][:attributes][:prefix] = ENV['DATACITE_DEFAULT_SHOULDER']
     end
 
     data
@@ -103,6 +103,8 @@ module EzidGenerator
   def set_datacite_event(data, hide=false)
     state = visibility_to_state
 
+    # More about events in Datacite
+    # https://support.datacite.org/docs/api-create-dois#create-a-findable-doi
     if hide
       data[:data][:attributes][:event] = "hide"
     elsif state == "findable"
@@ -114,6 +116,8 @@ module EzidGenerator
     data
   end
 
+  # Our mapping from Digitalhub visibility to Datacite state
+  # https://support.datacite.org/docs/doi-states#doi-states-outside-of-fabrica
   def visibility_to_state
     case self.visibility
     when "restricted"

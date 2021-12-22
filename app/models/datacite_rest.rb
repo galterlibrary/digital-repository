@@ -3,8 +3,8 @@ require 'rest-client'
 class DataciteRest
   def initialize
     endpoint = ENV['DATACITE_API']
-    username = ENV['EZID_USER']
-    password = ENV['EZID_PASSWORD']
+    username = ENV['DATACITE_USER']
+    password = ENV['DATACITE_PASSWORD']
     @resource = RestClient::Resource.new(endpoint, username, password)
   end
 
