@@ -248,6 +248,8 @@ GEM
       devise (>= 3.4.1)
       net-ldap (>= 0.16.0)
     diff-lcs (1.2.5)
+    domain_name (0.5.20190701)
+      unf (>= 0.0.5, < 1.0.0)
     dropbox-sdk (1.6.5)
       json
     ebnf (1.0.0)
@@ -312,6 +314,9 @@ GEM
       httparty (>= 0.7.3)
       mimemagic
       multipart-post
+    http-accept (1.7.0)
+    http-cookie (1.0.4)
+      domain_name (~> 0.5)
     http_logger (0.5.1)
     httparty (0.18.1)
       mime-types (~> 3.0)
@@ -454,6 +459,7 @@ GEM
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-ssh (3.2.0)
+    netrc (0.11.0)
     newrelic_rpm (3.16.1.320)
     nio4r (2.5.2)
     noid (0.9.0)
@@ -628,6 +634,11 @@ GEM
     resque-pool (0.7.1)
       rake (>= 10.0, < 14.0)
       resque (>= 1.22, < 3)
+    rest-client (2.1.0)
+      http-accept (>= 1.7.0, < 2.0)
+      http-cookie (>= 1.0.2, < 2.0)
+      mime-types (>= 1.16, < 4.0)
+      netrc (~> 0.8)
     retriable (1.4.1)
     riiif (0.2.0)
       rails (> 3.2.0)
@@ -761,6 +772,9 @@ GEM
       thread_safe (~> 0.1)
     uglifier (4.1.10)
       execjs (>= 0.3.0, < 3)
+    unf (0.1.4)
+      unf_ext
+    unf_ext (0.0.8)
     unicorn (5.1.0)
       kgio (~> 2.6)
       raindrops (~> 0.7)
@@ -840,6 +854,7 @@ DEPENDENCIES
   rails (= 4.2.7)
   rdf-vocab
   resque (= 1.26.0)
+  rest-client
   riiif (= 0.2.0)
   rspec-activemodel-mocks
   rspec-rails

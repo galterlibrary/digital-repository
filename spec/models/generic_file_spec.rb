@@ -296,11 +296,7 @@ RSpec.describe GenericFile do
       end
     end
 
-    describe 'all required metadata present' do
-      let(:identifier) { double(
-        'ezid-id', id: 'doi', status: 'reserved'
-      ) }
-
+    describe 'all required metadata present', :vcr do
       subject { make_generic_file(
         user, title: ['title'], creator: ['bcd'],
         date_uploaded: Date.new(2013), id: 'mahid',
@@ -320,8 +316,8 @@ RSpec.describe GenericFile do
         end
 
         it 'does nothing' do
-          expect(Ezid::Identifier).not_to receive(:mint)
-          expect(Ezid::Identifier).not_to receive(:find)
+          expect(DataciteRest).not_to receive(:mint)
+          expect(DataciteRest).not_to receive(:get_doi)
           expect(subject.check_doi_presence).to eq('page')
           expect(subject.reload.doi).to eq([])
         end
@@ -329,54 +325,27 @@ RSpec.describe GenericFile do
         describe 'with no page_number metadata' do
           before do
             subject.update_attributes(page_number: nil)
-
-            expect(Ezid::Identifier).to receive(:mint)
-              .with(
-                Ezid::Metadata.new({
-                  'datacite' => "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<resource xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://datacite.org/schema/kernel-4\" xsi:schemaLocation=\"http://schema.datacite.org/meta/kernel-4/ http://datacite.org/schema/kernel-4/metadata.xsd\">\n  <identifier identifierType=\"DOI\"></identifier>\n  <creators>\n    <creator>\n      <creatorName>bcd</creatorName>\n    </creator>\n  </creators>\n  <titles>\n    <title>title</title>\n  </titles>\n  <publisher>Galter Health Science Library &amp; Learning Center</publisher>\n  <publicationYear>2013</publicationYear>\n  <resourceType resourceTypeGeneral=\"Other\">Book</resourceType>\n  <descriptions/>\n</resource>\n",
-                  '_status' => 'reserved',
-                  '_target' => 'https://digitalhub.northwestern.edu/files/mahid'
-                })
-              ).and_return(identifier)
           end
 
           it 'creates the doi' do
-            expect(subject.check_doi_presence).to eq('generated_reserved')
-            expect(subject.reload.doi).to eq(['doi'])
+            expect(subject.check_doi_presence).to eq('generated_draft')
+            expect(subject.reload.doi).to eq(['10.82113/as-zwv6-gf43'])
           end
         end
       end
 
       context 'no date_uploaded' do
-        let(:identifier) { double(
-          'ezid-id', id: 'doi', status: 'reserved'
-        ) }
-
         before { subject.update_attributes(date_uploaded: nil) }
 
         it 'sets doi' do
-          expect(Ezid::Identifier).to receive(:mint).with(
-            Ezid::Metadata.new({
-              'datacite' => "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<resource xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://datacite.org/schema/kernel-4\" xsi:schemaLocation=\"http://schema.datacite.org/meta/kernel-4/ http://datacite.org/schema/kernel-4/metadata.xsd\">\n  <identifier identifierType=\"DOI\"></identifier>\n  <creators>\n    <creator>\n      <creatorName>bcd</creatorName>\n    </creator>\n  </creators>\n  <titles>\n    <title>title</title>\n  </titles>\n  <publisher>Galter Health Science Library &amp; Learning Center</publisher>\n  <publicationYear>#{Time.zone.today.year.to_s}</publicationYear>\n  <resourceType resourceTypeGeneral=\"Other\">Book</resourceType>\n  <descriptions/>\n</resource>\n",
-              '_status' => 'reserved',
-              '_target' => 'https://digitalhub.northwestern.edu/files/mahid'
-            })
-          ).and_return(identifier)
-          expect(subject.check_doi_presence).to eq('generated_reserved')
-          expect(subject.reload.doi).to eq(['doi'])
+          expect(subject.check_doi_presence).to eq('generated_draft')
+          expect(subject.reload.doi).to eq(['10.82113/as-9n6h-wf43'])
         end
       end
 
       context 'doi already present' do
-        before { subject.update_attributes(doi: ['10.abc/FK2']) }
-
         describe 'does not originate from Galter' do
-          before do
-            expect(Ezid::Identifier).to receive(:find).with(
-              '10.abc/FK2').and_raise(Ezid::Error)
-            expect_any_instance_of(Ezid::Identifier).not_to receive(
-              :update_metadata)
-          end
+          before { subject.update_attributes(doi: ['10.abc/FK2']) }
 
           it 'does nothing' do
             expect(subject.check_doi_presence).to be_nil
@@ -384,135 +353,60 @@ RSpec.describe GenericFile do
           end
         end
 
-        describe 'schema validation errors' do
-          let(:identifier) { double(
-            'ezid-id', id: 'abc/FK2', status: 'public'
-          ) }
-
-          before do
-            subject.update_attributes(doi: ['abc/FK2'])
-            expect(Ezid::Identifier).to receive(:find).with(
-              'abc/FK2').and_return(Ezid::Identifier.new)
-            expect_any_instance_of(Ezid::Identifier).not_to receive(:save)
-          end
-
-          it 'throws an error' do
-            expect { subject.check_doi_presence }.to raise_error(
-              EzidGenerator::DataciteSchemaError
-            )
-            expect(subject.reload.doi).to eq(['abc/FK2'])
-          end
-        end
-
         describe 'originates from Galter and visibility set to open' do
-          let(:identifier) { double(
-            'ezid-id', id: '10.abc/FK2', status: 'public'
-          ) }
-
           before do
+            subject.update_attributes(doi: ['10.82113/as-4e2m-fd12'])
             subject.visibility = 'open'
             subject.save!
-            expect(Ezid::Identifier).to receive(:find).with(
-              '10.abc/FK2').and_return(Ezid::Identifier.new)
-            expect_any_instance_of(Ezid::Identifier).to receive(
-              :update_metadata).with(
-                Ezid::Metadata.new({
-                  'datacite' => "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<resource xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://datacite.org/schema/kernel-4\" xsi:schemaLocation=\"http://schema.datacite.org/meta/kernel-4/ http://datacite.org/schema/kernel-4/metadata.xsd\">\n  <identifier identifierType=\"DOI\">10.abc/FK2</identifier>\n  <creators>\n    <creator>\n      <creatorName>bcd</creatorName>\n    </creator>\n  </creators>\n  <titles>\n    <title>title</title>\n  </titles>\n  <publisher>Galter Health Science Library &amp; Learning Center</publisher>\n  <publicationYear>2013</publicationYear>\n  <resourceType resourceTypeGeneral=\"Other\">Book</resourceType>\n  <descriptions/>\n</resource>\n",
-                  '_status' => 'public',
-                  '_target' => 'https://digitalhub.northwestern.edu/files/mahid'
-                })
-              )
-            expect_any_instance_of(Ezid::Identifier).to receive(:save)
           end
 
           it 'updates the metadata remotely but not the ids locally' do
             expect(subject.check_doi_presence).to eq('updated')
-            expect(subject.reload.doi).to eq(['10.abc/FK2'])
+            expect(subject.reload.doi).to eq(['10.82113/as-4e2m-fd12'])
           end
         end
 
-        describe 'originates from Galter' do
+        describe 'originates from Galter and visibility set to restricted' do
           before do
-            expect(Ezid::Identifier).to receive(:find).with(
-              '10.abc/FK2').and_return(Ezid::Identifier.new)
-            expect_any_instance_of(Ezid::Identifier).to receive(
-              :update_metadata).with(
-                Ezid::Metadata.new({
-                  'datacite' => "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<resource xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://datacite.org/schema/kernel-4\" xsi:schemaLocation=\"http://schema.datacite.org/meta/kernel-4/ http://datacite.org/schema/kernel-4/metadata.xsd\">\n  <identifier identifierType=\"DOI\">10.abc/FK2</identifier>\n  <creators>\n    <creator>\n      <creatorName>bcd</creatorName>\n    </creator>\n  </creators>\n  <titles>\n    <title>title</title>\n  </titles>\n  <publisher>Galter Health Science Library &amp; Learning Center</publisher>\n  <publicationYear>2013</publicationYear>\n  <resourceType resourceTypeGeneral=\"Other\">Book</resourceType>\n  <descriptions/>\n</resource>\n",
-                  '_status' => 'unavailable',
-                  '_target' => 'https://digitalhub.northwestern.edu/files/mahid'
-                })
-              )
-            expect_any_instance_of(Ezid::Identifier).to receive(:save)
+            subject.update_attributes(doi: ['10.82113/as-4e2m-fd12'])
+            subject.visibility = 'authenticated'
+            subject.save!
           end
 
           it 'updates the metadata remotely but not the ids locally' do
-            expect(subject.check_doi_presence).to eq('updated_unavailable')
-            expect(subject.reload.doi).to eq(['10.abc/FK2'])
+            expect(subject.check_doi_presence).to eq('updated_registered')
+            expect(subject.reload.doi).to eq(['10.82113/as-4e2m-fd12'])
           end
         end
 
         describe 'multiple dois one originating from Galter' do
           before do
-            expect(Ezid::Identifier).to receive(:find).with(
-              '10.doi1/AA1').and_raise(Ezid::Error)
-            expect(Ezid::Identifier).to receive(:find).with(
-              '10.doi/BB3').and_raise(Ezid::Error)
-            expect(Ezid::Identifier).to receive(:find).with(
-              '10.abc/FK2').and_return(Ezid::Identifier.new)
-            expect_any_instance_of(Ezid::Identifier).to receive(
-              :update_metadata
-            ).with(
-                Ezid::Metadata.new({
-                  'datacite' => "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<resource xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://datacite.org/schema/kernel-4\" xsi:schemaLocation=\"http://schema.datacite.org/meta/kernel-4/ http://datacite.org/schema/kernel-4/metadata.xsd\">\n  <identifier identifierType=\"DOI\">10.abc/FK2</identifier>\n  <creators>\n    <creator>\n      <creatorName>bcd</creatorName>\n    </creator>\n  </creators>\n  <titles>\n    <title>title</title>\n  </titles>\n  <publisher>Galter Health Science Library &amp; Learning Center</publisher>\n  <publicationYear>2013</publicationYear>\n  <resourceType resourceTypeGeneral=\"Other\">Book</resourceType>\n  <descriptions/>\n</resource>\n",
-                  '_status' => 'unavailable',
-                  '_target' => 'https://digitalhub.northwestern.edu/files/mahid'
-                })
-              )
-            expect_any_instance_of(Ezid::Identifier).to receive(:save)
+            subject.visibility = 'authenticated'
             subject.update_attributes(doi: [
-              '10.doi1/AA1', '10.doi/BB3', '10.abc/FK2'
+              '10.doi1/AA1', '10.doi/BB3', '10.abc/FK2', '10.82113/as-5edn-6577'
             ])
           end
 
           it 'updates the metadata remotely but not the ids locally' do
-            expect(subject.check_doi_presence).to eq('updated_unavailable')
+            expect(subject.check_doi_presence).to eq('updated_registered')
             expect(subject.reload.doi).to eq([
-              '10.doi1/AA1', '10.doi/BB3', '10.abc/FK2'
+              '10.doi1/AA1', '10.doi/BB3', '10.abc/FK2', '10.82113/as-5edn-6577'
             ])
           end
         end
       end
 
       it 'sets doi' do
-        expect(Ezid::Identifier).to receive(:mint).with(
-          Ezid::Metadata.new({
-            'datacite' => "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<resource xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://datacite.org/schema/kernel-4\" xsi:schemaLocation=\"http://schema.datacite.org/meta/kernel-4/ http://datacite.org/schema/kernel-4/metadata.xsd\">\n  <identifier identifierType=\"DOI\"></identifier>\n  <creators>\n    <creator>\n      <creatorName>bcd</creatorName>\n    </creator>\n  </creators>\n  <titles>\n    <title>title</title>\n  </titles>\n  <publisher>Galter Health Science Library &amp; Learning Center</publisher>\n  <publicationYear>2013</publicationYear>\n  <resourceType resourceTypeGeneral=\"Other\">Book</resourceType>\n  <descriptions/>\n</resource>\n",
-            '_status' => 'reserved',
-            '_target' => 'https://digitalhub.northwestern.edu/files/mahid'
-          })
-        ).and_return(identifier)
-        expect(subject.check_doi_presence).to eq('generated_reserved')
-        expect(subject.reload.doi).to eq(['doi'])
+        expect(subject.check_doi_presence).to eq('generated_draft')
+        expect(subject.reload.doi).to eq(['10.82113/as-20qw-j035'])
       end
 
       context 'when visibility set to public' do
-        let(:identifier) { double(
-          'ezid-id', id: 'doi', status: 'public'
-        ) }
-
         before { subject.visibility = 'open'; subject.save! }
 
         it 'sets doi' do
-          expect(Ezid::Identifier).to receive(:mint).with(
-            Ezid::Metadata.new({
-              'datacite' => "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<resource xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://datacite.org/schema/kernel-4\" xsi:schemaLocation=\"http://schema.datacite.org/meta/kernel-4/ http://datacite.org/schema/kernel-4/metadata.xsd\">\n  <identifier identifierType=\"DOI\"></identifier>\n  <creators>\n    <creator>\n      <creatorName>bcd</creatorName>\n    </creator>\n  </creators>\n  <titles>\n    <title>title</title>\n  </titles>\n  <publisher>Galter Health Science Library &amp; Learning Center</publisher>\n  <publicationYear>2013</publicationYear>\n  <resourceType resourceTypeGeneral=\"Other\">Book</resourceType>\n  <descriptions/>\n</resource>\n",
-              '_status' => 'public',
-              '_target' => 'https://digitalhub.northwestern.edu/files/mahid'
-            })
-          ).and_return(identifier)
           expect(subject.check_doi_presence).to eq('generated')
-          expect(subject.reload.doi).to eq(['doi'])
+          expect(subject.reload.doi).to eq(['10.82113/as-5edn-6577'])
         end
       end
     end
