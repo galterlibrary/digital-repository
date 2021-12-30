@@ -43,19 +43,23 @@ module DoiGenerator
     client = DataciteRest.new
 
     self.doi.each do |doi|
-      response = client.get_doi(doi)
-      data = JSON[response.body]["data"]
-      identifier = data["id"]
-      new_state = visibility_to_state
-      current_state = data["attributes"]["state"]
-      # if state changes from findable to anything else, we hide it
-      if current_state == "findable" && new_state != "findable"
-        json = datacite_api_json(hide=true)
-      else
-        json = datacite_api_json
+      begin
+        response = client.get_doi(doi)
+        data = JSON[response.body]["data"]
+        identifier = data["id"]
+        new_state = visibility_to_state
+        current_state = data["attributes"]["state"]
+        # if state changes from findable to anything else, we hide it
+        if current_state == "findable" && new_state != "findable"
+          json = datacite_api_json(hide=true)
+        else
+          json = datacite_api_json
+        end
+        client.update_metadata(identifier, json)
+        update_doi_metadata_message(current_state, new_state)
+      rescue RestClient::NotFound
+        next
       end
-      client.update_metadata(identifier, json)
-      update_doi_metadata_message(current_state, new_state)
     end
   end
 

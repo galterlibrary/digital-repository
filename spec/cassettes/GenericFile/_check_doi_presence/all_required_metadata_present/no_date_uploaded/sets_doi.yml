@@ -1,0 +1,71 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.test.datacite.org/dois
+    body:
+      encoding: UTF-8
+      string: data[type]=dois&data[attributes][creators][][name]=bcd&data[attributes][titles][][title]=title&data[attributes][publisher]=DigitalHub.+Galter+Health+Sciences+Library+%26+Learning+Center&data[attributes][publicationYear]=2021&data[attributes][types][resourceType]=Book&data[attributes][types][resourceTypeGeneral]=Other&data[attributes][descriptions]&data[attributes][url]=http%3A%2F%2Flocalhost%3A3000%2Ffiles%2Fmahid&data[attributes][schemaVersion]=http%3A%2F%2Fdatacite.org%2Fschema%2Fkernel-4&data[attributes][prefix]=10.82113%2FAS
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - rest-client/2.1.0 (darwin16.7.0 x86_64) ruby/2.3.7p456
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Content-Length:
+      - '534'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - api.test.datacite.org
+      Authorization:
+      - Basic R0hTTC5PVkdBT0g6UkRNQEdIU0wyMDE5
+  response:
+    status:
+      code: 201
+      message: Created
+    headers:
+      Date:
+      - Thu, 30 Dec 2021 17:48:33 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Status:
+      - 201 Created
+      Location:
+      - https://api.test.datacite.org/dois/5173356
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Vary:
+      - Accept-Encoding
+      Etag:
+      - W/"7f7050d4fc6aec5a6335a29e842dedef"
+      X-Runtime:
+      - '0.199930'
+      X-Credential-Username:
+      - ghsl.ovgaoh
+      X-Request-Id:
+      - 0e3ffd18-f898-418f-a7cb-be10ae018f6e
+      X-Powered-By:
+      - Phusion Passenger(R) 6.0.12
+      Server:
+      - nginx/1.18.0 + Phusion Passenger(R) 6.0.12
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Methods:
+      - GET, POST, PUT, PATCH, DELETE, OPTIONS
+      Access-Control-Allow-Headers:
+      - Accept,Access-Control-Allow-Origin,Access-Control-Expose-Headers,Access-Control-Allow-Methods,Access-Control-Allow-Headers,Authorization,Cache-Control,Content-Type,DNT,If-Modified-Since,Keep-Alive,Origin,User-Agent,X-Mx-ReqToken,X-Requested-With
+      Access-Control-Expose-Headers:
+      - Authorization
+    body:
+      encoding: ASCII-8BIT
+      string: '{"data":{"id":"10.82113/as-9n6h-wf43","type":"dois","attributes":{"doi":"10.82113/as-9n6h-wf43","prefix":"10.82113","suffix":"as-9n6h-wf43","identifiers":[],"alternateIdentifiers":[],"creators":[{"name":"bcd","affiliation":[],"nameIdentifiers":[]}],"titles":[{"title":"title"}],"publisher":"DigitalHub.
+        Galter Health Sciences Library & Learning Center","container":{},"publicationYear":2021,"subjects":[],"contributors":[],"dates":[],"language":null,"types":{"schemaOrg":"Book","citeproc":"book","bibtex":"book","ris":"BOOK","resourceTypeGeneral":"Other","resourceType":"Book"},"relatedIdentifiers":[],"sizes":[],"formats":[],"version":null,"rightsList":[],"descriptions":[],"geoLocations":[],"fundingReferences":[],"xml":"PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHJlc291cmNlIHhtbG5zOnhzaT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEtaW5zdGFuY2UiIHhtbG5zPSJodHRwOi8vZGF0YWNpdGUub3JnL3NjaGVtYS9rZXJuZWwtNCIgeHNpOnNjaGVtYUxvY2F0aW9uPSJodHRwOi8vZGF0YWNpdGUub3JnL3NjaGVtYS9rZXJuZWwtNCBodHRwOi8vc2NoZW1hLmRhdGFjaXRlLm9yZy9tZXRhL2tlcm5lbC00L21ldGFkYXRhLnhzZCI+CiAgPGlkZW50aWZpZXIgaWRlbnRpZmllclR5cGU9IkRPSSI+MTAuODIxMTMvQVMtOU42SC1XRjQzPC9pZGVudGlmaWVyPgogIDxjcmVhdG9ycz4KICAgIDxjcmVhdG9yPgogICAgICA8Y3JlYXRvck5hbWU+YmNkPC9jcmVhdG9yTmFtZT4KICAgIDwvY3JlYXRvcj4KICA8L2NyZWF0b3JzPgogIDx0aXRsZXM+CiAgICA8dGl0bGU+dGl0bGU8L3RpdGxlPgogIDwvdGl0bGVzPgogIDxwdWJsaXNoZXI+RGlnaXRhbEh1Yi4gR2FsdGVyIEhlYWx0aCBTY2llbmNlcyBMaWJyYXJ5ICZhbXA7IExlYXJuaW5nIENlbnRlcjwvcHVibGlzaGVyPgogIDxwdWJsaWNhdGlvblllYXI+MjAyMTwvcHVibGljYXRpb25ZZWFyPgogIDxyZXNvdXJjZVR5cGUgcmVzb3VyY2VUeXBlR2VuZXJhbD0iT3RoZXIiPkJvb2s8L3Jlc291cmNlVHlwZT4KICA8c2l6ZXMvPgogIDxmb3JtYXRzLz4KICA8dmVyc2lvbi8+CjwvcmVzb3VyY2U+Cg==","url":"http://localhost:3000/files/mahid","contentUrl":null,"metadataVersion":0,"schemaVersion":"http://datacite.org/schema/kernel-4","source":"api","isActive":false,"state":"draft","reason":null,"landingPage":null,"viewCount":0,"viewsOverTime":[],"downloadCount":0,"downloadsOverTime":[],"referenceCount":0,"citationCount":0,"citationsOverTime":[],"partCount":0,"partOfCount":0,"versionCount":0,"versionOfCount":0,"created":"2021-12-30T17:48:33.000Z","registered":null,"published":"2021","updated":"2021-12-30T17:48:33.000Z"},"relationships":{"client":{"data":{"id":"ghsl.ovgaoh","type":"clients"}},"provider":{"data":{"id":"ghsl","type":"providers"}},"media":{"data":{"id":"10.82113/as-9n6h-wf43","type":"media"}},"references":{"data":[]},"citations":{"data":[]},"parts":{"data":[]},"partOf":{"data":[]},"versions":{"data":[]},"versionOf":{"data":[]}}}}'
+    http_version:
+  recorded_at: Thu, 30 Dec 2021 17:48:33 GMT
+recorded_with: VCR 4.0.0
