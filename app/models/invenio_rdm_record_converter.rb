@@ -1,6 +1,4 @@
 include Sufia::Export
-require 'digest/md5'
-require 'logger'
 
 # Convert a GenericFile including metadata, permissions and version metadata into a PORO
 # so that the metadata can be exported in json format using to_json
@@ -37,17 +35,19 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   # Create an instance of a InvenioRdmRecordConverter converter containing all the metadata for json export
   #
   # @param [GenericFile] generic_file file to be converted for export
-  def initialize(generic_file=nil)
+  def initialize(generic_file=nil, collection_store={})
     return unless generic_file
     @generic_file = generic_file
 
     @record = record_for_export
     @file = file_info
     @extras = extra_data
+    @collection_store = collection_store
+    @communities = list_collections
   end
 
   def to_json(options={})
-    options[:except] ||= ["memoized_mesh", "memoized_lcsh", "generic_file"]
+    options[:except] ||= ["memoized_mesh", "memoized_lcsh", "generic_file", "collection_store"]
     super
   end
 
@@ -103,6 +103,18 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     end
 
     permission_data
+  end
+
+  def list_collections
+    collection_paths = []
+
+    @generic_file.collection_ids.each do |collection_id|
+      @collection_store[collection_id][:paths].each do |path|
+        collection_paths << path
+      end
+    end
+
+    collection_paths
   end
 
   def record_for_export
@@ -180,9 +192,10 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
         "title": @generic_file.title.first,
         "additional_titles": format_additional("title", "alternative-title", @generic_file.title.drop(1)),
         "description": @generic_file.description.first,
-        "additional_descriptions": format_additional("description", "other", @generic_file.description.drop(1)) + format_additional("description", "acknowledgements", @generic_file.acknowledgments),
+        "additional_descriptions": format_additional("description", "other", @generic_file.description.drop(1)) + format_additional("description", "acknowledgements", @generic_file.acknowledgments)\
+          + format_additional("description", "abstract", @generic_file.abstract),
         "publisher": @generic_file.publisher.shift,
-        "publication_date": format_publication_date(@generic_file.date_created.shift || @generic_file.date_uploaded.to_s),
+        "publication_date": format_publication_date(@generic_file.date_created.shift || @generic_file.date_uploaded.to_s.force_encoding("UTF-8")),
         "subjects": SUBJECT_SCHEMES.map{ |subject_type| subjects_for_scheme(@generic_file.send(subject_type), subject_type) }.compact.flatten,
         "contributors": contributors(@generic_file.contributor),
         "dates": @generic_file.date_created.map{ |date| {"date": normalize_date(date), "type": {"id": "created"}, "description": "When the item was originally created."} },
@@ -193,18 +206,18 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
         "formats": [@generic_file.mime_type],
         "version": version(@generic_file.content),
         "rights": rights(@generic_file.rights),
-        "locations": {"features": @generic_file.subject_geographic.present? ? @generic_file.subject_geographic.map{ |location| {place: location} } : []},
+        "locations": {"features": @generic_file.subject_geographic.present? ? @generic_file.subject_geographic.map{ |location| {place: location.force_encoding("UTF-8")} } : []},
         "funding": funding(@generic_file.id)
       }
     rescue => e
-      logger = Logger.new("#{Rails.root}/tmp/export/export_errors.log")
-      logger.level = Logger::ERROR
-      logger.error("Problem for GenericFile: #{@generic_file.id}")
-      logger.error("Error - #{e}")
+      puts "[!!!ERROR!!!] Problem for GenericFile: #{@generic_file.id}"
+      puts "Error - #{e}".force_encoding("UTF-8")
+      puts "Continuing..."
     end
   end
 
   def resource_type(digitalhub_subtype)
+    puts "in #resource_type..."
     irdm_types = DH_IRDM_RESOURCE_TYPES[digitalhub_subtype]
 
     if irdm_types
@@ -219,6 +232,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def build_creator_contributor_json(creator)
+    puts "in #build_creator_contributor_json..."
     if creator_data = @@person_or_org_data[creator]
       return creator_data
     # Organization
@@ -252,8 +266,8 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
         "person_or_org":
           Hash.new.tap do |hash|
             hash["type"] = "personal"
-            hash["given_name"] = given_name.lstrip
-            hash["family_name"] = family_name.lstrip
+            hash["given_name"] = given_name&.lstrip.to_s
+            hash["family_name"] = family_name&.lstrip.to_s
           end
       }
     # Unknown / Not Identified creator
@@ -274,11 +288,12 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end # build_creator_contributor_json
 
   def format_additional(content_type, invenio_type, values)
+    puts "in #format_additional..."
     formatted_values = values.map do |value|
       if value.blank?
         next
       else
-        {"#{content_type}": value, "type": {"id": invenio_type, "title": {"en": invenio_type.titleize}}}
+        {"#{content_type}": value.to_s.force_encoding("UTF-8"), "type": {"id": invenio_type}}
       end
     end
 
@@ -287,15 +302,18 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
 
   # return array of invenio formatted subjects
   def subjects_for_scheme(terms, scheme)
+    puts "in #subjects_for_scheme..."
     mapped_terms = terms.map do |term|
       pid = @@header_lookup.pid_lookup_by_scheme(term, scheme)
 
-      if pid.present?
+      if term.blank?
+        nil
+      elsif pid.present?
         {id: pid}
       elsif scheme == :subject_name || scheme == :tag
-        {subject: term}
+        {subject: term.force_encoding("UTF-8")}
       else
-        puts "------\nUnable to map subject\nFile Id: #{@generic_file.id} Term: #{term} Scheme: #{scheme}\n------"
+        puts "------\nUnable to map subject\nFile Id: #{@generic_file.id} Term: #{term} Scheme: #{scheme}\n------".force_encoding("UTF-8")
       end
     end
 
@@ -304,6 +322,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
 
 
   def contributors(contributors)
+    puts "in #contributors..."
     contributors.map do |contributor|
       contributor_json = build_creator_contributor_json(contributor)
       contributor_json.merge!({"role": {id: ROLE_OTHER}})
@@ -312,6 +331,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def ark_identifiers(arks)
+    puts "in #ark_identifiers..."
     arks.map do |ark|
       {
         "identifier": ark,
@@ -321,6 +341,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def rights(license_urls)
+    puts "in #rights..."
     license_urls.map do |license_url|
       license_data = @@license_data[license_url.to_sym]
 
@@ -340,6 +361,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def version(content)
+    puts "in #version..."
     return "" unless content.has_versions?
     version_number = content.versions.all.length
 
@@ -347,6 +369,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def related_identifiers(related_url)
+    puts "in #related_identifiers..."
     identifiers = related_url.map do |url|
       next if url.blank?
 
@@ -354,13 +377,13 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
         doi = url.split(DOI_ORG).last
 
         {
-          "identifier": doi,
+          "identifier": doi.force_encoding("UTF-8"),
           "scheme": "doi",
           "relation_type": {"id": "isRelatedTo"}
         }
       else
         {
-          "identifier": url,
+          "identifier": url.force_encoding("UTF-8"),
           "scheme": "url",
           "relation_type": {"id": "isRelatedTo"}
         }
@@ -371,14 +394,17 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def doi_url?(url)
+    puts "in #doi_url..."
     url.include?(DOI_ORG)
   end
 
   def format_publication_date(publication_date)
+    puts "in #format_publication_date..."
     normalize_date(publication_date)
   end
 
   def normalize_date(date_string)
+    puts "in #normalize_date..."
     split_date = date_string.split(/[-,\/ ]/).map(&:downcase)
     # date format starts with month first
     if (!split_date.blank? && split_date[0].length < 3)
@@ -451,6 +477,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def rearrange_year(date_array)
+    puts "in #rearrange_year..."
     if date_array[0].length == 4
       return date_array
     end
@@ -467,6 +494,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def funding(file_id)
+    puts "in #funding..."
     funding_sources = @@funding_data[file_id]
 
     if funding_sources.blank?

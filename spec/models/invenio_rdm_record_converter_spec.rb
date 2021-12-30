@@ -38,7 +38,8 @@ RSpec.describe InvenioRdmRecordConverter do
       rights: ["http://creativecommons.org/licenses/by-nc-sa/3.0/us/"],
       visibility: InvenioRdmRecordConverter::OPEN_ACCESS,
       related_url: ["https://doi.org/10.5438/55e5-t5c0"],
-      acknowledgments: ["this is an acknowledgement"]
+      acknowledgments: ["this is an acknowledgement"],
+      abstract: ["this is an abstract"]
     )
   }
   let(:generic_file_checksum) { generic_file.content.checksum.value }
@@ -46,6 +47,7 @@ RSpec.describe InvenioRdmRecordConverter do
     "#{ENV["FEDORA_BINARY_PATH"]}/#{generic_file_checksum[0..1]}/"\
     "#{generic_file_checksum[2..3]}/#{generic_file_checksum[4..5]}/#{generic_file_checksum}"
   }
+  let(:collection_store) { CollectionStore.new }
   let(:json) do
     {
       "record": {
@@ -75,16 +77,17 @@ RSpec.describe InvenioRdmRecordConverter do
           "additional_titles": [
             {
               "title": "Secondary Title",
-              "type": {"id": "alternative-title", "title": {"en": "Alternative Title"}}
+              "type": {"id": "alternative-title"}
             },
             {
               "title": "Tertiary Title",
-              "type": {"id": "alternative-title", "title": {"en": "Alternative Title"}}
+              "type": {"id": "alternative-title"}
             }
           ],
           "description": generic_file.description.shift,
-          "additional_descriptions": [{"description": generic_file.description.last, "type": {"id": "other", "title": {"en": "Other"}}},
-                                      {"description": generic_file.acknowledgments.first, "type": {"id": "acknowledgements", "title": {"en": "Acknowledgements"}}}],
+          "additional_descriptions": [{"description": generic_file.description.last, "type": {"id": "other"}},
+                                      {"description": generic_file.acknowledgments.first, "type": {"id": "acknowledgements"}},
+                                      {"description": generic_file.abstract.first, "type": {"id": "abstract"}}],
           "publisher": "DigitalHub. Galter Health Sciences Library & Learning Center",
           "publication_date": "2021-01-01",
           "subjects": [
@@ -172,10 +175,11 @@ RSpec.describe InvenioRdmRecordConverter do
           "read": ["public"],
           "edit": [user.username]
         }
-      }
+      },
+      "communities": []
     }.to_json
   end
-  let(:invenio_rdm_record_converter) { described_class.new(generic_file) }
+  let(:invenio_rdm_record_converter) { described_class.new(generic_file, collection_store.data) }
 
   before do
     ProxyDepositRights.create(grantor_id: assistant.id, grantee_id: user.id)
@@ -240,7 +244,8 @@ RSpec.describe InvenioRdmRecordConverter do
       "person_or_org": {
         "name": organization_name,
         "type": "organizational"
-      }
+      },
+      "role": {"id": InvenioRdmRecordConverter::ROLE_OTHER}
     }.with_indifferent_access
   }
 
@@ -299,6 +304,119 @@ RSpec.describe InvenioRdmRecordConverter do
   describe "#extra_data" do
     it "adds data" do
       expect(invenio_rdm_record_converter.send(:extra_data).with_indifferent_access).to eq(expected_extra_data)
+    end
+  end
+
+  describe "#list_collections" do
+    before do
+      make_collection(user, title: "Community", id: "community-1",
+                      member_ids: [generic_file.id])
+    end
+
+    context "with one collection" do
+      before do
+        collection_store.build_collection_store_data
+        collection_store.build_paths_for_collection_store
+      end
+
+      let(:expected_communities) {
+        [
+          [{"title": "Community", "id": "community-1"}]
+        ]
+      }
+
+      let(:converted_record_with_collection) {
+        described_class.new(generic_file, collection_store.data)
+      }
+
+      it "adds data" do
+        expect(
+          converted_record_with_collection.send(:list_collections)
+        ).to eql(expected_communities)
+      end
+    end
+
+    context "with two collections" do
+      before do
+        make_collection(user, title: "Collection", id: "collection-1",
+                        member_ids: [generic_file.id])
+        collection_store.build_collection_store_data
+        collection_store.build_paths_for_collection_store
+      end
+
+      let(:expected_communities) {
+        [
+          [{"title": "Community", "id": "community-1"}],
+          [{"title": "Collection", "id": "collection-1"}]
+        ]
+      }
+      let(:converted_record_with_two_collections) {
+        described_class.new(generic_file, collection_store.data)
+      }
+
+      it "adds data" do
+        expect(
+          converted_record_with_two_collections.send(:list_collections)
+        ).to eq(expected_communities)
+      end
+    end
+
+    context "with parent collection" do
+      before do
+        make_collection(user, title: "Parent", id: "parent-1",
+                        member_ids: ["community-1"])
+        collection_store.build_collection_store_data
+        collection_store.build_paths_for_collection_store
+      end
+
+      let(:expected_communities) {
+        [
+          [
+            {"title": "Parent", "id": "parent-1"},
+            {"title": "Community", "id": "community-1"}
+          ]
+        ]
+      }
+
+      let(:converted_record_with_parent_collection) {
+        described_class.new(generic_file, collection_store.data)
+      }
+
+      it "adds data" do
+        expect(
+          converted_record_with_parent_collection.send(:list_collections)
+        ).to eq(expected_communities)
+      end
+    end
+
+    context "with multiple parents collection" do
+      before do
+        make_collection(user, title: "Mom", id: "parent-1",
+                        member_ids: ["community-1"])
+        make_collection(user, title: "Dad", id: "parent-2",
+                        member_ids: ["community-1"])
+        collection_store.build_collection_store_data
+        collection_store.build_paths_for_collection_store
+      end
+
+      let(:expected_communities) {
+        [
+          [{"title": "Mom", "id": "parent-1"},
+           {"title": "Community", "id": "community-1"}],
+          [{"title": "Dad", "id": "parent-2"},
+           {"title": "Community", "id": "community-1"}]
+        ]
+      }
+
+      let(:converted_record_with_multiple_parents) {
+        described_class.new(generic_file, collection_store.data)
+      }
+
+      it "adds data" do
+        expect(
+          converted_record_with_multiple_parents.send(:list_collections)
+        ).to eq(expected_communities)
+      end
     end
   end
 
@@ -470,13 +588,13 @@ RSpec.describe InvenioRdmRecordConverter do
   let(:expected_two_cats_title) {
     [{
       "title": "Two Cats",
-      "type": {"id": "alternative-title", "title": {"en": "Alternative Title"}}
+      "type": {"id": "alternative-title"}
     }]
   }
   let(:expected_two_cats_description) {
     [{
       "description": "Two Cats",
-      "type": {"id": "other", "title": {"en": "Other"}}
+      "type": {"id": "other"}
     }]
   }
 

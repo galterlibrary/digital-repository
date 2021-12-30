@@ -1,6 +1,5 @@
 source 'https://rubygems.org'
 
-
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.7'
 # Use sqlite3 as the database for Active Record
@@ -13,9 +12,6 @@ gem 'sass-rails'
 gem 'uglifier'
 # Use CoffeeScript for .js.coffee assets and views
 gem 'coffee-rails'
-# See https://github.com/sstephenson/execjs#readme for more supported runtimes
-# gem 'therubyracer',  platforms: :ruby
-
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
@@ -37,10 +33,6 @@ gem 'ruby-prof',        group: :development
 gem 'unicorn'
 gem 'thin'
 
-#gem 'active-fedora', '9.1.2'
-#gem 'sufia', :git => 'https://github.com/phebal/sufia.git', :branch => 'fix/master/dashboard_sort_toggle_fix'
-#gem 'sufia', :git => 'https://github.com/projecthydra/sufia.git', :branch => 'master'
-#gem 'sufia', '6.7'
 gem 'sufia', git: 'https://github.com/samvera-deprecated/sufia', branch: '6.x-stable'
 gem 'kaminari', github: 'jcoyne/kaminari', branch: 'sufia' # required to handle pagination properly in dashboard. See https://github.com/amatsuda/kaminari/pull/322
 gem 'therubyracer', platforms: :ruby
@@ -110,3 +102,4 @@ gem 'nokogiri', '~> 1.10.9'
 gem 'puma'
 
 gem 'rack-attack'
+gem 'rest-client'

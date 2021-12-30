@@ -6,6 +6,7 @@ VCR.configure do |c|
   c.hook_into :webmock
   c.allow_http_connections_when_no_cassette = true
   c.configure_rspec_metadata!
+  c.filter_sensitive_data('BOGUS') { ENV['DATACITE_PASSWORD'] }
 end
 
 RSpec.configure do |c|
