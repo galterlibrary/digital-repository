@@ -328,7 +328,7 @@ RSpec.describe GenericFile do
           end
 
           it 'creates the doi' do
-            expect(subject.check_doi_presence).to eq('generated_draft')
+            expect(subject.check_doi_presence).to eq('draft_restricted')
             expect(subject.reload.doi).to eq(['10.82113/as-zwv6-gf43'])
           end
         end
@@ -338,7 +338,7 @@ RSpec.describe GenericFile do
         before { subject.update_attributes(date_uploaded: nil) }
 
         it 'sets doi' do
-          expect(subject.check_doi_presence).to eq('generated_draft')
+          expect(subject.check_doi_presence).to eq('draft_restricted')
           expect(subject.reload.doi).to eq(['10.82113/as-9n6h-wf43'])
         end
       end
@@ -361,7 +361,7 @@ RSpec.describe GenericFile do
           end
 
           it 'updates the metadata remotely but not the ids locally' do
-            expect(subject.check_doi_presence).to eq('updated')
+            expect(subject.check_doi_presence).to eq('already_findable')
             expect(subject.reload.doi).to eq(['10.82113/as-4e2m-fd12'])
           end
         end
@@ -374,7 +374,7 @@ RSpec.describe GenericFile do
           end
 
           it 'updates the metadata remotely but not the ids locally' do
-            expect(subject.check_doi_presence).to eq('updated_registered')
+            expect(subject.check_doi_presence).to eq('hide_findable')
             expect(subject.reload.doi).to eq(['10.82113/as-4e2m-fd12'])
           end
         end
@@ -388,7 +388,7 @@ RSpec.describe GenericFile do
           end
 
           it 'updates the metadata remotely but not the ids locally' do
-            expect(subject.check_doi_presence).to eq('updated_registered')
+            expect(subject.check_doi_presence).to eq('hide_findable')
             expect(subject.reload.doi).to eq([
               '10.doi1/AA1', '10.doi/BB3', '10.abc/FK2', '10.82113/as-5edn-6577'
             ])
@@ -397,7 +397,7 @@ RSpec.describe GenericFile do
       end
 
       it 'sets doi' do
-        expect(subject.check_doi_presence).to eq('generated_draft')
+        expect(subject.check_doi_presence).to eq('draft_restricted')
         expect(subject.reload.doi).to eq(['10.82113/as-20qw-j035'])
       end
 
@@ -405,7 +405,7 @@ RSpec.describe GenericFile do
         before { subject.visibility = 'open'; subject.save! }
 
         it 'sets doi' do
-          expect(subject.check_doi_presence).to eq('generated')
+          expect(subject.check_doi_presence).to eq('draft_published')
           expect(subject.reload.doi).to eq(['10.82113/as-5edn-6577'])
         end
       end

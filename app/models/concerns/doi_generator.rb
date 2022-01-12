@@ -30,13 +30,13 @@ module DoiGenerator
   end
 
   def create_datacite_doi
+    action, message = get_action_message("draft", self.visibility)
     response = DataciteRest.new.mint(
-      datacite_api_json
+      datacite_api_json(action)
     )
     data = JSON[response.body]["data"]
     self.update_attributes(doi: [data["id"]])
-    self.doi_message = 'generated'
-    self.doi_message = 'generated_draft' if data["attributes"]["state"] == 'draft'
+    self.doi_message = message
   end
 
   def update_datacite_doi
@@ -47,36 +47,40 @@ module DoiGenerator
         response = client.get_doi(doi)
         data = JSON[response.body]["data"]
         identifier = data["id"]
-        new_state = visibility_to_state
-        current_state = data["attributes"]["state"]
-        # if state changes from findable to anything else, we hide it
-        if current_state == "findable" && new_state != "findable"
-          json = datacite_api_json(hide=true)
-        else
-          json = datacite_api_json
-        end
+        doi_state = data["attributes"]["state"]
+        action, message = get_action_message(doi_state, self.visibility)
+        json = datacite_api_json(action)
         client.update_metadata(identifier, json)
-        update_doi_metadata_message(current_state, new_state)
+        self.doi_message = message
       rescue RestClient::NotFound
         next
       end
     end
   end
 
-  def update_doi_metadata_message(old_state, new_state)
-    if new_state == 'registered' && old_state != new_state
-      self.doi_message = 'updated_registered'
-    else
-      self.doi_message = 'updated'
-    end
-
+  def get_action_message(current_doi_state, new_state)
+    states = {
+      ["draft", "restricted"] => ["", "draft_restricted"], # do nothing
+      ["draft", "open"] => ["publish", "draft_published"],
+      ["draft", "authenticated"] => ["register", "draft_registered"],
+      ["findable", "restricted"] => ["hide", "hide_findable"],
+      ["findable", "open"] => ["", "already_findable"], # do nothing
+      ["findable", "authenticated"] => ["hide", "hide_findable"],
+      ["registered", "restricted"] => ["", "registered_restricted"], # do nothing
+      ["registered", "open"] => ["publish", "publish_registered"],
+      ["registered", "authenticated"] => ["", "registered_authenticated"] # do nothing
+    }
+    action = states[[current_doi_state, new_state]][0]
+    message = states[[current_doi_state, new_state]][1]
+    return action, message
   end
 
-  def datacite_api_json(event=false)
+  def datacite_api_json(event="")
     data = {
       "data": {
         "type": "dois",
         "attributes": {
+          "event": event,
           "creators": creators_json,
           "titles": titles_json,
           "publisher": self.publisher.first,
@@ -93,7 +97,6 @@ module DoiGenerator
     }
 
     set_datacite_prefix(data)
-    set_datacite_event(data, event)
   end
 
   def set_datacite_prefix(data)
@@ -102,35 +105,6 @@ module DoiGenerator
     end
 
     data
-  end
-
-  def set_datacite_event(data, hide=false)
-    state = visibility_to_state
-
-    # More about events in Datacite
-    # https://support.datacite.org/docs/api-create-dois#create-a-findable-doi
-    if hide
-      data[:data][:attributes][:event] = "hide"
-    elsif state == "findable"
-      data[:data][:attributes][:event] = "publish"
-    elsif state == "registered"
-      data[:data][:attributes][:event] = "register"
-    end
-
-    data
-  end
-
-  # Our mapping from Digitalhub visibility to Datacite state
-  # https://support.datacite.org/docs/doi-states#doi-states-outside-of-fabrica
-  def visibility_to_state
-    case self.visibility
-    when "restricted"
-      "draft"
-    when "open"
-      "findable"
-    when "authenticated"
-      "registered"
-    end
   end
 
   def creators_json
