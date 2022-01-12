@@ -70,9 +70,7 @@ module DoiGenerator
       ["registered", "open"] => ["publish", "publish_registered"],
       ["registered", "authenticated"] => ["", "registered_authenticated"] # do nothing
     }
-    action = states[[current_doi_state, new_state]][0]
-    message = states[[current_doi_state, new_state]][1]
-    return action, message
+    return states[[current_doi_state, new_state]]
   end
 
   def datacite_api_json(event="")
