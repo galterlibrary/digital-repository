@@ -33,6 +33,14 @@ class CollectionStore
       starting_collection[:paths] << path
     else
       collection[:collections].each do |parent_collection|
+        if parent_collection == collection[:id]
+          puts "SELF CONTAINED COLLECTION: #{collection[:id]}"
+          next
+        elsif @data[parent_collection][:collections].include?(collection[:id])
+          puts "HAS JOINT COLLECTION: #{collection[:id]}"
+          next
+        end
+
         parent_collection_data = @data[parent_collection]
 
         recursive_collection_path(
