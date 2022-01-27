@@ -5,8 +5,11 @@ RSpec.describe InvenioRdmRecordConverter do
                                     display_name: 'Mock Tester') }
   let(:contributor_user) { FactoryGirl.create(:user, username: "contributor_user", formal_name: "User, Contributor",  display_name: 'Contributor User') }
   let(:assistant) { FactoryGirl.create(:user, username: "ast9876") }
+  let(:lcnaf_term) { "Birkan, Kaarin" }
+  let(:expected_lcnaf_term) {}
   let(:mesh_term) { "Vocabulary, Controlled" }
   let(:expected_mesh_id) { ::HeaderLookup::MESH_ID_URI + "D018875" }
+  let(:expected_lcnaf_id) { "http://id.loc.gov/authorities/names/n90699999" }
   let(:lcsh_term) { "Semantic Web" }
   let(:expected_lcsh_id) { ::HeaderLookup::LCSH_ID_URI + "sh2002000569" }
   let(:generic_file_doi) { "10.5438/55e5-t5c0" }
@@ -22,7 +25,7 @@ RSpec.describe InvenioRdmRecordConverter do
       creator: [user.formal_name],
       contributor: [contributor_user.formal_name],
       title: ["Primary Title"],
-      tag: ["keyword subject"],
+      subject_name: [lcnaf_term],
       publisher: ["DigitalHub. Galter Health Sciences Library & Learning Center"],
       date_uploaded: Time.new(2020, 2, 3),
       mesh: [mesh_term],
@@ -92,13 +95,13 @@ RSpec.describe InvenioRdmRecordConverter do
           "publication_date": "2021-01-01",
           "subjects": [
             {
-              "subject": "keyword subject"
+              "id": expected_mesh_id
             },
             {
-              "id": expected_mesh_id,
+              "id": expected_lcsh_id
             },
             {
-              "id": expected_lcsh_id,
+              "id": expected_lcnaf_id
             }
           ],
           "contributors": [{
@@ -803,13 +806,13 @@ RSpec.describe InvenioRdmRecordConverter do
       end
     end
 
-    context "tag scheme" do
-      let(:tag_term){ ["tumor"] }
-      let(:tag_subject_type){ :tag }
-      let(:expected_tag_result){ ["subject": "tumor"] }
+    context "lcnaf scheme" do
+      let(:subject_name_terms) { [lcnaf_term] }
+      let(:subject_name_subject_type){ :subject_name }
+      let(:expected_lcnaf_pid) { ["id": "http://id.loc.gov/authorities/names/n90699999"] }
 
       it "returns metadata for term" do
-        expect(invenio_rdm_record_converter.send(:subjects_for_scheme, tag_term, tag_subject_type)).to eq(expected_tag_result)
+        expect(invenio_rdm_record_converter.send(:subjects_for_scheme, subject_name_terms, subject_name_subject_type)).to eq(expected_lcnaf_pid)
       end
     end
   end

@@ -143,4 +143,17 @@ RSpec.describe HeaderLookup do
       expect(subject.mesh_term_pid_local_lookup(mesh_local_subject)).to eq(expected_mesh_local_subject)
     end
   end
+
+  let(:lcnaf_file_name) { "spec/fixtures/mock_lcnaf.yml" }
+  let(:lcnaf_term) { "New York (N.Y.). Administration for Children's Services" }
+  let(:lcnaf_id) { "http://id.loc.gov/authorities/names/n2001099999" }
+  let(:lcnaf_term2) { "Birkan, Kaarin" }
+  let(:lcnaf_id2) { "http://id.loc.gov/authorities/names/n90699999" }
+
+  describe "#lcnaf_pid_lookup" do
+    it "it returns the correct id for the lcnaf term" do
+      expect(subject.lcnaf_pid_lookup(lcnaf_term, lcnaf_file_name)).to eq(lcnaf_id)
+      expect(subject.lcnaf_pid_lookup(lcnaf_term2, lcnaf_file_name)).to eq(lcnaf_id2)
+    end
+  end
 end
