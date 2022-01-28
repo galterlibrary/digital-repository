@@ -22,7 +22,7 @@ Capybara.register_driver :poltergeist_no_js_errors do |app|
   Capybara::Poltergeist::Driver.new(app, options)
 end
 
-# insert `page.driver.debug` into your test to 
+# insert `page.driver.debug` into your test to
 # launch the WebKit inspector in a browser.
 options = options.merge({ inspector: true })
 Capybara.register_driver :poltergeist_debug do |app|
@@ -62,7 +62,6 @@ RSpec.configure do |config|
       'eduPersonOrcid' => ['https://orcid.org/0000-9999-9999-9999']
     }])
     allow_any_instance_of(GenericFile).to receive(:check_doi_presence)
-    allow_any_instance_of(DeactivateDoiJob).to receive(:deactivate_or_remove_doi)
     unless (example.metadata[:type] == :view || example.metadata[:no_clean])
       ActiveFedora::Cleaner.clean!
     end
