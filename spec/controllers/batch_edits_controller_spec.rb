@@ -40,22 +40,6 @@ describe BatchEditsController do
         expect { Collection.find('killme') }.to raise_error(Ldp::Gone)
         expect(flash[:notice]).to match('Batch delete complete')
       end
-
-      it 'schedules doi deactivation jobs for the generic files only' do
-        job1 = double('job1')
-        job2 = double('job2')
-        job3 = double('job3')
-        expect(DeactivateDoiJob).to receive(:new).with(
-          'nukeme', 'a', 'admin', 'Nuke').and_return(job1)
-        expect(DeactivateDoiJob).to receive(:new).with(
-          'nukeme', 'b', 'admin', 'Nuke').and_return(job2)
-        expect(DeactivateDoiJob).to receive(:new).with(
-          'kaput', 'c', 'admin', 'Kaput').and_return(job3)
-        expect(Sufia.queue).to receive(:push).with(job1)
-        expect(Sufia.queue).to receive(:push).with(job2)
-        expect(Sufia.queue).to receive(:push).with(job3)
-        subject
-      end
     end
   end
 
@@ -95,22 +79,6 @@ describe BatchEditsController do
         expect { subject }.to change(ActiveFedora::Base, :count).by(-2)
         expect { GenericFile.find('nukeme') }.to raise_error(Ldp::Gone)
         expect { Collection.find('kaput') }.to raise_error(Ldp::Gone)
-      end
-
-      it 'schedules doi deactivation jobs for the generic files only' do
-        job1 = double('job1')
-        job2 = double('job2')
-        job3 = double('job3')
-        expect(DeactivateDoiJob).to receive(:new).with(
-          'nukeme', 'a', 'admin', 'Nuke').and_return(job1)
-        expect(DeactivateDoiJob).to receive(:new).with(
-          'nukeme', 'b', 'admin', 'Nuke').and_return(job2)
-        expect(DeactivateDoiJob).to receive(:new).with(
-          'kaput', 'c', 'admin', 'Kaput').and_return(job3)
-        expect(Sufia.queue).to receive(:push).with(job1)
-        expect(Sufia.queue).to receive(:push).with(job2)
-        expect(Sufia.queue).to receive(:push).with(job3)
-        subject
       end
     end
   end
