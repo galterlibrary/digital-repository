@@ -36,14 +36,19 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   #
   # @param [GenericFile] generic_file file to be converted for export
   def initialize(generic_file=nil, collection_store={})
-    return unless generic_file
+    # communites are necessary to check if the file should be exported
+    @collection_store = collection_store
+    @communities = list_collections
+
+    if generic_file&.unexportable?(@communities)
+      return
+    end
+
     @generic_file = generic_file
 
     @record = record_for_export
     @file = file_info
     @extras = extra_data
-    @collection_store = collection_store
-    @communities = list_collections
   end
 
   def to_json(options={})

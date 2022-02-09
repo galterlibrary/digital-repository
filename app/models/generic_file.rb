@@ -7,6 +7,9 @@ class GenericFile < ActiveFedora::Base
   include Galtersufia::GenericFile::FullTextIndexing
   include Galtersufia::GenericFile::MimeTypes
 
+  GV_BLACK_PHOTOGRAPH_SUB_COLLECTION_ID = "x346d4254"
+  GV_BLACK_COLLECTION_ID = "a4de96c9-7c6d-40d6-ad9e-cac8a24faad5"
+
   belongs_to :parent,
     predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf,
     class_name: "Collection"
@@ -154,6 +157,32 @@ class GenericFile < ActiveFedora::Base
     gfjson['uri'] = "#{url_prefix}/files/#{self.try(:id)}"
     gfjson['download'] = "#{url_prefix}/downloads/#{self.try(:id)}"
     gfjson
+  end
+
+  def unexportable?(collection_paths)
+     open_access_and_no_doi? || in_old_gv_black_and_not_photograph?(collection_paths)
+  end
+
+  def in_old_gv_black_and_not_photograph?(collection_paths)
+    in_collections?([GV_BLACK_COLLECTION_ID], collection_paths) && !in_collections?([GV_BLACK_PHOTOGRAPH_SUB_COLLECTION_ID], collection_paths)
+  end
+  private :in_old_gv_black_and_not_photograph?
+
+  def open_access_and_no_doi?
+    (visibility == InvenioRdmRecordConverter::OPEN_ACCESS && doi.empty?)
+  end
+  private :open_access_and_no_doi?
+
+  def in_collections?(collection_ids=[], collection_paths=[[{}]])
+    collection_paths.each do |collection_path|
+      collection_path.each do |collection_obj|
+        if collection_ids.include?(collection_obj[:id])
+          return true
+        end
+      end
+    end
+
+    false
   end
 
   class << self
