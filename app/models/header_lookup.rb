@@ -106,13 +106,13 @@ class HeaderLookup
   end
 
   def lcnaf_pid_lookup(lcnaf_term)
-    lcnaf_term = lcnaf_term.downcase.trim
+    lcnaf_term = lcnaf_term.downcase.strip
 
     @@searchable_lcnaf_file.each do |row|
       term, pid = row
 
       # if the term matches up memoize, write to file, and return pid
-      if lcnaf_term == term.downcase.trim
+      if lcnaf_term == term.downcase.strip
         @@memoized_lcnaf[lcnaf_term] = pid
         File.write(MEMOIZED_LCNAF_FILE, @@memoized_lcnaf)
         return pid
