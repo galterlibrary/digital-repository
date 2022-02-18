@@ -25,34 +25,42 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   MEMOIZED_PERSON_OR_ORG_DATA_FILE = 'memoized_person_or_org_data.txt'
   FUNDING_DATA_FILE = 'app/models/concerns/galtersufia/generic_file/funding_data.txt'
   LICENSE_DATA_FILE = 'app/models/concerns/galtersufia/generic_file/license_data.txt'
+  COLLECTIONS_TO_COMMUNITIES_JSON = 'collections_to_communities.json'
   BLANK_FUNDER_SOURCE = {funder: {name: "", identifier: "", scheme: "ror"}, award: {title: "", number: "", identifier: "", scheme: ""}}
 
   @@header_lookup ||= HeaderLookup.new
   @@funding_data ||= eval(File.read(FUNDING_DATA_FILE))
   @@person_or_org_data ||= eval(File.read(MEMOIZED_PERSON_OR_ORG_DATA_FILE))
   @@license_data ||= eval(File.read(LICENSE_DATA_FILE))
+  # parse json then trim down to a hash of dh collection id to prism community id
+  @@collections_to_communities ||= JSON.parse(File.read(COLLECTIONS_TO_COMMUNITIES_JSON)).each_with_object({}){ |node, hash| hash[node["dh"]] = node["prism"] }
 
   # Create an instance of a InvenioRdmRecordConverter converter containing all the metadata for json export
   #
   # @param [GenericFile] generic_file file to be converted for export
   def initialize(generic_file=nil, collection_store={})
-    # communites are necessary to check if the file should be exported
-    @collection_store = collection_store
-    @communities = list_collections
-
-    if generic_file&.unexportable?(@communities)
+    if generic_file.blank?
       return
     end
 
     @generic_file = generic_file
+    # communites are necessary to check if the file should be exported
+    @collection_store = collection_store
+    # communities is an array consisting of collection paths which are arrays of hashes
+    @dh_collections = list_collections
+
+    if generic_file.unexportable?(@dh_collections)
+      return
+    end
 
     @record = record_for_export
     @file = file_info
     @extras = extra_data
+    @prism_communities = map_collections_to_communities
   end
 
   def to_json(options={})
-    options[:except] ||= ["memoized_mesh", "memoized_lcsh", "generic_file", "collection_store"]
+    options[:except] ||= ["memoized_mesh", "memoized_lcsh", "generic_file", "collection_store", "dh_collections"]
     super
   end
 
@@ -214,6 +222,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
         "locations": {"features": @generic_file.subject_geographic.present? ? @generic_file.subject_geographic.map{ |location| {place: location.force_encoding("UTF-8")} } : []},
         "funding": funding(@generic_file.id)
       }
+
     rescue => e
       puts "[!!!ERROR!!!] Problem for GenericFile: #{@generic_file.id}"
       puts "Error - #{e}".force_encoding("UTF-8")
@@ -507,5 +516,19 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
 
     # remove nil values
     funding_sources.compact
+  end
+
+  def map_collections_to_communities
+    @dh_collections.map do |collection_path|
+      prism_community_id_from_collection_path(collection_path)
+    end
+  end
+
+  def prism_community_id_from_collection_path(collection_path)
+    collection_path.each do |collection_path_entry|
+      if community = @@collections_to_communities[collection_path_entry[:id]]
+        return community
+      end
+    end
   end
 end
