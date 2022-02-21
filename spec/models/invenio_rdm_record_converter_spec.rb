@@ -5,8 +5,11 @@ RSpec.describe InvenioRdmRecordConverter do
                                     display_name: 'Mock Tester') }
   let(:contributor_user) { FactoryGirl.create(:user, username: "contributor_user", formal_name: "User, Contributor",  display_name: 'Contributor User') }
   let(:assistant) { FactoryGirl.create(:user, username: "ast9876") }
+  let(:lcnaf_term) { "Birkan, Kaarin" }
+  let(:expected_lcnaf_term) {}
   let(:mesh_term) { "Vocabulary, Controlled" }
   let(:expected_mesh_id) { ::HeaderLookup::MESH_ID_URI + "D018875" }
+  let(:expected_lcnaf_id) { "http://id.loc.gov/authorities/names/n90699999" }
   let(:lcsh_term) { "Semantic Web" }
   let(:expected_lcsh_id) { ::HeaderLookup::LCSH_ID_URI + "sh2002000569" }
   let(:generic_file_doi) { "10.5438/55e5-t5c0" }
@@ -22,7 +25,7 @@ RSpec.describe InvenioRdmRecordConverter do
       creator: [user.formal_name],
       contributor: [contributor_user.formal_name],
       title: ["Primary Title"],
-      tag: ["keyword subject"],
+      subject_name: [lcnaf_term],
       publisher: ["DigitalHub. Galter Health Sciences Library & Learning Center"],
       date_uploaded: Time.new(2020, 2, 3),
       mesh: [mesh_term],
@@ -92,13 +95,13 @@ RSpec.describe InvenioRdmRecordConverter do
           "publication_date": "2021-01-01",
           "subjects": [
             {
-              "subject": "keyword subject"
+              "id": expected_mesh_id
             },
             {
-              "id": expected_mesh_id,
+              "id": expected_lcsh_id
             },
             {
-              "id": expected_lcsh_id,
+              "id": expected_lcnaf_id
             }
           ],
           "contributors": [{
@@ -176,7 +179,7 @@ RSpec.describe InvenioRdmRecordConverter do
           "edit": [user.username]
         }
       },
-      "communities": []
+      "prism_communities": []
     }.to_json
   end
   let(:invenio_rdm_record_converter) { described_class.new(generic_file, collection_store.data) }
@@ -803,13 +806,44 @@ RSpec.describe InvenioRdmRecordConverter do
       end
     end
 
-    context "tag scheme" do
-      let(:tag_term){ ["tumor"] }
-      let(:tag_subject_type){ :tag }
-      let(:expected_tag_result){ ["subject": "tumor"] }
+    context "lcnaf scheme" do
+      let(:subject_name_terms) { [lcnaf_term] }
+      let(:subject_name_subject_type){ :subject_name }
+      let(:expected_lcnaf_pid) { ["id": "http://id.loc.gov/authorities/names/n90699999"] }
 
       it "returns metadata for term" do
-        expect(invenio_rdm_record_converter.send(:subjects_for_scheme, tag_term, tag_subject_type)).to eq(expected_tag_result)
+        expect(invenio_rdm_record_converter.send(:subjects_for_scheme, subject_name_terms, subject_name_subject_type)).to eq(expected_lcnaf_pid)
+      end
+    end
+  end
+
+  describe "#map_collections_to_communities" do
+    let(:map_collections_to_communites_irrc) { described_class.new(generic_file, collection_store.data) }
+    let(:expected_invenio_ids) { ["biostatistics-collaboration-center-lecture-series", "center-for-community-health"] }
+
+    context "there is not a match in the collection store to the communities mapping json" do
+      before do
+        # clear the existing collections
+        collection_store.build_collection_store_data
+        collection_store.build_paths_for_collection_store
+      end
+
+      it "returns a blank array" do
+        expect(map_collections_to_communites_irrc.send(:map_collections_to_communities)).to eq([])
+      end
+    end
+
+    context "there are matches in the collection store to communities mapping json" do
+      before do
+        make_collection(user, title: "Biostatistics Collaboration Center Lecture Series", id: "2cc92425-b656-47ea-a3b4-825405ee6088", member_ids: [generic_file.id])
+        make_collection(user, title: "Center for Community Health", id: "ae0b945c-d0d4-45bb-a0fc-263c7afca49e", member_ids: [generic_file.id])
+
+        collection_store.build_collection_store_data
+        collection_store.build_paths_for_collection_store
+      end
+
+      it "returns an array with the matching community mapping object" do
+        expect(map_collections_to_communites_irrc.send(:map_collections_to_communities)).to eq(expected_invenio_ids)
       end
     end
   end

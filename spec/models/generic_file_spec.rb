@@ -3,13 +3,13 @@ RSpec.describe GenericFile do
   # Tested in collection_spec
   it { is_expected.to respond_to(:add_institutional_admin_permissions) }
 
-  context 'export citations' do
-    let(:gf_doi) { GenericFile.new(title: ['abc'],
-                                   creator: ['Donald Duck'],
-                                  doi: ['doi:11111/bbbb']) }
-    let(:gf_no_doi) { GenericFile.new(title: ['meow'],
+  let(:gf_doi) { GenericFile.new(title: ['abc'],
+                                 creator: ['Donald Duck'],
+                                doi: ['doi:11111/bbbb']) }
+  let(:gf_no_doi) { GenericFile.new(title: ['meow'],
                                       creator: ['Cicero']) }
 
+  context 'export citations' do
     it 'adds a doi to apa-formated citations' do
       expect(gf_doi.export_as_apa_citation).to include('doi:11111/bbbb')
       expect(gf_doi.export_as_apa_citation).to include(
@@ -328,7 +328,7 @@ RSpec.describe GenericFile do
           end
 
           it 'creates the doi' do
-            expect(subject.check_doi_presence).to eq('generated_draft')
+            expect(subject.check_doi_presence).to eq('draft_restricted')
             expect(subject.reload.doi).to eq(['10.82113/as-zwv6-gf43'])
           end
         end
@@ -338,7 +338,7 @@ RSpec.describe GenericFile do
         before { subject.update_attributes(date_uploaded: nil) }
 
         it 'sets doi' do
-          expect(subject.check_doi_presence).to eq('generated_draft')
+          expect(subject.check_doi_presence).to eq('draft_restricted')
           expect(subject.reload.doi).to eq(['10.82113/as-9n6h-wf43'])
         end
       end
@@ -361,7 +361,7 @@ RSpec.describe GenericFile do
           end
 
           it 'updates the metadata remotely but not the ids locally' do
-            expect(subject.check_doi_presence).to eq('updated')
+            expect(subject.check_doi_presence).to eq('already_findable')
             expect(subject.reload.doi).to eq(['10.82113/as-4e2m-fd12'])
           end
         end
@@ -374,7 +374,7 @@ RSpec.describe GenericFile do
           end
 
           it 'updates the metadata remotely but not the ids locally' do
-            expect(subject.check_doi_presence).to eq('updated_registered')
+            expect(subject.check_doi_presence).to eq('hide_findable')
             expect(subject.reload.doi).to eq(['10.82113/as-4e2m-fd12'])
           end
         end
@@ -388,7 +388,7 @@ RSpec.describe GenericFile do
           end
 
           it 'updates the metadata remotely but not the ids locally' do
-            expect(subject.check_doi_presence).to eq('updated_registered')
+            expect(subject.check_doi_presence).to eq('hide_findable')
             expect(subject.reload.doi).to eq([
               '10.doi1/AA1', '10.doi/BB3', '10.abc/FK2', '10.82113/as-5edn-6577'
             ])
@@ -397,7 +397,7 @@ RSpec.describe GenericFile do
       end
 
       it 'sets doi' do
-        expect(subject.check_doi_presence).to eq('generated_draft')
+        expect(subject.check_doi_presence).to eq('draft_restricted')
         expect(subject.reload.doi).to eq(['10.82113/as-20qw-j035'])
       end
 
@@ -405,7 +405,7 @@ RSpec.describe GenericFile do
         before { subject.visibility = 'open'; subject.save! }
 
         it 'sets doi' do
-          expect(subject.check_doi_presence).to eq('generated')
+          expect(subject.check_doi_presence).to eq('draft_published')
           expect(subject.reload.doi).to eq(['10.82113/as-5edn-6577'])
         end
       end
@@ -516,6 +516,92 @@ RSpec.describe GenericFile do
 
       it 'does not extracts the text' do
         expect(subject.full_text.content).to be_nil
+      end
+    end
+  end
+
+  let(:mock_gv_black_collection) { {title: "mock gv black collection", id: GenericFile::GV_BLACK_COLLECTION_ID} }
+  let(:mock_gv_black_photo_collection) { {title: "gv black photograph sub collection", id: GenericFile::GV_BLACK_PHOTOGRAPH_SUB_COLLECTION_ID} }
+  let(:mock_collection) { {title: "test collection", id: "test-collection"} }
+
+  let(:collection_paths_gv_black_not_in_photo) { [[mock_gv_black_collection], [mock_collection]] }
+  let(:collection_paths_gv_black_in_photo) { [[mock_gv_black_collection, mock_gv_black_photo_collection], [mock_collection]] }
+  let(:no_gv_black) { [[mock_collection]] }
+
+  # if it's in the old gv black collection and not the photograph sub collection
+  describe "#in_old_gv_black_and_not_photograph" do
+    context "in old gv black collection" do
+      context "in photograph sub collection" do
+        it "returns false" do
+          expect(gf_doi.send(:in_old_gv_black_and_not_photograph?, collection_paths_gv_black_in_photo)).to eq(false)
+        end
+      end
+
+      context "not in photograph sub collection" do
+        it "returns true" do
+          expect(gf_doi.send(:in_old_gv_black_and_not_photograph?, collection_paths_gv_black_not_in_photo)).to eq(true)
+        end
+      end
+    end
+
+    context "not in old gv black collection" do
+      context "in photograph sub collection" do
+        it "returns false" do
+          expect(gf_doi.send(:in_old_gv_black_and_not_photograph?, no_gv_black)).to eq(false)
+        end
+      end
+
+      context "not in photograph sub collection" do
+        it "returns false" do
+          expect(gf_doi.send(:in_old_gv_black_and_not_photograph?, no_gv_black)).to eq(false)
+        end
+      end
+    end
+  end
+
+  # if it's open access and has no doi
+  describe "#open_access_and_no_doi?" do
+    context "has doi" do
+      context "is open access" do
+        before do
+          allow(gf_doi).to receive(:visibility).and_return(InvenioRdmRecordConverter::OPEN_ACCESS)
+        end
+
+        it "returns true" do
+          expect(gf_doi.send(:open_access_and_no_doi?)).to eq(false)
+        end
+      end
+
+      context "is not open access" do
+        before do
+          allow(gf_doi).to receive(:visibility).and_return("")
+        end
+
+        it "returns false" do
+          expect(gf_doi.send(:open_access_and_no_doi?)).to eq(false)
+        end
+      end
+    end
+
+    context "does not have doi" do
+      context "is open access" do
+        before do
+          allow(gf_no_doi).to receive(:visibility).and_return(InvenioRdmRecordConverter::OPEN_ACCESS)
+        end
+
+        it "returns false" do
+          expect(gf_no_doi.send(:open_access_and_no_doi?)).to eq(true)
+        end
+      end
+
+      context "is not open access" do
+        before do
+          allow(gf_no_doi).to receive(:visibility).and_return("")
+        end
+
+        it "returns false" do
+          expect(gf_no_doi.send(:open_access_and_no_doi?)).to eq(false)
+        end
       end
     end
   end

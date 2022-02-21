@@ -25,29 +25,42 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   MEMOIZED_PERSON_OR_ORG_DATA_FILE = 'memoized_person_or_org_data.txt'
   FUNDING_DATA_FILE = 'app/models/concerns/galtersufia/generic_file/funding_data.txt'
   LICENSE_DATA_FILE = 'app/models/concerns/galtersufia/generic_file/license_data.txt'
+  COLLECTIONS_TO_COMMUNITIES_JSON = 'collections_to_communities.json'
   BLANK_FUNDER_SOURCE = {funder: {name: "", identifier: "", scheme: "ror"}, award: {title: "", number: "", identifier: "", scheme: ""}}
 
   @@header_lookup ||= HeaderLookup.new
   @@funding_data ||= eval(File.read(FUNDING_DATA_FILE))
   @@person_or_org_data ||= eval(File.read(MEMOIZED_PERSON_OR_ORG_DATA_FILE))
   @@license_data ||= eval(File.read(LICENSE_DATA_FILE))
+  # parse json then trim down to a hash of dh collection id to prism community id
+  @@collections_to_communities ||= JSON.parse(File.read(COLLECTIONS_TO_COMMUNITIES_JSON)).each_with_object({}){ |node, hash| hash[node["dh"]] = node["prism"] }
 
   # Create an instance of a InvenioRdmRecordConverter converter containing all the metadata for json export
   #
   # @param [GenericFile] generic_file file to be converted for export
   def initialize(generic_file=nil, collection_store={})
-    return unless generic_file
+    if generic_file.blank?
+      return
+    end
+
     @generic_file = generic_file
+    # communites are necessary to check if the file should be exported
+    @collection_store = collection_store
+    # communities is an array consisting of collection paths which are arrays of hashes
+    @dh_collections = list_collections
+
+    if generic_file.unexportable?(@dh_collections)
+      return
+    end
 
     @record = record_for_export
     @file = file_info
     @extras = extra_data
-    @collection_store = collection_store
-    @communities = list_collections
+    @prism_communities = map_collections_to_communities
   end
 
   def to_json(options={})
-    options[:except] ||= ["memoized_mesh", "memoized_lcsh", "generic_file", "collection_store"]
+    options[:except] ||= ["memoized_mesh", "memoized_lcsh", "generic_file", "collection_store", "dh_collections"]
     super
   end
 
@@ -209,6 +222,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
         "locations": {"features": @generic_file.subject_geographic.present? ? @generic_file.subject_geographic.map{ |location| {place: location.force_encoding("UTF-8")} } : []},
         "funding": funding(@generic_file.id)
       }
+
     rescue => e
       puts "[!!!ERROR!!!] Problem for GenericFile: #{@generic_file.id}"
       puts "Error - #{e}".force_encoding("UTF-8")
@@ -217,7 +231,6 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def resource_type(digitalhub_subtype)
-    puts "in #resource_type..."
     irdm_types = DH_IRDM_RESOURCE_TYPES[digitalhub_subtype]
 
     if irdm_types
@@ -232,7 +245,6 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def build_creator_contributor_json(creator)
-    puts "in #build_creator_contributor_json..."
     if creator_data = @@person_or_org_data[creator]
       return creator_data
     # Organization
@@ -288,7 +300,6 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end # build_creator_contributor_json
 
   def format_additional(content_type, invenio_type, values)
-    puts "in #format_additional..."
     formatted_values = values.map do |value|
       if value.blank?
         next
@@ -302,7 +313,6 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
 
   # return array of invenio formatted subjects
   def subjects_for_scheme(terms, scheme)
-    puts "in #subjects_for_scheme..."
     mapped_terms = terms.map do |term|
       pid = @@header_lookup.pid_lookup_by_scheme(term, scheme)
 
@@ -322,7 +332,6 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
 
 
   def contributors(contributors)
-    puts "in #contributors..."
     contributors.map do |contributor|
       contributor_json = build_creator_contributor_json(contributor)
       contributor_json.merge!({"role": {id: ROLE_OTHER}})
@@ -331,7 +340,6 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def ark_identifiers(arks)
-    puts "in #ark_identifiers..."
     arks.map do |ark|
       {
         "identifier": ark,
@@ -341,7 +349,6 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def rights(license_urls)
-    puts "in #rights..."
     license_urls.map do |license_url|
       license_data = @@license_data[license_url.to_sym]
 
@@ -361,7 +368,6 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def version(content)
-    puts "in #version..."
     return "" unless content.has_versions?
     version_number = content.versions.all.length
 
@@ -369,7 +375,6 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def related_identifiers(related_url)
-    puts "in #related_identifiers..."
     identifiers = related_url.map do |url|
       next if url.blank?
 
@@ -394,17 +399,14 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def doi_url?(url)
-    puts "in #doi_url..."
     url.include?(DOI_ORG)
   end
 
   def format_publication_date(publication_date)
-    puts "in #format_publication_date..."
     normalize_date(publication_date)
   end
 
   def normalize_date(date_string)
-    puts "in #normalize_date..."
     split_date = date_string.split(/[-,\/ ]/).map(&:downcase)
     # date format starts with month first
     if (!split_date.blank? && split_date[0].length < 3)
@@ -477,7 +479,6 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def rearrange_year(date_array)
-    puts "in #rearrange_year..."
     if date_array[0].length == 4
       return date_array
     end
@@ -494,7 +495,6 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def funding(file_id)
-    puts "in #funding..."
     funding_sources = @@funding_data[file_id]
 
     if funding_sources.blank?
@@ -516,5 +516,19 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
 
     # remove nil values
     funding_sources.compact
+  end
+
+  def map_collections_to_communities
+    @dh_collections.map do |collection_path|
+      prism_community_id_from_collection_path(collection_path)
+    end
+  end
+
+  def prism_community_id_from_collection_path(collection_path)
+    collection_path.each do |collection_path_entry|
+      if community = @@collections_to_communities[collection_path_entry[:id]]
+        return community
+      end
+    end
   end
 end

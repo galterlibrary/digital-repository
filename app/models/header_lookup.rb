@@ -10,18 +10,22 @@ class HeaderLookup
   MESH_ID_URI = "https://id.nlm.nih.gov/mesh/"
   MEMOIZED_MESH_FILE = "memoized_mesh.txt"
   MEMOIZED_LCSH_FILE = "memoized_lcsh.txt"
+  MEMOIZED_LCNAF_FILE = "memoized_lcnaf.txt"
   SEARCHABLE_MESH_FILE = "subjects_mesh.yml"
   SEARCHABLE_LCSH_FILE = "subjects_lcsh.yml"
+  SEARCHABLE_LCNAF_FILE = "subjects_lcnaf.csv"
 
   def initialize
     puts "initializing header_lookup..."
     # these are the terms to search through for header lookups
     @@searchable_mesh_terms ||= YAML.load_file(SEARCHABLE_MESH_FILE)
     @@searchable_lcsh_terms ||= YAML.load_file(SEARCHABLE_LCSH_FILE)
+    @@searchable_lcnaf_file ||= CSV.new(SEARCHABLE_LCNAF_FILE)
 
     # these are values that have been previously found from the searchable terms
     @@memoized_mesh ||= read_memoized_headers(MEMOIZED_MESH_FILE)
     @@memoized_lcsh ||= read_memoized_headers(MEMOIZED_LCSH_FILE)
+    @@memoized_lcnaf ||= read_memoized_headers(MEMOIZED_LCNAF_FILE)
   end
 
   def pid_lookup_by_scheme(term="", scheme="")
@@ -31,6 +35,8 @@ class HeaderLookup
       @@memoized_mesh[term] || mesh_term_pid_local_lookup(term) || nil
     elsif scheme == :lcsh
       @@memoized_lcsh[term] || lcsh_term_pid_local_lookup(term) || nil
+    elsif scheme == :subject_name
+      @@memoized_lcnaf[term] || lcnaf_pid_lookup(term) || nil
     else
       nil
     end
@@ -99,6 +105,24 @@ class HeaderLookup
     end
   end
 
+  def lcnaf_pid_lookup(lcnaf_term)
+    lcnaf_term = lcnaf_term.downcase.strip
+
+    @@searchable_lcnaf_file.each do |row|
+      term, pid = row
+
+      # if the term matches up memoize, write to file, and return pid
+      if lcnaf_term == term.downcase.strip
+        @@memoized_lcnaf[lcnaf_term] = pid
+        File.write(MEMOIZED_LCNAF_FILE, @@memoized_lcnaf)
+        return pid
+      end
+    end
+
+    # if no pid is found, return nil
+    nil
+  end
+
   private
 
   def perform_and_parse_lcsh_query(stripped_lcsh_term)
@@ -131,7 +155,7 @@ class HeaderLookup
     term.mb_chars.normalize(:kd).gsub(/[^\ \-()x00-\x7F]/n, '').to_s
   end
 
-  # read memoized from JSON file, if no file found return blank hash
+  # read memoized from file, if no file found return blank hash
   def read_memoized_headers(filepath)
     begin
       file = File.read(filepath)
