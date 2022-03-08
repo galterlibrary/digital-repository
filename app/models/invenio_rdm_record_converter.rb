@@ -38,12 +38,13 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   # Create an instance of a InvenioRdmRecordConverter converter containing all the metadata for json export
   #
   # @param [GenericFile] generic_file file to be converted for export
-  def initialize(generic_file=nil, collection_store={})
+  def initialize(generic_file=nil, collection_store={}, role_store={})
     if generic_file.blank?
       return
     end
 
     @generic_file = generic_file
+    @role_store = role_store
     # communites are necessary to check if the file should be exported
     @collection_store = collection_store
     # communities is an array consisting of collection paths which are arrays of hashes
@@ -60,7 +61,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def to_json(options={})
-    options[:except] ||= ["memoized_mesh", "memoized_lcsh", "generic_file", "collection_store", "dh_collections"]
+    options[:except] ||= ["memoized_mesh", "memoized_lcsh", "generic_file", "collection_store", "role_store", "dh_collections"]
     super
   end
 
@@ -112,7 +113,13 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     permission_data = Hash.new { |h,k| h[k] = [] }
 
     @generic_file.permissions.each do |permission|
-      permission_data[permission.access] << permission.agent_name
+      if @role_store[permission.agent_name]
+        permission_data[permission.access].push(
+          *@role_store[permission.agent_name][:netids]
+        )
+      else
+        permission_data[permission.access] << permission.agent_name
+      end
     end
 
     permission_data
