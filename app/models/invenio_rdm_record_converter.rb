@@ -110,15 +110,17 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def file_permissions
-    permission_data = Hash.new { |h,k| h[k] = [] }
+    permission_data = Hash.new
 
     @generic_file.permissions.each do |permission|
+      permission_data[permission.access] ||= Hash.new
+
       if @role_store[permission.agent_name]
-        permission_data[permission.access].push(
-          *@role_store[permission.agent_name].keys
-        )
+        permission_data[permission.access].merge!(@role_store[permission.agent_name])
+      elsif user = User.find_by(username: permission.agent_name)
+        permission_data[permission.access].merge!({user.username => user.email})
       else
-        permission_data[permission.access] << permission.agent_name
+        permission_data[permission.access].merge!({permission.agent_name => ""})
       end
     end
 

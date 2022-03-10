@@ -176,9 +176,13 @@ RSpec.describe InvenioRdmRecordConverter do
           "email": user.email
         },
         "permissions": {
-          "read": ["public"],
-          "edit": [user.username]
-        }
+          "read": {
+            "public": ""
+          },
+          "edit": {
+            user.username => user.email,
+          }
+        }.with_indifferent_access
       },
       "prism_communities": []
     }.to_json
@@ -299,9 +303,13 @@ RSpec.describe InvenioRdmRecordConverter do
         "email": user.email
       },
       "permissions": {
-        "read": ["public"],
-        "edit": [user.username]
-      }
+        "read": {
+          "public": ""
+        },
+        "edit": {
+          user.username => user.email,
+        }
+      }.with_indifferent_access
     }.with_indifferent_access
   }
 
@@ -328,8 +336,13 @@ RSpec.describe InvenioRdmRecordConverter do
 
       let(:expected_permissions) {
         {
-          "read": ["public"],
-          "edit": ["usr1234", "exp987"]
+          "read": {
+            "public": ""
+          },
+          "edit": {
+            user.username => user.email,
+            exporter.username => exporter.email
+          }
         }.with_indifferent_access
       }
 
