@@ -115,7 +115,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     @generic_file.permissions.each do |permission|
       if @role_store[permission.agent_name]
         permission_data[permission.access].push(
-          *@role_store[permission.agent_name][:netids]
+          *@role_store[permission.agent_name].keys
         )
       else
         permission_data[permission.access] << permission.agent_name
