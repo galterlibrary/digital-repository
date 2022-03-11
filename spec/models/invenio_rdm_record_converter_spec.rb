@@ -171,11 +171,10 @@ RSpec.describe InvenioRdmRecordConverter do
       },
       "extras": {
         "presentation_location": generic_file.based_near,
-        "owner": {
-          "netid": user.username,
-          "email": user.email
-        },
         "permissions": {
+          "owner": {
+            user.username => user.email
+          },
           "read": {
             "public": ""
           },
@@ -187,7 +186,9 @@ RSpec.describe InvenioRdmRecordConverter do
       "prism_communities": []
     }.to_json
   end
-  let(:invenio_rdm_record_converter) { described_class.new(generic_file, collection_store.data, role_store.data) }
+  let(:invenio_rdm_record_converter) {
+    described_class.new(generic_file, collection_store.data, role_store.data)
+  }
 
   before do
     ProxyDepositRights.create(grantor_id: assistant.id, grantee_id: user.id)
@@ -298,11 +299,10 @@ RSpec.describe InvenioRdmRecordConverter do
   let(:expected_extra_data) {
     {
       "presentation_location": ["'Boston, Massachusetts, United States', 'East Peoria, Illinois, United States'"],
-      "owner": {
-        "netid": user.username,
-        "email": user.email
-      },
       "permissions": {
+        "owner": {
+          user.username => user.email
+        },
         "read": {
           "public": ""
         },
@@ -336,6 +336,9 @@ RSpec.describe InvenioRdmRecordConverter do
 
       let(:expected_permissions) {
         {
+          "owner": {
+            user.username => user.email
+          },
           "read": {
             "public": ""
           },
@@ -347,7 +350,9 @@ RSpec.describe InvenioRdmRecordConverter do
       }
 
       let(:converted_record_with_roles) {
-        described_class.new(generic_file, collection_store.data, role_store.data)
+        described_class.new(
+          generic_file, collection_store.data, role_store.data
+        )
       }
 
       it "adds data" do
@@ -377,7 +382,9 @@ RSpec.describe InvenioRdmRecordConverter do
       }
 
       let(:converted_record_with_collection) {
-        described_class.new(generic_file, collection_store.data, role_store.data)
+        described_class.new(
+          generic_file, collection_store.data, role_store.data
+        )
       }
 
       it "adds data" do
@@ -402,7 +409,9 @@ RSpec.describe InvenioRdmRecordConverter do
         ]
       }
       let(:converted_record_with_two_collections) {
-        described_class.new(generic_file, collection_store.data, role_store.data)
+        described_class.new(
+          generic_file, collection_store.data, role_store.data
+        )
       }
 
       it "adds data" do
@@ -430,7 +439,9 @@ RSpec.describe InvenioRdmRecordConverter do
       }
 
       let(:converted_record_with_parent_collection) {
-        described_class.new(generic_file, collection_store.data, role_store.data)
+        described_class.new(
+          generic_file, collection_store.data, role_store.data
+        )
       }
 
       it "adds data" do
@@ -460,7 +471,9 @@ RSpec.describe InvenioRdmRecordConverter do
       }
 
       let(:converted_record_with_multiple_parents) {
-        described_class.new(generic_file, collection_store.data, role_store.data)
+        described_class.new(
+          generic_file, collection_store.data, role_store.data
+        )
       }
 
       it "adds data" do
@@ -866,7 +879,9 @@ RSpec.describe InvenioRdmRecordConverter do
   end
 
   describe "#map_collections_to_communities" do
-    let(:map_collections_to_communites_irrc) { described_class.new(generic_file, collection_store.data, role_store.data) }
+    let(:map_collections_to_communites_irrc) {
+      described_class.new(generic_file, collection_store.data, role_store.data)
+    }
     let(:expected_invenio_ids) { ["biostatistics-collaboration-center-lecture-series", "center-for-community-health"] }
 
     context "there is not a match in the collection store to the communities mapping json" do

@@ -87,7 +87,6 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     if !@generic_file.based_near.empty?
         data["presentation_location"] = @generic_file.based_near
     end
-    data["owner"] = owner_info
     data["permissions"] = file_permissions
 
     data
@@ -97,20 +96,16 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     user = User.find_by(username: @generic_file.depositor)
 
     if user
-      {
-        "netid": user.username,
-        "email": user.email
-      }
+      { user.username => user.email }
     else
-      {
-        "netid": "unknown",
-        "email": "unknown"
-      }
+      { "unknown": "unknown" }
     end
   end
 
   def file_permissions
     permission_data = Hash.new
+
+    permission_data["owner"] = owner_info
 
     @generic_file.permissions.each do |permission|
       permission_data[permission.access] ||= Hash.new
