@@ -38,12 +38,13 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   # Create an instance of a InvenioRdmRecordConverter converter containing all the metadata for json export
   #
   # @param [GenericFile] generic_file file to be converted for export
-  def initialize(generic_file=nil, collection_store={})
+  def initialize(generic_file=nil, collection_store={}, role_store={})
     if generic_file.blank?
       return
     end
 
     @generic_file = generic_file
+    @role_store = role_store
     # communites are necessary to check if the file should be exported
     @collection_store = collection_store
     # communities is an array consisting of collection paths which are arrays of hashes
@@ -60,7 +61,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def to_json(options={})
-    options[:except] ||= ["memoized_mesh", "memoized_lcsh", "generic_file", "collection_store", "dh_collections"]
+    options[:except] ||= ["memoized_mesh", "memoized_lcsh", "generic_file", "collection_store", "role_store", "dh_collections"]
     super
   end
 
@@ -86,7 +87,6 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     if !@generic_file.based_near.empty?
         data["presentation_location"] = @generic_file.based_near
     end
-    data["owner"] = owner_info
     data["permissions"] = file_permissions
 
     data
@@ -96,23 +96,27 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     user = User.find_by(username: @generic_file.depositor)
 
     if user
-      {
-        "netid": user.username,
-        "email": user.email
-      }
+      { user.username => user.email }
     else
-      {
-        "netid": "unknown",
-        "email": "unknown"
-      }
+      { "unknown": "unknown" }
     end
   end
 
   def file_permissions
-    permission_data = Hash.new { |h,k| h[k] = [] }
+    permission_data = Hash.new
+
+    permission_data["owner"] = owner_info
 
     @generic_file.permissions.each do |permission|
-      permission_data[permission.access] << permission.agent_name
+      permission_data[permission.access] ||= Hash.new
+
+      if @role_store[permission.agent_name]
+        permission_data[permission.access].merge!(@role_store[permission.agent_name])
+      elsif user = User.find_by(username: permission.agent_name)
+        permission_data[permission.access].merge!({user.username => user.email})
+      else
+        permission_data[permission.access].merge!({permission.agent_name => ""})
+      end
     end
 
     permission_data
