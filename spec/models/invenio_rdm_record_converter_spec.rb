@@ -183,7 +183,7 @@ RSpec.describe InvenioRdmRecordConverter do
           }
         }.with_indifferent_access
       },
-      "prism_communities": []
+      "prism_community": ""
     }.to_json
   end
   let(:invenio_rdm_record_converter) {
@@ -878,35 +878,57 @@ RSpec.describe InvenioRdmRecordConverter do
     end
   end
 
-  describe "#map_collections_to_communities" do
-    let(:map_collections_to_communites_irrc) {
-      described_class.new(generic_file, collection_store.data, role_store.data)
-    }
-    let(:expected_invenio_ids) { ["biostatistics-collaboration-center-lecture-series", "center-for-community-health"] }
 
-    context "there is not a match in the collection store to the communities mapping json" do
+  describe "#dh_collection_to_prism_community_collection" do
+    let(:map_collection_to_prism_community_collections_irrc) { described_class.new(generic_file, collection_store.data) }
+    let(:expected_community_collection_string_2019_2020) { "biostatistics-collaboration-center-lecture-series::2019-2020" }
+    let(:expected_community_collection_string_center_for_community_health) { "center-for-community-health" }
+
+    let(:generic_file_with_community_collection_match) { make_generic_file_with_content(user, id: "9e27fbd0-c6cb-47c7-8770-8ffeb135009d") }
+    let(:expected_community_collection_string_center_for_file_id) { "science-in-society-scientific-images-contest::2018 Scientific Images Contest Winners" }
+    let(:map_file_to_prism_community_collections_irrc) { described_class.new(generic_file_with_community_collection_match, collection_store.data) }
+
+    context "there is not a match in the collection store or the filed id to prism commmunity communities mapping json" do
       before do
         # clear the existing collections
         collection_store.build_collection_store_data
         collection_store.build_paths_for_collection_store
       end
 
-      it "returns a blank array" do
-        expect(map_collections_to_communites_irrc.send(:map_collections_to_communities)).to eq([])
+      it "returns a blank string" do
+        expect(map_collection_to_prism_community_collections_irrc.send(:dh_collection_to_prism_community_collection)).to eq("")
       end
     end
 
-    context "there are matches in the collection store to communities mapping json" do
+    context "there are matches in the collection store to prism community collections mapping json for community and collection" do
       before do
-        make_collection(user, title: "Biostatistics Collaboration Center Lecture Series", id: "2cc92425-b656-47ea-a3b4-825405ee6088", member_ids: [generic_file.id])
+        make_collection(user, title: "2019-2020", id: "a86e1412-d72c-4cae-b8ca-16fd834cb128", member_ids: [generic_file.id])
+
+        collection_store.build_collection_store_data
+        collection_store.build_paths_for_collection_store
+      end
+
+      it "returns correctly formatted string" do
+        expect(map_collection_to_prism_community_collections_irrc.send(:dh_collection_to_prism_community_collection)).to eq(expected_community_collection_string_2019_2020)
+      end
+    end
+
+    context "there are matches in the collection store to prism community collections mapping json for community only" do
+      before do
         make_collection(user, title: "Center for Community Health", id: "ae0b945c-d0d4-45bb-a0fc-263c7afca49e", member_ids: [generic_file.id])
 
         collection_store.build_collection_store_data
         collection_store.build_paths_for_collection_store
       end
 
-      it "returns an array with the matching community mapping object" do
-        expect(map_collections_to_communites_irrc.send(:map_collections_to_communities)).to eq(expected_invenio_ids)
+      it "returns correctly formatted string" do
+        expect(map_collection_to_prism_community_collections_irrc.send(:dh_collection_to_prism_community_collection)).to eq(expected_community_collection_string_center_for_community_health)
+      end
+    end
+
+    context "the file id matches to prism commnity collections mapping json" do
+      it "returns correctly formatted string" do
+        expect(map_file_to_prism_community_collections_irrc.send(:dh_collection_to_prism_community_collection)).to eq(expected_community_collection_string_center_for_file_id)
       end
     end
   end

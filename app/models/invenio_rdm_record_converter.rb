@@ -25,15 +25,14 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   MEMOIZED_PERSON_OR_ORG_DATA_FILE = 'memoized_person_or_org_data.txt'
   FUNDING_DATA_FILE = 'app/models/concerns/galtersufia/generic_file/funding_data.txt'
   LICENSE_DATA_FILE = 'app/models/concerns/galtersufia/generic_file/license_data.txt'
-  COLLECTIONS_TO_COMMUNITIES_JSON = 'collections_to_communities.json'
+  DH_COLLECTIONS_TO_PRISM_COLLECTION_COMMUNITY_JSON = 'dh_collections_prism_collection_community.json'
   BLANK_FUNDER_SOURCE = {funder: {name: "", identifier: "", scheme: "ror"}, award: {title: "", number: "", identifier: "", scheme: ""}}
 
   @@header_lookup ||= HeaderLookup.new
   @@funding_data ||= eval(File.read(FUNDING_DATA_FILE))
   @@person_or_org_data ||= eval(File.read(MEMOIZED_PERSON_OR_ORG_DATA_FILE))
   @@license_data ||= eval(File.read(LICENSE_DATA_FILE))
-  # parse json then trim down to a hash of dh collection id to prism community id
-  @@collections_to_communities ||= JSON.parse(File.read(COLLECTIONS_TO_COMMUNITIES_JSON)).each_with_object({}){ |node, hash| hash[node["dh"]] = node["prism"] }
+  @@dh_to_prism_entity = JSON.parse(File.read(DH_COLLECTIONS_TO_PRISM_COLLECTION_COMMUNITY_JSON))
 
   # Create an instance of a InvenioRdmRecordConverter converter containing all the metadata for json export
   #
@@ -57,7 +56,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     @record = record_for_export
     @file = file_info
     @extras = extra_data
-    @prism_communities = map_collections_to_communities
+    @prism_community = dh_collection_to_prism_community_collection
   end
 
   def to_json(options={})
@@ -522,17 +521,36 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     funding_sources.compact
   end
 
-  def map_collections_to_communities
-    @dh_collections.map do |collection_path|
-      prism_community_id_from_collection_path(collection_path)
+  def dh_collection_to_prism_community_collection
+    # check if the file id pulls back an entry first
+    if mapping_entry = @@dh_to_prism_entity[@generic_file.id]
+      return format_prism_community_collection_string(mapping_entry)
+    # if nothing was found try to find a collection id that matches
+    else
+      @dh_collections.map do |collection_path|
+        collection_path.each do |collection_path_entry|
+          mapping_entry = @@dh_to_prism_entity[collection_path_entry[:id]]
+
+          # there's a match, no need to keep searching
+          if mapping_entry
+            return format_prism_community_collection_string(mapping_entry)
+          end
+        end
+      end
     end
+
+    # if nothing else is found, return blank string
+    ""
   end
 
-  def prism_community_id_from_collection_path(collection_path)
-    collection_path.each do |collection_path_entry|
-      if community = @@collections_to_communities[collection_path_entry[:id]]
-        return community
-      end
+  def format_prism_community_collection_string(mapping_entry)
+    community_id = mapping_entry["community_id"]
+    collection_id = mapping_entry["collection_id"]
+
+    if community_id && collection_id
+      "#{community_id}::#{collection_id}"
+    else
+      community_id
     end
   end
 end
