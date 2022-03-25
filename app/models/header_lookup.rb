@@ -45,7 +45,7 @@ class HeaderLookup
   def mesh_term_pid_local_lookup(mesh_term="")
     puts "mesh term pid local lookup"
     @@searchable_mesh_terms.each do |term_json|
-      if term_json["subject"].downcase == mesh_term.downcase
+      if term_json["subject"].downcase == mesh_term.downcase.gsub("--", "/")
         mesh_id = term_json["id"]
         @@memoized_mesh[mesh_term] = mesh_id
         File.write(MEMOIZED_MESH_FILE, @@memoized_mesh)

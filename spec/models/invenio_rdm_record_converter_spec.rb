@@ -830,15 +830,21 @@ RSpec.describe InvenioRdmRecordConverter do
     context "mesh scheme" do
       let(:unknown_mesh_term){ ["nothing but lies"] }
       let(:known_mesh_term){ ["Bile Duct Neoplasms"] }
+      let(:known_mesh_term_with_qualifier){ ["Burkitt Lymphoma--etiology"] }
       let(:mesh_subject_type){ :mesh }
       let(:expected_mesh_result){ [{"id": ::HeaderLookup::MESH_ID_URI + "D001650"}]}
+      let(:expected_mesh_with_qualifier_result){ [{"id": ::HeaderLookup::MESH_ID_URI + "D002051Q000209"}]}
 
       it "returns '[]' for unknown term" do
         expect(invenio_rdm_record_converter.send(:subjects_for_scheme, unknown_mesh_term, mesh_subject_type)).to eq([])
       end
 
-      it "returns metadata for known term" do
+      it "returns metadata for known term without qualifier" do
         expect(invenio_rdm_record_converter.send(:subjects_for_scheme, known_mesh_term, mesh_subject_type)).to eq(expected_mesh_result)
+      end
+
+      it "returns metadata for term with qualifier" do
+        expect(invenio_rdm_record_converter.send(:subjects_for_scheme, known_mesh_term_with_qualifier, mesh_subject_type)).to eq(expected_mesh_with_qualifier_result)
       end
     end
 
