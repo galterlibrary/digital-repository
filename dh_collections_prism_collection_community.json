@@ -31,31 +31,31 @@
   },
   "91294b2e-34e4-46ac-9086-be17c40d0d01": {
     "collection_id": "Exhibits",
-    "community_id": "galter-health-sciences-library-&-learning-center"
+    "community_id": "galter-health-sciences-library-and-learning-center"
   },
   "8a281ff6-dd0e-4a02-8486-97c3bc7058c4": {
     "collection_id": "Exhibits",
-    "community_id": "galter-health-sciences-library-&-learning-center"
+    "community_id": "galter-health-sciences-library-and-learning-center"
   },
   "k0698748f": {
     "collection_id": "Exhibits",
-    "community_id": "galter-health-sciences-library-&-learning-center"
+    "community_id": "galter-health-sciences-library-and-learning-center"
   },
   "d526f63d-f10a-423d-bb81-bc32cc70b427": {
     "collection_id": "Exhibits",
-    "community_id": "galter-health-sciences-library-&-learning-center"
+    "community_id": "galter-health-sciences-library-and-learning-center"
   },
   "ec202d45-992f-4f21-b3ea-d02703ca7621": {
     "collection_id": "Exhibits",
-    "community_id": "galter-health-sciences-library-&-learning-center"
+    "community_id": "galter-health-sciences-library-and-learning-center"
   },
   "library-notes": {
     "collection_id": "Library Notes",
-    "community_id": "galter-health-sciences-library-&-learning-center"
+    "community_id": "galter-health-sciences-library-and-learning-center"
   },
   "diaw2017": {
     "collection_id": "Dissemination, Impact, and Access Workshop ",
-    "community_id": "galter-health-sciences-library-&-learning-center"
+    "community_id": "galter-health-sciences-library-and-learning-center"
   },
   "40acd700-b850-4e7b-a650-0535de84ab6b": {
     "community_id": "masters-in-public-health-ce-papers"
@@ -914,9 +914,6 @@
     "collection_id": "Northwestern University Medical School, 1859-1979: A pioneer in educational reform",
     "community_id": "history-of-feinberg-school-of-medicine"
   },
-  "e71c88e3-3a0b-4b56-90ce-8ddc75a78e81": {
-    "community_id": "pro-implementation-planning-toolkit"
-  },
   "97a2913d-45b8-458c-82eb-5111a94b6c9f": {
     "community_id": "prevention-science-methodology-group"
   },
@@ -955,29 +952,6 @@
   "x346d4254": {
     "collection_id": "Series IV. Photographs",
     "community_id": "g-v-black-papers"
-  },
-  "ce39f2be-9a64-4717-973b-ff531c2a93ee": {
-    "collection_id": "",
-    "community_id": "communication-bridge"
-  },
-  "ed35d953-d035-44a7-bacb-0edf1c8006a6": {
-    "community_id": "endowed-professorship-biographies"
-  },
-  "a97853c7-82d3-408c-95d8-c72a04acb41f": {
-    "collection_id": "James A. Conner",
-    "community_id": "12th General Hospital Collection"
-  },
-  "b0a1fa15-eb29-416f-b452-e81b39f0f26b": {
-    "collection_id": "Michael L. Mason Collection",
-    "community_id": "12th-general-hospital-collection"
-  },
-  "2f75r807r": {
-    "collection_id": "Portraits",
-    "community_id": "history-of-feinberg-school-of-medicine"
-  },
-  "areybook": {
-    "collection_id": "Northwestern University Medical School, 1859-1979: A pioneer in educational reform",
-    "community_id": "history-of-feinberg-school-of-medicine"
   },
   "6d56zw644": {
     "community_id": "history-of-feinberg-school-of-medicine"
@@ -1042,9 +1016,6 @@
   "752b7c7f-ec96-4635-af07-34d4b36dac78": {
     "community_id": "history-of-feinberg-school-of-medicine"
   },
-  "3f4ac3b8-6c05-4b4d-978e-f5ab7388743b": {
-    "community_id": "history-of-feinberg-school-of-medicine"
-  },
   "9k41zd48h": {
     "community_id": "history-of-feinberg-school-of-medicine"
   },
@@ -1082,7 +1053,7 @@
     "community_id": "systematic-review-toolkit"
   },
   "b0375b45-0b95-4bf8-9ee7-7df4d6fb47e4": {
-    "community_id": "the-national-center-for-data-to-health"
+    "community_id": "national-center-for-data-to-health"
   },
   "hq37vn62g": {
     "community_id": "soulakis-lab"
@@ -1115,6 +1086,6 @@
     "community_id": "syncropatch-db-r-package"
   },
   "467b71cc-a252-4a43-95fb-ca5ee8124707": {
-    "community_id": "the-food-allergy-data-dictionary"
+    "community_id": "food-allergy-data-dictionary"
   }
 }
