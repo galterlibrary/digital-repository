@@ -159,12 +159,12 @@ class GenericFile < ActiveFedora::Base
     gfjson
   end
 
-  def unexportable?(collection_paths)
-     open_access_and_no_doi? || in_old_gv_black_and_not_photograph?(collection_paths)
+  def unexportable?
+     open_access_and_no_doi? || in_old_gv_black_and_not_photograph?
   end
 
-  def in_old_gv_black_and_not_photograph?(collection_paths)
-    in_collections?([GV_BLACK_COLLECTION_ID], collection_paths) && !in_collections?([GV_BLACK_PHOTOGRAPH_SUB_COLLECTION_ID], collection_paths)
+  def in_old_gv_black_and_not_photograph?
+    in_collections?([GV_BLACK_COLLECTION_ID]) && !in_collections?([GV_BLACK_PHOTOGRAPH_SUB_COLLECTION_ID])
   end
   private :in_old_gv_black_and_not_photograph?
 
@@ -173,16 +173,8 @@ class GenericFile < ActiveFedora::Base
   end
   private :open_access_and_no_doi?
 
-  def in_collections?(collection_ids=[], collection_paths=[[{}]])
-    collection_paths.each do |collection_path|
-      collection_path.each do |collection_obj|
-        if collection_ids.include?(collection_obj[:id])
-          return true
-        end
-      end
-    end
-
-    false
+  def in_collections?(collection_array=[])
+    !(collection_array & self.collection_ids).empty?
   end
 
   class << self

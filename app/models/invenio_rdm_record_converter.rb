@@ -49,10 +49,6 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     # communities is an array consisting of collection paths which are arrays of hashes
     @dh_collections = list_collections
 
-    if generic_file.unexportable?(@dh_collections)
-      return
-    end
-
     @record = record_for_export
     @file = file_info
     @extras = extra_data
