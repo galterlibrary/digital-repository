@@ -39,6 +39,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   # @param [GenericFile] generic_file file to be converted for export
   def initialize(generic_file=nil, collection_store={}, role_store={})
     if generic_file.blank?
+      puts "No file to convert"
       return
     end
 
@@ -50,6 +51,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     @dh_collections = list_collections
 
     if generic_file.unexportable?(@dh_collections)
+      puts "Record unexportable"
       return
     end
 
