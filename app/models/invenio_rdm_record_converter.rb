@@ -214,7 +214,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
           + format_additional("description", "abstract", @generic_file.abstract),
         "publisher": @generic_file.publisher.shift,
         "publication_date": format_publication_date(@generic_file.date_created.shift || @generic_file.date_uploaded.to_s.force_encoding("UTF-8")),
-        "subjects": SUBJECT_SCHEMES.map{ |subject_type| subjects_for_scheme(@generic_file.send(subject_type), subject_type) }.compact.flatten,
+        "subjects": SUBJECT_SCHEMES.map{ |subject_type| subjects_for_scheme(@generic_file.send(subject_type), subject_type) }.compact.flatten, #.uniq,
         "contributors": contributors(@generic_file.contributor),
         "dates": @generic_file.date_created.map{ |date| {"date": normalize_date(date), "type": {"id": "created"}, "description": "When the item was originally created."} },
         "languages": @generic_file.language.map{ |lang| lang.present? && lang.downcase == ENGLISH ? {"id": "eng"} : nil }.compact,

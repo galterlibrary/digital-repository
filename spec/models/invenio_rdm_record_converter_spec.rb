@@ -26,6 +26,7 @@ RSpec.describe InvenioRdmRecordConverter do
       contributor: [contributor_user.formal_name],
       title: ["Primary Title"],
       subject_name: [lcnaf_term],
+      tag: [lcnaf_term],
       publisher: ["DigitalHub. Galter Health Sciences Library & Learning Center"],
       date_uploaded: Time.new(2020, 2, 3),
       mesh: [mesh_term],
@@ -878,8 +879,19 @@ RSpec.describe InvenioRdmRecordConverter do
       let(:subject_name_subject_type){ :subject_name }
       let(:expected_lcnaf_pid) { ["id": "http://id.loc.gov/authorities/names/n90699999"] }
 
+
       it "returns metadata for term" do
         expect(invenio_rdm_record_converter.send(:subjects_for_scheme, subject_name_terms, subject_name_subject_type)).to eq(expected_lcnaf_pid)
+      end
+    end
+
+    context "tag scheme" do
+      let(:tag_term) { "Galter Health Sciences Library" }
+      let(:tag_terms) { [tag_term] }
+      let(:expected_tag_result){ [{"subject": tag_term}] }
+
+      it "returns the tag in subject field" do
+        expect(invenio_rdm_record_converter.send(:subjects_for_scheme, tag_terms, :tag)).to eq(expected_tag_result)
       end
     end
   end
