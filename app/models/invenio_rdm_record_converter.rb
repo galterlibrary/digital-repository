@@ -143,33 +143,6 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       "provenance": invenio_provenance(@generic_file.proxy_depositor, @generic_file.on_behalf_of),
       "access": invenio_access(@generic_file.visibility)
     }
-    # @label = generic_file.label
-    # @depositor = generic_file.depositor
-    # @arkivo_checksum = generic_file.arkivo_checksum
-    # @relative_path = generic_file.relative_path
-    # @import_url = generic_file.import_url
-    # @resource_type = generic_file.resource_type
-    # @title = generic_file.title
-    # @creator = generic_file.creator
-    # @contributor = generic_file.contributor
-    # @description = generic_file.description
-    # @tag = generic_file.tag
-    # @rights = generic_file.rights
-    # @publisher = generic_file.publisher
-    # @date_created = generic_file.date_created
-    # @date_uploaded = generic_file.date_uploaded
-    # @date_modified = generic_file.date_modified
-    # @subject = generic_file.subject
-    # @language = generic_file.language
-    # @identifier = generic_file.identifier
-    # @based_near = generic_file.based_near
-    # @related_url = generic_file.related_url
-    # @bibliographic_citation = generic_file.bibliographic_citation
-    # @source = generic_file.source
-    # @batch_id = generic_file.batch.id if generic_file.batch
-    # @visibility = generic_file.visibility
-    # @versions = versions(generic_file)
-    # @permissions = permissions(generic_file)
   end
 
   def invenio_pids(doi)
@@ -214,7 +187,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
           + format_additional("description", "abstract", @generic_file.abstract),
         "publisher": @generic_file.publisher.shift,
         "publication_date": format_publication_date(@generic_file.date_created.shift || @generic_file.date_uploaded.to_s.force_encoding("UTF-8")),
-        "subjects": SUBJECT_SCHEMES.map{ |subject_type| subjects_for_scheme(@generic_file.send(subject_type), subject_type) }.compact.flatten,
+        "subjects": SUBJECT_SCHEMES.map{ |subject_type| subjects_for_scheme(@generic_file.send(subject_type), subject_type) }.compact.flatten.uniq,
         "contributors": contributors(@generic_file.contributor),
         "dates": @generic_file.date_created.map{ |date| {"date": normalize_date(date), "type": {"id": "created"}, "description": "When the item was originally created."} },
         "languages": @generic_file.language.map{ |lang| lang.present? && lang.downcase == ENGLISH ? {"id": "eng"} : nil }.compact,
