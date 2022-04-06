@@ -11,6 +11,7 @@ RSpec.describe InvenioRdmRecordConverter do
   let(:expected_mesh_id) { ::HeaderLookup::MESH_ID_URI + "D018875" }
   let(:expected_lcnaf_id) { "http://id.loc.gov/authorities/names/n90699999" }
   let(:lcsh_term) { "Semantic Web" }
+  let(:duplicate_subject_term) { "Duplicate Term" }
   let(:expected_lcsh_id) { ::HeaderLookup::LCSH_ID_URI + "sh2002000569" }
   let(:generic_file_doi) { "10.5438/55e5-t5c0" }
   let(:generic_file) {
@@ -25,7 +26,8 @@ RSpec.describe InvenioRdmRecordConverter do
       creator: [user.formal_name],
       contributor: [contributor_user.formal_name],
       title: ["Primary Title"],
-      subject_name: [lcnaf_term],
+      subject_name: [lcnaf_term, duplicate_subject_term],
+      tag: [lcnaf_term, duplicate_subject_term],
       publisher: ["DigitalHub. Galter Health Sciences Library & Learning Center"],
       date_uploaded: Time.new(2020, 2, 3),
       mesh: [mesh_term],
@@ -95,6 +97,12 @@ RSpec.describe InvenioRdmRecordConverter do
           "publisher": "DigitalHub. Galter Health Sciences Library & Learning Center",
           "publication_date": "2021-01-01",
           "subjects": [
+            {
+              "subject": duplicate_subject_term
+            },
+            {
+              "subject": lcnaf_term
+            },
             {
               "id": expected_mesh_id
             },
@@ -878,8 +886,19 @@ RSpec.describe InvenioRdmRecordConverter do
       let(:subject_name_subject_type){ :subject_name }
       let(:expected_lcnaf_pid) { ["id": "http://id.loc.gov/authorities/names/n90699999"] }
 
+
       it "returns metadata for term" do
         expect(invenio_rdm_record_converter.send(:subjects_for_scheme, subject_name_terms, subject_name_subject_type)).to eq(expected_lcnaf_pid)
+      end
+    end
+
+    context "tag scheme" do
+      let(:tag_term) { "Galter Health Sciences Library" }
+      let(:tag_terms) { [tag_term] }
+      let(:expected_tag_result){ [{"subject": tag_term}] }
+
+      it "returns the tag in subject field" do
+        expect(invenio_rdm_record_converter.send(:subjects_for_scheme, tag_terms, :tag)).to eq(expected_tag_result)
       end
     end
   end
