@@ -25,42 +25,44 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   MEMOIZED_PERSON_OR_ORG_DATA_FILE = 'memoized_person_or_org_data.txt'
   FUNDING_DATA_FILE = 'app/models/concerns/galtersufia/generic_file/funding_data.txt'
   LICENSE_DATA_FILE = 'app/models/concerns/galtersufia/generic_file/license_data.txt'
-  COLLECTIONS_TO_COMMUNITIES_JSON = 'collections_to_communities.json'
+  DH_COLLECTIONS_TO_PRISM_COLLECTION_COMMUNITY_JSON = 'dh_collections_prism_collection_community.json'
   BLANK_FUNDER_SOURCE = {funder: {name: "", identifier: "", scheme: "ror"}, award: {title: "", number: "", identifier: "", scheme: ""}}
 
   @@header_lookup ||= HeaderLookup.new
   @@funding_data ||= eval(File.read(FUNDING_DATA_FILE))
   @@person_or_org_data ||= eval(File.read(MEMOIZED_PERSON_OR_ORG_DATA_FILE))
   @@license_data ||= eval(File.read(LICENSE_DATA_FILE))
-  # parse json then trim down to a hash of dh collection id to prism community id
-  @@collections_to_communities ||= JSON.parse(File.read(COLLECTIONS_TO_COMMUNITIES_JSON)).each_with_object({}){ |node, hash| hash[node["dh"]] = node["prism"] }
+  @@dh_to_prism_entity = JSON.parse(File.read(DH_COLLECTIONS_TO_PRISM_COLLECTION_COMMUNITY_JSON))
 
   # Create an instance of a InvenioRdmRecordConverter converter containing all the metadata for json export
   #
   # @param [GenericFile] generic_file file to be converted for export
-  def initialize(generic_file=nil, collection_store={})
+  def initialize(generic_file=nil, collection_store={}, role_store={})
     if generic_file.blank?
+      puts "No file to convert"
       return
     end
 
     @generic_file = generic_file
+    @role_store = role_store
     # communites are necessary to check if the file should be exported
     @collection_store = collection_store
     # communities is an array consisting of collection paths which are arrays of hashes
     @dh_collections = list_collections
 
     if generic_file.unexportable?(@dh_collections)
+      puts "Record unexportable"
       return
     end
 
     @record = record_for_export
     @file = file_info
     @extras = extra_data
-    @prism_communities = map_collections_to_communities
+    @prism_community = dh_collection_to_prism_community_collection
   end
 
   def to_json(options={})
-    options[:except] ||= ["memoized_mesh", "memoized_lcsh", "generic_file", "collection_store", "dh_collections"]
+    options[:except] ||= ["memoized_mesh", "memoized_lcsh", "generic_file", "collection_store", "role_store", "dh_collections"]
     super
   end
 
@@ -86,7 +88,6 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     if !@generic_file.based_near.empty?
         data["presentation_location"] = @generic_file.based_near
     end
-    data["owner"] = owner_info
     data["permissions"] = file_permissions
 
     data
@@ -96,23 +97,27 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     user = User.find_by(username: @generic_file.depositor)
 
     if user
-      {
-        "netid": user.username,
-        "email": user.email
-      }
+      { user.username => user.email }
     else
-      {
-        "netid": "unknown",
-        "email": "unknown"
-      }
+      { "unknown": "unknown" }
     end
   end
 
   def file_permissions
-    permission_data = Hash.new { |h,k| h[k] = [] }
+    permission_data = Hash.new
+
+    permission_data["owner"] = owner_info
 
     @generic_file.permissions.each do |permission|
-      permission_data[permission.access] << permission.agent_name
+      permission_data[permission.access] ||= Hash.new
+
+      if @role_store[permission.agent_name]
+        permission_data[permission.access].merge!(@role_store[permission.agent_name])
+      elsif user = User.find_by(username: permission.agent_name)
+        permission_data[permission.access].merge!({user.username => user.email})
+      else
+        permission_data[permission.access].merge!({permission.agent_name => ""})
+      end
     end
 
     permission_data
@@ -138,33 +143,6 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       "provenance": invenio_provenance(@generic_file.proxy_depositor, @generic_file.on_behalf_of),
       "access": invenio_access(@generic_file.visibility)
     }
-    # @label = generic_file.label
-    # @depositor = generic_file.depositor
-    # @arkivo_checksum = generic_file.arkivo_checksum
-    # @relative_path = generic_file.relative_path
-    # @import_url = generic_file.import_url
-    # @resource_type = generic_file.resource_type
-    # @title = generic_file.title
-    # @creator = generic_file.creator
-    # @contributor = generic_file.contributor
-    # @description = generic_file.description
-    # @tag = generic_file.tag
-    # @rights = generic_file.rights
-    # @publisher = generic_file.publisher
-    # @date_created = generic_file.date_created
-    # @date_uploaded = generic_file.date_uploaded
-    # @date_modified = generic_file.date_modified
-    # @subject = generic_file.subject
-    # @language = generic_file.language
-    # @identifier = generic_file.identifier
-    # @based_near = generic_file.based_near
-    # @related_url = generic_file.related_url
-    # @bibliographic_citation = generic_file.bibliographic_citation
-    # @source = generic_file.source
-    # @batch_id = generic_file.batch.id if generic_file.batch
-    # @visibility = generic_file.visibility
-    # @versions = versions(generic_file)
-    # @permissions = permissions(generic_file)
   end
 
   def invenio_pids(doi)
@@ -209,7 +187,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
           + format_additional("description", "abstract", @generic_file.abstract),
         "publisher": @generic_file.publisher.shift,
         "publication_date": format_publication_date(@generic_file.date_created.shift || @generic_file.date_uploaded.to_s.force_encoding("UTF-8")),
-        "subjects": SUBJECT_SCHEMES.map{ |subject_type| subjects_for_scheme(@generic_file.send(subject_type), subject_type) }.compact.flatten,
+        "subjects": SUBJECT_SCHEMES.map{ |subject_type| subjects_for_scheme(@generic_file.send(subject_type), subject_type) }.compact.flatten.uniq,
         "contributors": contributors(@generic_file.contributor),
         "dates": @generic_file.date_created.map{ |date| {"date": normalize_date(date), "type": {"id": "created"}, "description": "When the item was originally created."} },
         "languages": @generic_file.language.map{ |lang| lang.present? && lang.downcase == ENGLISH ? {"id": "eng"} : nil }.compact,
@@ -518,17 +496,36 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     funding_sources.compact
   end
 
-  def map_collections_to_communities
-    @dh_collections.map do |collection_path|
-      prism_community_id_from_collection_path(collection_path)
+  def dh_collection_to_prism_community_collection
+    # check if the file id pulls back an entry first
+    if mapping_entry = @@dh_to_prism_entity[@generic_file.id]
+      return format_prism_community_collection_string(mapping_entry)
+    # if nothing was found try to find a collection id that matches
+    else
+      @dh_collections.map do |collection_path|
+        collection_path.each do |collection_path_entry|
+          mapping_entry = @@dh_to_prism_entity[collection_path_entry[:id]]
+
+          # there's a match, no need to keep searching
+          if mapping_entry
+            return format_prism_community_collection_string(mapping_entry)
+          end
+        end
+      end
     end
+
+    # if nothing else is found, return blank string
+    ""
   end
 
-  def prism_community_id_from_collection_path(collection_path)
-    collection_path.each do |collection_path_entry|
-      if community = @@collections_to_communities[collection_path_entry[:id]]
-        return community
-      end
+  def format_prism_community_collection_string(mapping_entry)
+    community_id = mapping_entry["community_id"]
+    collection_id = mapping_entry["collection_id"]
+
+    if community_id && collection_id
+      "#{community_id}::#{collection_id}"
+    else
+      community_id
     end
   end
 end

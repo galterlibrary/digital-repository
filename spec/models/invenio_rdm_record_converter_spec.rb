@@ -11,6 +11,7 @@ RSpec.describe InvenioRdmRecordConverter do
   let(:expected_mesh_id) { ::HeaderLookup::MESH_ID_URI + "D018875" }
   let(:expected_lcnaf_id) { "http://id.loc.gov/authorities/names/n90699999" }
   let(:lcsh_term) { "Semantic Web" }
+  let(:duplicate_subject_term) { "Duplicate Term" }
   let(:expected_lcsh_id) { ::HeaderLookup::LCSH_ID_URI + "sh2002000569" }
   let(:generic_file_doi) { "10.5438/55e5-t5c0" }
   let(:generic_file) {
@@ -25,7 +26,8 @@ RSpec.describe InvenioRdmRecordConverter do
       creator: [user.formal_name],
       contributor: [contributor_user.formal_name],
       title: ["Primary Title"],
-      subject_name: [lcnaf_term],
+      subject_name: [lcnaf_term, duplicate_subject_term],
+      tag: [lcnaf_term, duplicate_subject_term],
       publisher: ["DigitalHub. Galter Health Sciences Library & Learning Center"],
       date_uploaded: Time.new(2020, 2, 3),
       mesh: [mesh_term],
@@ -51,6 +53,7 @@ RSpec.describe InvenioRdmRecordConverter do
     "#{generic_file_checksum[2..3]}/#{generic_file_checksum[4..5]}/#{generic_file_checksum}"
   }
   let(:collection_store) { CollectionStore.new }
+  let(:role_store) { RoleStore.new }
   let(:json) do
     {
       "record": {
@@ -94,6 +97,12 @@ RSpec.describe InvenioRdmRecordConverter do
           "publisher": "DigitalHub. Galter Health Sciences Library & Learning Center",
           "publication_date": "2021-01-01",
           "subjects": [
+            {
+              "subject": duplicate_subject_term
+            },
+            {
+              "subject": lcnaf_term
+            },
             {
               "id": expected_mesh_id
             },
@@ -170,19 +179,24 @@ RSpec.describe InvenioRdmRecordConverter do
       },
       "extras": {
         "presentation_location": generic_file.based_near,
-        "owner": {
-          "netid": user.username,
-          "email": user.email
-        },
         "permissions": {
-          "read": ["public"],
-          "edit": [user.username]
-        }
+          "owner": {
+            user.username => user.email
+          },
+          "read": {
+            "public": ""
+          },
+          "edit": {
+            user.username => user.email,
+          }
+        }.with_indifferent_access
       },
-      "prism_communities": []
+      "prism_community": ""
     }.to_json
   end
-  let(:invenio_rdm_record_converter) { described_class.new(generic_file, collection_store.data) }
+  let(:invenio_rdm_record_converter) {
+    described_class.new(generic_file, collection_store.data, role_store.data)
+  }
 
   before do
     ProxyDepositRights.create(grantor_id: assistant.id, grantee_id: user.id)
@@ -293,20 +307,67 @@ RSpec.describe InvenioRdmRecordConverter do
   let(:expected_extra_data) {
     {
       "presentation_location": ["'Boston, Massachusetts, United States', 'East Peoria, Illinois, United States'"],
-      "owner": {
-        "netid": user.username,
-        "email": user.email
-      },
       "permissions": {
-        "read": ["public"],
-        "edit": [user.username]
-      }
+        "owner": {
+          user.username => user.email
+        },
+        "read": {
+          "public": ""
+        },
+        "edit": {
+          user.username => user.email,
+        }
+      }.with_indifferent_access
     }.with_indifferent_access
   }
 
   describe "#extra_data" do
     it "adds data" do
       expect(invenio_rdm_record_converter.send(:extra_data).with_indifferent_access).to eq(expected_extra_data)
+    end
+  end
+
+  describe "#file_permissions" do
+    let(:role) { Role.create(name: 'export_editor') }
+    let(:exporter) { FactoryGirl.create(:user, username: "exp987") }
+    before do
+      exporter.add_role(role.name)
+      generic_file.permissions.create!(
+        name: role.name, type: 'group', access: 'edit',
+        access_to: generic_file.id)
+    end
+
+    context "with role" do
+      before do
+        role_store.build_role_store_data
+      end
+
+      let(:expected_permissions) {
+        {
+          "owner": {
+            user.username => user.email
+          },
+          "read": {
+            "public": ""
+          },
+          "edit": {
+            user.username => user.email,
+            exporter.username => exporter.email
+          }
+        }.with_indifferent_access
+      }
+
+      let(:converted_record_with_roles) {
+        described_class.new(
+          generic_file, collection_store.data, role_store.data
+        )
+      }
+
+      it "adds data" do
+        expect(
+          converted_record_with_roles.send(:file_permissions)
+        ).to eql(expected_permissions)
+      end
     end
   end
 
@@ -329,7 +390,9 @@ RSpec.describe InvenioRdmRecordConverter do
       }
 
       let(:converted_record_with_collection) {
-        described_class.new(generic_file, collection_store.data)
+        described_class.new(
+          generic_file, collection_store.data, role_store.data
+        )
       }
 
       it "adds data" do
@@ -354,7 +417,9 @@ RSpec.describe InvenioRdmRecordConverter do
         ]
       }
       let(:converted_record_with_two_collections) {
-        described_class.new(generic_file, collection_store.data)
+        described_class.new(
+          generic_file, collection_store.data, role_store.data
+        )
       }
 
       it "adds data" do
@@ -382,7 +447,9 @@ RSpec.describe InvenioRdmRecordConverter do
       }
 
       let(:converted_record_with_parent_collection) {
-        described_class.new(generic_file, collection_store.data)
+        described_class.new(
+          generic_file, collection_store.data, role_store.data
+        )
       }
 
       it "adds data" do
@@ -412,7 +479,9 @@ RSpec.describe InvenioRdmRecordConverter do
       }
 
       let(:converted_record_with_multiple_parents) {
-        described_class.new(generic_file, collection_store.data)
+        described_class.new(
+          generic_file, collection_store.data, role_store.data
+        )
       }
 
       it "adds data" do
@@ -769,15 +838,21 @@ RSpec.describe InvenioRdmRecordConverter do
     context "mesh scheme" do
       let(:unknown_mesh_term){ ["nothing but lies"] }
       let(:known_mesh_term){ ["Bile Duct Neoplasms"] }
+      let(:known_mesh_term_with_qualifier){ ["Burkitt Lymphoma--etiology"] }
       let(:mesh_subject_type){ :mesh }
       let(:expected_mesh_result){ [{"id": ::HeaderLookup::MESH_ID_URI + "D001650"}]}
+      let(:expected_mesh_with_qualifier_result){ [{"id": ::HeaderLookup::MESH_ID_URI + "D002051Q000209"}]}
 
       it "returns '[]' for unknown term" do
         expect(invenio_rdm_record_converter.send(:subjects_for_scheme, unknown_mesh_term, mesh_subject_type)).to eq([])
       end
 
-      it "returns metadata for known term" do
+      it "returns metadata for known term without qualifier" do
         expect(invenio_rdm_record_converter.send(:subjects_for_scheme, known_mesh_term, mesh_subject_type)).to eq(expected_mesh_result)
+      end
+
+      it "returns metadata for term with qualifier" do
+        expect(invenio_rdm_record_converter.send(:subjects_for_scheme, known_mesh_term_with_qualifier, mesh_subject_type)).to eq(expected_mesh_with_qualifier_result)
       end
     end
 
@@ -811,39 +886,74 @@ RSpec.describe InvenioRdmRecordConverter do
       let(:subject_name_subject_type){ :subject_name }
       let(:expected_lcnaf_pid) { ["id": "http://id.loc.gov/authorities/names/n90699999"] }
 
+
       it "returns metadata for term" do
         expect(invenio_rdm_record_converter.send(:subjects_for_scheme, subject_name_terms, subject_name_subject_type)).to eq(expected_lcnaf_pid)
       end
     end
+
+    context "tag scheme" do
+      let(:tag_term) { "Galter Health Sciences Library" }
+      let(:tag_terms) { [tag_term] }
+      let(:expected_tag_result){ [{"subject": tag_term}] }
+
+      it "returns the tag in subject field" do
+        expect(invenio_rdm_record_converter.send(:subjects_for_scheme, tag_terms, :tag)).to eq(expected_tag_result)
+      end
+    end
   end
 
-  describe "#map_collections_to_communities" do
-    let(:map_collections_to_communites_irrc) { described_class.new(generic_file, collection_store.data) }
-    let(:expected_invenio_ids) { ["biostatistics-collaboration-center-lecture-series", "center-for-community-health"] }
 
-    context "there is not a match in the collection store to the communities mapping json" do
+  describe "#dh_collection_to_prism_community_collection" do
+    let(:map_collection_to_prism_community_collections_irrc) { described_class.new(generic_file, collection_store.data) }
+    let(:expected_community_collection_string_2019_2020) { "biostatistics-collaboration-center-lecture-series::2019-2020" }
+    let(:expected_community_collection_string_center_for_community_health) { "center-for-community-health" }
+
+    let(:generic_file_with_community_collection_match) { make_generic_file_with_content(user, id: "9e27fbd0-c6cb-47c7-8770-8ffeb135009d") }
+    let(:expected_community_collection_string_center_for_file_id) { "science-in-society-scientific-images-contest::2018 Scientific Images Contest Winners" }
+    let(:map_file_to_prism_community_collections_irrc) { described_class.new(generic_file_with_community_collection_match, collection_store.data) }
+
+    context "there is not a match in the collection store or the filed id to prism commmunity communities mapping json" do
       before do
         # clear the existing collections
         collection_store.build_collection_store_data
         collection_store.build_paths_for_collection_store
       end
 
-      it "returns a blank array" do
-        expect(map_collections_to_communites_irrc.send(:map_collections_to_communities)).to eq([])
+      it "returns a blank string" do
+        expect(map_collection_to_prism_community_collections_irrc.send(:dh_collection_to_prism_community_collection)).to eq("")
       end
     end
 
-    context "there are matches in the collection store to communities mapping json" do
+    context "there are matches in the collection store to prism community collections mapping json for community and collection" do
       before do
-        make_collection(user, title: "Biostatistics Collaboration Center Lecture Series", id: "2cc92425-b656-47ea-a3b4-825405ee6088", member_ids: [generic_file.id])
+        make_collection(user, title: "2019-2020", id: "a86e1412-d72c-4cae-b8ca-16fd834cb128", member_ids: [generic_file.id])
+
+        collection_store.build_collection_store_data
+        collection_store.build_paths_for_collection_store
+      end
+
+      it "returns correctly formatted string" do
+        expect(map_collection_to_prism_community_collections_irrc.send(:dh_collection_to_prism_community_collection)).to eq(expected_community_collection_string_2019_2020)
+      end
+    end
+
+    context "there are matches in the collection store to prism community collections mapping json for community only" do
+      before do
         make_collection(user, title: "Center for Community Health", id: "ae0b945c-d0d4-45bb-a0fc-263c7afca49e", member_ids: [generic_file.id])
 
         collection_store.build_collection_store_data
         collection_store.build_paths_for_collection_store
       end
 
-      it "returns an array with the matching community mapping object" do
-        expect(map_collections_to_communites_irrc.send(:map_collections_to_communities)).to eq(expected_invenio_ids)
+      it "returns correctly formatted string" do
+        expect(map_collection_to_prism_community_collections_irrc.send(:dh_collection_to_prism_community_collection)).to eq(expected_community_collection_string_center_for_community_health)
+      end
+    end
+
+    context "the file id matches to prism commnity collections mapping json" do
+      it "returns correctly formatted string" do
+        expect(map_file_to_prism_community_collections_irrc.send(:dh_collection_to_prism_community_collection)).to eq(expected_community_collection_string_center_for_file_id)
       end
     end
   end

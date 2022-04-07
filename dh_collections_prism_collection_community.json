@@ -1,0 +1,1115 @@
+{
+  "a86e1412-d72c-4cae-b8ca-16fd834cb128": {
+    "collection_id": "2019-2020",
+    "community_id": "biostatistics-collaboration-center-lecture-series"
+  },
+  "fc389d13-2430-409b-82fd-a4b26613d350": {
+    "collection_id": "Fall 2016",
+    "community_id": "biostatistics-collaboration-center-lecture-series"
+  },
+  "17c76dde-4be6-4d2d-9020-3904a9451617": {
+    "collection_id": "Fall 2017",
+    "community_id": "biostatistics-collaboration-center-lecture-series"
+  },
+  "5d8b5f8e-c46b-4e97-a5a2-9c118c9cca24": {
+    "collection_id": "Winter 2019",
+    "community_id": "biostatistics-collaboration-center-lecture-series"
+  },
+  "ae0b945c-d0d4-45bb-a0fc-263c7afca49e": {
+    "community_id": "center-for-community-health"
+  },
+  "ab570598-e497-4c81-9351-1aa316252682": {
+    "collection_id": "Biomedical Data Science Day",
+    "community_id": "center-for-biomedical-informatics-and-data-science"
+  },
+  "6d66813c-a6e8-49b0-a568-d9378f82da51": {
+    "collection_id": "Chicago Biomedical Informatics and Data Science Jam",
+    "community_id": "center-for-biomedical-informatics-and-data-science"
+  },
+  "44857499-5126-47bd-a226-5fbf291abaf6": {
+    "community_id": "dialogues-in-oncofertility"
+  },
+  "91294b2e-34e4-46ac-9086-be17c40d0d01": {
+    "collection_id": "Exhibits",
+    "community_id": "galter-health-sciences-library-and-learning-center"
+  },
+  "8a281ff6-dd0e-4a02-8486-97c3bc7058c4": {
+    "collection_id": "Exhibits",
+    "community_id": "galter-health-sciences-library-and-learning-center"
+  },
+  "k0698748f": {
+    "collection_id": "Exhibits",
+    "community_id": "galter-health-sciences-library-and-learning-center"
+  },
+  "d526f63d-f10a-423d-bb81-bc32cc70b427": {
+    "collection_id": "Exhibits",
+    "community_id": "galter-health-sciences-library-and-learning-center"
+  },
+  "ec202d45-992f-4f21-b3ea-d02703ca7621": {
+    "collection_id": "Exhibits",
+    "community_id": "galter-health-sciences-library-and-learning-center"
+  },
+  "library-notes": {
+    "collection_id": "Library Notes",
+    "community_id": "galter-health-sciences-library-and-learning-center"
+  },
+  "diaw2017": {
+    "collection_id": "Dissemination, Impact, and Access Workshop ",
+    "community_id": "galter-health-sciences-library-and-learning-center"
+  },
+  "40acd700-b850-4e7b-a650-0535de84ab6b": {
+    "community_id": "masters-in-public-health-ce-papers"
+  },
+  "e5e1683f-5075-4afd-9eba-2a36fc981414": {
+    "collection_id": "A genome-wide and phenome-wide association study of diverticular diseases using electronic health records of 64,409 adults with European/African ancestries",
+    "community_id": "researchers-collections"
+  },
+  "7badb7c9-d4ec-4ca9-b58e-6e01f224fcf7": {
+    "collection_id": "A genome-wide association study (GWAS) of bitter and sweet beverage consumption",
+    "community_id": "researchers-collections"
+  },
+  "d0798568-47c3-453e-ae39-242d8a96b1dc": {
+    "collection_id": "Aberrant cGMP Signaling Persists During Recovery in Mice with Oxygen-Induced Pulmonary Hypertension",
+    "community_id": "researchers-collections"
+  },
+  "913f8fa2-06c9-49e1-9cdf-0f88118b18da": {
+    "collection_id": "A Polygenic and Phenotypic Risk Prediction for Polycystic Ovary Syndrome evaluated by Phenome-wide association studies - Supplemental Material",
+    "community_id": "researchers-collections"
+  },
+  "8s45q876k": {
+    "collection_id": "Beyond an Apple a Day: Finding Reliable Health Information Online",
+    "community_id": "researchers-collections"
+  },
+  "3ca02e5e-83be-4ea7-b51f-11aee3497e6c": {
+    "collection_id": "Christian Adames Publications and Presentations",
+    "community_id": "researchers-collections"
+  },
+  "afec3d3f-5ee6-468a-b8b4-80ab6d0402ac": {
+    "collection_id": "Coffee.GWAS.Mol.Psych.2015",
+    "community_id": "researchers-collections"
+  },
+  "ea926798-0e47-4441-b159-8af916499af3": {
+    "collection_id": "Cord-Blood Metabolomics: Association with Newborn Anthropometrics and C-Peptide across Ancestries - Supplemental Material",
+    "community_id": "researchers-collections"
+  },
+  "6b2bc47e-a3da-4222-8b8b-39e3b2832648": {
+    "collection_id": "Effect of texturing on material properties of 3D printed prosthetic sockets",
+    "community_id": "researchers-collections"
+  },
+  "fj236212d": {
+    "collection_id": "Expression of receptors for plasminogen activators on endothelial cell surface depends on their origin",
+    "community_id": "researchers-collections"
+  },
+  "ed5f344a-8a48-4b50-9843-895634e5cd6a": {
+    "collection_id": "Food.Addiction.GWAS.Obesity.2016",
+    "community_id": "researchers-collections"
+  },
+  "kw52j804p": {
+    "collection_id": "National Library of Medicine Associate Fellowship Projects",
+    "community_id": "researchers-collections"
+  },
+  "96fc0e70-98e7-4e49-9784-8aa6942fc2a6": {
+    "collection_id": "Perturbation Recovery During Walking is Impacted by Knowledge of Perturbation Timing in Below-Knee Prosthesis Users and Non-Impaired Participants",
+    "community_id": "researchers-collections"
+  },
+  "ae47e062-d7f8-49c0-8ffa-ce86fb2855ca": {
+    "collection_id": "PPA Resting State Manuscript (Cortex)",
+    "community_id": "researchers-collections"
+  },
+  "91a4a3c2-e9f8-4540-85bb-5b69923106c0": {
+    "collection_id": "Pragmatic Reproducible Research for Analysis, Dissemination and Publication",
+    "community_id": "researchers-collections"
+  },
+  "09e7110d-7677-4b82-985a-a7c26ac46b57": {
+    "collection_id": "Proactive Locomotor Adjustments Are Specific to Perturbation Uncertainty in Below-Knee Prosthesis Users",
+    "community_id": "researchers-collections"
+  },
+  "55da1441-ddee-4f57-9c17-d371f78f2ed4": {
+    "collection_id": "Scaffold-free endometrial organoids respond to excess androgens associated with polycystic ovarian syndrome",
+    "community_id": "researchers-collections"
+  },
+  "9aa727f0-29d0-44af-ae9f-1018208cec89": {
+    "collection_id": "TNF-alpha Inhibitor and Malignancy Meta Analysis",
+    "community_id": "researchers-collections"
+  },
+  "d50c6f56-2600-4e67-ba4f-ee681eeae64c": {
+    "collection_id": "Using mechanical testing to assess texturing of prosthetic sockets to improve suspension in the transverse plane and reduce rotation",
+    "community_id": "researchers-collections"
+  },
+  "19673087-b6a5-4108-b285-9614aa8b6b95": {
+    "collection_id": "Using mechanical testing to assess the effect of prosthetic socket texturing on longitudinal suspension to reduce pistoning",
+    "community_id": "researchers-collections"
+  },
+  "rb68xb84x": {
+    "collection_id": "Violeta Ilik's Presentations and Papers",
+    "community_id": "researchers-collections"
+  },
+  "0d944080-d8ec-4386-abb0-c5ca34d2a3f5": {
+    "collection_id": "VIVO",
+    "community_id": "researchers-collections"
+  },
+  "a0deab15-7c16-4c52-86f8-80c96a2fb888": {
+    "collection_id": "Walking with Ears: Altered Auditory Feedback Impacts Gait Step Length in Older Adults",
+    "community_id": "researchers-collections"
+  },
+  "e0338411-7829-49ac-8fdc-cd17b7307474": {
+    "collection_id": "AASLD 2018",
+    "community_id": "researchers-collections"
+  },
+  "pnb-15-7": {
+    "collection_id": "Volume 15, Issue 07",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-15-8": {
+    "collection_id": "Volume 15, Issue 08",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-15-9": {
+    "collection_id": "Volume 15, Issue 09",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-15-10": {
+    "collection_id": "Volume 15, Issue 10",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-15-11": {
+    "collection_id": "Volume 15, Issue 11",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-15-12": {
+    "collection_id": "Volume 15, Issue 12",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-16-1": {
+    "collection_id": "Volume 16, Issue 01",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-16-2": {
+    "collection_id": "Volume 16, Issue 02",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-16-3": {
+    "collection_id": "Volume 16, Issue 03",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-16-4": {
+    "collection_id": "Volume 16, Issue 04",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-16-5": {
+    "collection_id": "Volume 16, Issue 05",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-16-6": {
+    "collection_id": "Volume 16, Issue 06",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-16-7": {
+    "collection_id": "Volume 16, Issue 07",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-16-8": {
+    "collection_id": "Volume 16, Issue 08",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-16-9": {
+    "collection_id": "Volume 16, Issue 09",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-16-10": {
+    "collection_id": "Volume 16, Issue 10",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-16-11": {
+    "collection_id": "Volume 16, Issue 11",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-16-12": {
+    "collection_id": "Volume 16, Issue 12",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-17-1": {
+    "collection_id": "Volume 17, Issue 01",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-17-2": {
+    "collection_id": "Volume 17, Issue 02",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-17-3": {
+    "collection_id": "Volume 17, Issue 03",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-17-4": {
+    "collection_id": "Volume 17, Issue 04",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-17-5": {
+    "collection_id": "Volume 17, Issue 05",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-17-6": {
+    "collection_id": "Volume 17, Issue 06",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-17-7": {
+    "collection_id": "Volume 17, Issue 07",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-17-8": {
+    "collection_id": "Volume 17, Issue 08",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-17-9": {
+    "collection_id": "Volume 17, Issue 09",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-17-10": {
+    "collection_id": "Volume 17, Issue 10",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-17-12": {
+    "collection_id": "Volume 17, Issue 12",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-18-1": {
+    "collection_id": "Volume 18, Issue 01",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-18-2": {
+    "collection_id": "Volume 18, Issue 02",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-18-3": {
+    "collection_id": "Volume 18, Issue 03",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-18-4": {
+    "collection_id": "Volume 18, Issue 04",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-18-5": {
+    "collection_id": "Volume 18, Issue 05",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-18-6": {
+    "collection_id": "Volume 18, Issue 06",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-18-7": {
+    "collection_id": "Volume 18, Issue 07",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-18-8": {
+    "collection_id": "Volume 18, Issue 08",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-18-9": {
+    "collection_id": "Volume 18, Issue 09",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-18-10": {
+    "collection_id": "Volume 18, Issue 10",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-18-11": {
+    "collection_id": "Volume 18, Issue 11",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-18-12": {
+    "collection_id": "Volume 18, Issue 12",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-19-1": {
+    "collection_id": "Volume 19, Issue 01",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-19-2": {
+    "collection_id": "Volume 19, Issue 02",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-19-3": {
+    "collection_id": "Volume 19, Issue 03",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-19-4": {
+    "collection_id": "Volume 19, Issue 04",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-19-5": {
+    "collection_id": "Volume 19, Issue 05",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-19-6": {
+    "collection_id": "Volume 19, Issue 06",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-19-7": {
+    "collection_id": "Volume 19, Issue 07",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-19-8": {
+    "collection_id": "Volume 19, Issue 08",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-19-9": {
+    "collection_id": "Volume 19, Issue 09",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-19-10": {
+    "collection_id": "Volume 19, Issue 10",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-19-11": {
+    "collection_id": "Volume 19, Issue 11",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-19-12": {
+    "collection_id": "Volume 19, Issue 12",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-20-11": {
+    "collection_id": "Volume 20, Issue 11",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-20-1": {
+    "collection_id": "Volume 20, Issue 01",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-20-2": {
+    "collection_id": "Volume 20, Issue 02",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-20-3": {
+    "collection_id": "Volume 20, Issue 03",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-20-4": {
+    "collection_id": "Volume 20, Issue 04",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-20-5": {
+    "collection_id": "Volume 20, Issue 05",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-20-6": {
+    "collection_id": "Volume 20, Issue 06",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-20-7": {
+    "collection_id": "Volume 20, Issue 07",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-20-8": {
+    "collection_id": "Volume 20, Issue 08",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-20-9": {
+    "collection_id": "Volume 20, Issue 09",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-20-10": {
+    "collection_id": "Volume 20, Issue 10",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-20-12": {
+    "collection_id": "Volume 20, Issue 12",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-21-1": {
+    "collection_id": "Volume 21, Issue 01",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-21-2": {
+    "collection_id": "Volume 21, Issue 02",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-21-3": {
+    "collection_id": "Volume 21, Issue 03",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-21-4": {
+    "collection_id": "Volume 21, Issue 04",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-21-5": {
+    "collection_id": "Volume 21, Issue 05",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-21-6": {
+    "collection_id": "Volume 21, Issue 06",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-21-7": {
+    "collection_id": "Volume 21, Issue 07",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-21-8": {
+    "collection_id": "Volume 21, Issue 08",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-21-9": {
+    "collection_id": "Volume 21, Issue 09",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-21-10": {
+    "collection_id": "Volume 21, Issue 10",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-21-11": {
+    "collection_id": "Volume 21, Issue 11",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-21-12": {
+    "collection_id": "Volume 21, Issue 12",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-22-1": {
+    "collection_id": "Volume 22, Issue 01",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-22-2": {
+    "collection_id": "Volume 22, Issue 02",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-22-3": {
+    "collection_id": "Volume 22, Issue 03",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-22-4": {
+    "collection_id": "Volume 22, Issue 04",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-22-5": {
+    "collection_id": "Volume 22, Issue 05",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-22-6": {
+    "collection_id": "Volume 22, Issue 06",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-22-7": {
+    "collection_id": "Volume 22, Issue 07",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-22-8": {
+    "collection_id": "Volume 22, Issue 08",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-22-9": {
+    "collection_id": "Volume 22, Issue 09",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-22-10": {
+    "collection_id": "Volume 22, Issue 10",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-22-11": {
+    "collection_id": "Volume 22, Issue 11",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-22-12": {
+    "collection_id": "Volume 22, Issue 12",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-23-1": {
+    "collection_id": "Volume 23, Issue 01",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-23-2": {
+    "collection_id": "Volume 23, Issue 02",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-23-3": {
+    "collection_id": "Volume 23, Issue 03",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-23-4": {
+    "collection_id": "Volume 23, Issue 04",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-23-5": {
+    "collection_id": "Volume 23, Issue 05",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-23-6": {
+    "collection_id": "Volume 23, Issue 06",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-23-7": {
+    "collection_id": "Volume 23, Issue 07",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-23-8": {
+    "collection_id": "Volume 23, Issue 08",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-23-9": {
+    "collection_id": "Volume 23, Issue 09",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-23-10": {
+    "collection_id": "Volume 23, Issue 10",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-23-11": {
+    "collection_id": "Volume 23, Issue 11",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-23-12": {
+    "collection_id": "Volume 23, Issue 12",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-24-1": {
+    "collection_id": "Volume 24, Issue 01",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-24-2": {
+    "collection_id": "Volume 24, Issue 02",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-24-3": {
+    "collection_id": "Volume 24, Issue 03",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-24-4": {
+    "collection_id": "Volume 24, Issue 04",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-24-5": {
+    "collection_id": "Volume 24, Issue 05",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-24-6": {
+    "collection_id": "Volume 24, Issue 06",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-24-7": {
+    "collection_id": "Volume 24, Issue 07",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-24-8": {
+    "collection_id": "Volume 24, Issue 08",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-24-9": {
+    "collection_id": "Volume 24, Issue 09",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-24-10": {
+    "collection_id": "Volume 24, Issue 10",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-24-11": {
+    "collection_id": "Volume 24, Issue 11",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-24-12": {
+    "collection_id": "Volume 24, Issue 12",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-25-1": {
+    "collection_id": "Volume 25, Issue 01",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-25-2": {
+    "collection_id": "Volume 25, Issue 02",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-25-3": {
+    "collection_id": "Volume 25, Issue 03",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-25-4": {
+    "collection_id": "Volume 25, Issue 04",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-25-5": {
+    "collection_id": "Volume 25, Issue 05",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-25-6": {
+    "collection_id": "Volume 25, Issue 06",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-25-7": {
+    "collection_id": "Volume 25, Issue 07",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-25-8": {
+    "collection_id": "Volume 25, Issue 08",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-25-9": {
+    "collection_id": "Volume 25, Issue 09",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-25-10": {
+    "collection_id": "Volume 25, Issue 10",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-25-11": {
+    "collection_id": "Volume 25, Issue 11",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-25-12": {
+    "collection_id": "Volume 25, Issue 12",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-26-1": {
+    "collection_id": "Volume 26, Issue 01",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-26-10": {
+    "collection_id": "Volume 26, Issue 10",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-26-11": {
+    "collection_id": "Volume 26, Issue 11",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-26-12": {
+    "collection_id": "Volume 26, Issue 12",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-26-2": {
+    "collection_id": "Volume 26, Issue 02",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-26-3": {
+    "collection_id": "Volume 26, Issue 03",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-26-4": {
+    "collection_id": "Volume 26, Issue 04",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-26-5": {
+    "collection_id": "Volume 26, Issue 05",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-26-6": {
+    "collection_id": "Volume 26, Issue 06",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-26-7": {
+    "collection_id": "Volume 26, Issue 07",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-26-8": {
+    "collection_id": "Volume 26, Issue 08",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-26-9": {
+    "collection_id": "Volume 26, Issue 09",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-27-1": {
+    "collection_id": "Volume 27, Issue 01",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-27-10": {
+    "collection_id": "Volume 27, Issue 10",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-27-11": {
+    "collection_id": "Volume 27, Issue 11",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-27-12": {
+    "collection_id": "Volume 27, Issue 12",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-27-2": {
+    "collection_id": "Volume 27, Issue 02",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-27-3": {
+    "collection_id": "Volume 27, Issue 03",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-27-4": {
+    "collection_id": "Volume 27, Issue 04",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-27-5": {
+    "collection_id": "Volume 27, Issue 05",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-27-6": {
+    "collection_id": "Volume 27, Issue 06",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-27-7": {
+    "collection_id": "Volume 27, Issue 07",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-27-8": {
+    "collection_id": "Volume 27, Issue 08",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-27-9": {
+    "collection_id": "Volume 27, Issue 09",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-28-1": {
+    "collection_id": "Volume 28, Issue 01",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-28-10": {
+    "collection_id": "Volume 28, Issue 10",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-28-11": {
+    "collection_id": "Volume 28, Issue 11",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-28-12": {
+    "collection_id": "Volume 28, Issue 12",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-28-2": {
+    "collection_id": "Volume 28, Issue 02",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-28-3": {
+    "collection_id": "Volume 28, Issue 03",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-28-4": {
+    "collection_id": "Volume 28, Issue 04",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-28-5": {
+    "collection_id": "Volume 28, Issue 05",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-28-6": {
+    "collection_id": "Volume 28, Issue 06",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-28-7": {
+    "collection_id": "Volume 28, Issue 07",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-28-8": {
+    "collection_id": "Volume 28, Issue 08",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-28-8s": {
+    "collection_id": "Volume 28, Issue 8s",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-28-9": {
+    "collection_id": "Volume 28, Issue 09",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-29-1": {
+    "collection_id": "Volume 29, Issue 01",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-29-2": {
+    "collection_id": "Volume 29, Issue 02",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-29-3": {
+    "collection_id": "Volume 29, Issue 03",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-29-4": {
+    "collection_id": "Volume 29, Issue 04",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-29-5": {
+    "collection_id": "Volume 29, Issue 05",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-29-6": {
+    "collection_id": "Volume 29, Issue 06",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-29-7": {
+    "collection_id": "Volume 29, Issue 07",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-29-8": {
+    "collection_id": "Volume 29, Issue 08",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-29-9": {
+    "collection_id": "Volume 29, Issue 09",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-29-10": {
+    "collection_id": "Volume 29, Issue 10",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-29-11": {
+    "collection_id": "Volume 29, Issue 11",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "pnb-29-12": {
+    "collection_id": "Volume 29, Issue 12",
+    "community_id": "pediatric-neurology-briefs"
+  },
+  "46374bec-fe29-4a06-a8b8-f1f93668699c": {
+    "collection_id": "Archive",
+    "community_id": "nucats-grants-repository"
+  },
+  "1b2b7d0f-d7f3-41a4-a2a4-8435d719ecec": {
+    "collection_id": "F-Series",
+    "community_id": "nucats-grants-repository"
+  },
+  "9aa9dbb6-7971-4e5c-9b9c-81216d9325d3": {
+    "collection_id": "Federal Non-NIH Awards",
+    "community_id": "nucats-grants-repository"
+  },
+  "691ddbbd-785c-4a6a-85d1-7569d8fcbcdb": {
+    "collection_id": "Grant Resources",
+    "community_id": "nucats-grants-repository"
+  },
+  "01b2ba97-8603-477f-bde3-b36b6c79bdea": {
+    "collection_id": "Industry/Foundation/Other",
+    "community_id": "nucats-grants-repository"
+  },
+  "90c63af3-adb9-48dc-95d9-7b4bafe13a7a": {
+    "collection_id": "K-series",
+    "community_id": "nucats-grants-repository"
+  },
+  "4a8457cb-7a65-4774-9ab6-057702e521f5": {
+    "collection_id": "R-Series",
+    "community_id": "nucats-grants-repository"
+  },
+  "22e29a25-6e89-4322-b772-15442ca5b713": {
+    "collection_id": "T-series",
+    "community_id": "nucats-grants-repository"
+  },
+  "eaa0acc4-64b5-4c34-8e90-49537ffa9e0b": {
+    "collection_id": "U-Series",
+    "community_id": "nucats-grants-repository"
+  },
+  "2abe2c1b-932e-4bb0-8455-a97d828f6924": {
+    "collection_id": "_sample",
+    "community_id": "nucats-grants-repository"
+  },
+  "ce39f2be-9a64-4717-973b-ff531c2a93ee": {
+    "community_id": "communication-bridge"
+  },
+  "ed35d953-d035-44a7-bacb-0edf1c8006a6": {
+    "community_id": "endowed-professorship-biographies"
+  },
+  "a97853c7-82d3-408c-95d8-c72a04acb41f": {
+    "collection_id": "James A. Conner",
+    "community_id": "12th-general-hospital-collection"
+  },
+  "b0a1fa15-eb29-416f-b452-e81b39f0f26b": {
+    "collection_id": "Michael L. Mason Collection",
+    "community_id": "12th-general-hospital-collection"
+  },
+  "2f75r807r": {
+    "collection_id": "Portraits",
+    "community_id": "history-of-feinberg-school-of-medicine"
+  },
+  "areybook": {
+    "collection_id": "Northwestern University Medical School, 1859-1979: A pioneer in educational reform",
+    "community_id": "history-of-feinberg-school-of-medicine"
+  },
+  "97a2913d-45b8-458c-82eb-5111a94b6c9f": {
+    "community_id": "prevention-science-methodology-group"
+  },
+  "f78501e9-ab3a-49db-ab85-d6de506988fc": {
+    "collection_id": "2015 Scientific Images Contest Winners",
+    "community_id": "science-in-society-scientific-images-contest"
+  },
+  "0b449311-b6c4-4144-843a-0ce84de567e2": {
+    "collection_id": "2016 Scientific Images Contest Winners",
+    "community_id": "science-in-society-scientific-images-contest"
+  },
+  "e476cb5c-4200-421a-b8d3-a5262fee3643": {
+    "collection_id": "2017 Scientific Images Contest Winners",
+    "community_id": "science-in-society-scientific-images-contest"
+  },
+  "9e27fbd0-c6cb-47c7-8770-8ffeb135009d": {
+    "collection_id": "2018 Scientific Images Contest Winners",
+    "community_id": "science-in-society-scientific-images-contest"
+  },
+  "4dd0d28a-fffb-433b-babc-c88b58404015": {
+    "collection_id": "2019 Scientific Images Contest Winners",
+    "community_id": "science-in-society-scientific-images-contest"
+  },
+  "ecc9987b-c1c2-458d-9bdb-f7c1753634b0": {
+    "collection_id": "Series I. Manuscripts",
+    "community_id": "g-v-black-papers"
+  },
+  "0f533119-59c8-4123-9ce4-1b41ff39d750": {
+    "collection_id": "Series II. Correspondence between G.V Black and F.S. McKay",
+    "community_id": "g-v-black-papers"
+  },
+  "282e074e-daa8-4688-86f6-2dbbb4f3f2e0": {
+    "collection_id": "Series III. World's Columbian Dental Congress",
+    "community_id": "g-v-black-papers"
+  },
+  "x346d4254": {
+    "collection_id": "Series IV. Photographs",
+    "community_id": "g-v-black-papers"
+  },
+  "6d56zw644": {
+    "community_id": "history-of-feinberg-school-of-medicine"
+  },
+  "01d4023f-da66-45c4-8987-af7badda959a": {
+    "community_id": "history-of-feinberg-school-of-medicine"
+  },
+  "h702q639b": {
+    "community_id": "history-of-feinberg-school-of-medicine"
+  },
+  "47429913s": {
+    "community_id": "history-of-feinberg-school-of-medicine"
+  },
+  "6m311p28w": {
+    "community_id": "history-of-feinberg-school-of-medicine"
+  },
+  "pr76f340k": {
+    "community_id": "history-of-feinberg-school-of-medicine"
+  },
+  "f670ed27-d344-4cb1-aa34-e3339f2992d5": {
+    "community_id": "history-of-feinberg-school-of-medicine"
+  },
+  "aa85a365-c493-42cf-922c-21ab24407a1e": {
+    "community_id": "history-of-feinberg-school-of-medicine"
+  },
+  "c85b38a8-e367-4ef4-8c0a-35a94c479dc6": {
+    "community_id": "history-of-feinberg-school-of-medicine"
+  },
+  "e13451f1-01ff-4462-acbf-2a87eb2312e2": {
+    "community_id": "history-of-feinberg-school-of-medicine"
+  },
+  "3f4ac3b8-6c05-4b4d-978e-f5ab7388743b": {
+    "community_id": "history-of-feinberg-school-of-medicine"
+  },
+  "7d8b5c55-9d80-40a5-992f-7bbadd466d5b": {
+    "community_id": "history-of-feinberg-school-of-medicine"
+  },
+  "506cbdca-cd9d-43fd-9be7-4b1b912782e5": {
+    "community_id": "history-of-feinberg-school-of-medicine"
+  },
+  "695a2e0f-428f-41ea-acd8-66486a1e292b": {
+    "community_id": "history-of-feinberg-school-of-medicine"
+  },
+  "ae887507-5e30-4129-91c2-dda6f8e5f944": {
+    "community_id": "history-of-feinberg-school-of-medicine"
+  },
+  "9cc06089-1a82-4378-ad19-b93dbbd402cb": {
+    "community_id": "history-of-feinberg-school-of-medicine"
+  },
+  "9f47bff1-33b4-4d63-88b2-75aab10b84bb": {
+    "community_id": "history-of-feinberg-school-of-medicine"
+  },
+  "0a5c7f42-7b10-443e-985a-b773a04e15ba": {
+    "community_id": "history-of-feinberg-school-of-medicine"
+  },
+  "d520d291-a3ab-431c-a992-6a931779ff31": {
+    "community_id": "history-of-feinberg-school-of-medicine"
+  },
+  "b6971153-c8bd-4f03-9917-d68659a89784": {
+    "community_id": "history-of-feinberg-school-of-medicine"
+  },
+  "752b7c7f-ec96-4635-af07-34d4b36dac78": {
+    "community_id": "history-of-feinberg-school-of-medicine"
+  },
+  "9k41zd48h": {
+    "community_id": "history-of-feinberg-school-of-medicine"
+  },
+  "ece380d-4dee-4e4e-aa97-28cb1d4f6b19": {
+    "collection_id": "Class of 1952 Oral History Collection",
+    "community_id": "galter-library-audio-video-archives"
+  },
+  "student-life": {
+    "collection_id": "Quo Vadis Medicus? Collection",
+    "community_id": "galter-library-audio-video-archives"
+  },
+  "paul-de-kruif-interviews": {
+    "collection_id": "Paul de Kruif Collection",
+    "community_id": "galter-library-audio-video-archives"
+  },
+  "b1546649-c60e-441b-9042-ec7a27adaf66": {
+    "community_id": "galter-library-audio-video-archives"
+  },
+  "074eef38-f1fa-48bb-aa1a-dd895b73d2b1": {
+    "community_id": "northwestern-pepper-center"
+  },
+  "98aba013-3005-4cbe-9fb0-e21960a8e274": {
+    "community_id": "nucats-series-on-developing-and-enhancing-mentoring-relationships"
+  },
+  "27114af7-6444-4f3c-8de1-3e9c5dc73e95": {
+    "community_id": "cbits-irb-materials"
+  },
+  "a75049ad-e87e-4fb8-80f5-f6a5c6276889": {
+    "community_id": "charleston-conference-health-sciences-lively-lunch-discussion-handouts"
+  },
+  "7b21d655-90c0-475e-814f-de7cb124fc18": {
+    "community_id": "charting-a-new-course-practical-data-visualization"
+  },
+  "f2a9d478-3411-412c-a88d-6de5b454c481": {
+    "community_id": "systematic-review-toolkit"
+  },
+  "b0375b45-0b95-4bf8-9ee7-7df4d6fb47e4": {
+    "community_id": "national-center-for-data-to-health"
+  },
+  "hq37vn62g": {
+    "community_id": "soulakis-lab"
+  },
+  "2e61510b-939f-4637-9fd9-c31f1013c661": {
+    "community_id": "center-for-behavioral-intervention-technologies"
+  },
+  "6682x398c": {
+    "community_id": "center-for-prevention-implementation-methodology"
+  },
+  "61e54c3e-b36f-48de-89d7-1c59048e5e03": {
+    "community_id": "cts-personas"
+  },
+  "cfda59b0-7d3c-4aa7-9f5e-53665849d624": {
+    "community_id": "northwestern-elements"
+  },
+  "e71c88e3-3a0b-4b56-90ce-8ddc75a78e81": {
+    "community_id": "pro-implementation-planning-toolkit"
+  },
+  "qr46r0806": {
+    "community_id": "history-of-medicine-projects-presentations-and-exhibits"
+  },
+  "b0f5d299-980e-4b83-8baf-8e1d7e7b09eb": {
+    "community_id": "grupo-de-equilibrio-de-estilo-de-vida"
+  },
+  "3149178e-121f-4771-93fd-f6d59b42c4b8": {
+    "community_id": "script-project"
+  },
+  "18dd7f23-fc33-41fa-a305-259a5078cb52": {
+    "community_id": "syncropatch-db-r-package"
+  },
+  "467b71cc-a252-4a43-95fb-ca5ee8124707": {
+    "community_id": "food-allergy-data-dictionary"
+  },
+  "406e5a26-e60d-4bac-9506-ddca25dbfa7c": {
+    "collection_id": "Northwestern University Medical School, 1859-1979: A pioneer in educational reform",
+    "community_id": "history-of-feinberg-school-of-medicine"
+  },
+  "fbf75e3d-0edb-4717-b284-9c79d31ee0ad": {
+    "collection_id": "Northwestern University Medical School, 1859-1979: A pioneer in educational reform",
+    "community_id": "history-of-feinberg-school-of-medicine"
+  },
+  "dca9a317-a456-4349-9a18-24ee104c5afd": {
+    "collection_id": "Northwestern University Medical School, 1859-1979: A pioneer in educational reform",
+    "community_id": "history-of-feinberg-school-of-medicine"
+  },
+  "6q182k19f": {
+    "collection_id": "Northwestern University Medical School, 1859-1979: A pioneer in educational reform",
+    "community_id": "history-of-feinberg-school-of-medicine"
+  },
+  "5138jd91b": {
+    "collection_id": "Northwestern University Medical School, 1859-1979: A pioneer in educational reform",
+    "community_id": "history-of-feinberg-school-of-medicine"
+  },
+  "qn59q402s": {
+    "collection_id": "Northwestern University Medical School, 1859-1979: A pioneer in educational reform",
+    "community_id": "history-of-feinberg-school-of-medicine"
+  }
+}
