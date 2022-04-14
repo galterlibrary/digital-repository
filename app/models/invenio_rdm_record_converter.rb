@@ -38,22 +38,12 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   #
   # @param [GenericFile] generic_file file to be converted for export
   def initialize(generic_file=nil, collection_store={}, role_store={})
-    if generic_file.blank?
-      puts "No file to convert"
-      return
-    end
-
     @generic_file = generic_file
     @role_store = role_store
     # communites are necessary to check if the file should be exported
     @collection_store = collection_store
     # communities is an array consisting of collection paths which are arrays of hashes
     @dh_collections = list_collections
-
-    if generic_file.unexportable?(@dh_collections)
-      puts "Record unexportable"
-      return
-    end
 
     @record = record_for_export
     @file = file_info
@@ -62,6 +52,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def to_json(options={})
+    return "{}" if @generic_file.unexportable?(@dh_collections)
     options[:except] ||= ["memoized_mesh", "memoized_lcsh", "generic_file", "collection_store", "role_store", "dh_collections"]
     super
   end

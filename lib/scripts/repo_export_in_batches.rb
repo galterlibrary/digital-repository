@@ -40,9 +40,11 @@ converters.each do |converter|
     )
     puts "---------\n#{converter[:model_class].name} has id: #{record_for_export.id}\n---------"
 
-    if converted_record.present?
+    converted_record_json_string = converted_record.to_json(pretty: true)
+    converted_record_json = JSON.parse(converted_record_json_string)
+    if converted_record_json.present?
       file_path = "tmp/export/#{converter[:model_class].name.underscore}_#{record_for_export.id}.json"
-      File.write(file_path, converted_record.to_json(pretty: true))
+      File.write(file_path, converted_record_json_string)
     end
 
     conversion_count += 1
