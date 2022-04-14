@@ -205,14 +205,22 @@ RSpec.describe InvenioRdmRecordConverter do
   end
 
   describe "#to_json" do
-    subject { invenio_rdm_record_converter.to_json }
+    context "record is exportable" do
+      subject { invenio_rdm_record_converter.to_json }
 
-    it do
-      is_expected.to eq json
+      it "returns formatted json string" do
+        is_expected.to eq json
+      end
+    end
+
+    context "record is unexportable" do
+      it "returns blank json string" do
+        allow(generic_file).to receive(:unexportable?).and_return(true)
+        expect(invenio_rdm_record_converter.to_json).to eq "{}"
+      end
     end
   end
 
-  let(:converter) { InvenioRdmRecordConverter.new }
   let(:checksum) { "abcd1234" }
   let(:non_user_properly_formatted) { "Laster, Firston" }
   let(:personal_creator_without_user_json) {
@@ -269,38 +277,38 @@ RSpec.describe InvenioRdmRecordConverter do
   describe "#build_creator_contributor_json" do
     context 'personal record without user in digital hub, with proper name formatting' do
       it 'assigns' do
-        expect(converter.send(:build_creator_contributor_json, non_user_properly_formatted).with_indifferent_access).to eq(personal_creator_without_user_json)
+        expect(invenio_rdm_record_converter.send(:build_creator_contributor_json, non_user_properly_formatted).with_indifferent_access).to eq(personal_creator_without_user_json)
       end
     end
 
     context 'personal record without user in digital hub, with improper name formatting' do
       it 'assigns' do
-        expect(converter.send(:build_creator_contributor_json, non_user_improperly_formatted).with_indifferent_access).to eq(organizational_creator_without_user_json)
+        expect(invenio_rdm_record_converter.send(:build_creator_contributor_json, non_user_improperly_formatted).with_indifferent_access).to eq(organizational_creator_without_user_json)
       end
     end
 
     context 'personal record with unknown creator' do
       it 'assigns' do
-        expect(converter.send(:build_creator_contributor_json, unknown_creator_name).with_indifferent_access).to eq(personal_creator_unknown_json)
+        expect(invenio_rdm_record_converter.send(:build_creator_contributor_json, unknown_creator_name).with_indifferent_access).to eq(personal_creator_unknown_json)
       end
     end
 
     context 'personal record with unidentified user' do
       it 'assigns' do
-        expect(converter.send(:build_creator_contributor_json, unidentified_creator_name).with_indifferent_access).to eq(personal_creator_unidentified_json)
+        expect(invenio_rdm_record_converter.send(:build_creator_contributor_json, unidentified_creator_name).with_indifferent_access).to eq(personal_creator_unidentified_json)
       end
     end
 
     context 'organizational record' do
       it 'assigns' do
-        expect(converter.send(:build_creator_contributor_json, organization_name).with_indifferent_access).to eq(organizational_creator_json)
+        expect(invenio_rdm_record_converter.send(:build_creator_contributor_json, organization_name).with_indifferent_access).to eq(organizational_creator_json)
       end
     end
   end
 
   describe "#generic_file_content_path" do
     it "returns the content's path" do
-      expect(converter.send(:generic_file_content_path, checksum)).to eq("#{ENV['FEDORA_BINARY_PATH']}/ab/cd/12/abcd1234")
+      expect(invenio_rdm_record_converter.send(:generic_file_content_path, checksum)).to eq("#{ENV['FEDORA_BINARY_PATH']}/ab/cd/12/abcd1234")
     end
   end
 
@@ -599,11 +607,11 @@ RSpec.describe InvenioRdmRecordConverter do
 
   describe "#rights" do
     it 'returns the expected license information' do
-      expect(subject.send(:rights, [creative_commons_attribution_v3_url])).to eq(expected_creative_commons_attribution_v3)
-      expect(subject.send(:rights, [creative_commons_zero_url])).to eq(expected_creative_commons_zero)
-      expect(subject.send(:rights, [mit_license_url])).to eq(expected_mit)
-      expect(subject.send(:rights, [all_rights_reserved])).to eq(expected_all_rights_reserved)
-      expect(subject.send(:rights, multiple_rights)).to eq(expected_multiple_rights)
+      expect(invenio_rdm_record_converter.send(:rights, [creative_commons_attribution_v3_url])).to eq(expected_creative_commons_attribution_v3)
+      expect(invenio_rdm_record_converter.send(:rights, [creative_commons_zero_url])).to eq(expected_creative_commons_zero)
+      expect(invenio_rdm_record_converter.send(:rights, [mit_license_url])).to eq(expected_mit)
+      expect(invenio_rdm_record_converter.send(:rights, [all_rights_reserved])).to eq(expected_all_rights_reserved)
+      expect(invenio_rdm_record_converter.send(:rights, multiple_rights)).to eq(expected_multiple_rights)
     end
   end
 
@@ -614,9 +622,9 @@ RSpec.describe InvenioRdmRecordConverter do
 
   describe "#doi_url?" do
     it 'returns true for urls that include doi.org' do
-      expect(subject.send(:doi_url?, doi_org_url)).to eq(true)
-      expect(subject.send(:doi_url?, dx_doi_org_url)).to eq(true)
-      expect(subject.send(:doi_url?, non_doi_url)).to eq(false)
+      expect(invenio_rdm_record_converter.send(:doi_url?, doi_org_url)).to eq(true)
+      expect(invenio_rdm_record_converter.send(:doi_url?, dx_doi_org_url)).to eq(true)
+      expect(invenio_rdm_record_converter.send(:doi_url?, non_doi_url)).to eq(false)
     end
   end
 
@@ -638,14 +646,14 @@ RSpec.describe InvenioRdmRecordConverter do
   describe "#related_identifiers" do
     context 'there is no related_url' do
       it 'returns an empty array' do
-        expect(subject.send(:related_identifiers, [])).to eq([])
+        expect(invenio_rdm_record_converter.send(:related_identifiers, [])).to eq([])
       end
     end
 
     context 'with related_url' do
       it 'returns formatted json' do
-        expect(subject.send(:related_identifiers, [doi_org_url])).to eq([expected_doi_related_identifiers_json])
-        expect(subject.send(:related_identifiers, [non_doi_url])).to eq([expected_related_identifiers_json])
+        expect(invenio_rdm_record_converter.send(:related_identifiers, [doi_org_url])).to eq([expected_doi_related_identifiers_json])
+        expect(invenio_rdm_record_converter.send(:related_identifiers, [non_doi_url])).to eq([expected_related_identifiers_json])
       end
     end
   end
@@ -673,30 +681,30 @@ RSpec.describe InvenioRdmRecordConverter do
   describe '#format_additional' do
     context "blank results" do
       it 'returns empty array' do
-        expect(subject.send(:format_additional, "title", "alternative-title", blank_text_field.drop(1))).to eq([])
-        expect(subject.send(:format_additional, "title", "alternative-title", white_space.drop(1))).to eq([])
-        expect(subject.send(:format_additional, "title", "alternative-title", multiple_blanks.drop(1))).to eq([])
-        expect(subject.send(:format_additional, "description", "other", blank_text_field.drop(1))).to eq([])
-        expect(subject.send(:format_additional, "description", "other", white_space.drop(1))).to eq([])
-        expect(subject.send(:format_additional, "description", "other", multiple_blanks.drop(1))).to eq([])
+        expect(invenio_rdm_record_converter.send(:format_additional, "title", "alternative-title", blank_text_field.drop(1))).to eq([])
+        expect(invenio_rdm_record_converter.send(:format_additional, "title", "alternative-title", white_space.drop(1))).to eq([])
+        expect(invenio_rdm_record_converter.send(:format_additional, "title", "alternative-title", multiple_blanks.drop(1))).to eq([])
+        expect(invenio_rdm_record_converter.send(:format_additional, "description", "other", blank_text_field.drop(1))).to eq([])
+        expect(invenio_rdm_record_converter.send(:format_additional, "description", "other", white_space.drop(1))).to eq([])
+        expect(invenio_rdm_record_converter.send(:format_additional, "description", "other", multiple_blanks.drop(1))).to eq([])
       end
     end
 
     context "with one cat" do
       it 'returns empty array' do
-        expect(subject.send(:format_additional, "title", "alternative-title", one_cat.drop(1))).to eq([])
-        expect(subject.send(:format_additional, "title", "alternative-title", one_cat_with_blank.drop(1))).to eq([])
-        expect(subject.send(:format_additional, "description", "other", one_cat.drop(1))).to eq([])
-        expect(subject.send(:format_additional, "description", "other", one_cat_with_blank.drop(1))).to eq([])
+        expect(invenio_rdm_record_converter.send(:format_additional, "title", "alternative-title", one_cat.drop(1))).to eq([])
+        expect(invenio_rdm_record_converter.send(:format_additional, "title", "alternative-title", one_cat_with_blank.drop(1))).to eq([])
+        expect(invenio_rdm_record_converter.send(:format_additional, "description", "other", one_cat.drop(1))).to eq([])
+        expect(invenio_rdm_record_converter.send(:format_additional, "description", "other", one_cat_with_blank.drop(1))).to eq([])
       end
     end
 
     context "with two cats" do
       it 'returns array with values' do
-        expect(subject.send(:format_additional, "title", "alternative-title", two_cats.drop(1))).to eq(expected_two_cats_title)
-        expect(subject.send(:format_additional, "title", "alternative-title", two_cats_with_blank.drop(1))).to eq(expected_two_cats_title)
-        expect(subject.send(:format_additional, "description", "other", two_cats.drop(1))).to eq(expected_two_cats_description)
-        expect(subject.send(:format_additional, "description", "other", two_cats_with_blank.drop(1))).to eq(expected_two_cats_description)
+        expect(invenio_rdm_record_converter.send(:format_additional, "title", "alternative-title", two_cats.drop(1))).to eq(expected_two_cats_title)
+        expect(invenio_rdm_record_converter.send(:format_additional, "title", "alternative-title", two_cats_with_blank.drop(1))).to eq(expected_two_cats_title)
+        expect(invenio_rdm_record_converter.send(:format_additional, "description", "other", two_cats.drop(1))).to eq(expected_two_cats_description)
+        expect(invenio_rdm_record_converter.send(:format_additional, "description", "other", two_cats_with_blank.drop(1))).to eq(expected_two_cats_description)
       end
     end
   end
