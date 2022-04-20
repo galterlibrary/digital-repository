@@ -52,7 +52,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def to_json(options={})
-    return "{}" if @generic_file.unexportable?(@dh_collections)
+    return "{}" if @generic_file.unexportable?(@dh_collections) || @record[:metadata].blank?
     options[:except] ||= ["memoized_mesh", "memoized_lcsh", "generic_file", "collection_store", "role_store", "dh_collections"]
     super
   end

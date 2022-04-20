@@ -218,6 +218,16 @@ RSpec.describe InvenioRdmRecordConverter do
         allow(generic_file).to receive(:unexportable?).and_return(true)
         expect(invenio_rdm_record_converter.to_json).to eq "{}"
       end
+
+      context "empty metadata" do
+        before do
+          allow_any_instance_of(InvenioRdmRecordConverter).to receive(:invenio_metadata).and_return(nil)
+        end
+
+        it "returns blank json string" do
+          expect(invenio_rdm_record_converter.to_json).to eq "{}"
+        end
+      end
     end
   end
 
