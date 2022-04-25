@@ -11,8 +11,8 @@ class HeaderLookup
   MEMOIZED_MESH_FILE = "memoized_mesh.txt"
   MEMOIZED_LCSH_FILE = "memoized_lcsh.txt"
   MEMOIZED_LCNAF_FILE = "memoized_lcnaf.txt"
-  SEARCHABLE_MESH_FILE = "subjects_mesh.yml"
-  SEARCHABLE_LCSH_FILE = "subjects_lcsh.yml"
+  SEARCHABLE_MESH_FILE = ENV['SUBJECTS_MESH_FILE']
+  SEARCHABLE_LCSH_FILE = ENV['SUBJECTS_LCSH_FILE']
   SEARCHABLE_LCNAF_FILE = "subjects_lcnaf.csv"
 
   def initialize
