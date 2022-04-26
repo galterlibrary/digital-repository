@@ -177,10 +177,10 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
         "additional_descriptions": format_additional("description", "other", @generic_file.description.drop(1)) + format_additional("description", "acknowledgements", @generic_file.acknowledgments)\
           + format_additional("description", "abstract", @generic_file.abstract),
         "publisher": @generic_file.publisher.shift,
-        "publication_date": format_publication_date(@generic_file.date_created.shift || @generic_file.date_uploaded.to_s.force_encoding("UTF-8")),
+        "publication_date": format_publication_date(@generic_file.date_created.shift.presence || @generic_file.date_uploaded.to_s.force_encoding("UTF-8")),
         "subjects": SUBJECT_SCHEMES.map{ |subject_type| subjects_for_scheme(@generic_file.send(subject_type), subject_type) }.compact.flatten.uniq,
         "contributors": contributors(@generic_file.contributor),
-        "dates": @generic_file.date_created.map{ |date| {"date": normalize_date(date), "type": {"id": "created"}, "description": "When the item was originally created."} },
+        "dates": format_dates(@generic_file.date_created),
         "languages": @generic_file.language.map{ |lang| lang.present? && lang.downcase == ENGLISH ? {"id": "eng"} : nil }.compact,
         "identifiers": ark_identifiers(@generic_file.ark),
         "related_identifiers": related_identifiers(@generic_file.related_url),
@@ -373,6 +373,16 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
 
   def format_publication_date(publication_date)
     normalize_date(publication_date)
+  end
+
+  def format_dates(dates)
+    dates.reject(&:blank?).map do |date|
+      {
+        "date": normalize_date(date),
+        "type": {"id": "created"},
+        "description": "When the item was originally created."
+      }
+    end
   end
 
   def normalize_date(date_string)
