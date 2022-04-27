@@ -709,6 +709,14 @@ RSpec.describe InvenioRdmRecordConverter do
     end
   end
 
+  describe "#format_dates" do
+    context "file has empty string for dated created" do
+      it "returns empty array" do
+        expect(invenio_rdm_record_converter.send(:format_dates, [""])).to eq([])
+      end
+    end
+  end
+
   describe "#normalize_date" do
     context "formatted date" do
       let(:expected_formatted_date_1){ "1907-09-06" }
