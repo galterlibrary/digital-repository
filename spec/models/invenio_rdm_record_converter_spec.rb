@@ -90,9 +90,8 @@ RSpec.describe InvenioRdmRecordConverter do
               "type": {"id": "alternative-title"}
             }
           ],
-          "description": generic_file.description.shift,
-          "additional_descriptions": [{"description": generic_file.description.last, "type": {"id": "other"}},
-                                      {"description": generic_file.acknowledgments.first, "type": {"id": "acknowledgements"}},
+          "description": "This is a generic file for specs only\n\nThis is an additional description to help test",
+          "additional_descriptions": [{"description": generic_file.acknowledgments.first, "type": {"id": "acknowledgements"}},
                                       {"description": generic_file.abstract.first, "type": {"id": "abstract"}}],
           "publisher": "DigitalHub. Galter Health Sciences Library & Learning Center",
           "publication_date": "2021-01-01",
