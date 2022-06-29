@@ -215,46 +215,53 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def build_creator_contributor_json(creator)
-    if creator_data = @@person_or_org_data[creator]
-      return creator_data
-    # Organization
-    elsif organization?(creator)
-      json = @@person_or_org_data[creator] = {
-        "person_or_org":
-          Hash.new.tap do |hash|
-            hash["name"] =  creator
-            hash["type"] = "organizational"
-          end
-      }
-    # User within DigitalHub
-    elsif dh_user = User.find_by(formal_name: creator)
-      dh_user_formal_name = dh_user.formal_name.split(',') # split name into components to be reused
-      family_name = dh_user_formal_name.shift # remove first value from formal name
-      given_name = dh_user_formal_name.join(' ') # the remaining strings becomes given name
+    json = @@person_or_org_data[creator]
+    return json if json
 
-      json = @@person_or_org_data[creator] = {
-        "person_or_org":
-          Hash.new.tap do |hash|
-            hash["type"] = "personal"
-            hash["given_name"] = given_name
-            hash["family_name"] = family_name
-            hash["identifiers"] = [{"scheme": "orcid", "identifier": dh_user.orcid.split('/').pop}] if dh_user.orcid.present?
-          end
+    family_name, given_name = creator.split(',', 2)
+    given_name = given_name.to_s.lstrip
+    family_name = family_name.to_s.lstrip
+    display_name = creator.split(", ").reverse.join(" ").strip
+
+    if !(given_name =~ /\d/)
+      given_name = given_name.gsub(',', "")
+    end
+
+    if dh_user = User.find_by(formal_name: creator) || User.find_by(display_name: display_name)
+      identifiers = dh_user.orcid.present? ? [{"scheme": "orcid", "identifier": dh_user.orcid.split('/').pop}] : nil
+    end
+
+    # Known organization
+    if organization?(creator)
+      json = {
+        "person_or_org": {
+          "name": creator,
+          "type": "organizational"
+        }
+      }
+    # Personal record with user in database
+    elsif dh_user.present?
+      json = {
+        "person_or_org": {
+          "given_name": given_name,
+          "family_name": family_name,
+          "type": "personal",
+          "identifiers": identifiers
+        }
       }
     # Personal record without user in database
     elsif creator.include?(",")
-      family_name, given_name = creator.split(',')
-      json = @@person_or_org_data[creator] = {
+      json = {
         "person_or_org":
-          Hash.new.tap do |hash|
-            hash["type"] = "personal"
-            hash["given_name"] = given_name&.lstrip.to_s
-            hash["family_name"] = family_name&.lstrip.to_s
-          end
+        {
+          "given_name": given_name,
+          "family_name": family_name,
+          "type": "personal"
+        }
       }
     # Unknown / Not Identified creator
     else
-      json = @@person_or_org_data[creator] = {
+      json = {
         "person_or_org":
           Hash.new.tap do |hash|
             hash["name"] = creator
@@ -263,6 +270,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       }
     end
 
+    @@person_or_org_data[creator] = json
     # this line only runs if there is an update to @@person_or_org_data
     File.write(MEMOIZED_PERSON_OR_ORG_DATA_FILE, @@person_or_org_data)
     # return the actual json
