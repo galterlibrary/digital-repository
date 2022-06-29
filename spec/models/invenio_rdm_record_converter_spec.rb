@@ -4,6 +4,7 @@ RSpec.describe InvenioRdmRecordConverter do
   let(:user) { FactoryGirl.create(:user, username: "usr1234", formal_name: "Tester, Mock", orcid: "https://orcid.org/1234-5678-9123-4567", \
                                     display_name: 'Mock Tester') }
   let(:contributor_user) { FactoryGirl.create(:user, username: "contributor_user", formal_name: "User, Contributor",  display_name: 'Contributor User') }
+  let(:creator_user) { FactoryGirl.create(:user, username: "creator_user", formal_name: "User, Creator James",  display_name: 'Creator User') }
   let(:assistant) { FactoryGirl.create(:user, username: "ast9876") }
   let(:lcnaf_term) { "Birkan, Kaarin" }
   let(:expected_lcnaf_term) {}
@@ -23,7 +24,7 @@ RSpec.describe InvenioRdmRecordConverter do
       resource_type: ["Account Books"],
       proxy_depositor: assistant.username,
       on_behalf_of: user.username,
-      creator: [user.formal_name],
+      creator: [user.formal_name, creator_user.display_name],
       contributor: [contributor_user.formal_name],
       title: ["Primary Title"],
       subject_name: [lcnaf_term, duplicate_subject_term],
@@ -77,6 +78,13 @@ RSpec.describe InvenioRdmRecordConverter do
                 "scheme": "orcid",
                 "identifier": "#{user.orcid.split('/').last}"
               }]
+            }
+          },
+          {
+            "person_or_org": {
+              "type": "personal",
+              "given_name": "#{creator_user.formal_name.split(',').last.strip}",
+              "family_name": "#{creator_user.formal_name.split(',').first.strip}"
             }
           }],
           "title": "#{generic_file.title.first}",
@@ -282,6 +290,38 @@ RSpec.describe InvenioRdmRecordConverter do
         }
       }.with_indifferent_access
     }
+  let(:non_user_with_suffix) { "Miller, Alfred Frederick, Jr." }
+  let(:creator_with_suffix_json) {
+    {
+      "person_or_org": {
+        "given_name": "Alfred Frederick Jr.",
+        "family_name": "Miller",
+        "type": "personal"
+      }
+    }.with_indifferent_access
+  }
+
+  let(:non_user_with_middle_initial) { "Mckay, Frederick, S." }
+  let(:creator_with_middle_initial_json) {
+    {
+      "person_or_org": {
+        "given_name": "Frederick S.",
+        "family_name": "Mckay",
+        "type": "personal"
+      }
+    }.with_indifferent_access
+  }
+
+  let(:non_user_with_date) { "Mason, Michael L., 1895-1963" }
+  let(:creator_with_date_json) {
+    {
+      "person_or_org": {
+        "given_name": "Michael L., 1895-1963",
+        "family_name": "Mason",
+        "type": "personal"
+      }
+    }.with_indifferent_access
+  }
 
   let(:unknown_creator_name) { "Unknown" }
   let(:personal_creator_unknown_json) {
@@ -299,21 +339,38 @@ RSpec.describe InvenioRdmRecordConverter do
       "person_or_org": {
         "name": organization_name,
         "type": "organizational"
-      },
-      "role": {"id": InvenioRdmRecordConverter::ROLE_OTHER}
+      }
     }.with_indifferent_access
   }
 
   describe "#build_creator_contributor_json" do
-    context 'personal record without user in digital hub, with proper name formatting' do
+    context 'personal record without user in digitalhub with proper name formatting' do
       it 'assigns' do
         expect(invenio_rdm_record_converter.send(:build_creator_contributor_json, non_user_properly_formatted).with_indifferent_access).to eq(personal_creator_without_user_json)
       end
     end
 
-    context 'personal record without user in digital hub, with improper name formatting' do
+    context 'personal record without user in digitalhub with improper name formatting' do
       it 'assigns' do
         expect(invenio_rdm_record_converter.send(:build_creator_contributor_json, non_user_improperly_formatted).with_indifferent_access).to eq(organizational_creator_without_user_json)
+      end
+    end
+
+    context 'personal record without user in digitalhub with middle initial in name' do
+      it 'assigns' do
+        expect(invenio_rdm_record_converter.send(:build_creator_contributor_json, non_user_with_middle_initial).with_indifferent_access).to eq(creator_with_middle_initial_json)
+      end
+    end
+
+    context 'personal record without user in digitalhub with generational suffix in name' do
+      it 'assigns' do
+        expect(invenio_rdm_record_converter.send(:build_creator_contributor_json, non_user_with_suffix).with_indifferent_access).to eq(creator_with_suffix_json)
+      end
+    end
+
+    context 'personal record without user in digitalhub with date in name' do
+      it 'assigns' do
+        expect(invenio_rdm_record_converter.send(:build_creator_contributor_json, non_user_with_date).with_indifferent_access).to eq(creator_with_date_json)
       end
     end
 
