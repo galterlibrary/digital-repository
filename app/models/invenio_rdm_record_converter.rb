@@ -173,9 +173,10 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
         "creators": @generic_file.creator.map{ |creator| build_creator_contributor_json(creator) },
         "title": @generic_file.title.first,
         "additional_titles": format_additional("title", "alternative-title", @generic_file.title.drop(1)),
-        "description": @generic_file.description.first,
-        "additional_descriptions": format_additional("description", "other", @generic_file.description.drop(1)) + format_additional("description", "acknowledgements", @generic_file.acknowledgments)\
-          + format_additional("description", "abstract", @generic_file.abstract),
+        "description": @generic_file.description.join("\n\n").force_encoding("UTF-8"),
+        "additional_descriptions":
+          format_additional("description", "acknowledgements", @generic_file.acknowledgments) +
+          format_additional("description", "abstract", @generic_file.abstract),
         "publisher": @generic_file.publisher.shift,
         "publication_date": format_publication_date(@generic_file.date_created.shift.presence || @generic_file.date_uploaded.to_s.force_encoding("UTF-8")),
         "subjects": SUBJECT_SCHEMES.map{ |subject_type| subjects_for_scheme(@generic_file.send(subject_type), subject_type) }.compact.flatten.uniq,
