@@ -10,6 +10,8 @@ class HeaderLookup
 
   ABSENT_SUBJECT = :absent
 
+  ABSENT_SUBJECT = :absent
+
   def initialize
     # these are the terms to search through for header lookups
     @@searchable_mesh_file ||= SEARCHABLE_MESH_FILE
