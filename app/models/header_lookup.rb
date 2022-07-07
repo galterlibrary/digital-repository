@@ -15,6 +15,7 @@ class HeaderLookup
     @@searchable_mesh_file ||= SEARCHABLE_MESH_FILE
     @@searchable_lcsh_file ||= SEARCHABLE_LCSH_FILE
     @@searchable_lcnaf_file ||= SEARCHABLE_LCNAF_FILE
+
     # these are values that have been previously found from the searchable terms
     @@memoized_mesh ||= read_memoized_headers(MEMOIZED_MESH_FILE)
     @@memoized_lcsh ||= read_memoized_headers(MEMOIZED_LCSH_FILE)
