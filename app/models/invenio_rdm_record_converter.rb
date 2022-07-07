@@ -284,6 +284,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   # return array of invenio formatted subjects
   def subjects_for_scheme(terms, scheme)
     mapped_terms = terms.map do |term|
+      term = term.strip
       pid = @@header_lookup.pid_lookup_by_scheme(term, scheme)
 
       if term.blank?
