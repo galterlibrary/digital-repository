@@ -1,1 +1,1 @@
-{"Semantic Web"=>"http://id.loc.gov/authorities/subjects/sh2002000569", "Abdomen--Cancer"=>"http://id.loc.gov/authorities/subjects/sh85000095"}
+{"Semantic Web"=>"http://id.loc.gov/authorities/subjects/sh2002000569", "Abdomen--Cancer"=>"http://id.loc.gov/authorities/subjects/sh85000095", "Cancer"=>"http://id.loc.gov/authorities/subjects/sh85019492"}
