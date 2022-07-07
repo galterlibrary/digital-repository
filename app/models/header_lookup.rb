@@ -7,16 +7,17 @@ class HeaderLookup
   MEMOIZED_LCSH_FILE = "memoized_lcsh.txt"
   MEMOIZED_LCNAF_FILE = "memoized_lcnaf.txt"
 
-  SEARCHABLE_LCNAF_FILE = "subjects_lcnaf.csv"
+  SEARCHABLE_LCNAF_FILE = "subjects_lcnaf.jsonl"
   SEARCHABLE_MESH_FILE = 'subjects_mesh.jsonl'
   SEARCHABLE_LCSH_FILE = 'subjects_lcsh.jsonl'
 
+  ABSENT_SUBJECT = :absent
+
   def initialize
-    puts "initializing header_lookup..."
     # these are the terms to search through for header lookups
     @@searchable_mesh_file ||= SEARCHABLE_MESH_FILE
     @@searchable_lcsh_file ||= SEARCHABLE_LCSH_FILE
-    @@searchable_lcnaf_file ||= CSV.new(SEARCHABLE_LCNAF_FILE)
+    @@searchable_lcnaf_file ||= SEARCHABLE_LCNAF_FILE
 
     # these are values that have been previously found from the searchable terms
     @@memoized_mesh ||= read_memoized_headers(MEMOIZED_MESH_FILE)
@@ -24,15 +25,21 @@ class HeaderLookup
     @@memoized_lcnaf ||= read_memoized_headers(MEMOIZED_LCNAF_FILE)
   end
 
-  def pid_lookup_by_scheme(term="", scheme="")
-    if term.blank? || scheme.blank?
+  def pid_lookup_by_field(term="", field="")
+    if term.blank? || field.blank?
       nil
-    elsif scheme == :mesh
+    elsif field == :mesh
       @@memoized_mesh[term] || mesh_term_pid_local_lookup(term) || nil
-    elsif scheme == :lcsh
+    elsif field == :lcsh
       @@memoized_lcsh[term] || lcsh_term_pid_local_lookup(term) || nil
-    elsif scheme == :subject_name
-      @@memoized_lcnaf[term] || lcnaf_pid_lookup(term) || nil
+    elsif field == :subject_name || field == :subject_geographic
+      pid = @@memoized_lcnaf[term] || lcnaf_pid_lookup(term)
+
+      if pid == ABSENT_SUBJECT
+        nil
+      else
+        pid
+      end
     else
       nil
     end
@@ -68,22 +75,21 @@ class HeaderLookup
     nil
   end
 
-  def lcnaf_pid_lookup(lcnaf_term)
-    lcnaf_term = lcnaf_term.downcase.strip
+  def lcnaf_pid_lookup(lcnaf_term="")
+    lcnaf_id = ABSENT_SUBJECT
 
-    @@searchable_lcnaf_file.each do |row|
-      term, pid = row
+    File.foreach(@@searchable_lcnaf_file) do |line|
+      lcnaf_term_json = JSON.parse(line)
 
-      # if the term matches up memoize, write to file, and return pid
-      if lcnaf_term == term.downcase.strip
-        @@memoized_lcnaf[lcnaf_term] = pid
-        File.write(MEMOIZED_LCNAF_FILE, @@memoized_lcnaf)
-        return pid
+      if lcnaf_term_json["subject"].downcase == lcnaf_term.downcase
+        lcnaf_id = lcnaf_term_json["id"]
+        break
       end
     end
 
-    # if no pid is found, return nil
-    nil
+    @@memoized_lcnaf[lcnaf_term] = lcnaf_id
+    File.write(MEMOIZED_LCNAF_FILE, @@memoized_lcnaf)
+    lcnaf_id
   end
 
   private

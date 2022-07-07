@@ -7,7 +7,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   include Galtersufia::GenericFile::InvenioResourceTypeMappings
   include Galtersufia::GenericFile::KnownOrganizations
 
-  SUBJECT_SCHEMES = [:tag, :mesh, :lcsh, :subject_name]
+  SUBJECT_FIELDS = [:tag, :mesh, :lcsh, :subject_name, :subject_geographic]
   CIRCA_VALUES = ["ca.", "ca", "circa", "CA.", "CA", "CIRCA"]
   UNDATED = ["undated", "UNDATED"]
   REFERENCE_FIELDS = ["bibliographic_citation", "part_of"]
@@ -179,7 +179,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
           format_additional("description", "abstract", @generic_file.abstract),
         "publisher": @generic_file.publisher.shift,
         "publication_date": format_publication_date(@generic_file.date_created.shift.presence || @generic_file.date_uploaded.to_s.force_encoding("UTF-8")),
-        "subjects": SUBJECT_SCHEMES.map{ |subject_type| subjects_for_scheme(@generic_file.send(subject_type), subject_type) }.compact.flatten.uniq,
+        "subjects": SUBJECT_FIELDS.map{ |subject_field| subjects_for_field(@generic_file.send(subject_field), subject_field) }.compact.flatten.uniq,
         "contributors": contributors(@generic_file.contributor),
         "dates": format_dates(@generic_file.date_created),
         "languages": @generic_file.language.map{ |lang| lang.present? && lang.downcase == ENGLISH ? {"id": "eng"} : nil }.compact,
@@ -189,7 +189,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
         "formats": [@generic_file.mime_type],
         "version": version(@generic_file.content),
         "rights": rights(@generic_file.rights),
-        "locations": {"features": @generic_file.subject_geographic.present? ? @generic_file.subject_geographic.map{ |location| {place: location.force_encoding("UTF-8")} } : []},
+        "locations": {},
         "funding": funding(@generic_file.id)
       }
 
@@ -282,19 +282,22 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   # return array of invenio formatted subjects
-  def subjects_for_scheme(terms, scheme)
+  def subjects_for_field(terms, field)
     mapped_terms = terms.map do |term|
       term = term.strip
-      pid = @@header_lookup.pid_lookup_by_scheme(term, scheme)
 
       if term.blank?
-        nil
-      elsif pid.present?
+        return nil
+      end
+
+      pid = @@header_lookup.pid_lookup_by_field(term, field)
+
+      if pid.present?
         {id: pid}
-      elsif scheme == :subject_name || scheme == :tag
+      elsif field == :subject_name || field == :tag
         {subject: term.force_encoding("UTF-8")}
       else
-        puts "------\nUnable to map subject\nFile Id: #{@generic_file.id} Term: #{term} Scheme: #{scheme}\n------".force_encoding("UTF-8")
+        puts "------\nUnable to map subject\nFile Id: #{@generic_file.id} Term: #{term} Subject Field: #{field}\n------".force_encoding("UTF-8")
       end
     end
 
