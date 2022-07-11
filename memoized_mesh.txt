@@ -1,1 +1,1 @@
-{"Vocabulary, Controlled"=>"https://id.nlm.nih.gov/mesh/D018875", "Bile Duct Neoplasms"=>"https://id.nlm.nih.gov/mesh/D001650", "Burkitt Lymphoma--etiology"=>"https://id.nlm.nih.gov/mesh/D002051Q000209"}
+{"Vocabulary, Controlled"=>"https://id.nlm.nih.gov/mesh/D018875", "Bile Duct Neoplasms"=>"https://id.nlm.nih.gov/mesh/D001650", "Burkitt Lymphoma--etiology"=>"https://id.nlm.nih.gov/mesh/D002051Q000209", "Abrin"=>"https://id.nlm.nih.gov/mesh/D000036"}
