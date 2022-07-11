@@ -77,7 +77,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     data = {}
 
     if !@generic_file.based_near.empty?
-        data["presentation_location"] = @generic_file.based_near
+      data["presentation_location"] = @generic_file.based_near
     end
     data["permissions"] = file_permissions
 
@@ -176,7 +176,8 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
         "description": @generic_file.description.join("\n\n").force_encoding("UTF-8"),
         "additional_descriptions":
           format_additional("description", "acknowledgements", @generic_file.acknowledgments) +
-          format_additional("description", "abstract", @generic_file.abstract),
+          format_additional("description", "abstract", @generic_file.abstract) +
+          format_additional("description", "other", @generic_file.based_near, "presentation_location: "),
         "publisher": @generic_file.publisher.shift,
         "publication_date": format_publication_date(@generic_file.date_created.shift.presence || @generic_file.date_uploaded.to_s.force_encoding("UTF-8")),
         "subjects": SUBJECT_FIELDS.map{ |subject_field| subjects_for_field(@generic_file.send(subject_field), subject_field) }.compact.flatten.uniq,
@@ -269,12 +270,12 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     json
   end # build_creator_contributor_json
 
-  def format_additional(content_type, invenio_type, values)
+  def format_additional(content_type, invenio_type, values, prefix="")
     formatted_values = values.map do |value|
       if value.blank?
         next
       else
-        {"#{content_type}": value.to_s.force_encoding("UTF-8"), "type": {"id": invenio_type}}
+        {"#{content_type}":  prefix + value.to_s.force_encoding("UTF-8"), "type": {"id": invenio_type}}
       end
     end
 

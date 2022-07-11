@@ -33,7 +33,7 @@ RSpec.describe InvenioRdmRecordConverter do
       mesh: [mesh_term],
       lcsh: [lcsh_term],
       subject_geographic: ["Boston (Mass.)", "Chicago (Ill.)"],
-      based_near: ["'Boston, Massachusetts, United States', 'East Peoria, Illinois, United States'"],
+      based_near: ['Boston, Massachusetts, United States', 'East Peoria, Illinois, United States'],
       description: ["This is a generic file for specs only", "This is an additional description to help test"],
       date_created: ["2021-1-1"],
       mime_type: 'application/pdf',
@@ -91,8 +91,32 @@ RSpec.describe InvenioRdmRecordConverter do
             }
           ],
           "description": "This is a generic file for specs only\n\nThis is an additional description to help test",
-          "additional_descriptions": [{"description": generic_file.acknowledgments.first, "type": {"id": "acknowledgements"}},
-                                      {"description": generic_file.abstract.first, "type": {"id": "abstract"}}],
+          "additional_descriptions": [
+            {
+              "description": generic_file.acknowledgments.first,
+              "type": {
+                "id": "acknowledgements"
+              }
+            },
+            {
+              "description": generic_file.abstract.first,
+              "type": {
+                "id": "abstract"
+              }
+            },
+            {
+              "description": "presentation_location: East Peoria, Illinois, United States",
+               "type": {
+                 "id": "other"
+               }
+            },
+            {
+              "description": "presentation_location: Boston, Massachusetts, United States",
+              "type": {
+                "id": "other"
+              }
+            }
+          ],
           "publisher": "DigitalHub. Galter Health Sciences Library & Learning Center",
           "publication_date": "2021-01-01",
           "subjects": [
@@ -320,7 +344,7 @@ RSpec.describe InvenioRdmRecordConverter do
 
   let(:expected_extra_data) {
     {
-      "presentation_location": ["'Boston, Massachusetts, United States', 'East Peoria, Illinois, United States'"],
+      "presentation_location": ["East Peoria, Illinois, United States", "Boston, Massachusetts, United States"],
       "permissions": {
         "owner": {
           user.username => user.email
