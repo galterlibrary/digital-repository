@@ -54,6 +54,7 @@ class HeaderLookup
 
       File.foreach(searchable_file) do |line|
         term_json = JSON.parse(line)
+
         if term_json["subject"].downcase == term.downcase
           term_pid = term_json["id"]
           break
