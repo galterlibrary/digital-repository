@@ -36,93 +36,17 @@ RSpec.describe HeaderLookup do
        }
      }"
   end
-  let(:expected_mesh_result) { "https://id.nlm.nih.gov/mesh/D018875" }
-  let(:expected_memoized_mesh) { {mesh_term=>expected_mesh_result} }
-  let(:blank_mesh_term) { "mesh term does not exist" }
-  let(:expected_failed_mesh) { "#{blank_mesh_term} - MESH" }
-
-  describe "#mesh_term_pid_lookup" do
-    context 'search returns values' do
-      before do
-        allow(HTTParty).to receive(:get).and_return(mesh_api_response)
-        @mesh_result = subject.mesh_term_pid_lookup(mesh_term)
-      end
-
-      it 'calls api with correct term' do
-        expect(HTTParty).to have_received(:get).with(mesh_query_url)
-      end
-
-      it 'returns result for mesh term' do
-        expect(@mesh_result).to eq(expected_mesh_result)
-      end
-    end
-
-    context 'search returns no values' do
-      before do
-        allow(HTTParty).to receive(:get).and_return(empty_mesh_api_response)
-        @mesh_result = subject.mesh_term_pid_lookup(blank_mesh_term)
-      end
-
-      it 'returns N/A for PID for mesh term' do
-        expect(@mesh_result).to eq(nil)
-      end
-    end
-  end
-
-  let(:lcsh_term) { "Semantic Web" }
-  let(:lcsh_query_url) { "http://id.loc.gov/authorities/subjects/suggest/?q=*Semantic+Web*" }
-  let(:lcsh_api_response) do
-    """\
-    [\"*Semantic*Web*\",[\"Semantic Web\",\"Semantic Web--Congresses\"],[\"1 result\",\"1 result\"],[\"http://id.loc.go\
-    v/authorities/subjects/sh2002000569\",\"http://id.loc.gov/authorities/subjects/sh2010112582\"]]
-    """
-  end
-  let(:empty_lcsh_api_response) { "[\"*this*is*not*a*real*search*\",[],[],[]]" }
-  let(:expected_lcsh_result) { "https://id.loc.gov/authorities/subjects/sh2002000569" }
-  let(:expected_memoized_lcsh) { {lcsh_term=>expected_lcsh_result} }
-  let(:blank_lcsh_term) { "lcsh term does not exist" }
-  let(:expected_failed_lcsh) { "#{blank_lcsh_term} - LCSH" }
-
-  describe "#lcsh_term_pid_lookup" do
-    context 'search returns values' do
-      before do
-        allow(HTTParty).to receive(:get).and_return(lcsh_api_response)
-        @lcsh_result = subject.lcsh_term_pid_lookup(lcsh_term)
-      end
-
-      it 'calls api with correct term' do
-        expect(HTTParty).to have_received(:get).with(lcsh_query_url)
-      end
-
-      # TODO figure out what to do with terms that have multiple PIDs returned from query
-      it 'returns result for lcsh term' do
-        expect(@lcsh_result).to eq(expected_lcsh_result)
-      end
-    end
-
-    context 'search returns no values' do
-      before do
-        allow(HTTParty).to receive(:get).and_return(empty_lcsh_api_response)
-        @lcsh_result = subject.lcsh_term_pid_lookup(lcsh_term)
-      end
-
-      it 'returns nil for PID for lcsh term' do
-        expect(@lcsh_result).to eq(nil)
-      end
-    end
-  end
 
   let(:no_pid_mesh_subject) { "Fake Mesh Term: DigitalHub field mesh" }
   let(:no_pid_lcsh_subject) { "Fake Lcsh Term: DigitalHub field lcsh" }
 
-  # TODO: do we want this to return nil? Should we log these values somewhere?
-  describe "#pid_lookup_by_scheme" do
+  describe "#pid_lookup_by_field" do
     it 'returns nil for subject header with no pid' do
-      expect(subject.send(:pid_lookup_by_scheme, no_pid_lcsh_subject, :lcsh)).to eq(nil)
+      expect(subject.send(:pid_lookup_by_field, no_pid_lcsh_subject, :lcsh)).to eq(nil)
     end
 
     it 'returns nil for subject header with no pid' do
-      expect(subject.send(:pid_lookup_by_scheme, no_pid_mesh_subject, :mesh)).to eq(nil)
+      expect(subject.send(:pid_lookup_by_field, no_pid_mesh_subject, :mesh)).to eq(nil)
     end
   end
 
@@ -144,16 +68,12 @@ RSpec.describe HeaderLookup do
     end
   end
 
-  let(:lcnaf_file_name) { "spec/fixtures/mock_lcnaf.yml" }
-  let(:lcnaf_term) { "New York (N.Y.). Administration for Children's Services" }
-  let(:lcnaf_id) { "http://id.loc.gov/authorities/names/n2001099999" }
-  let(:lcnaf_term2) { "Birkan, Kaarin" }
-  let(:lcnaf_id2) { "http://id.loc.gov/authorities/names/n90699999" }
+  let(:lcnaf_term) { "Birkan, Kaarin" }
+  let(:lcnaf_id) { "http://id.loc.gov/authorities/names/n90699999" }
 
   describe "#lcnaf_pid_lookup" do
     it "it returns the correct id for the lcnaf term" do
-      expect(subject.lcnaf_pid_lookup(lcnaf_term, lcnaf_file_name)).to eq(lcnaf_id)
-      expect(subject.lcnaf_pid_lookup(lcnaf_term2, lcnaf_file_name)).to eq(lcnaf_id2)
+      expect(subject.lcnaf_pid_lookup(lcnaf_term)).to eq(lcnaf_id)
     end
   end
 end

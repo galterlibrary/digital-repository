@@ -1,1 +1,1 @@
-{"Birkan, Kaarin"=>"http://id.loc.gov/authorities/names/n90699999", "birkan kaarin"=>"http://id.loc.gov/authorities/names/n90699999"}
+{"Birkan, Kaarin"=>"http://id.loc.gov/authorities/names/n90699999", "Tampa Joe"=>"http://id.loc.gov/authorities/names/n94099999", "Boston (Mass.)"=>"http://id.loc.gov/authorities/names/n79045553", "Chicago (Ill.)"=>"http://id.loc.gov/authorities/names/n78086438", "malignant"=>:absent}

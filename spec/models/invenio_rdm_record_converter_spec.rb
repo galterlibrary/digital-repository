@@ -11,7 +11,7 @@ RSpec.describe InvenioRdmRecordConverter do
   let(:expected_mesh_id) { ::HeaderLookup::MESH_ID_URI + "D018875" }
   let(:expected_lcnaf_id) { "http://id.loc.gov/authorities/names/n90699999" }
   let(:lcsh_term) { "Semantic Web" }
-  let(:duplicate_subject_term) { "Duplicate Term" }
+  let(:duplicate_subject_term) { "Tampa Joe" }
   let(:expected_lcsh_id) { ::HeaderLookup::LCSH_ID_URI + "sh2002000569" }
   let(:generic_file_doi) { "10.5438/55e5-t5c0" }
   let(:generic_file) {
@@ -32,8 +32,8 @@ RSpec.describe InvenioRdmRecordConverter do
       date_uploaded: Time.new(2020, 2, 3),
       mesh: [mesh_term],
       lcsh: [lcsh_term],
-      subject_geographic: ["Boston, Massachusetts", "Chicago, Illinois"],
-      based_near: ["'Boston, Massachusetts, United States', 'East Peoria, Illinois, United States'"],
+      subject_geographic: ["Boston (Mass.)", "Chicago (Ill.)"],
+      based_near: ['Boston, Massachusetts, United States', 'East Peoria, Illinois, United States'],
       description: ["This is a generic file for specs only", "This is an additional description to help test"],
       date_created: ["2021-1-1"],
       mime_type: 'application/pdf',
@@ -90,10 +90,33 @@ RSpec.describe InvenioRdmRecordConverter do
               "type": {"id": "alternative-title"}
             }
           ],
-          "description": generic_file.description.shift,
-          "additional_descriptions": [{"description": generic_file.description.last, "type": {"id": "other"}},
-                                      {"description": generic_file.acknowledgments.first, "type": {"id": "acknowledgements"}},
-                                      {"description": generic_file.abstract.first, "type": {"id": "abstract"}}],
+          "description": "This is a generic file for specs only\n\nThis is an additional description to help test",
+          "additional_descriptions": [
+            {
+              "description": generic_file.acknowledgments.first,
+              "type": {
+                "id": "acknowledgements"
+              }
+            },
+            {
+              "description": generic_file.abstract.first,
+              "type": {
+                "id": "abstract"
+              }
+            },
+            {
+              "description": "presentation_location: East Peoria, Illinois, United States",
+               "type": {
+                 "id": "other"
+               }
+            },
+            {
+              "description": "presentation_location: Boston, Massachusetts, United States",
+              "type": {
+                "id": "other"
+              }
+            }
+          ],
           "publisher": "DigitalHub. Galter Health Sciences Library & Learning Center",
           "publication_date": "2021-01-01",
           "subjects": [
@@ -111,6 +134,15 @@ RSpec.describe InvenioRdmRecordConverter do
             },
             {
               "id": expected_lcnaf_id
+            },
+            {
+              "id": "http://id.loc.gov/authorities/names/n94099999" # tampa joe
+            },
+            {
+              "id": "http://id.loc.gov/authorities/names/n79045553" # boston
+            },
+            {
+              "id": "http://id.loc.gov/authorities/names/n78086438" # chicago
             }
           ],
           "contributors": [{
@@ -139,9 +171,7 @@ RSpec.describe InvenioRdmRecordConverter do
             "id": "cc-by-nc-sa-3.0-us",
             "link": "http://creativecommons.org/licenses/by-nc-sa/3.0/us/",
             "title": {"en": 'Creative Commons Attribution Non Commercial Share Alike 3.0 United States'}}],
-          "locations": {
-            "features": [{"place": "Chicago, Illinois"}, {"place": "Boston, Massachusetts"}]
-          },
+          "locations": {},
           "funding": [{
             "funder": {
               "name": "National Library of Medicine (NLM)",
@@ -314,7 +344,7 @@ RSpec.describe InvenioRdmRecordConverter do
 
   let(:expected_extra_data) {
     {
-      "presentation_location": ["'Boston, Massachusetts, United States', 'East Peoria, Illinois, United States'"],
+      "presentation_location": ["East Peoria, Illinois, United States", "Boston, Massachusetts, United States"],
       "permissions": {
         "owner": {
           user.username => user.email
@@ -850,7 +880,7 @@ RSpec.describe InvenioRdmRecordConverter do
     end
   end
 
-  describe "#subjects_for_scheme" do
+  describe "#subjects_for_field" do
     context "mesh scheme" do
       let(:unknown_mesh_term){ ["nothing but lies"] }
       let(:known_mesh_term){ ["Bile Duct Neoplasms"] }
@@ -860,15 +890,15 @@ RSpec.describe InvenioRdmRecordConverter do
       let(:expected_mesh_with_qualifier_result){ [{"id": ::HeaderLookup::MESH_ID_URI + "D002051Q000209"}]}
 
       it "returns '[]' for unknown term" do
-        expect(invenio_rdm_record_converter.send(:subjects_for_scheme, unknown_mesh_term, mesh_subject_type)).to eq([])
+        expect(invenio_rdm_record_converter.send(:subjects_for_field, unknown_mesh_term, mesh_subject_type)).to eq([])
       end
 
       it "returns metadata for known term without qualifier" do
-        expect(invenio_rdm_record_converter.send(:subjects_for_scheme, known_mesh_term, mesh_subject_type)).to eq(expected_mesh_result)
+        expect(invenio_rdm_record_converter.send(:subjects_for_field, known_mesh_term, mesh_subject_type)).to eq(expected_mesh_result)
       end
 
       it "returns metadata for term with qualifier" do
-        expect(invenio_rdm_record_converter.send(:subjects_for_scheme, known_mesh_term_with_qualifier, mesh_subject_type)).to eq(expected_mesh_with_qualifier_result)
+        expect(invenio_rdm_record_converter.send(:subjects_for_field, known_mesh_term_with_qualifier, mesh_subject_type)).to eq(expected_mesh_with_qualifier_result)
       end
     end
 
@@ -879,11 +909,11 @@ RSpec.describe InvenioRdmRecordConverter do
       let(:expected_lcsh_result){ ["id": ::HeaderLookup::LCSH_ID_URI + "sh85000095"] }
 
       it "returns '[]' for unknown term" do
-        expect(invenio_rdm_record_converter.send(:subjects_for_scheme, unknown_lcsh_term, lcsh_subject_type)).to eq([])
+        expect(invenio_rdm_record_converter.send(:subjects_for_field, unknown_lcsh_term, lcsh_subject_type)).to eq([])
       end
 
       it "returns metadata for known term" do
-        expect(invenio_rdm_record_converter.send(:subjects_for_scheme, known_lcsh_term, lcsh_subject_type)).to eq(expected_lcsh_result)
+        expect(invenio_rdm_record_converter.send(:subjects_for_field, known_lcsh_term, lcsh_subject_type)).to eq(expected_lcsh_result)
       end
     end
 
@@ -893,7 +923,7 @@ RSpec.describe InvenioRdmRecordConverter do
       let(:expected_subject_name_result){ ["subject": "malignant"] }
 
       it "returns metadata for known term" do
-        expect(invenio_rdm_record_converter.send(:subjects_for_scheme, subject_name_term, subject_name_subject_type)).to eq(expected_subject_name_result)
+        expect(invenio_rdm_record_converter.send(:subjects_for_field, subject_name_term, subject_name_subject_type)).to eq(expected_subject_name_result)
       end
     end
 
@@ -904,7 +934,7 @@ RSpec.describe InvenioRdmRecordConverter do
 
 
       it "returns metadata for term" do
-        expect(invenio_rdm_record_converter.send(:subjects_for_scheme, subject_name_terms, subject_name_subject_type)).to eq(expected_lcnaf_pid)
+        expect(invenio_rdm_record_converter.send(:subjects_for_field, subject_name_terms, subject_name_subject_type)).to eq(expected_lcnaf_pid)
       end
     end
 
@@ -914,7 +944,7 @@ RSpec.describe InvenioRdmRecordConverter do
       let(:expected_tag_result){ [{"subject": tag_term}] }
 
       it "returns the tag in subject field" do
-        expect(invenio_rdm_record_converter.send(:subjects_for_scheme, tag_terms, :tag)).to eq(expected_tag_result)
+        expect(invenio_rdm_record_converter.send(:subjects_for_field, tag_terms, :tag)).to eq(expected_tag_result)
       end
     end
   end
