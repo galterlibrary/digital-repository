@@ -1,1 +1,1 @@
-{"Semantic Web"=>"http://id.loc.gov/authorities/subjects/sh2002000569", "Abdomen--Cancer"=>"http://id.loc.gov/authorities/subjects/sh85000095", "Cancer"=>"http://id.loc.gov/authorities/subjects/sh85019492"}
+{"Semantic Web"=>"http://id.loc.gov/authorities/subjects/sh2002000569", "Abdomen--Cancer"=>"http://id.loc.gov/authorities/subjects/sh85000095", "Cancer"=>"http://id.loc.gov/authorities/subjects/sh85019492", "Fake Lcsh Term: DigitalHub field lcsh"=>:absent, "nothing but lies"=>:absent}

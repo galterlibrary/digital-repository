@@ -288,15 +288,11 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       term = term.strip
 
       if term.blank?
-        return nil
-      end
-
-      pid = @@header_lookup.pid_lookup_by_field(term, field)
-
-      if pid.present?
-        {id: pid}
-      elsif field == :subject_name || field == :tag
+        nil
+      elsif field == :tag
         {subject: term.force_encoding("UTF-8")}
+      elsif pid = @@header_lookup.pid_lookup_by_field(term, field)
+        {id: pid}
       else
         puts "------\nUnable to map subject\nFile Id: #{@generic_file.id} Term: #{term} Subject Field: #{field}\n------".force_encoding("UTF-8")
       end
