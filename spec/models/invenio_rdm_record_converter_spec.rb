@@ -38,7 +38,7 @@ RSpec.describe InvenioRdmRecordConverter do
       date_created: ["2021-1-1"],
       mime_type: 'application/pdf',
       grants_and_funding: ["European Commission 00k4n6c32"],
-      language: ["English"],
+      language: ["Pali", "English", "Fake Language"],
       page_count: [rand(1..1000).to_s],
       rights: ["http://creativecommons.org/licenses/by-nc-sa/3.0/us/"],
       visibility: InvenioRdmRecordConverter::OPEN_ACCESS,
@@ -154,7 +154,7 @@ RSpec.describe InvenioRdmRecordConverter do
             "role": {"id": InvenioRdmRecordConverter::ROLE_OTHER}
           }],
           "dates": [{"date": "2021-01-01", "type": {"id":"created"}, "description": "When the item was originally created."}],
-          "languages": [{"id": "eng"}],
+          "languages": [{"id": "eng"}, {"id": "pli"}],
           "identifiers": [{
             "identifier": "10.6666/ARK",
             "scheme": "ark"
