@@ -14,8 +14,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   ABBR_MONTHNAMES = Date::ABBR_MONTHNAMES.map{ |abbr_monthname| abbr_monthname.downcase if abbr_monthname.present? }
   MONTHNAMES = Date::MONTHNAMES.map{ |monthname| monthname.downcase if monthname.present? }
   SEASONS = ["spring", "summer", "fall", "winter"]
-  ENG = "eng"
-  ENGLISH = "english"
+  LANGUAGES = {"english": "eng", "pali": "pli", "afrikaans": "afr", "polish": "pol", "italian": "ita", "french": "fra"}.with_indifferent_access
   ROLE_OTHER = 'role-other'
   OPEN_ACCESS = "open"
   INVENIO_PUBLIC = "public"
@@ -183,7 +182,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
         "subjects": SUBJECT_FIELDS.map{ |subject_field| subjects_for_field(@generic_file.send(subject_field), subject_field) }.compact.flatten.uniq,
         "contributors": contributors(@generic_file.contributor),
         "dates": format_dates(@generic_file.date_created),
-        "languages": @generic_file.language.map{ |lang| lang.present? && lang.downcase == ENGLISH ? {"id": "eng"} : nil }.compact,
+        "languages": @generic_file.language.map{ |lang| LANGUAGES[lang.downcase] ? {"id": LANGUAGES[lang.downcase]} : nil }.compact,
         "identifiers": ark_identifiers(@generic_file.ark),
         "related_identifiers": related_identifiers(@generic_file.related_url),
         "sizes": Array.new.tap{ |size_json| size_json << "#{@generic_file.page_count} pages" if !@generic_file.page_count.blank? },

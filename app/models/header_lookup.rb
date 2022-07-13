@@ -3,9 +3,10 @@ class HeaderLookup
   MEMOIZED_LCSH_FILE = "memoized_lcsh.txt"
   MEMOIZED_LCNAF_FILE = "memoized_lcnaf.txt"
 
-  SEARCHABLE_MESH_FILE = 'subjects_mesh.jsonl'
-  SEARCHABLE_LCSH_FILE = 'subjects_lcsh.jsonl'
-  SEARCHABLE_LCNAF_FILE = "subjects_lcnaf.jsonl"
+  SEARCHABLE_MESH_FILE = "subjects_mesh.jsonl"
+  SEARCHABLE_LCSH_FILE = "subjects_lcsh.jsonl"
+  # Needs to be in config because file is too large for VCS
+  SEARCHABLE_LCNAF_FILE = ENV["SUBJECTS_LCNAF"]
 
   ABSENT_SUBJECT = :absent
 
