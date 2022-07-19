@@ -1,8 +1,10 @@
 csv = CSV.open('/home/deploy/all_gf_subject.csv', 'wb')
-terms =  GalterGenericFilePresenter.terms + [:depositor, :date_uploaded, :date_modified, :read_access_group]
+terms =  GalterGenericFilePresenter.terms + [
+  :depositor, :date_uploaded, :date_modified, :read_access_group, :isPartOf, :id
+]
 
-csv << terms.map(&:to_s).map { |term| 
-  I18n.translate(:simple_form)[:labels][:generic_file][term] || term.to_s.titleize 
+csv << terms.map(&:to_s).map { |term|
+  I18n.translate(:simple_form)[:labels][:generic_file][term] || term.titleize
 }
 
 ActiveFedora::SolrService.query('has_model_ssim:GenericFile', { rows: 99999 }).each.with_index do |gf, idx|
