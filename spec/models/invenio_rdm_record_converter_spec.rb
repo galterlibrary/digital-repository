@@ -34,7 +34,7 @@ RSpec.describe InvenioRdmRecordConverter do
       mesh: [mesh_term],
       lcsh: [lcsh_term],
       subject_geographic: ["Boston (Mass.)", "Chicago (Ill.)"],
-      based_near: ['Boston, Massachusetts, United States', 'East Peoria, Illinois, United States'],
+      based_near: ['East Peoria, Illinois, United States', 'Boston, Massachusetts, United States'],
       description: ["This is a generic file for specs only", "This is an additional description to help test"],
       date_created: ["2021-1-1"],
       mime_type: 'application/pdf',
@@ -45,7 +45,19 @@ RSpec.describe InvenioRdmRecordConverter do
       visibility: InvenioRdmRecordConverter::OPEN_ACCESS,
       related_url: ["https://doi.org/10.5438/55e5-t5c0"],
       acknowledgments: ["this is an acknowledgement"],
-      abstract: ["this is an abstract"]
+      abstract: ["this is an abstract"],
+      identifier: [
+       "(DOI):46589",
+       "(PMID) 11549777",
+       "cruisemicrobe",
+       "615.778-2",
+       "600-15",
+       "m19090127",
+       "HSL.2016.15.0007",
+       "(ISBN 10) 3956501241",
+       "PNB-14-96-a",
+       "PNB-15-10"
+     ]
     )
   }
   let(:generic_file_checksum) { generic_file.content.checksum.value }
@@ -72,19 +84,19 @@ RSpec.describe InvenioRdmRecordConverter do
           "creators": [{
             "person_or_org": {
               "type": "personal",
+              "given_name": "#{creator_user.formal_name.split(',').last.strip}",
+              "family_name": "#{creator_user.formal_name.split(',').first.strip}"
+            }
+          },
+          {
+            "person_or_org": {
+              "type": "personal",
               "given_name": "#{user.formal_name.split(',').last}",
               "family_name": "#{user.formal_name.split(',').first}",
               "identifiers": [{
                 "scheme": "orcid",
                 "identifier": "#{user.orcid.split('/').last}"
               }]
-            }
-          },
-          {
-            "person_or_org": {
-              "type": "personal",
-              "given_name": "#{creator_user.formal_name.split(',').last.strip}",
-              "family_name": "#{creator_user.formal_name.split(',').first.strip}"
             }
           }],
           "title": "#{generic_file.title.first}",
@@ -113,26 +125,26 @@ RSpec.describe InvenioRdmRecordConverter do
               }
             },
             {
-              "description": "presentation_location: East Peoria, Illinois, United States",
-               "type": {
-                 "id": "other"
-               }
-            },
-            {
               "description": "presentation_location: Boston, Massachusetts, United States",
               "type": {
                 "id": "other"
               }
+            },
+            {
+              "description": "presentation_location: East Peoria, Illinois, United States",
+               "type": {
+                 "id": "other"
+               }
             }
           ],
           "publisher": "DigitalHub. Galter Health Sciences Library & Learning Center",
           "publication_date": "2021-01-01",
           "subjects": [
             {
-              "subject": duplicate_subject_term
+              "subject": lcnaf_term
             },
             {
-              "subject": lcnaf_term
+              "subject": duplicate_subject_term
             },
             {
               "id": expected_mesh_id
@@ -147,10 +159,10 @@ RSpec.describe InvenioRdmRecordConverter do
               "id": "http://id.loc.gov/authorities/names/n94099999" # tampa joe
             },
             {
-              "id": "http://id.loc.gov/authorities/names/n79045553" # boston
+              "id": "http://id.loc.gov/authorities/names/n78086438" # chicago
             },
             {
-              "id": "http://id.loc.gov/authorities/names/n78086438" # chicago
+              "id": "http://id.loc.gov/authorities/names/n79045553" # boston
             }
           ],
           "contributors": [{
@@ -162,11 +174,31 @@ RSpec.describe InvenioRdmRecordConverter do
             "role": {"id": InvenioRdmRecordConverter::ROLE_OTHER}
           }],
           "dates": [{"date": "2021-01-01", "type": {"id":"created"}, "description": "When the item was originally created."}],
-          "languages": [{"id": "eng"}, {"id": "pli"}],
+          "languages": [{"id": "pli"}, {"id": "eng"}],
           "identifiers": [{
-            "identifier": "10.6666/ARK",
-            "scheme": "ark"
-          }],
+              "identifier": "11549777",
+              "scheme": "pmid"
+            },
+            {
+              "identifier": "46589",
+              "scheme": "doi"
+            },
+            {
+              "identifier": "PNB-14-96-a",
+              "scheme": "other"
+            },
+            {
+              "identifier": "3956501241",
+              "scheme": "isbn"
+            },
+            {
+              "identifier": "PNB-15-10",
+              "scheme": "other"
+            },
+            {
+              "identifier": "10.6666/ARK",
+              "scheme": "ark"
+            }],
           "related_identifiers": [{
               "identifier": generic_file_doi,
               "scheme": "doi",
@@ -401,7 +433,7 @@ RSpec.describe InvenioRdmRecordConverter do
 
   let(:expected_extra_data) {
     {
-      "presentation_location": ["East Peoria, Illinois, United States", "Boston, Massachusetts, United States"],
+      "presentation_location": ["Boston, Massachusetts, United States", "East Peoria, Illinois, United States"],
       "permissions": {
         "owner": {
           user.username => user.email
@@ -1053,6 +1085,7 @@ RSpec.describe InvenioRdmRecordConverter do
 
         context "that belongs to a collection without an issue number in the collection id" do
           it "returns the correct community string" do
+            expect(generic_file_converter_pnb_short_id.send(:dh_collection_to_prism_community_collection)).to eq(expected_pnb_short_id_community_string)
           end
         end
       end
