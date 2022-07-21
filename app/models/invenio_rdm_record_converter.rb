@@ -183,7 +183,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
         "contributors": contributors(@generic_file.contributor),
         "dates": format_dates(@generic_file.date_created),
         "languages": @generic_file.language.map{ |lang| LANGUAGES[lang.downcase] ? {"id": LANGUAGES[lang.downcase]} : nil }.compact,
-        "identifiers": ark_identifiers(@generic_file.ark),
+        "identifiers": original_identifiers(@generic_file.identifier) + ark_identifiers(@generic_file.ark),
         "related_identifiers": related_identifiers(@generic_file.related_url),
         "sizes": Array.new.tap{ |size_json| size_json << "#{@generic_file.page_count} pages" if !@generic_file.page_count.blank? },
         "formats": [@generic_file.mime_type],
@@ -546,5 +546,33 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     else
       community_id
     end
+  end
+
+  def original_identifiers(identifiers)
+    identifiers = identifiers.map do |identifier|
+      if identifier.include?("PMID")
+        id = identifier.gsub(/\(PMID\)/, "").strip
+        scheme = "pmid"
+      elsif identifier.include?("DOI")
+        # it's significantly less difficult to just do two removals than find a catch all here
+        id = identifier.gsub(/DOI/, "").gsub(/[():]/, "").strip
+        scheme = "doi"
+      elsif identifier.include?("ISBN")
+        id = identifier.gsub(/\(ISBN.*\)/, "").strip
+        scheme = "isbn"
+      elsif identifier.include?("PNB")
+        id = identifier
+        scheme = "other"
+      else
+        next
+      end
+
+      {
+        "identifier": id,
+        "scheme": scheme
+      }
+    end
+
+    identifiers.compact
   end
 end
