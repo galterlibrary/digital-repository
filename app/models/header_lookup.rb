@@ -1,15 +1,12 @@
 class HeaderLookup
-  LCSH_BASE_URI = "http://id.loc.gov/authorities/subjects/suggest/?q="
-  LCSH_ID_URI = "http://id.loc.gov/authorities/subjects/"
-  MESH_ID_URI = "https://id.nlm.nih.gov/mesh/"
-
   MEMOIZED_MESH_FILE = "memoized_mesh.txt"
   MEMOIZED_LCSH_FILE = "memoized_lcsh.txt"
   MEMOIZED_LCNAF_FILE = "memoized_lcnaf.txt"
 
-  SEARCHABLE_LCNAF_FILE = "subjects_lcnaf.jsonl"
-  SEARCHABLE_MESH_FILE = 'subjects_mesh.jsonl'
-  SEARCHABLE_LCSH_FILE = 'subjects_lcsh.jsonl'
+  SEARCHABLE_MESH_FILE = "subjects_mesh.jsonl"
+  SEARCHABLE_LCSH_FILE = "subjects_lcsh.jsonl"
+  # Needs to be in config because file is too large for VCS
+  SEARCHABLE_LCNAF_FILE = ENV["SUBJECTS_LCNAF"]
 
   ABSENT_SUBJECT = :absent
 
@@ -26,70 +23,49 @@ class HeaderLookup
   end
 
   def pid_lookup_by_field(term="", field="")
+    searchable_file = ""
+
+    # assign searchable file,  memoized terms, any string modifications
     if term.blank? || field.blank?
-      nil
+      return nil
     elsif field == :mesh
-      @@memoized_mesh[term] || mesh_term_pid_local_lookup(term) || nil
+      searchable_file = @@searchable_mesh_file
+      memoized_terms = @@memoized_mesh
+      memoized_file = MEMOIZED_MESH_FILE
+      term = term.gsub("--", "/")
     elsif field == :lcsh
-      @@memoized_lcsh[term] || lcsh_term_pid_local_lookup(term) || nil
-    elsif field == :subject_name || field == :subject_geographic
-      pid = @@memoized_lcnaf[term] || lcnaf_pid_lookup(term)
-
-      if pid == ABSENT_SUBJECT
-        nil
-      else
-        pid
-      end
+      searchable_file = @@searchable_lcsh_file
+      memoized_terms = @@memoized_lcsh
+      memoized_file = MEMOIZED_LCSH_FILE
+    elsif field == :subject_name || field == :subject_geographic || field == :lcnaf
+      searchable_file = @@searchable_lcnaf_file
+      memoized_terms = @@memoized_lcnaf
+      memoized_file = MEMOIZED_LCNAF_FILE
     else
-      nil
+      return nil
     end
-  end
 
-  def mesh_term_pid_local_lookup(mesh_term="")
-    File.foreach(@@searchable_mesh_file) do |line|
-      mesh_term_json = JSON.parse(line)
+    # check for memoized term
+    if memoized_terms[term]
+      term_pid = memoized_terms[term]
+    # search
+    else
+      term_pid = ABSENT_SUBJECT
 
-      if mesh_term_json["subject"].downcase == mesh_term.downcase.gsub("--", "/")
-        mesh_id = mesh_term_json["id"]
-        @@memoized_mesh[mesh_term] = mesh_id
-        File.write(MEMOIZED_MESH_FILE, @@memoized_mesh)
-        return mesh_id
+      File.foreach(searchable_file) do |line|
+        term_json = JSON.parse(line)
+
+        if term_json["subject"].downcase == term.downcase
+          term_pid = term_json["id"]
+          break
+        end
       end
+
+      memoized_terms[term] = term_pid
+      File.write(memoized_file, memoized_terms)
     end
 
-    nil
-  end
-
-  def lcsh_term_pid_local_lookup(lcsh_term="")
-    File.foreach(@@searchable_lcsh_file) do |line|
-      lcsh_term_json = JSON.parse(line)
-
-      if lcsh_term_json["subject"].downcase == lcsh_term.downcase
-        lcsh_id = lcsh_term_json["id"]
-        @@memoized_lcsh[lcsh_term] = lcsh_id
-        File.write(MEMOIZED_LCSH_FILE, @@memoized_lcsh)
-        return lcsh_id
-      end
-    end
-
-    nil
-  end
-
-  def lcnaf_pid_lookup(lcnaf_term="")
-    lcnaf_id = ABSENT_SUBJECT
-
-    File.foreach(@@searchable_lcnaf_file) do |line|
-      lcnaf_term_json = JSON.parse(line)
-
-      if lcnaf_term_json["subject"].downcase == lcnaf_term.downcase
-        lcnaf_id = lcnaf_term_json["id"]
-        break
-      end
-    end
-
-    @@memoized_lcnaf[lcnaf_term] = lcnaf_id
-    File.write(MEMOIZED_LCNAF_FILE, @@memoized_lcnaf)
-    lcnaf_id
+    term_pid == ABSENT_SUBJECT ? nil : term_pid
   end
 
   private

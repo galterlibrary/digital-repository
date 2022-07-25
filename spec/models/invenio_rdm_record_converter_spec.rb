@@ -8,11 +8,11 @@ RSpec.describe InvenioRdmRecordConverter do
   let(:lcnaf_term) { "Birkan, Kaarin" }
   let(:expected_lcnaf_term) {}
   let(:mesh_term) { "Vocabulary, Controlled" }
-  let(:expected_mesh_id) { ::HeaderLookup::MESH_ID_URI + "D018875" }
+  let(:expected_mesh_id) { "https://id.nlm.nih.gov/mesh/D018875" }
   let(:expected_lcnaf_id) { "http://id.loc.gov/authorities/names/n90699999" }
   let(:lcsh_term) { "Semantic Web" }
   let(:duplicate_subject_term) { "Tampa Joe" }
-  let(:expected_lcsh_id) { ::HeaderLookup::LCSH_ID_URI + "sh2002000569" }
+  let(:expected_lcsh_id) { "http://id.loc.gov/authorities/subjects/sh2002000569" }
   let(:generic_file_doi) { "10.5438/55e5-t5c0" }
   let(:generic_file) {
     make_generic_file_with_content(
@@ -38,7 +38,7 @@ RSpec.describe InvenioRdmRecordConverter do
       date_created: ["2021-1-1"],
       mime_type: 'application/pdf',
       grants_and_funding: ["European Commission 00k4n6c32"],
-      language: ["English"],
+      language: ["Pali", "English", "Fake Language"],
       page_count: [rand(1..1000).to_s],
       rights: ["http://creativecommons.org/licenses/by-nc-sa/3.0/us/"],
       visibility: InvenioRdmRecordConverter::OPEN_ACCESS,
@@ -154,7 +154,7 @@ RSpec.describe InvenioRdmRecordConverter do
             "role": {"id": InvenioRdmRecordConverter::ROLE_OTHER}
           }],
           "dates": [{"date": "2021-01-01", "type": {"id":"created"}, "description": "When the item was originally created."}],
-          "languages": [{"id": "eng"}],
+          "languages": [{"id": "eng"}, {"id": "pli"}],
           "identifiers": [{
             "identifier": "10.6666/ARK",
             "scheme": "ark"
@@ -886,8 +886,8 @@ RSpec.describe InvenioRdmRecordConverter do
       let(:known_mesh_term){ ["Bile Duct Neoplasms"] }
       let(:known_mesh_term_with_qualifier){ ["Burkitt Lymphoma--etiology"] }
       let(:mesh_subject_type){ :mesh }
-      let(:expected_mesh_result){ [{"id": ::HeaderLookup::MESH_ID_URI + "D001650"}]}
-      let(:expected_mesh_with_qualifier_result){ [{"id": ::HeaderLookup::MESH_ID_URI + "D002051Q000209"}]}
+      let(:expected_mesh_result){ [{"id": "https://id.nlm.nih.gov/mesh/D001650"}]}
+      let(:expected_mesh_with_qualifier_result){ [{"id": "https://id.nlm.nih.gov/mesh/D002051Q000209"}]}
 
       it "returns '[]' for unknown term" do
         expect(invenio_rdm_record_converter.send(:subjects_for_field, unknown_mesh_term, mesh_subject_type)).to eq([])
@@ -906,7 +906,7 @@ RSpec.describe InvenioRdmRecordConverter do
       let(:unknown_lcsh_term){ ["nothing but lies"] }
       let(:known_lcsh_term){ ["Abdomen--Cancer"] }
       let(:lcsh_subject_type){ :lcsh }
-      let(:expected_lcsh_result){ ["id": ::HeaderLookup::LCSH_ID_URI + "sh85000095"] }
+      let(:expected_lcsh_result){ ["id": "http://id.loc.gov/authorities/subjects/sh85000095"] }
 
       it "returns '[]' for unknown term" do
         expect(invenio_rdm_record_converter.send(:subjects_for_field, unknown_lcsh_term, lcsh_subject_type)).to eq([])
@@ -920,7 +920,7 @@ RSpec.describe InvenioRdmRecordConverter do
     context "subject_name scheme" do
       let(:subject_name_term){ ["malignant"] }
       let(:subject_name_subject_type){ :subject_name }
-      let(:expected_subject_name_result){ ["subject": "malignant"] }
+      let(:expected_subject_name_result){ [] }
 
       it "returns metadata for known term" do
         expect(invenio_rdm_record_converter.send(:subjects_for_field, subject_name_term, subject_name_subject_type)).to eq(expected_subject_name_result)
