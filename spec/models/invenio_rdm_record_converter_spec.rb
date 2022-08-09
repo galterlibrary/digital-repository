@@ -959,6 +959,10 @@ RSpec.describe InvenioRdmRecordConverter do
     let(:expected_community_collection_string_center_for_file_id) { "science-in-society-scientific-images-contest::2018 Scientific Images Contest Winners" }
     let(:map_file_to_prism_community_collections_irrc) { described_class.new(generic_file_with_community_collection_match, collection_store.data) }
 
+    let(:generic_file_pnb) { make_generic_file_with_content(user, id: "pnb-5-7-20") }
+    let(:expected_pnb_community_string) { "pediatric-neurology-briefs::Volume 05, Issue 07" }
+    let(:pnb_collection) { described_class.new(generic_file_pnb, collection_store.data) }
+
     context "there is not a match in the collection store or the filed id to prism commmunity communities mapping json" do
       before do
         # clear the existing collections
@@ -968,6 +972,19 @@ RSpec.describe InvenioRdmRecordConverter do
 
       it "returns a blank string" do
         expect(map_collection_to_prism_community_collections_irrc.send(:dh_collection_to_prism_community_collection)).to eq("")
+      end
+    end
+
+    context "pediatric neurology brief collection" do
+      before do
+        make_collection(user, title: "Pediatric Neurology Briefs: Volume 05, Issue 07", id: "pnb-5-7", member_ids: [generic_file_pnb.id])
+
+        collection_store.build_collection_store_data
+        collection_store.build_paths_for_collection_store
+      end
+
+      it "returns the correct community string" do
+        expect(pnb_collection.send(:dh_collection_to_prism_community_collection)).to eq(expected_pnb_community_string)
       end
     end
 
