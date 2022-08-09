@@ -39,7 +39,7 @@ RSpec.describe HeaderLookup do
 
     context "lcnaf term" do
       it "it returns the correct id for the lcnaf term" do
-        expect(subject.send(:pid_lookup_by_field, lcnaf_term, :lcnaf)).to eq(expected_lcnaf_id)
+        expect(subject.send(:pid_lookup_by_field, lcnaf_term, :subject_name)).to eq(expected_lcnaf_id)
       end
     end
   end

@@ -499,32 +499,41 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def dh_collection_to_prism_community_collection
-    # check if the file id pulls back an entry first
-    if mapping_entry = @@dh_to_prism_entity[@generic_file.id]
-      return format_prism_community_collection_string(mapping_entry)
-    # if nothing was found try to find a collection id that matches
-    else
-      @dh_collections.map do |collection_path|
-        collection_path.each do |collection_path_entry|
-          mapping_entry = @@dh_to_prism_entity[collection_path_entry[:id]]
+    mapping_entry =
+      @@dh_to_prism_entity[@generic_file.id] ||
+      find_mapping_entry_in_dh_collections ||
+      {"community_id": "", "collection_id": ""}
 
-          # there's a match, no need to keep searching
-          if mapping_entry
-            return format_prism_community_collection_string(mapping_entry)
-          end
+    return format_prism_community_collection_string(mapping_entry.with_indifferent_access)
+  end
+
+  def find_mapping_entry_in_dh_collections
+    @dh_collections.map do |collection_path|
+      collection_path.each do |collection_path_entry|
+        mapping_entry = @@dh_to_prism_entity[collection_path_entry[:id]]
+
+        # there's a match, no need to keep searching
+        if mapping_entry
+          return mapping_entry
+        # part of pediatric neurology brief collection in format pnb-volume#-issue#
+        elsif collection_path_entry[:id]&.starts_with?("pnb-")
+          volume_number, issue_number = collection_path_entry[:id].split("-").last(2)
+          return {
+            "community_id": "pediatric-neurology-briefs",
+            "collection_id": "Volume #{"%02d" % volume_number}, Issue #{"%02d" % issue_number}"
+          }
         end
       end
     end
 
-    # if nothing else is found, return blank string
-    ""
+    nil
   end
 
   def format_prism_community_collection_string(mapping_entry)
     community_id = mapping_entry["community_id"]
     collection_id = mapping_entry["collection_id"]
 
-    if community_id && collection_id
+    if community_id.present? && collection_id.present?
       "#{community_id}::#{collection_id}"
     else
       community_id
