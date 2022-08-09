@@ -37,7 +37,7 @@ class HeaderLookup
       searchable_file = @@searchable_lcsh_file
       memoized_terms = @@memoized_lcsh
       memoized_file = MEMOIZED_LCSH_FILE
-    elsif field == :subject_name || field == :subject_geographic || field == :lcnaf
+    elsif field == :subject_name || field == :subject_geographic
       searchable_file = @@searchable_lcnaf_file
       memoized_terms = @@memoized_lcnaf
       memoized_file = MEMOIZED_LCNAF_FILE
