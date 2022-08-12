@@ -215,46 +215,53 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def build_creator_contributor_json(creator)
-    if creator_data = @@person_or_org_data[creator]
-      return creator_data
-    # Organization
-    elsif organization?(creator)
-      json = @@person_or_org_data[creator] = {
-        "person_or_org":
-          Hash.new.tap do |hash|
-            hash["name"] =  creator
-            hash["type"] = "organizational"
-          end
-      }
-    # User within DigitalHub
-    elsif dh_user = User.find_by(formal_name: creator)
-      dh_user_formal_name = dh_user.formal_name.split(',') # split name into components to be reused
-      family_name = dh_user_formal_name.shift # remove first value from formal name
-      given_name = dh_user_formal_name.join(' ') # the remaining strings becomes given name
+    json = @@person_or_org_data[creator]
+    return json if json
 
-      json = @@person_or_org_data[creator] = {
-        "person_or_org":
-          Hash.new.tap do |hash|
-            hash["type"] = "personal"
-            hash["given_name"] = given_name
-            hash["family_name"] = family_name
-            hash["identifiers"] = [{"scheme": "orcid", "identifier": dh_user.orcid.split('/').pop}] if dh_user.orcid.present?
-          end
+    family_name, given_name = creator.split(',', 2)
+    given_name = given_name.to_s.lstrip
+    family_name = family_name.to_s.lstrip
+    display_name = creator.split(", ").reverse.join(" ").strip
+
+    if !(given_name =~ /\d/)
+      given_name = given_name.gsub(',', "")
+    end
+
+    if dh_user = User.find_by(formal_name: creator) || User.find_by(display_name: display_name)
+      identifiers = dh_user.orcid.present? ? [{"scheme": "orcid", "identifier": dh_user.orcid.split('/').pop}] : nil
+    end
+
+    # Known organization
+    if organization?(creator)
+      json = {
+        "person_or_org": {
+          "name": creator,
+          "type": "organizational"
+        }
+      }
+    # Personal record with user in database
+    elsif dh_user.present?
+      json = {
+        "person_or_org": {
+          "given_name": given_name,
+          "family_name": family_name,
+          "type": "personal",
+          "identifiers": identifiers
+        }
       }
     # Personal record without user in database
     elsif creator.include?(",")
-      family_name, given_name = creator.split(',')
-      json = @@person_or_org_data[creator] = {
+      json = {
         "person_or_org":
-          Hash.new.tap do |hash|
-            hash["type"] = "personal"
-            hash["given_name"] = given_name&.lstrip.to_s
-            hash["family_name"] = family_name&.lstrip.to_s
-          end
+        {
+          "given_name": given_name,
+          "family_name": family_name,
+          "type": "personal"
+        }
       }
     # Unknown / Not Identified creator
     else
-      json = @@person_or_org_data[creator] = {
+      json = {
         "person_or_org":
           Hash.new.tap do |hash|
             hash["name"] = creator
@@ -263,6 +270,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       }
     end
 
+    @@person_or_org_data[creator] = json
     # this line only runs if there is an update to @@person_or_org_data
     File.write(MEMOIZED_PERSON_OR_ORG_DATA_FILE, @@person_or_org_data)
     # return the actual json
@@ -499,32 +507,41 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def dh_collection_to_prism_community_collection
-    # check if the file id pulls back an entry first
-    if mapping_entry = @@dh_to_prism_entity[@generic_file.id]
-      return format_prism_community_collection_string(mapping_entry)
-    # if nothing was found try to find a collection id that matches
-    else
-      @dh_collections.map do |collection_path|
-        collection_path.each do |collection_path_entry|
-          mapping_entry = @@dh_to_prism_entity[collection_path_entry[:id]]
+    mapping_entry =
+      @@dh_to_prism_entity[@generic_file.id] ||
+      find_mapping_entry_in_dh_collections ||
+      {"community_id": "", "collection_id": ""}
 
-          # there's a match, no need to keep searching
-          if mapping_entry
-            return format_prism_community_collection_string(mapping_entry)
-          end
+    return format_prism_community_collection_string(mapping_entry.with_indifferent_access)
+  end
+
+  def find_mapping_entry_in_dh_collections
+    @dh_collections.map do |collection_path|
+      collection_path.each do |collection_path_entry|
+        mapping_entry = @@dh_to_prism_entity[collection_path_entry[:id]]
+
+        # there's a match, no need to keep searching
+        if mapping_entry
+          return mapping_entry
+        # part of pediatric neurology brief collection in format pnb-volume#-issue#
+        elsif collection_path_entry[:id]&.starts_with?("pnb-")
+          volume_number, issue_number = collection_path_entry[:id].split("-").last(2)
+          return {
+            "community_id": "pediatric-neurology-briefs",
+            "collection_id": "Volume #{"%02d" % volume_number}, Issue #{"%02d" % issue_number}"
+          }
         end
       end
     end
 
-    # if nothing else is found, return blank string
-    ""
+    nil
   end
 
   def format_prism_community_collection_string(mapping_entry)
     community_id = mapping_entry["community_id"]
     collection_id = mapping_entry["collection_id"]
 
-    if community_id && collection_id
+    if community_id.present? && collection_id.present?
       "#{community_id}::#{collection_id}"
     else
       community_id
