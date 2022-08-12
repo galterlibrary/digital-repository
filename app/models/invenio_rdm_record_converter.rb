@@ -215,8 +215,8 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def build_creator_contributor_json(creator)
-    json = @@person_or_org_data[creator]
-    return json if json
+    creatibutor_json = @@person_or_org_data[creator]
+    return creatibutor_json if creatibutor_json
 
     family_name, given_name = creator.split(',', 2)
     given_name = given_name.to_s.lstrip
@@ -227,54 +227,47 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       given_name = given_name.gsub(',', "")
     end
 
-    if dh_user = User.find_by(formal_name: creator) || User.find_by(display_name: display_name)
-      identifiers = dh_user.orcid.present? ? [{"scheme": "orcid", "identifier": dh_user.orcid.split('/').pop}] : nil
-    end
+    dh_user = User.find_by(formal_name: creator) || User.find_by(display_name: display_name)
 
     # Known organization
     if organization?(creator)
-      json = {
+      creatibutor_json = {
         "person_or_org": {
           "name": creator,
           "type": "organizational"
         }
       }
-    # Personal record with user in database
-    elsif dh_user.present?
-      json = {
+    # Personal record with user in database OR is a person's formal name
+    elsif dh_user.present? || creator.include?(",")
+      creatibutor_json = {
         "person_or_org": {
-          "given_name": given_name,
-          "family_name": family_name,
-          "type": "personal",
-          "identifiers": identifiers
-        }
-      }
-    # Personal record without user in database
-    elsif creator.include?(",")
-      json = {
-        "person_or_org":
-        {
           "given_name": given_name,
           "family_name": family_name,
           "type": "personal"
         }
       }
+
+      if dh_user.orcid.present?
+        identifiers = [{"scheme": "orcid", "identifier": dh_user.orcid.split('/').pop}]
+        creatibutor_json["person_or_org"].merge!({"identifiers": identifiers})
+      end
+    # Personal record without user in database
     # Unknown / Not Identified creator
     else
-      json = {
-        "person_or_org":
-          Hash.new.tap do |hash|
-            hash["name"] = creator
-            hash["type"] = "organizational"
-          end
+      creatibutor_json = {
+        "person_or_org": {
+          "name": creator,
+          "type": "organizational"
+        }
       }
     end
 
-    @@person_or_org_data[creator] = json
+
+    @@person_or_org_data[creator] = creatibutor_json
     # this line only runs if there is an update to @@person_or_org_data
     File.write(MEMOIZED_PERSON_OR_ORG_DATA_FILE, @@person_or_org_data)
     # return the actual json
-    json
+    creatibutor_json
   end # build_creator_contributor_json
 
   def format_additional(content_type, invenio_type, values, prefix="")
