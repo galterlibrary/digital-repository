@@ -1016,9 +1016,15 @@ RSpec.describe InvenioRdmRecordConverter do
     let(:expected_community_collection_string_center_for_file_id) { "science-in-society-scientific-images-contest::2018 Scientific Images Contest Winners" }
     let(:map_file_to_prism_community_collections_irrc) { described_class.new(generic_file_with_community_collection_match, collection_store.data) }
 
+    let!(:collection_pnb) { make_collection(user, title: "Pediatric Neurology Briefs: Volume 05 Issue 07", id: "pnb-5-7", member_ids: [generic_file_pnb.id]) }
     let(:generic_file_pnb) { make_generic_file_with_content(user, id: "pnb-5-7-20") }
     let(:expected_pnb_community_string) { "pediatric-neurology-briefs::Volume 05, Issue 07" }
-    let(:pnb_collection) { described_class.new(generic_file_pnb, collection_store.data) }
+    let!(:collection_pnb_short_id) { make_collection(user, title: "Pediatric Neurology Briefs: Volume 01", id: "pnb-1", member_ids: [generic_file_pnb_with_short_id.id]) }
+    let(:generic_file_pnb_with_short_id) { make_generic_file_with_content(user, id: "pnb-5") }
+    let(:expected_pnb_short_id_community_string) { "pediatric-neurology-briefs::Volume 01" }
+
+    let(:generic_file_converter_pnb) { described_class.new(generic_file_pnb, collection_store.data) }
+    let(:generic_file_converter_pnb_short_id) { described_class.new(generic_file_pnb_with_short_id, collection_store.data) }
 
     context "there is not a match in the collection store or the filed id to prism commmunity communities mapping json" do
       before do
@@ -1032,16 +1038,24 @@ RSpec.describe InvenioRdmRecordConverter do
       end
     end
 
-    context "pediatric neurology brief collection" do
+    context "file belongs to pediatric neurology brief collection" do
       before do
-        make_collection(user, title: "Pediatric Neurology Briefs: Volume 05, Issue 07", id: "pnb-5-7", member_ids: [generic_file_pnb.id])
-
         collection_store.build_collection_store_data
         collection_store.build_paths_for_collection_store
       end
 
-      it "returns the correct community string" do
-        expect(pnb_collection.send(:dh_collection_to_prism_community_collection)).to eq(expected_pnb_community_string)
+      context "for a pnb generic file" do
+        context "that belongs to a collection with an issue number in the id" do
+          it "returns the correct community string" do
+            expect(generic_file_converter_pnb.send(:dh_collection_to_prism_community_collection)).to eq(expected_pnb_community_string)
+          end
+        end
+
+        context "that belongs to a collection without an issue number in the collection id" do
+          it "returns the correct community string" do
+            expect(generic_file_converter_pnb_short_id.send(:dh_collection_to_prism_community_collection)).to eq(expected_pnb_short_id_community_string)
+          end
+        end
       end
     end
 
