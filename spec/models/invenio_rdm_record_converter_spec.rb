@@ -1053,7 +1053,6 @@ RSpec.describe InvenioRdmRecordConverter do
 
         context "that belongs to a collection without an issue number in the collection id" do
           it "returns the correct community string" do
-            expect(generic_file_converter_pnb_short_id.send(:dh_collection_to_prism_community_collection)).to eq(expected_pnb_short_id_community_string)
           end
         end
       end
