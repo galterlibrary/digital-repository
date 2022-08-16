@@ -30,7 +30,7 @@ def add_metadata_to_csv(model)
     }
 
     record = model.constantize.find(gfmod["id"])
-    event = record.events.first.blank? ? "no event" : record.events.first[:action]
+    event = record.events.empty? ? "no event" : record.events.first[:action]
     row << event
     row << record.collection_ids.reject(&:blank?).join(' ; ')
 
