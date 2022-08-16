@@ -518,10 +518,17 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
           return mapping_entry
         # part of pediatric neurology brief collection in format pnb-volume#-issue#
         elsif collection_path_entry[:id]&.starts_with?("pnb-")
-          volume_number, issue_number = collection_path_entry[:id].split("-").last(2)
+          volume_number, issue_number = collection_path_entry[:id].split(/[^\d]/).reject(&:blank?)
+
+          if issue_number.present?
+            collection_id = "Volume #{"%02d" % volume_number}, Issue #{"%02d" % issue_number}"
+          else
+            collection_id = "Volume #{"%02d" % volume_number}"
+          end
+
           return {
             "community_id": "pediatric-neurology-briefs",
-            "collection_id": "Volume #{"%02d" % volume_number}, Issue #{"%02d" % issue_number}"
+            "collection_id": collection_id
           }
         end
       end
