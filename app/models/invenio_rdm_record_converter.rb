@@ -241,15 +241,23 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     elsif dh_user.present? || creator.include?(",")
       creatibutor_json = {
         "person_or_org": {
+          "given_name": "given_name",
+          "family_name": "family_name",
+          "type": "personal"
+        }
+      }
+
+      creatibutor_json = {
+        "person_or_org": {
           "given_name": given_name,
           "family_name": family_name,
           "type": "personal"
         }
       }
 
-      if dh_user.orcid.present?
+      if dh_user&.orcid.present?
         identifiers = [{"scheme": "orcid", "identifier": dh_user.orcid.split('/').pop}]
-        creatibutor_json["person_or_org"].merge!({"identifiers": identifiers})
+        creatibutor_json[:person_or_org].merge!({"identifiers": identifiers})
       end
     # Personal record without user in database
     # Unknown / Not Identified creator
