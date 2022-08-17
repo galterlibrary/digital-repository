@@ -183,7 +183,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
         "contributors": contributors(@generic_file.contributor),
         "dates": format_dates(@generic_file.date_created),
         "languages": @generic_file.language.map{ |lang| LANGUAGES[lang.downcase] ? {"id": LANGUAGES[lang.downcase]} : nil }.compact,
-        "identifiers": ark_identifiers(@generic_file.ark),
+        "identifiers": original_identifiers(@generic_file.identifier) + ark_identifiers(@generic_file.ark),
         "related_identifiers": related_identifiers(@generic_file.related_url),
         "sizes": Array.new.tap{ |size_json| size_json << "#{@generic_file.page_count} pages" if !@generic_file.page_count.blank? },
         "formats": [@generic_file.mime_type],
@@ -215,8 +215,8 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def build_creator_contributor_json(creator)
-    json = @@person_or_org_data[creator]
-    return json if json
+    creatibutor_json = @@person_or_org_data[creator]
+    return creatibutor_json if creatibutor_json
 
     family_name, given_name = creator.split(',', 2)
     given_name = given_name.to_s.lstrip
@@ -227,54 +227,47 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       given_name = given_name.gsub(',', "")
     end
 
-    if dh_user = User.find_by(formal_name: creator) || User.find_by(display_name: display_name)
-      identifiers = dh_user.orcid.present? ? [{"scheme": "orcid", "identifier": dh_user.orcid.split('/').pop}] : nil
-    end
+    dh_user = User.find_by(formal_name: creator) || User.find_by(display_name: display_name)
 
     # Known organization
     if organization?(creator)
-      json = {
+      creatibutor_json = {
         "person_or_org": {
           "name": creator,
           "type": "organizational"
         }
       }
-    # Personal record with user in database
-    elsif dh_user.present?
-      json = {
+    # Personal record with user in database OR is a person's formal name
+    elsif dh_user.present? || creator.include?(",")
+      creatibutor_json = {
         "person_or_org": {
-          "given_name": given_name,
-          "family_name": family_name,
-          "type": "personal",
-          "identifiers": identifiers
-        }
-      }
-    # Personal record without user in database
-    elsif creator.include?(",")
-      json = {
-        "person_or_org":
-        {
           "given_name": given_name,
           "family_name": family_name,
           "type": "personal"
         }
       }
+
+      if dh_user.orcid.present?
+        identifiers = [{"scheme": "orcid", "identifier": dh_user.orcid.split('/').pop}]
+        creatibutor_json["person_or_org"].merge!({"identifiers": identifiers})
+      end
+    # Personal record without user in database
     # Unknown / Not Identified creator
     else
-      json = {
-        "person_or_org":
-          Hash.new.tap do |hash|
-            hash["name"] = creator
-            hash["type"] = "organizational"
-          end
+      creatibutor_json = {
+        "person_or_org": {
+          "name": creator,
+          "type": "organizational"
+        }
       }
     end
 
-    @@person_or_org_data[creator] = json
+
+    @@person_or_org_data[creator] = creatibutor_json
     # this line only runs if there is an update to @@person_or_org_data
     File.write(MEMOIZED_PERSON_OR_ORG_DATA_FILE, @@person_or_org_data)
     # return the actual json
-    json
+    creatibutor_json
   end # build_creator_contributor_json
 
   def format_additional(content_type, invenio_type, values, prefix="")
@@ -525,10 +518,17 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
           return mapping_entry
         # part of pediatric neurology brief collection in format pnb-volume#-issue#
         elsif collection_path_entry[:id]&.starts_with?("pnb-")
-          volume_number, issue_number = collection_path_entry[:id].split("-").last(2)
+          volume_number, issue_number = collection_path_entry[:id].split(/[^\d]/).reject(&:blank?)
+
+          if issue_number.present?
+            collection_id = "Volume #{"%02d" % volume_number}, Issue #{"%02d" % issue_number}"
+          else
+            collection_id = "Volume #{"%02d" % volume_number}"
+          end
+
           return {
             "community_id": "pediatric-neurology-briefs",
-            "collection_id": "Volume #{"%02d" % volume_number}, Issue #{"%02d" % issue_number}"
+            "collection_id": collection_id
           }
         end
       end
@@ -546,5 +546,33 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     else
       community_id
     end
+  end
+
+  def original_identifiers(identifiers)
+    identifiers = identifiers.map do |identifier|
+      if identifier.include?("PMID")
+        id = identifier.gsub(/\(PMID\)/, "").strip
+        scheme = "pmid"
+      elsif identifier.include?("DOI")
+        # it's significantly less difficult to just do two removals than find a catch all here
+        id = identifier.gsub(/DOI/, "").gsub(/[():]/, "").strip
+        scheme = "doi"
+      elsif identifier.include?("ISBN")
+        id = identifier.gsub(/\(ISBN.*\)/, "").strip
+        scheme = "isbn"
+      elsif identifier.include?("PNB")
+        id = identifier
+        scheme = "other"
+      else
+        next
+      end
+
+      {
+        "identifier": id,
+        "scheme": scheme
+      }
+    end
+
+    identifiers.compact
   end
 end

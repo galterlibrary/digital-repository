@@ -76,11 +76,12 @@ digital-repository/$ cap <stage> deploy
 ```
 
 ##### Digital Hub Export
-* Export repo to JSON formatted for InvenioRDM
+* To export Digital Hub data to JSON format use the below commands from the root project directory. It's critical to use
+		*both* `nohup` AND the trailing ampersand for the first command and similarly important to run the second command
+		with the correct job number. If you don't do all of this then the export will cut out when the terminal that started
+		it in the first place is closed for any reason.
+
 ```
-./bin/rake repo_export
-```
-* Same as above, but with extra debugging information
-```
-./bin/rake verbose debug repo_export
+nohup ./bin/rails r lib/scripts/repo_export_in_batches.rb > "$(date +'%Y-%m-%d-%H%M%S')_repo_export_in_batches.log" &
+disown <job number assigned in previous command>
 ```
