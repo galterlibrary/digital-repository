@@ -7,6 +7,7 @@ module Galtersufia
         "Galter Health Sciences Library",
         "12th General Hospital",
         "Northwestern University, Medical School",
+        "Northwestern University Medical School",
         "United States Army Office of Information and Education",
         "United States. Army",
         "World's Columbian Dental Congress (1893 : Chicago, Ill.)",
