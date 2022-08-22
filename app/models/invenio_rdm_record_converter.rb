@@ -10,7 +10,6 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   SUBJECT_FIELDS = [:tag, :mesh, :lcsh, :subject_name, :subject_geographic]
   CIRCA_VALUES = ["ca.", "ca", "circa", "CA.", "CA", "CIRCA"]
   UNDATED = ["undated", "UNDATED"]
-  REFERENCE_FIELDS = ["bibliographic_citation", "part_of"]
   ABBR_MONTHNAMES = Date::ABBR_MONTHNAMES.map{ |abbr_monthname| abbr_monthname.downcase if abbr_monthname.present? }
   MONTHNAMES = Date::MONTHNAMES.map{ |monthname| monthname.downcase if monthname.present? }
   SEASONS = ["spring", "summer", "fall", "winter"]
@@ -176,7 +175,9 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
         "additional_descriptions":
           format_additional("description", "acknowledgements", @generic_file.acknowledgments) +
           format_additional("description", "abstract", @generic_file.abstract) +
-          format_additional("description", "other", @generic_file.based_near, "presentation_location: "),
+          format_additional("description", "other", @generic_file.based_near, "presentation_location: ") +
+          [{"description":  "number_in_sequence: #{@generic_file.page_number.to_s.force_encoding("UTF-8")}", "type": {"id": "other"}}] +
+          format_additional("description", "other", @generic_file.bibliographic_citation, "original_citation: "),
         "publisher": @generic_file.publisher.shift,
         "publication_date": format_publication_date(@generic_file.date_created.shift.presence || @generic_file.date_uploaded.to_s.force_encoding("UTF-8")),
         "subjects": SUBJECT_FIELDS.map{ |subject_field| subjects_for_field(@generic_file.send(subject_field), subject_field) }.compact.flatten.uniq,

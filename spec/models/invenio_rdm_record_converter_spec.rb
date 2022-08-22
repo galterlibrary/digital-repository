@@ -57,7 +57,9 @@ RSpec.describe InvenioRdmRecordConverter do
        "(ISBN 10) 3956501241",
        "PNB-14-96-a",
        "PNB-15-10"
-     ]
+     ],
+     page_number: "29a",
+     bibliographic_citation: ["This is a citation", "This is another citation"]
     )
   }
   let(:generic_file_checksum) { generic_file.content.checksum.value }
@@ -135,6 +137,24 @@ RSpec.describe InvenioRdmRecordConverter do
                "type": {
                  "id": "other"
                }
+            },
+            {
+              "description": "number_in_sequence: 29a",
+              "type": {
+                "id": "other"
+              }
+            },
+            {
+              "description": "original_citation: This is another citation",
+              "type": {
+                "id": "other"
+              }
+            },
+            {
+              "description": "original_citation: This is a citation",
+              "type": {
+                "id": "other"
+              }
             }
           ],
           "publisher": "DigitalHub. Galter Health Sciences Library & Learning Center",
