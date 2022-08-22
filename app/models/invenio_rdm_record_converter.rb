@@ -241,8 +241,8 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     elsif dh_user.present? || creator.include?(",")
       creatibutor_json = {
         "person_or_org": {
-          "given_name": "given_name",
-          "family_name": "family_name",
+          "given_name": given_name,
+          "family_name": family_name,
           "type": "personal"
         }
       }
