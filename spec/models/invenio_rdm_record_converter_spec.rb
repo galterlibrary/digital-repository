@@ -385,7 +385,7 @@ RSpec.describe InvenioRdmRecordConverter do
     }.with_indifferent_access
   }
 
-  let(:organization_name) { "Galter Health Sciences Library" }
+  let(:organization_name) { "Northwestern University (Evanston, Ill.). Medical Alumni Association" }
   let(:organizational_creator_json) {
     {
       "person_or_org": {
