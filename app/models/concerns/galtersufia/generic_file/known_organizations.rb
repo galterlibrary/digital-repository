@@ -29,6 +29,7 @@ module Galtersufia
         "McCoy Printing Company",
         "Medical Library Association Latino Special Interest Group",
         "Northwestern University (Evanston, Ill.). Medical School",
+        "Northwestern University (Evanston, Ill.). Medical Alumni Association",
         "OpenVIVO Working Group",
         "Polar Ice & Fuel Co.",
         "Polk's Best",
