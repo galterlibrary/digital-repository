@@ -176,7 +176,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
           format_additional("description", "acknowledgements", @generic_file.acknowledgments) +
           format_additional("description", "abstract", @generic_file.abstract) +
           format_additional("description", "other", @generic_file.based_near, "presentation_location: ") +
-          [{"description":  "number_in_sequence: #{@generic_file.page_number.to_s.force_encoding("UTF-8")}", "type": {"id": "other"}}] +
+          format_additional("description", "other", [@generic_file.page_number.to_s.force_encoding("UTF-8")], "number_in_sequence: ") +
           format_additional("description", "other", @generic_file.bibliographic_citation, "original_citation: "),
         "publisher": @generic_file.publisher.shift,
         "publication_date": format_publication_date(@generic_file.date_created.shift.presence || @generic_file.date_uploaded.to_s.force_encoding("UTF-8")),
