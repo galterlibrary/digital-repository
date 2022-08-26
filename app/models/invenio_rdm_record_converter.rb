@@ -550,6 +550,8 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def original_identifiers(identifiers)
+    isbn_count = 0
+
     identifiers = identifiers.map do |identifier|
       if identifier.include?("PMID")
         id = identifier.gsub(/\(PMID\)/, "").strip
@@ -561,6 +563,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       elsif identifier.include?("ISBN")
         id = identifier.gsub(/\(ISBN.*\)/, "").strip
         scheme = "isbn"
+        isbn_count += 1
       elsif identifier.include?("PNB")
         id = identifier
         scheme = "other"
@@ -574,6 +577,21 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       }
     end
 
+    # if there are multiple isbn find the isbn with length 10 and remove it
+    if isbn_count > 1
+      identifiers = normalize_isbn(identifiers)
+    end
+
     identifiers.compact
+  end
+
+  def normalize_isbn(identifiers)
+    identifiers.map do |id_obj|
+      if id_obj.present? && id_obj[:scheme] == "isbn" && id_obj[:identifier].to_s.length == 10
+        nil
+      else
+        id_obj
+      end
+    end
   end
 end
