@@ -655,6 +655,14 @@ RSpec.describe InvenioRdmRecordConverter do
         expect(invenio_rdm_record_converter.send(:funding, multiple_funding_file_id).length).to eq(2)
       end
     end
+
+    context "file has blank funding sources" do
+      let(:blank_funding_file_id) { "78254bed-92a7-4708-bcff-16383bab9ce3" }
+
+      it "returns blank array" do
+        expect(invenio_rdm_record_converter.send(:funding, blank_funding_file_id)).to eq([])
+      end
+    end
   end
 
   describe "#resource_type" do
