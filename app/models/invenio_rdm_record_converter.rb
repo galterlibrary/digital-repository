@@ -483,7 +483,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       return []
     end
 
-    funding_sources.map do |source|
+    funding_sources.map! do |source|
       # if the source is empty except for funder scheme, return empty
       if source == BLANK_FUNDER_SOURCE
         nil
