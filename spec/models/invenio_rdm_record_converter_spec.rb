@@ -55,6 +55,7 @@ RSpec.describe InvenioRdmRecordConverter do
        "m19090127",
        "HSL.2016.15.0007",
        "(ISBN 10) 3956501241",
+       "(ISBN) 9783956501241",
        "PNB-14-96-a",
        "PNB-15-10"
      ],
@@ -208,17 +209,18 @@ RSpec.describe InvenioRdmRecordConverter do
               "scheme": "other"
             },
             {
-              "identifier": "3956501241",
-              "scheme": "isbn"
-            },
-            {
               "identifier": "PNB-15-10",
               "scheme": "other"
             },
             {
+              "identifier": "9783956501241",
+              "scheme": "isbn"
+            },
+            {
               "identifier": "10.6666/ARK",
               "scheme": "ark"
-            }],
+            }
+          ],
           "related_identifiers": [{
               "identifier": generic_file_doi,
               "scheme": "doi",
