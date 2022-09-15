@@ -1,8 +1,6 @@
 $(function () {
-  max_file_size = 2147483648;
-  max_file_size_str = "2GB";
-  max_total_file_size = 4294967296;
-  max_total_file_size_str = "4GB";
+  max_file_size = 0;
+  max_total_file_size = 0;
   $('#total_upload_size').val(0);
 
   $('#fileupload').fileupload(
@@ -25,7 +23,7 @@ $(function () {
     // is file size too big
     else if (data.files[0].size > max_file_size) {
       $($('#fileupload .files .cancel button')[data.context[0].rowIndex]).click();
-      $("#errmsg").html(data.files[0].name + " is too big. No files over " + max_file_size_str + " can be uploaded.");
+      $("#errmsg").html("Uploads are no longer being accepted");
       $("#errmsg").fadeIn('slow');
     }
     // cumulative upload file size is too big
@@ -34,7 +32,7 @@ $(function () {
       $($('#fileupload .files .cancel button')[data.context[0].rowIndex]).click();
       // artificially bump size to max so small files don't sneak in out of order.
       $('#total_upload_size').val( max_total_file_size );
-      $("#errmsg").html("All files selected from " + first_file_after_max + " and after will not be uploaded because your total upload is too big. You may not upload more than " + max_total_file_size_str + " in one upload.");
+      $("#errmsg").html("Uploads are no longer being accepted");
       $("#errmsg").fadeIn('slow');
     }
     else if( filestoupload > max_file_count) {
@@ -48,4 +46,18 @@ $(function () {
 
   $('#fileupload').off("fileuploadadded");
   $('#fileupload').on("fileuploadadded", galterUploadAdded);
+
+  // disable file upload buttons
+  // "Select files..." button
+  $("input[type=file]").prop("disabled", true);
+  // "Select folder..." button
+  $("#main_upload_start").prop("disabled", true);
+  // "Start upload" button
+  $("#main_upload_start").prop("disabled", true);
+  // "Cancel upload" button
+  $("#fileupload > div > div.row.fileupload-buttonbar > div.col-md-7 > button").prop("disabled", true);
+  // Browse cloud files
+  $("#browse-btn").prop("disabled", true);
+  // Submit selected files
+  $("#submit-btn").prop("disabled", true);
 });
