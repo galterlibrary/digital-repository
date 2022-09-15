@@ -1,0 +1,38 @@
+<% current_tab = @selected_tab.to_s %>
+<% content_for :head do %>
+  <%= auto_discovery_link_tag(:rss, sufia.url_for(params.merge(format: 'rss')), title: "RSS for results") %>
+  <%= auto_discovery_link_tag(:atom, sufia.url_for(params.merge(format: 'atom')), title: "Atom for results") %>
+<% end %>
+
+<%= javascript_tag do %>
+  <%= render partial: 'scripts', formats: [:js] %>
+<% end %>
+
+<% @page_title = "#{current_tab.capitalize} listing" %>
+
+<h1 class="sr-only">My Files, Collections, Highlights, and Files Shared with Me</h1>
+<ul class="nav nav-tabs" id="my_nav" role="navigation">
+  <span class="sr-only">You are currently listing your <%= current_tab.pluralize %> .  You have <%= @response.docs.count %> <%= current_tab.pluralize(@response.docs.count)%> </span>
+  <li class="<%= "active" if @selected_tab == :files %>">
+    <%= link_to t('sufia.dashboard.my.files'), sufia.dashboard_files_path %>
+  </li>
+  <li class="<%= "active" if @selected_tab == :collections %>">
+    <%= link_to t('sufia.dashboard.my.collections'), sufia.dashboard_collections_path %>
+  </li>
+  <li class="<%= "active" if @selected_tab == :highlighted %>">
+    <%= link_to t('sufia.dashboard.my.highlights'), sufia.dashboard_highlights_path %>
+  </li>
+  <li class="<%= "active" if @selected_tab == :shared %>">
+    <%= link_to t('sufia.dashboard.my.shares'), sufia.dashboard_shares_path %>
+  </li>
+  <li class="<%= "active" if @selected_tab == :shared_collections %>">
+    <%= link_to t('sufia.dashboard.my.shared_collections'), sufia.dashboard_shared_collections_path %>
+  </li>
+</ul>
+
+<%= render 'search_header' %>
+
+<h2 class="sr-only"><%= @page_title %></h2>
+<%= render partial: 'document_list' %>
+
+<%= render 'results_pagination' %>
