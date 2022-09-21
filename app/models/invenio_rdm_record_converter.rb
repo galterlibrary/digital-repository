@@ -25,6 +25,8 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   LICENSE_DATA_FILE = 'app/models/concerns/galtersufia/generic_file/license_data.txt'
   DH_COLLECTIONS_TO_PRISM_COLLECTION_COMMUNITY_JSON = 'dh_collections_prism_collection_community.json'
   BLANK_FUNDER_SOURCE = {funder: {name: "", identifier: "", scheme: "ror"}, award: {title: "", number: "", identifier: "", scheme: ""}}
+  INSTITUTIONAL_PNB_DEPOSITOR = "Institutional Pnb"
+  PNB_DOI_PREFIX = "10.15844"
 
   @@header_lookup ||= HeaderLookup.new
   @@funding_data ||= eval(File.read(FUNDING_DATA_FILE))
@@ -178,7 +180,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
           format_additional("description", "other", @generic_file.based_near, "presentation_location: ") +
           format_additional("description", "other", [@generic_file.page_number.to_s.force_encoding("UTF-8")], "number_in_sequence: ") +
           format_additional("description", "other", @generic_file.bibliographic_citation, "original_citation: "),
-        "publisher": @generic_file.publisher.shift,
+        "publisher": publisher,
         "publication_date": format_publication_date(@generic_file.date_created.shift.presence || @generic_file.date_uploaded.to_s.force_encoding("UTF-8")),
         "subjects": SUBJECT_FIELDS.map{ |subject_field| subjects_for_field(@generic_file.send(subject_field), subject_field) }.compact.flatten.uniq,
         "contributors": contributors(@generic_file.contributor),
@@ -593,5 +595,19 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
         id_obj
       end
     end
+  end
+
+  def publisher
+    # When the record is a Pediatric Neurology Brief specifically want the publisher: Pediatric Neurology Briefs Publishers
+    if pediatric_neurology_brief?
+      "Pediatric Neurology Briefs Publishers"
+    # By default just take the first publisher
+    else
+      @generic_file.publisher.shift
+    end
+  end
+
+  def pediatric_neurology_brief?
+    @generic_file.depositor == INSTITUTIONAL_PNB_DEPOSITOR || @generic_file.doi.shift.include?(PNB_DOI_PREFIX)
   end
 end
