@@ -84,20 +84,21 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     data
   end
 
-  def owner_info
-    user = User.find_by(username: @generic_file.depositor)
+  def owner_info(depositor)
+    user = User.find_by(username: depositor)
+    user_email  = user.email == "joshelder@northwestern.edu" ? "JoshElder@northwestern.edu" : user.email
 
     if user
-      { user.username => user.email }
+      {user.username => user_email}
     else
-      { "unknown": "unknown" }
+      {"unknown": "unknown"}
     end
   end
 
   def file_permissions
     permission_data = Hash.new
 
-    permission_data["owner"] = owner_info
+    permission_data["owner"] = owner_info(@generic_file.depositor)
 
     @generic_file.permissions.each do |permission|
       permission_data[permission.access] ||= Hash.new
