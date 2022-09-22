@@ -203,5 +203,12 @@ class User < ActiveRecord::Base
     def batchuser_key
       'batchuser'
     end
+
+    def email
+      email = super
+      if email == "JoshElder@northwestern.edu"
+        "joshelder@northwestern.edu"
+      end
+    end
   end
 end
