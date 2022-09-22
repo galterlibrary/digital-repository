@@ -1068,7 +1068,6 @@ RSpec.describe InvenioRdmRecordConverter do
     end
   end
 
-
   describe "#dh_collection_to_prism_community_collection" do
     let(:map_collection_to_prism_community_collections_irrc) { described_class.new(generic_file, collection_store.data) }
     let(:expected_community_collection_string_2019_2020) { "biostatistics-collaboration-center-lecture-series::2019-2020" }
@@ -1151,6 +1150,14 @@ RSpec.describe InvenioRdmRecordConverter do
       it "returns correctly formatted string" do
         expect(map_file_to_prism_community_collections_irrc.send(:dh_collection_to_prism_community_collection)).to eq(expected_community_collection_string_center_for_file_id)
       end
+    end
+  end
+
+  describe "owner_info" do
+    let(:josh_elder_user) { FactoryGirl.create(:user, username: "josh_the_elder", formal_name: "Elder, Josh",  display_name: 'Josh Elder', email: 'joshelder@northwestern.edu') }
+
+    it "identifies Josh Elder's email and returns the correct casing" do
+      expect(invenio_rdm_record_converter.send(:owner_info, josh_elder_user.username)).to eq({'josh_the_elder' => 'JoshElder@northwestern.edu'})
     end
   end
 end
