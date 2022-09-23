@@ -10,7 +10,6 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   SUBJECT_FIELDS = [:tag, :mesh, :lcsh, :subject_name, :subject_geographic]
   CIRCA_VALUES = ["ca.", "ca", "circa", "CA.", "CA", "CIRCA"]
   UNDATED = ["undated", "UNDATED"]
-  REFERENCE_FIELDS = ["bibliographic_citation", "part_of"]
   ABBR_MONTHNAMES = Date::ABBR_MONTHNAMES.map{ |abbr_monthname| abbr_monthname.downcase if abbr_monthname.present? }
   MONTHNAMES = Date::MONTHNAMES.map{ |monthname| monthname.downcase if monthname.present? }
   SEASONS = ["spring", "summer", "fall", "winter"]
@@ -26,6 +25,8 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   LICENSE_DATA_FILE = 'app/models/concerns/galtersufia/generic_file/license_data.txt'
   DH_COLLECTIONS_TO_PRISM_COLLECTION_COMMUNITY_JSON = 'dh_collections_prism_collection_community.json'
   BLANK_FUNDER_SOURCE = {funder: {name: "", identifier: "", scheme: "ror"}, award: {title: "", number: "", identifier: "", scheme: ""}}
+  INSTITUTIONAL_PNB_DEPOSITOR = "Institutional Pnb"
+  PNB_DOI_PREFIX = "10.15844"
 
   @@header_lookup ||= HeaderLookup.new
   @@funding_data ||= eval(File.read(FUNDING_DATA_FILE))
@@ -83,20 +84,21 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     data
   end
 
-  def owner_info
-    user = User.find_by(username: @generic_file.depositor)
+  def owner_info(depositor)
+    user = User.find_by(username: depositor)
+    user_email  = user.email == "joshelder@northwestern.edu" ? "JoshElder@northwestern.edu" : user.email
 
     if user
-      { user.username => user.email }
+      {user.username => user_email}
     else
-      { "unknown": "unknown" }
+      {"unknown": "unknown"}
     end
   end
 
   def file_permissions
     permission_data = Hash.new
 
-    permission_data["owner"] = owner_info
+    permission_data["owner"] = owner_info(@generic_file.depositor)
 
     @generic_file.permissions.each do |permission|
       permission_data[permission.access] ||= Hash.new
@@ -176,8 +178,10 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
         "additional_descriptions":
           format_additional("description", "acknowledgements", @generic_file.acknowledgments) +
           format_additional("description", "abstract", @generic_file.abstract) +
-          format_additional("description", "other", @generic_file.based_near, "presentation_location: "),
-        "publisher": @generic_file.publisher.shift,
+          format_additional("description", "other", @generic_file.based_near, "presentation_location: ") +
+          format_additional("description", "other", [@generic_file.page_number.to_s.force_encoding("UTF-8")], "number_in_sequence: ") +
+          format_additional("description", "other", @generic_file.bibliographic_citation, "original_citation: "),
+        "publisher": publisher,
         "publication_date": format_publication_date(@generic_file.date_created.shift.presence || @generic_file.date_uploaded.to_s.force_encoding("UTF-8")),
         "subjects": SUBJECT_FIELDS.map{ |subject_field| subjects_for_field(@generic_file.send(subject_field), subject_field) }.compact.flatten.uniq,
         "contributors": contributors(@generic_file.contributor),
@@ -482,7 +486,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       return []
     end
 
-    funding_sources.map do |source|
+    funding_sources.map! do |source|
       # if the source is empty except for funder scheme, return empty
       if source == BLANK_FUNDER_SOURCE
         nil
@@ -549,6 +553,8 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def original_identifiers(identifiers)
+    isbn_count = 0
+
     identifiers = identifiers.map do |identifier|
       if identifier.include?("PMID")
         id = identifier.gsub(/\(PMID\)/, "").strip
@@ -560,6 +566,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       elsif identifier.include?("ISBN")
         id = identifier.gsub(/\(ISBN.*\)/, "").strip
         scheme = "isbn"
+        isbn_count += 1
       elsif identifier.include?("PNB")
         id = identifier
         scheme = "other"
@@ -573,6 +580,35 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       }
     end
 
+    # if there are multiple isbn find the isbn with length 10 and remove it
+    if isbn_count > 1
+      identifiers = normalize_isbn(identifiers)
+    end
+
     identifiers.compact
+  end
+
+  def normalize_isbn(identifiers)
+    identifiers.map do |id_obj|
+      if id_obj.present? && id_obj[:scheme] == "isbn" && id_obj[:identifier].to_s.length == 10
+        nil
+      else
+        id_obj
+      end
+    end
+  end
+
+  def publisher
+    # When the record is a Pediatric Neurology Brief specifically want the publisher: Pediatric Neurology Briefs Publishers
+    if pediatric_neurology_brief?
+      "Pediatric Neurology Briefs Publishers"
+    # By default just take the first publisher
+    else
+      @generic_file.publisher.shift
+    end
+  end
+
+  def pediatric_neurology_brief?
+    @generic_file.depositor == INSTITUTIONAL_PNB_DEPOSITOR || @generic_file.doi.shift.include?(PNB_DOI_PREFIX)
   end
 end

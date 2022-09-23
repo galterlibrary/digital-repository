@@ -55,9 +55,12 @@ RSpec.describe InvenioRdmRecordConverter do
        "m19090127",
        "HSL.2016.15.0007",
        "(ISBN 10) 3956501241",
+       "(ISBN) 9783956501241",
        "PNB-14-96-a",
        "PNB-15-10"
-     ]
+     ],
+     page_number: "29a",
+     bibliographic_citation: ["This is a citation", "This is another citation"]
     )
   }
   let(:generic_file_checksum) { generic_file.content.checksum.value }
@@ -135,6 +138,24 @@ RSpec.describe InvenioRdmRecordConverter do
                "type": {
                  "id": "other"
                }
+            },
+            {
+              "description": "number_in_sequence: 29a",
+              "type": {
+                "id": "other"
+              }
+            },
+            {
+              "description": "original_citation: This is another citation",
+              "type": {
+                "id": "other"
+              }
+            },
+            {
+              "description": "original_citation: This is a citation",
+              "type": {
+                "id": "other"
+              }
             }
           ],
           "publisher": "DigitalHub. Galter Health Sciences Library & Learning Center",
@@ -188,17 +209,18 @@ RSpec.describe InvenioRdmRecordConverter do
               "scheme": "other"
             },
             {
-              "identifier": "3956501241",
-              "scheme": "isbn"
-            },
-            {
               "identifier": "PNB-15-10",
               "scheme": "other"
             },
             {
+              "identifier": "9783956501241",
+              "scheme": "isbn"
+            },
+            {
               "identifier": "10.6666/ARK",
               "scheme": "ark"
-            }],
+            }
+          ],
           "related_identifiers": [{
               "identifier": generic_file_doi,
               "scheme": "doi",
@@ -365,7 +387,7 @@ RSpec.describe InvenioRdmRecordConverter do
     }.with_indifferent_access
   }
 
-  let(:organization_name) { "Galter Health Sciences Library" }
+  let(:organization_name) { "Northwestern University (Evanston, Ill.). Medical Alumni Association" }
   let(:organizational_creator_json) {
     {
       "person_or_org": {
@@ -633,6 +655,14 @@ RSpec.describe InvenioRdmRecordConverter do
 
       it "returns all funding sources" do
         expect(invenio_rdm_record_converter.send(:funding, multiple_funding_file_id).length).to eq(2)
+      end
+    end
+
+    context "file has blank funding sources" do
+      let(:blank_funding_file_id) { "78254bed-92a7-4708-bcff-16383bab9ce3" }
+
+      it "returns blank array" do
+        expect(invenio_rdm_record_converter.send(:funding, blank_funding_file_id)).to eq([])
       end
     end
   end
@@ -1038,7 +1068,6 @@ RSpec.describe InvenioRdmRecordConverter do
     end
   end
 
-
   describe "#dh_collection_to_prism_community_collection" do
     let(:map_collection_to_prism_community_collections_irrc) { described_class.new(generic_file, collection_store.data) }
     let(:expected_community_collection_string_2019_2020) { "biostatistics-collaboration-center-lecture-series::2019-2020" }
@@ -1121,6 +1150,14 @@ RSpec.describe InvenioRdmRecordConverter do
       it "returns correctly formatted string" do
         expect(map_file_to_prism_community_collections_irrc.send(:dh_collection_to_prism_community_collection)).to eq(expected_community_collection_string_center_for_file_id)
       end
+    end
+  end
+
+  describe "owner_info" do
+    let(:josh_elder_user) { FactoryGirl.create(:user, username: "josh_the_elder", formal_name: "Elder, Josh",  display_name: 'Josh Elder', email: 'joshelder@northwestern.edu') }
+
+    it "identifies Josh Elder's email and returns the correct casing" do
+      expect(invenio_rdm_record_converter.send(:owner_info, josh_elder_user.username)).to eq({'josh_the_elder' => 'JoshElder@northwestern.edu'})
     end
   end
 end

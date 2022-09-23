@@ -323,7 +323,7 @@
   "9k41zd48h": {
     "community_id": "history-of-feinberg-school-of-medicine"
   },
-  "ece380d-4dee-4e4e-aa97-28cb1d4f6b19": {
+  "cece380d-4dee-4e4e-aa97-28cb1d4f6b19": {
     "collection_id": "Class of 1952 Oral History Collection",
     "community_id": "galter-library-audio-video-archives"
   },
@@ -418,5 +418,8 @@
   },
   "3635f61e-e67e-41f2-b4de-982a9f81dcc8": {
     "community_id": "covid-19-community"
+  },
+  "5f1b1739-512f-4015-98bc-22f37f42af7b": {
+    "community_id": "calantone-et-al-2022-commun-biol-source-data"
   }
 }
