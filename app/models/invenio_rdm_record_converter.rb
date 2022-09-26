@@ -189,7 +189,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
         "languages": @generic_file.language.map{ |lang| LANGUAGES[lang.downcase] ? {"id": LANGUAGES[lang.downcase]} : nil }.compact,
         "identifiers": original_identifiers(@generic_file.identifier) + ark_identifiers(@generic_file.ark),
         "related_identifiers": related_identifiers(@generic_file.related_url),
-        "sizes": Array.new.tap{ |size_json| size_json << "#{@generic_file.page_count} pages" if !@generic_file.page_count.blank? },
+        "sizes": sizes,
         "formats": [@generic_file.mime_type],
         "version": version(@generic_file.content),
         "rights": rights(@generic_file.rights),
@@ -610,5 +610,15 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
 
   def pediatric_neurology_brief?
     @generic_file.depositor == INSTITUTIONAL_PNB_DEPOSITOR || @generic_file.doi.shift.include?(PNB_DOI_PREFIX)
+  end
+
+  def sizes
+    if @generic_file.id == "3105875f-61e1-412c-9b1c-c8a33b37ff35"
+      ["116 pages"]
+    elsif  @generic_file.id == "9cd9e3df-458c-4a2c-9e42-1dcdc95e7adf"
+      ["44 pages"]
+    elsif !@generic_file.page_count.blank?
+      ["#{@generic_file.page_count.shift} pages"]
+    end
   end
 end
