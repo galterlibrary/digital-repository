@@ -35,6 +35,8 @@ converters.each do |converter|
   conversion_count = 0
 
   converter[:model_class].find_each do |record_for_export|
+    next if record_for_export.is_a?(Page)
+
     converted_record = converter[:converter_class].new(
       record_for_export, collection_store.data, role_store.data
     )
