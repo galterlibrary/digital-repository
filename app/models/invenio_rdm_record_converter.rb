@@ -609,7 +609,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def pediatric_neurology_brief?
-    @generic_file.depositor == INSTITUTIONAL_PNB_DEPOSITOR || @generic_file.doi.shift.include?(PNB_DOI_PREFIX)
+    @generic_file.depositor == INSTITUTIONAL_PNB_DEPOSITOR || @generic_file.doi.shift&.include?(PNB_DOI_PREFIX)
   end
 
   def sizes
