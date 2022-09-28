@@ -160,7 +160,7 @@ class GenericFile < ActiveFedora::Base
   end
 
   def unexportable?(collection_paths)
-     open_access_and_no_doi? || in_old_gv_black_and_not_photograph?(collection_paths)
+    open_access_and_no_doi? || in_old_gv_black_and_not_photograph?(collection_paths) || title.shift&.ends_with?("- Combined", "- combined")
   end
 
   def in_old_gv_black_and_not_photograph?(collection_paths)
