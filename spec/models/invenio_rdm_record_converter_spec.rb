@@ -226,7 +226,7 @@ RSpec.describe InvenioRdmRecordConverter do
               "scheme": "doi",
               "relation_type": {"id": "isRelatedTo"}
             }],
-          "sizes": ["#{generic_file.page_count} pages"],
+          "sizes": ["#{generic_file.page_count.shift} pages"],
           "formats": ["application/pdf"],
           "version": "v1.0.0",
           "rights": [{
@@ -289,6 +289,8 @@ RSpec.describe InvenioRdmRecordConverter do
   let(:invenio_rdm_record_converter) {
     described_class.new(generic_file, collection_store.data, role_store.data)
   }
+  let(:unexportable_generic_file_upper) { make_generic_file_with_content(user, title: ["Test file - Combined"]) }
+  let(:unexportable_generic_file_lower) { make_generic_file_with_content(user, title: ["Test file - combined"]) }
 
   before do
     ProxyDepositRights.create(grantor_id: assistant.id, grantee_id: user.id)
@@ -309,6 +311,8 @@ RSpec.describe InvenioRdmRecordConverter do
       it "returns blank json string" do
         allow(generic_file).to receive(:unexportable?).and_return(true)
         expect(invenio_rdm_record_converter.to_json).to eq "{}"
+        expect(unexportable_generic_file_upper.unexportable?([])).to eq true
+        expect(unexportable_generic_file_lower.unexportable?([])).to eq true
       end
     end
   end
