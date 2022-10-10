@@ -68,16 +68,24 @@
     "collection_id": "A genome-wide association study (GWAS) of bitter and sweet beverage consumption",
     "community_id": "researchers-collections"
   },
-  "d0798568-47c3-453e-ae39-242d8a96b1dc": {
-    "collection_id": "Aberrant cGMP Signaling Persists During Recovery in Mice with Oxygen-Induced Pulmonary Hypertension",
-    "community_id": "researchers-collections"
-  },
   "913f8fa2-06c9-49e1-9cdf-0f88118b18da": {
     "collection_id": "A Polygenic and Phenotypic Risk Prediction for Polycystic Ovary Syndrome evaluated by Phenome-wide association studies - Supplemental Material",
     "community_id": "researchers-collections"
   },
+  "2dd287f0-9748-41f7-8fab-222db450d196":{
+    "collection_id": "A retrospective look at the predictions and recommendations from the 2009 AMIA Policy Meeting",
+    "community_id": "researchers-collections"
+  },
+  "d0798568-47c3-453e-ae39-242d8a96b1dc": {
+    "collection_id": "Aberrant cGMP Signaling Persists During Recovery in Mice with Oxygen-Induced Pulmonary Hypertension",
+    "community_id": "researchers-collections"
+  },
   "8s45q876k": {
     "collection_id": "Beyond an Apple a Day: Finding Reliable Health Information Online",
+    "community_id": "researchers-collections"
+  },
+  "5f1b1739-512f-4015-98bc-22f37f42af7b": {
+    "collection_id": "calantone-et-al-2022-commun-biol-source-data",
     "community_id": "researchers-collections"
   },
   "3ca02e5e-83be-4ea7-b51f-11aee3497e6c": {
@@ -419,7 +427,8 @@
   "3635f61e-e67e-41f2-b4de-982a9f81dcc8": {
     "community_id": "covid-19-community"
   },
-  "5f1b1739-512f-4015-98bc-22f37f42af7b": {
-    "community_id": "calantone-et-al-2022-commun-biol-source-data"
+
+  "5f2d9ec7-8f1e-4e2f-aa69-62980d7ed29a": {
+    "community_id": "chicago-area-medical-archivists-medical-history-symposium"
   }
 }
