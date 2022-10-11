@@ -8,7 +8,7 @@ class GenericFile < ActiveFedora::Base
   include Galtersufia::GenericFile::MimeTypes
 
   GV_BLACK_PHOTOGRAPH_SUB_COLLECTION_ID = "x346d4254"
-  GV_BLACK_COLLECTION_ID = "a4de96c9-7c6d-40d6-ad9e-cac8a24faad5"
+  GV_BLACK_COLLECTION_ID = "x633f100h"
 
   belongs_to :parent,
     predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf,
