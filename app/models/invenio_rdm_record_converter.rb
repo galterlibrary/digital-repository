@@ -619,6 +619,8 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       ["44 pages"]
     elsif !@generic_file.page_count.blank?
       ["#{@generic_file.page_count.shift} pages"]
+    else
+      []
     end
   end
 end
