@@ -1164,4 +1164,11 @@ RSpec.describe InvenioRdmRecordConverter do
       expect(invenio_rdm_record_converter.send(:owner_info, josh_elder_user.username)).to eq({'josh_the_elder' => 'JoshElder@northwestern.edu'})
     end
   end
+
+  describe "sizes" do
+    it "returns a blank array when page_count is blank" do
+      allow(generic_file).to receive(:page_count).and_return(nil)
+      expect(invenio_rdm_record_converter.send(:sizes)).to eq([])
+    end
+  end
 end
