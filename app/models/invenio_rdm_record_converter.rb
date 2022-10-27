@@ -295,6 +295,8 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
         nil
       elsif field == :tag
         {subject: term.force_encoding("UTF-8")}
+        # One potential option is to send individual terms from here
+        # Another option is to wrap term into an array and change the pid_lookup_by_field implementation to iterate across more than one term per a call
       elsif pid = @@header_lookup.pid_lookup_by_field(term, field)
         {id: pid}
       else

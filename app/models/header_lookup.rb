@@ -32,6 +32,7 @@ class HeaderLookup
       searchable_file = @@searchable_mesh_file
       memoized_terms = @@memoized_mesh
       memoized_file = MEMOIZED_MESH_FILE
+      # TODO: Figure out why this is being done, was it a complex header?
       term = term.gsub("--", "/")
     elsif field == :lcsh
       searchable_file = @@searchable_lcsh_file
@@ -44,6 +45,12 @@ class HeaderLookup
     else
       return nil
     end
+
+    # -- this might need to stay here, but check first
+    # split out terms for complex headers
+    # if complex_header?(term)
+    #   terms = term.split("--")
+    # end
 
     # check for memoized term
     if memoized_terms[term]
@@ -80,5 +87,9 @@ class HeaderLookup
     rescue Errno::ENOENT
       return {}
     end
+  end
+
+  def complex_header?(header_str)
+    header_str.include?("--")
   end
 end
