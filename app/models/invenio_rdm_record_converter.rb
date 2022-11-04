@@ -137,13 +137,17 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def invenio_pids(doi)
-    {
-      "doi": {
-        "identifier": doi, # doi is stored in an array
-        "provider": "datacite",
-        "client": "digitalhub"
+    if doi.blank?
+      {}
+    else
+      {
+        "doi": {
+          "identifier": doi.strip,
+          "provider": "datacite",
+          "client": "digitalhub"
+        }
       }
-    }
+    end
   end
 
   def invenio_provenance(proxy_depositor, on_behalf_of)
