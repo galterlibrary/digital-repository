@@ -1070,6 +1070,16 @@ RSpec.describe InvenioRdmRecordConverter do
         expect(invenio_rdm_record_converter.send(:subjects_for_field, tag_terms, :tag)).to eq(expected_tag_result)
       end
     end
+
+    context "unmappable complex header" do
+      let(:unmappable_complex_header_term) { "COVID-19 (Disease)--Complications" }
+      let(:unmappable_complex_header_terms) { [unmappable_complex_header_term] }
+      let(:expected_unmappable_complex_header_result) { [{"subject": unmappable_complex_header_term}] }
+
+      it "returns the complex header in subject field" do
+        expect(invenio_rdm_record_converter.send(:subjects_for_field, unmappable_complex_header_terms, :lcsh)).to eq(expected_unmappable_complex_header_result)
+      end
+    end
   end
 
   describe "#dh_collection_to_prism_community_collection" do
