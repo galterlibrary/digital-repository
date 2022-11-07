@@ -296,7 +296,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
 
       if term.blank?
         nil
-      elsif field == :tag
+      elsif field == :tag || unmappable_complex_headers.include?(term)
         {subject: term.force_encoding("UTF-8")}
       elsif pid = @@header_lookup.pid_lookup_by_field(term, field)
         {id: pid}
@@ -629,5 +629,17 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
 
   def user_email(user)
     user.email == "joshelder@northwestern.edu" ? "JoshElder@northwestern.edu" : user.email
+  end
+
+  # This is the current list of complex headers that were not mapping correctly. They will be exported as keywords
+  def unmappable_complex_headers
+    [
+     "COVID-19 (Disease)--Complications",
+     "COVID-19 (Disease)--Testing",
+     "COVID-19 (Disease)--Treatment",
+     "Feinberg School of Medicine--Buildings",
+     "Illinois--History",
+     "Illinois--Northern"
+    ]
   end
 end
