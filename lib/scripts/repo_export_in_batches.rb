@@ -4,7 +4,10 @@
 #   ./bin/rails r lib/scripts/repo_export_in_batches.rb > "$(date +'%Y-%m-%d-%H%M%S')_repo_export_in_batches.log"
 # OR
 #   rm -rf tmp/export/; mkdir tmp/export/; ./bin/rails r lib/scripts/repo_export_in_batches.rb > "$(date +'%Y-%m-%d-%H%M%S')_repo_export_in_batches.log"
-#
+
+puts "---------\nRemoving previous export (if it exists) at tmp/export\n---------"
+FileUtils.rm_rf(Dir['tmp/export'])
+
 puts "---------\nBeginning repo export at #{Time.now} #{Time.zone}\n---------"
 
 # set classes to have records exported and classes that will do the actual conversion
