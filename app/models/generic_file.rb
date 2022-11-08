@@ -9,6 +9,7 @@ class GenericFile < ActiveFedora::Base
 
   GV_BLACK_PHOTOGRAPH_SUB_COLLECTION_ID = "x346d4254"
   GV_BLACK_COLLECTION_ID = "x633f100h"
+  AREYBOOK_COLLECTION_ID = "areybook"
 
   belongs_to :parent,
     predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf,
@@ -160,7 +161,10 @@ class GenericFile < ActiveFedora::Base
   end
 
   def unexportable?(collection_paths)
-    open_access_and_no_doi? || in_old_gv_black_and_not_photograph?(collection_paths) || title.shift&.ends_with?("- Combined", "- combined")
+    open_access_and_no_doi? ||
+    in_old_gv_black_and_not_photograph?(collection_paths) ||
+    in_collections?([AREYBOOK_COLLECTION_ID], collection_paths) ||
+    title.shift&.ends_with?("- Combined", "- combined")
   end
 
   def in_old_gv_black_and_not_photograph?(collection_paths)
