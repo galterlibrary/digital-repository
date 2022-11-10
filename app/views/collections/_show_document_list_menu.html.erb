@@ -7,10 +7,6 @@
                   class: "copypaste itemicon itemcode", title: "Single-Use Link to File", id: "copy_link_#{id}" %>
     </li>
     <li>
-      <%= link_to raw('<i class="glyphicon glyphicon-pencil"></i> Edit File'), sufia.edit_generic_file_path(id),
-                  class: 'itemicon itemedit', title: 'Edit File' %>
-    </li>
-    <li>
       <%= link_to raw('<i class="glyphicon glyphicon-download-alt"></i> Download File'), sufia.download_path(id),
                   class: 'itemicon itemdownload', title: 'Download File', target: '_new' %>
     </li>
@@ -19,16 +15,6 @@
         <%= display_trophy_link(current_user, id) do |text| %>
           <i class='glyphicon glyphicon-star'></i> <%= text %>
         <% end %>
-      </li>
-    <% end %>
-
-    <% if can?(:edit, params['id']) %>
-      <li>
-      <%= link_to raw(
-        '<i class="glyphicon glyphicon-minus" aria-hidden="true"></i> Remove from Collection'),
-        collections.collection_path(params['id'], collection: {
-          members: 'remove' }, batch_document_ids: [id]), method: 'patch',
-          class: 'itemicon itemedit', title: 'Remove from Collection' %>
       </li>
     <% end %>
   </ul>

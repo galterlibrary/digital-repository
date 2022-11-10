@@ -4,12 +4,8 @@
 
 <% unless has_collection_search_parameters? %>
   <div class="row">
-    <div class="col-xs-12 col-sm-10 pull-right">
-      <%= render 'collections/tabs' %>
-    </div>
     <div class="col-xs-12 col-sm-2">
       <%= render 'collections/media_display', collection: @collection %>
-      <%= render 'collections/edit_actions' %>
     </div>
   </div>
 <% end %>
