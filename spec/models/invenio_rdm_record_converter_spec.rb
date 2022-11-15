@@ -3,8 +3,8 @@ require 'rails_helper'
 RSpec.describe InvenioRdmRecordConverter do
   let(:user) { FactoryGirl.create(:user, username: "usr1234", formal_name: "Tester, Mock", orcid: "https://orcid.org/1234-5678-9123-4567", \
                                     display_name: 'Mock Tester') }
-  let(:contributor_user) { FactoryGirl.create(:user, username: "contributor_user", formal_name: "User, Contributor",  display_name: 'Contributor User') }
-  let(:creator_user) { FactoryGirl.create(:user, username: "creator_user", formal_name: "User, Creator James",  display_name: 'Creator User') }
+  let(:contributor_user) { FactoryGirl.create(:user, username: "contributor_user", formal_name: " User, Contributor ",  display_name: ' Contributor User ') }
+  let(:creator_user) { FactoryGirl.create(:user, username: "creator_user", formal_name: " User, Creator James ",  display_name: ' Creator User ') }
   let(:assistant) { FactoryGirl.create(:user, username: "ast9876") }
   let(:lcnaf_term) { "Birkan, Kaarin" }
   let(:expected_lcnaf_term) {}
@@ -84,24 +84,26 @@ RSpec.describe InvenioRdmRecordConverter do
           "resource_type": {
             "id": "book-account_book"
           },
-          "creators": [{
-            "person_or_org": {
-              "type": "personal",
-              "given_name": "#{creator_user.formal_name.split(',').last.strip}",
-              "family_name": "#{creator_user.formal_name.split(',').first.strip}"
+          "creators": [
+            {
+              "person_or_org": {
+                "type": "personal",
+                "given_name": "#{user.formal_name.split(',').last}",
+                "family_name": "#{user.formal_name.split(',').first}",
+                "identifiers": [{
+                  "scheme": "orcid",
+                  "identifier": "#{user.orcid.split('/').last}"
+                }]
+              }
+            },
+            {
+              "person_or_org": {
+                "type": "personal",
+                "given_name": "#{creator_user.formal_name.split(',').last.strip}",
+                "family_name": "#{creator_user.formal_name.split(',').first.strip}"
+               }
             }
-          },
-          {
-            "person_or_org": {
-              "type": "personal",
-              "given_name": "#{user.formal_name.split(',').last}",
-              "family_name": "#{user.formal_name.split(',').first}",
-              "identifiers": [{
-                "scheme": "orcid",
-                "identifier": "#{user.orcid.split('/').last}"
-              }]
-            }
-          }],
+          ],
           "title": "#{generic_file.title.first}",
           "additional_titles": [
             {
@@ -189,8 +191,8 @@ RSpec.describe InvenioRdmRecordConverter do
           "contributors": [{
             "person_or_org": {
               "type": "personal",
-              "given_name": "#{contributor_user.formal_name.split(',').last}",
-              "family_name": "#{contributor_user.formal_name.split(',').first}",
+              "given_name": "#{contributor_user.formal_name.split(',').last.strip}",
+              "family_name": "#{contributor_user.formal_name.split(',').first.strip}",
             },
             "role": {"id": InvenioRdmRecordConverter::ROLE_OTHER}
           }],
@@ -397,6 +399,9 @@ RSpec.describe InvenioRdmRecordConverter do
       "person_or_org": {
         "name": organization_name,
         "type": "organizational"
+      },
+      "role": {
+        "id": "role-other"
       }
     }.with_indifferent_access
   }

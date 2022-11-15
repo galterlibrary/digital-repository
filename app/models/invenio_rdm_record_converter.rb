@@ -20,7 +20,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   INVENIO_RESTRICTED = "restricted"
   ALL_RIGHTS_RESERVED = 'All rights reserved'
   DOI_ORG = "doi.org/"
-  MEMOIZED_PERSON_OR_ORG_DATA_FILE = 'memoized_person_or_org_data.txt'
+  MEMOIZED_PERSON_OR_ORG_DATA_FILE = 'memoized_person_or_org_data.json'
   FUNDING_DATA_FILE = 'app/models/concerns/galtersufia/generic_file/funding_data.txt'
   LICENSE_DATA_FILE = 'app/models/concerns/galtersufia/generic_file/license_data.txt'
   DH_COLLECTIONS_TO_PRISM_COLLECTION_COMMUNITY_JSON = 'dh_collections_prism_collection_community.json'
@@ -30,7 +30,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
 
   @@header_lookup ||= HeaderLookup.new
   @@funding_data ||= eval(File.read(FUNDING_DATA_FILE))
-  @@person_or_org_data ||= eval(File.read(MEMOIZED_PERSON_OR_ORG_DATA_FILE))
+  @@person_or_org_data ||= JSON.parse(File.read(MEMOIZED_PERSON_OR_ORG_DATA_FILE))
   @@license_data ||= eval(File.read(LICENSE_DATA_FILE))
   @@dh_to_prism_entity = JSON.parse(File.read(DH_COLLECTIONS_TO_PRISM_COLLECTION_COMMUNITY_JSON))
 
@@ -222,12 +222,13 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def build_creator_contributor_json(creator)
+    creator = creator.strip
     creatibutor_json = @@person_or_org_data[creator]
     return creatibutor_json if creatibutor_json
 
     family_name, given_name = creator.split(',', 2)
-    given_name = given_name.to_s.lstrip
-    family_name = family_name.to_s.lstrip
+    given_name = given_name.to_s.strip
+    family_name = family_name.to_s.strip
     display_name = creator.split(", ").reverse.join(" ").strip
 
     if !(given_name =~ /\d/)
@@ -272,7 +273,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
 
     @@person_or_org_data[creator] = creatibutor_json
     # this line only runs if there is an update to @@person_or_org_data
-    File.write(MEMOIZED_PERSON_OR_ORG_DATA_FILE, @@person_or_org_data)
+    File.write(MEMOIZED_PERSON_OR_ORG_DATA_FILE, JSON.pretty_generate(@@person_or_org_data))
     # return the actual json
     creatibutor_json
   end # build_creator_contributor_json
