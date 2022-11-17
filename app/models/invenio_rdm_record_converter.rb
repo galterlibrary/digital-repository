@@ -617,12 +617,15 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def sizes
+    page_count = @generic_file.page_count&.shift
+
     if @generic_file.id == "3105875f-61e1-412c-9b1c-c8a33b37ff35"
       ["116 pages"]
     elsif  @generic_file.id == "9cd9e3df-458c-4a2c-9e42-1dcdc95e7adf"
       ["44 pages"]
-    elsif !@generic_file.page_count.blank?
-      ["#{@generic_file.page_count.shift} pages"]
+    elsif !page_count.blank?
+      page_string = page_count.to_i > 1 ? "#{page_count} pages" : "#{page_count} page"
+      [page_string]
     else
       []
     end
