@@ -1,10 +1,11 @@
-# Before you run this script empty the directory tmp/export/!
-#   rm -rf tmp/export/; mkdir tmp/export/
 # Run this script with the following:
 #   ./bin/rails r lib/scripts/repo_export_in_batches.rb > "$(date +'%Y-%m-%d-%H%M%S')_repo_export_in_batches.log"
-# OR
-#   rm -rf tmp/export/; mkdir tmp/export/; ./bin/rails r lib/scripts/repo_export_in_batches.rb > "$(date +'%Y-%m-%d-%H%M%S')_repo_export_in_batches.log"
-#
+
+puts "---------\nRemoving previous export (if it exists) at tmp/export\n---------"
+export_dir = "tmp/export"
+FileUtils.rm_rf(Dir[export_dir])
+FileUtils.mkdir_p(export_dir)
+
 puts "---------\nBeginning repo export at #{Time.now} #{Time.zone}\n---------"
 
 # set classes to have records exported and classes that will do the actual conversion
@@ -35,8 +36,6 @@ converters.each do |converter|
   conversion_count = 0
 
   converter[:model_class].find_each do |record_for_export|
-    next if record_for_export.is_a?(Page)
-
     converted_record = converter[:converter_class].new(
       record_for_export, collection_store.data, role_store.data
     )

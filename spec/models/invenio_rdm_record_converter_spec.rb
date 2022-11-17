@@ -3,8 +3,8 @@ require 'rails_helper'
 RSpec.describe InvenioRdmRecordConverter do
   let(:user) { FactoryGirl.create(:user, username: "usr1234", formal_name: "Tester, Mock", orcid: "https://orcid.org/1234-5678-9123-4567", \
                                     display_name: 'Mock Tester') }
-  let(:contributor_user) { FactoryGirl.create(:user, username: "contributor_user", formal_name: "User, Contributor",  display_name: 'Contributor User') }
-  let(:creator_user) { FactoryGirl.create(:user, username: "creator_user", formal_name: "User, Creator James",  display_name: 'Creator User') }
+  let(:contributor_user) { FactoryGirl.create(:user, username: "contributor_user", formal_name: " User, Contributor ",  display_name: ' Contributor User ') }
+  let(:creator_user) { FactoryGirl.create(:user, username: "creator_user", formal_name: " User, Creator James ",  display_name: ' Creator User ') }
   let(:assistant) { FactoryGirl.create(:user, username: "ast9876") }
   let(:lcnaf_term) { "Birkan, Kaarin" }
   let(:expected_lcnaf_term) {}
@@ -84,24 +84,26 @@ RSpec.describe InvenioRdmRecordConverter do
           "resource_type": {
             "id": "book-account_book"
           },
-          "creators": [{
-            "person_or_org": {
-              "type": "personal",
-              "given_name": "#{creator_user.formal_name.split(',').last.strip}",
-              "family_name": "#{creator_user.formal_name.split(',').first.strip}"
+          "creators": [
+            {
+              "person_or_org": {
+                "type": "personal",
+                "given_name": "#{user.formal_name.split(',').last}",
+                "family_name": "#{user.formal_name.split(',').first}",
+                "identifiers": [{
+                  "scheme": "orcid",
+                  "identifier": "#{user.orcid.split('/').last}"
+                }]
+              }
+            },
+            {
+              "person_or_org": {
+                "type": "personal",
+                "given_name": "#{creator_user.formal_name.split(',').last.strip}",
+                "family_name": "#{creator_user.formal_name.split(',').first.strip}"
+               }
             }
-          },
-          {
-            "person_or_org": {
-              "type": "personal",
-              "given_name": "#{user.formal_name.split(',').last}",
-              "family_name": "#{user.formal_name.split(',').first}",
-              "identifiers": [{
-                "scheme": "orcid",
-                "identifier": "#{user.orcid.split('/').last}"
-              }]
-            }
-          }],
+          ],
           "title": "#{generic_file.title.first}",
           "additional_titles": [
             {
@@ -189,8 +191,8 @@ RSpec.describe InvenioRdmRecordConverter do
           "contributors": [{
             "person_or_org": {
               "type": "personal",
-              "given_name": "#{contributor_user.formal_name.split(',').last}",
-              "family_name": "#{contributor_user.formal_name.split(',').first}",
+              "given_name": "#{contributor_user.formal_name.split(',').last.strip}",
+              "family_name": "#{contributor_user.formal_name.split(',').first.strip}",
             },
             "role": {"id": InvenioRdmRecordConverter::ROLE_OTHER}
           }],
@@ -397,6 +399,9 @@ RSpec.describe InvenioRdmRecordConverter do
       "person_or_org": {
         "name": organization_name,
         "type": "organizational"
+      },
+      "role": {
+        "id": "role-other"
       }
     }.with_indifferent_access
   }
@@ -1070,6 +1075,16 @@ RSpec.describe InvenioRdmRecordConverter do
         expect(invenio_rdm_record_converter.send(:subjects_for_field, tag_terms, :tag)).to eq(expected_tag_result)
       end
     end
+
+    context "unmappable complex header" do
+      let(:unmappable_complex_header_term) { "COVID-19 (Disease)--Complications" }
+      let(:unmappable_complex_header_terms) { [unmappable_complex_header_term] }
+      let(:expected_unmappable_complex_header_result) { [{"subject": unmappable_complex_header_term}] }
+
+      it "returns the complex header in subject field" do
+        expect(invenio_rdm_record_converter.send(:subjects_for_field, unmappable_complex_header_terms, :lcsh)).to eq(expected_unmappable_complex_header_result)
+      end
+    end
   end
 
   describe "#dh_collection_to_prism_community_collection" do
@@ -1162,6 +1177,13 @@ RSpec.describe InvenioRdmRecordConverter do
 
     it "identifies Josh Elder's email and returns the correct casing" do
       expect(invenio_rdm_record_converter.send(:owner_info, josh_elder_user.username)).to eq({'josh_the_elder' => 'JoshElder@northwestern.edu'})
+    end
+  end
+
+  describe "sizes" do
+    it "returns a blank array when page_count is blank" do
+      allow(generic_file).to receive(:page_count).and_return(nil)
+      expect(invenio_rdm_record_converter.send(:sizes)).to eq([])
     end
   end
 end

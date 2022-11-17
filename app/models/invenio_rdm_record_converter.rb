@@ -20,7 +20,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   INVENIO_RESTRICTED = "restricted"
   ALL_RIGHTS_RESERVED = 'All rights reserved'
   DOI_ORG = "doi.org/"
-  MEMOIZED_PERSON_OR_ORG_DATA_FILE = 'memoized_person_or_org_data.txt'
+  MEMOIZED_PERSON_OR_ORG_DATA_FILE = 'memoized_person_or_org_data.json'
   FUNDING_DATA_FILE = 'app/models/concerns/galtersufia/generic_file/funding_data.txt'
   LICENSE_DATA_FILE = 'app/models/concerns/galtersufia/generic_file/license_data.txt'
   DH_COLLECTIONS_TO_PRISM_COLLECTION_COMMUNITY_JSON = 'dh_collections_prism_collection_community.json'
@@ -30,7 +30,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
 
   @@header_lookup ||= HeaderLookup.new
   @@funding_data ||= eval(File.read(FUNDING_DATA_FILE))
-  @@person_or_org_data ||= eval(File.read(MEMOIZED_PERSON_OR_ORG_DATA_FILE))
+  @@person_or_org_data ||= JSON.parse(File.read(MEMOIZED_PERSON_OR_ORG_DATA_FILE))
   @@license_data ||= eval(File.read(LICENSE_DATA_FILE))
   @@dh_to_prism_entity = JSON.parse(File.read(DH_COLLECTIONS_TO_PRISM_COLLECTION_COMMUNITY_JSON))
 
@@ -86,10 +86,9 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
 
   def owner_info(depositor)
     user = User.find_by(username: depositor)
-    user_email  = user.email == "joshelder@northwestern.edu" ? "JoshElder@northwestern.edu" : user.email
 
     if user
-      {user.username => user_email}
+      {user.username => user_email(user)}
     else
       {"unknown": "unknown"}
     end
@@ -106,7 +105,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       if @role_store[permission.agent_name]
         permission_data[permission.access].merge!(@role_store[permission.agent_name])
       elsif user = User.find_by(username: permission.agent_name)
-        permission_data[permission.access].merge!({user.username => user.email})
+        permission_data[permission.access].merge!({user.username => user_email(user)})
       else
         permission_data[permission.access].merge!({permission.agent_name => ""})
       end
@@ -138,13 +137,17 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def invenio_pids(doi)
-    {
-      "doi": {
-        "identifier": doi, # doi is stored in an array
-        "provider": "datacite",
-        "client": "digitalhub"
+    if doi.blank?
+      {}
+    else
+      {
+        "doi": {
+          "identifier": doi.strip,
+          "provider": "datacite",
+          "client": "digitalhub"
+        }
       }
-    }
+    end
   end
 
   def invenio_provenance(proxy_depositor, on_behalf_of)
@@ -219,12 +222,13 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def build_creator_contributor_json(creator)
+    creator = creator.strip
     creatibutor_json = @@person_or_org_data[creator]
     return creatibutor_json if creatibutor_json
 
     family_name, given_name = creator.split(',', 2)
-    given_name = given_name.to_s.lstrip
-    family_name = family_name.to_s.lstrip
+    given_name = given_name.to_s.strip
+    family_name = family_name.to_s.strip
     display_name = creator.split(", ").reverse.join(" ").strip
 
     if !(given_name =~ /\d/)
@@ -269,7 +273,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
 
     @@person_or_org_data[creator] = creatibutor_json
     # this line only runs if there is an update to @@person_or_org_data
-    File.write(MEMOIZED_PERSON_OR_ORG_DATA_FILE, @@person_or_org_data)
+    File.write(MEMOIZED_PERSON_OR_ORG_DATA_FILE, JSON.pretty_generate(@@person_or_org_data))
     # return the actual json
     creatibutor_json
   end # build_creator_contributor_json
@@ -293,7 +297,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
 
       if term.blank?
         nil
-      elsif field == :tag
+      elsif field == :tag || unmappable_complex_headers.include?(term)
         {subject: term.force_encoding("UTF-8")}
       elsif pid = @@header_lookup.pid_lookup_by_field(term, field)
         {id: pid}
@@ -613,12 +617,33 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def sizes
+    page_count = @generic_file.page_count&.shift
+
     if @generic_file.id == "3105875f-61e1-412c-9b1c-c8a33b37ff35"
       ["116 pages"]
     elsif  @generic_file.id == "9cd9e3df-458c-4a2c-9e42-1dcdc95e7adf"
       ["44 pages"]
-    elsif !@generic_file.page_count.blank?
-      ["#{@generic_file.page_count.shift} pages"]
+    elsif !page_count.blank?
+      page_string = page_count.to_i > 1 ? "#{page_count} pages" : "#{page_count} page"
+      [page_string]
+    else
+      []
     end
+  end
+
+  def user_email(user)
+    user.email == "joshelder@northwestern.edu" ? "JoshElder@northwestern.edu" : user.email
+  end
+
+  # This is the current list of complex headers that were not mapping correctly. They will be exported as keywords
+  def unmappable_complex_headers
+    [
+     "COVID-19 (Disease)--Complications",
+     "COVID-19 (Disease)--Testing",
+     "COVID-19 (Disease)--Treatment",
+     "Feinberg School of Medicine--Buildings",
+     "Illinois--History",
+     "Illinois--Northern"
+    ]
   end
 end
