@@ -88,7 +88,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     user = User.find_by(username: depositor)
 
     if user
-      {user.username => user_email(user)}
+      {user.username => normalize_email(user)}
     else
       {"unknown": "unknown"}
     end
@@ -105,7 +105,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
       if @role_store[permission.agent_name]
         permission_data[permission.access].merge!(@role_store[permission.agent_name])
       elsif user = User.find_by(username: permission.agent_name)
-        permission_data[permission.access].merge!({user.username => user_email(user)})
+        permission_data[permission.access].merge!({user.username => normalize_email(user)})
       else
         permission_data[permission.access].merge!({permission.agent_name => ""})
       end
@@ -631,7 +631,7 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     end
   end
 
-  def user_email(user)
+  def normalize_email(user)
     user.email == "joshelder@northwestern.edu" ? "JoshElder@northwestern.edu" : user.email
   end
 
