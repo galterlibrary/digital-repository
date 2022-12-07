@@ -79,8 +79,8 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
     if !@generic_file.based_near.empty?
       data["presentation_location"] = @generic_file.based_near
     end
-    data["permissions"] = file_permissions
 
+    data["permissions"] = file_permissions
     data
   end
 
@@ -95,15 +95,14 @@ class InvenioRdmRecordConverter < Sufia::Export::Converter
   end
 
   def file_permissions
-    permission_data = Hash.new
-
+    permission_data = {}
     permission_data["owner"] = owner_info(@generic_file.depositor)
 
     @generic_file.permissions.each do |permission|
-      permission_data[permission.access] ||= Hash.new
+      permission_data[permission.access] ||= {}
 
-      if @role_store[permission.agent_name]
-        permission_data[permission.access].merge!(@role_store[permission.agent_name])
+      if role_user_data = @role_store[permission.agent_name]
+        permission_data[permission.access].merge!(role_user_data)
       elsif user = User.find_by(username: permission.agent_name)
         permission_data[permission.access].merge!({user.username => normalize_email(user)})
       else
