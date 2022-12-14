@@ -461,5 +461,29 @@
   },
   "5f2d9ec7-8f1e-4e2f-aa69-62980d7ed29a": {
     "community_id": "chicago-area-medical-archivists-medical-history-symposium"
+  },
+  "3e59c5b9-bbbf-4f49-946f-e08ef9b10d9f": {
+    "collection_id": "Library of Congress Subject Headings Authority Records with Medical Subject Headings mapping data",
+    "community_id": "galter-health-sciences-library-and-learning-center"
+  },
+  "4b7f6a77-9cf4-4deb-b9aa-f3f49391bcc8": {
+    "collection_id": "Medical Subject Headings Authority Records with Library of Congress Subject Headings mapping data",
+    "community_id": "galter-health-sciences-library-and-learning-center"
+  },
+  "2d0bccbb-90e3-40c9-9012-4f6a98c19060":{
+    "collection_id": "CT Surgery",
+    "community_id": "researchers-collections"
+  },
+  "1369e34e-94f3-483e-8adc-5f98d16e3c61":{
+    "collection_id": "Q Eileen Wafford Posters",
+    "community_id": "researchers-collections"
+  },
+  "e7e7d9a3-8724-4bb5-8630-c74e4c1980bf":{
+    "collection_id": "Northwestern Applied Statistics Seminar Series",
+    "community_id": "researchers-collections"
+  },
+  "ad56bfd2-f4e0-4ee5-82ec-6ac38f5a3069":{
+    "collection_id": "Library History Timeline Images",
+    "community_id": "history-of-feinberg-school-of-medicine"
   }
 }
