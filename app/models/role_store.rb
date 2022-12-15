@@ -10,7 +10,7 @@ class RoleStore
     josh_elder_email  = "JoshElder@northwestern.edu"
 
     Role.find_each do |role|
-      role_user_data = r.users.pluck(:username, :email).to_h
+      role_user_data = role.users.pluck(:username, :email).to_h
 
       # update Josh's email to titlecase in the role store
       if role_user_data[josh_elder_username]
