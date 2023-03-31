@@ -4,7 +4,7 @@
 # `$ b rails r lib/scripts/add_sunset_editor_role.rb`
 
 # Create new role
-Role.create(name: "sunset-editor", description: "Allow user to edit files after DigitalHub is closed to the public")
+sunset_editor = Role.create(name: "sunset-editor", description: "Allow user to edit files after DigitalHub is closed to the public")
 
 # Find and assign users to role
 user_emails = ["gretchen.neidhardt@northwestern.edu", "eric.newman@northwestern.edu"]
