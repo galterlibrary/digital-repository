@@ -31,6 +31,9 @@
         <i class="glyphicon glyphicon-eye-open"></i> Follow
       <% end %>
     <% end %>
+    <% unless has_collection_search_parameters? && current_user.sunset_editor? %>
+      <%= render partial: 'collections/show_actions' %>
+    <% end %>
     <%= render partial: 'show_relations' %>
   </div>
 </div>

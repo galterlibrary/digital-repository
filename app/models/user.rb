@@ -30,6 +30,10 @@ class User < ActiveRecord::Base
   end
   alias_method :in_group?, :has_role?
 
+  def sunset_editor?
+    has_role?("sunset-editor")
+  end
+
   def add_to_group(name)
     return roles if has_role?(name)
     roles << Role.find_by(name: name)

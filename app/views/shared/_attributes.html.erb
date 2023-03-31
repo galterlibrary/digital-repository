@@ -37,3 +37,17 @@
     <td><%= work.date_uploaded %></td>
   </tr>
 </table>
+<% if current_user.sunset_editor? %>
+  <% if can?(:destroy, work.id) %>
+    <%= link_to 'Delete',
+      hydra_object_path(work),
+      id: "deleteButton-#{work.id}",
+      data: { confirm: 'Are you sure?'},
+      class: 'btn btn-danger',
+      method: 'delete' %>
+  <% end %>
+  <% if can?(:edit, :any_collection) %>
+    <%= button_tag 'Add to Collection', class: 'btn btn-primary cat-cal-modal',
+      data: { toggle: 'modal', target: '#collection-list-container', id: work.id } %>
+  <% end %>
+<% end %>

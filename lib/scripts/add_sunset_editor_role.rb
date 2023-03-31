@@ -8,7 +8,7 @@ Role.create(name: "sunset-editor", description: "Allow user to edit files after 
 
 # Find and assign users to role
 user_emails = ["gretchen.neidhardt@northwestern.edu"]
-users = User.where(net_ids: user_net_ids)
+users = User.where(email: user_emails)
 
 users.each do |user|
   user.roles << sunset_editor
