@@ -1,4 +1,4 @@
-<% if can?(:edit, id) %>
+<% if current_user.sunset_editor? && can?(:edit, id) %>
 <div class="btn-group">
   <button class="btn btn-sm dropdown-toggle" data-toggle="dropdown" type="button" id="dropdownMenu_<%= id %>" aria-haspopup="true">
     <span class="sr-only">Press to </span>
@@ -18,7 +18,6 @@
       confirm: "Deleting a collection from #{t('sufia.product_name')} is permanent. Click OK to delete this collection from #{t('sufia.product_name')}, or Cancel to cancel this operation" } %>
     </li>
    <% end %>
-
    <% if request.original_fullpath.starts_with?('/dashboard') %>
     <li role="menuitem" tabindex="-1">
     <%= link_to raw(
@@ -27,7 +26,6 @@
       data: { toggle: 'modal', target: '#collection-list-container', id: id } %>
     </li>
    <% end %>
-
    <% if request.original_fullpath.starts_with?('/collections') %>
     <li role="menuitem" tabindex="-1">
     <%= link_to raw(
