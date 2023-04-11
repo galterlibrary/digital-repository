@@ -7,8 +7,8 @@
 Role.create(name: "sunset-editor", description: "Allow user to edit files after DigitalHub is closed to the public")
 
 # Find and assign users to role
-user_emails = ["gretchen.neidhardt@northwestern.edu"]
-users = User.where(net_ids: user_net_ids)
+user_emails = ["gretchen.neidhardt@northwestern.edu", "eric.newman@northwestern.edu"]
+users = User.where(email: user_emails)
 
 users.each do |user|
   user.roles << sunset_editor
