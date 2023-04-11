@@ -4,13 +4,17 @@
 
 <% unless has_collection_search_parameters? %>
   <div class="row">
-    <div class="col-xs-12 col-sm-10 pull-right">
-      <%= render 'collections/tabs' %>
-    </div>
+    <% if current_user.sunset_editor? %>
+      <div class="col-xs-12 col-sm-10 pull-right">
+        <%= render 'collections/tabs' %>
+      </div>
+    <% end %>
     <div class="col-xs-12 col-sm-2">
       <%= render 'collections/media_display', collection: @collection %>
-      <%= render 'collections/edit_actions' %>
     </div>
+    <% if current_user.sunset_editor? %>
+      <%= render 'collections/edit_actions' %>
+    <% end %>
   </div>
 <% end %>
 

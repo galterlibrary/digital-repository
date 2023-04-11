@@ -49,7 +49,9 @@
 <div class="row">
   <div class="col-xs-12 col-sm-4">
     <%= render 'generic_files/media_display' %>
-    <%= render 'show_actions' %>
+    <% if current_user.sunset_editor? %>
+      <%= render 'show_actions' %>
+    <% end %>
     <%= render 'show_collections' %>
   </div>
   <div itemscope itemtype="<%= @presenter.itemtype %>" class="col-xs-12 col-sm-8">
