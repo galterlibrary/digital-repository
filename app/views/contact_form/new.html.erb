@@ -4,8 +4,8 @@
 </div>
 
 <% if user_signed_in? %>
-  <% nm = current_user.name %>
-  <% em = current_user.email_address %>
+  <% nm = current_user&.name %>
+  <% em = current_user&.email_address %>
 <% else %>
   <% nm = '' %>
   <% em = '' %>

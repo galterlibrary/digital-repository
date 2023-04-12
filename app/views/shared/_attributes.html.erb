@@ -37,7 +37,7 @@
     <td><%= work.date_uploaded %></td>
   </tr>
 </table>
-<% if current_user.sunset_editor? %>
+<% if current_user&.sunset_editor? %>
   <% if can?(:destroy, work.id) %>
     <%= link_to 'Delete',
       hydra_object_path(work),

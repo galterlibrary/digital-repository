@@ -1,4 +1,4 @@
-<% if current_user.sunset_editor? %>
+<% if current_user&.sunset_editor? %>
   <div class="dropdown batch_document_selector_all" >
     <%= check_box_tag 'check_all', 'yes', @all_checked, disabled: @disable_select_all %>
     <% if !@disable_select_all %>

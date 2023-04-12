@@ -6,7 +6,7 @@
       <%= link_to raw('<i class="glyphicon glyphicon-link over"></i> Single-Use Link to File'), '#',
                   class: "copypaste itemicon itemcode", title: "Single-Use Link to File", id: "copy_link_#{id}" %>
     </li>
-    <% if current_user.sunset_editor? %>
+    <% if current_user&.sunset_editor? %>
       <li>
         <%= link_to raw('<i class="glyphicon glyphicon-pencil"></i> Edit File'), sufia.edit_generic_file_path(id),
                     class: 'itemicon itemedit', title: 'Edit File' %>
