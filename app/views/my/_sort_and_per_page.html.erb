@@ -1,4 +1,4 @@
-<% if current_user.sunset_editor? %>
+<% if current_user&.sunset_editor? %>
   <div class="batch-info">
     <div>
       <%= render partial: 'collections/form_for_select_collection', locals: {user_collections: @user_collections}  %>

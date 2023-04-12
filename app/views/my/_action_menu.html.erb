@@ -1,4 +1,4 @@
-<% if current_user.sunset_editor? %>
+<% if current_user&.sunset_editor? %>
   <div class="btn-group">
     <button class="btn btn-sm dropdown-toggle" data-toggle="dropdown" type="button" id="dropdownMenu_<%= id %>" aria-haspopup="true">
       <span class="sr-only">Press to </span>
