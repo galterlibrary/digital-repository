@@ -393,16 +393,14 @@ Sufia.config do |config|
 
   # Enable displaying usage statistics in the UI
   # Defaults to FALSE
-  if ENV['GOOGLE_ANALYTICS_ID']
-    # Requires a Google Analytics id and OAuth2 keyfile.  See README for more info
-    config.analytics = true
+  # Requires a Google Analytics id and OAuth2 keyfile.  See README for more info
+  config.analytics = false
 
-    # Specify a Google Analytics tracking ID to gather usage statistics
-    config.google_analytics_id = ENV['GOOGLE_ANALYTICS_ID']
+  # Specify a Google Analytics tracking ID to gather usage statistics
+  # config.google_analytics_id = ENV['GOOGLE_ANALYTICS_ID']
 
-    # Specify a date you wish to start collecting Google Analytic statistics for.
-    config.analytic_start_date = DateTime.new(2015,10,1)
-  end
+  # Specify a date you wish to start collecting Google Analytic statistics for.
+  # config.analytic_start_date = DateTime.new(2015,10,1)
 
   config.geonames_username = 'galterlibrary'
   # Enables a link to the citations page for a generic_file.

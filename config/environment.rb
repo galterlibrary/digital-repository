@@ -11,7 +11,6 @@ load(local_env) if File.exists?(local_env)
 unless Rails.env.test? || Rails.env.ci?
   vars = ['LDAP_PASS',
           'LDAP_USER',
-          'NEW_RELIC_LICENSE',
           'GOOGLE_ANALYTICS_ID',
           'FEDORA_USER',
           'FEDORA_PASS',
